@@ -1,0 +1,177 @@
+@model GeDoc.catAgenteReparticionWS
+
+<script type="text/javascript">
+    //Asignamos los valores de los campos\\
+    if ($("#repAccion").val() == "Consultar" || $("#repAccion").val() == "Eliminar") {
+        $('#frmcatAgenteReparticion').find('input').attr("readonly", "readonly");
+    }
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatAgenteReparticion").ready(function () {
+        $("#repId").focus().select();
+    });
+
+    function onAceptarcatAgenteReparticion() {
+        if ($("#repAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatAgenteReparticion').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        $('#tblVinculoFamiliar').find('input[type=radio]:checked').each(function (index) {
+            debugger;
+            $("#ospvId").val($(this).val());
+        });
+
+        debugger;
+        $("#agtIdRep").val(IdAgente);
+
+        var $form = $('#frmcatAgenteReparticion');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridReparticionesAgente").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatAgenteReparticiones').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+    
+    function onCancelarcatAgenteReparticion() {
+        var windowElement = $('#wCRUDcatAgenteReparticiones').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setAgenteReparticion", "DCRM", FormMethod.Post, new { id = "frmcatAgenteReparticion" }))
+{
+    <div id="divGridPrincipalcatAgenteReparticion" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected">
+            Información
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <table style="border: none; width: 100%;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline;">Ministerio:</label>
+                    </td>
+                    <td style="border: none;">
+                        @Html.Partial("EditorTemplates/_ListaDesplegable", "minId_Lista#NO#434px")
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline;">Repartición:</label>
+                    </td>
+                    <td style="border: none;">
+                        @Html.Partial("EditorTemplates/_ListaDesplegable", "repId_Lista#NO#434px")
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatAgenteReparticion();" title="@(Model.repAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatAgenteReparticion();" title="Cancelar" style="@(Model.repAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => Model.repAccion, new { id = "repAccion" })
+        @Html.HiddenFor(model => Model.agtIdRep, new { id = "agtIdRep" })
+        @Html.HiddenFor(model => Model.repId, new { id = "repId" })
+        @Html.HiddenFor(model => Model.minId, new { id = "minId" })
+    </div>
+}
+
+<script>
+    $("#minId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        $("#minId").val($("#minId_Lista").val());
+        RecargarReparticiones();
+    });
+    var $ListaMinisterios = $("#minId_Lista");
+    if ($('#minId').val() != "" && $('#minId').val() > 0) {
+        $ListaMinisterios.val($("#minId").val()).trigger("change");
+    }
+    $ListaMinisterios.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19200");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19200");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19200");
+    });
+
+    function RecargarReparticiones() {
+        ProcesandoListaDesplegable("listaDesplegable_repId_Lista");
+        var _Post = GetPathApp("DCRM/ListaDeReparticiones");
+        debugger;
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { minId: $("#minId").val() },
+            error: function () {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_repId_Lista").html(respuesta);
+
+                    $("#repId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function (e) {
+                        $("#repId").val($("#repId_Lista").val());
+                    });
+                    var $ListaReparticiones = $("#repId_Lista");
+                    if ($('#repId').val() != "" && $('#repId').val() > 0) {
+                        $ListaReparticiones.val($("#repId").val()).trigger("change");
+                    } else {
+                        $ListaReparticiones.trigger("change");
+                    }
+
+                    $ListaReparticiones.on("select2:open", function (e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+
+                    if ($("#repAccion").val() == "Consultar" || $("#repAccion").val() == "Eliminar") {
+                        $("#repId_Lista").prop("disabled", true);
+                    }
+                }
+            }
+        });
+    }
+
+    if ($("#repAccion").val() == "Consultar" || $("#repAccion").val() == "Eliminar") {
+        $("#minId_Lista").prop("disabled", true);
+    }
+
+</script>

@@ -1,0 +1,127 @@
+@using GeDoc
+@model GeDoc.catHCProblemaCronicoWS
+
+@{
+    ViewData["StyleAutoComplete"] = "width: 368px;";
+}
+<script type="text/javascript">
+    function onAceptarcatHCProblemaCronico() {
+        if ($("#pcroAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatHCProblemaCronico').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        @*if ($("#pcroCodigo").val() <= 0) {
+            MensajeEmergente("¡Error!", "@("El código ingresado es incrorrecto.")", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+            $("#pcroCodigo").addClass("ES-ErrorValidacion");
+            onMostrarMensaje("@("El codigo ingresado es incrorrecto.")");
+            $("#pcroCodigo").focus().select();
+            return;
+        }*@
+
+        @*if ($("#pcroDescripcion").val() === "") {
+            MensajeEmergente("¡Error!", "@("Debe ingresar la Descripción del Problema Crónico.")", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+            $("#pcroDescripcion").addClass("ES-ErrorValidacion");
+            onMostrarMensaje("@("Debe ingresar la Descripcion del Problema Cronico.")");
+            $("#pcroDescripcion").focus().select();
+            return;
+        }*@
+
+        var $form = $('#frmcatHCProblemaCronico');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    MensajeEmergente("¡Error!", respuesta.Mensaje, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                    $("#" + respuesta.Foco).addClass("ES-ErrorValidacion");
+                    onMostrarMensaje(respuesta.Mensaje);
+                    $("#" + respuesta.Foco).focus().select();
+                } else {
+                    $("#gridcatHCProblemaCronico").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatHCProblemaCronico').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarcatHCProblemaCronico() {
+        var windowElement = $('#wCRUDcatHCProblemaCronico').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatHCProblemaCronico", "HistoriaClinica", FormMethod.Post, new { id = "frmcatHCProblemaCronico" }))
+{
+    <div id="divGridPrincipalcatHCProblemaCronico" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="color: white;">
+           Problema Crónico
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 93%; height: 87%;">
+            <div>
+                <label style="vertical-align: text-bottom;">Código:</label>
+                @Html.TextBoxFor(model => Model.pcroCodigo, new {id = "pcroCodigo", @class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Código", style = "text-align: left; width: 100px;" })
+            </div>
+            <div style="margin-top: 20px;">
+                <label style="vertical-align: text-bottom;">Descripción:</label>
+                @Html.TextBoxFor(model => Model.pcroDescripcion, new {id = "pcroDescripcion", MensajeDeError = "Descripción", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 360px;"})
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatHCProblemaCronico();" title="@(Model.pcroAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatHCProblemaCronico();" title="Cancelar" style="@(Model.pcroAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.pcroAccion, new { style = "width: 200px; display: none;", id = "pcroAccion" })
+        @Html.HiddenFor(model => Model.pcroId, new { style = "width: 200px; display: none;", id = "pcroId" })
+    </div>
+}
+
+<div>
+    @{ Html.RenderPartial("Mensaje", new ParametrosMensaje() {Nombre = "msg_ProblemasCronicos", TipoMensaje = "error", MostrarEmergente = false, Titulo = "¡Atención!", Mensaje = "Mensaje.", Visible = false}); }
+</div>
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatHCProblemaCronico").ready(function () {
+        //Aplicamos algunos estilos
+        $("#pcroAccion").attr("style", "display: none;");
+        $("#pcroId").attr("style", "display: none;");
+        $("#pcroDescripcion").attr("style", "width: 364px;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#pcroAccion").val() == "Consultar" || $("#pcroAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeClass("ES-ErrorValidacion");
+            onOcultarMensaje();
+        });
+    });
+
+</script>

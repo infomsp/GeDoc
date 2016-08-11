@@ -1,0 +1,260 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+@model GeDoc.gesCartaMedica
+
+@{
+    ViewData["StyleComboBox"] = "width: 200px;";
+   }
+
+<script type="text/javascript">
+    function onLoadComboBox_espId() {
+        var combobox = $("#espId").data("tComboBox");
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.espId == null ? 0 : Model.espId)";
+        };
+
+        combobox.select(selectItem);
+        combobox.enable();
+    }
+
+    function onAceptargesCartaMedicaRecepcion() {
+        var tipoCM = $("input:radio[name=DatosCM.cmedMotivoSolicitud]:checked").val();
+        var prioridad = $("#cbxPrioridad").data("tDropDownList").value();
+        var especialidad = $("#espId").data("tComboBox").value();
+
+        if (especialidad == null || especialidad === 0 || especialidad === "") {
+            jAlert("Debe ingresar la especialidad.", "¡Atención!", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        var $form = $('#frmgesCartaMedicaRecepcion');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: { cmedId: $("#cmedId").val(), tipoCM: tipoCM, prioridad: prioridad, espId: especialidad },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    onCancelargesCartaMedicaRecepcion();
+                    jAlert(respuesta.Mensaje, "Información...", function () {
+                        $("#txtBusquedaRecepcionCM").val("");
+                        $("#gridRecepcionCM").data("tGrid").ajaxRequest();
+                        $("#txtBusquedaRecepcionCM").focus();
+                    });
+                }
+            }
+        });
+    }
+
+    function onCancelargesCartaMedicaRecepcion() {
+        var windowElement = $("#wCRUDJuntaMedicaRecibir").data("tWindow");
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setRecibirCM", "JuntaMedica", FormMethod.Post, new { id = "frmgesCartaMedicaRecepcion" }))
+{
+    <div id="divGridPrincipalgesCartaMedicaRecepcion" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div style="padding: 10px;">
+            <label style="vertical-align: super;">Número:</label>
+            @Html.TextBoxFor(model => Model.DatosCM.cmedNumero, new { @class = "desactivar", id = "cmedNumero", style="text-align: center; font-size: x-large;" })
+        </div>
+        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+            Datos Personales
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+            <table style="width: 100%; border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline;">Agente:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.agtApellidoyNombre, new { @class = "desactivar", id = "agtApellidoyNombre", style="width: 300px;" })
+                    </td>
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline; text-align: center;">DNI:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.agtDNI, new { @class = "desactivar", id = "agtDNI", style="text-align: center; width: 90px;" })
+                    </td>
+                    <td style="border: none;  text-align: right;">
+                        <label style="vertical-align: baseline;">CUIL:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.agtCUIL, new { @class = "desactivar", id = "agtCUIL", style="text-align: center; width: 110px;" })
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline;">Estado Civil:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.EstadoCivil, new {@class = "desactivar", id = "EstadoCivil", style = "width: 130px;"})
+                    </td>
+                    <td style="border: none;">
+                        <label style="vertical-align: baseline;">Fecha de Nacimiento:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.agtFechaNacimiento, new {@class = "desactivar", id = "agtFechaNacimiento", style = "text-align: center; width: 68px;"})
+                    </td>
+                    <td style="border: none; text-align: right;">
+                        <label style="vertical-align: baseline;">Edad:</label>
+                        @Html.TextBoxFor(model => Model.DatosAgente.Edad, new {@class = "desactivar", id = "Edad", style = "text-align: center; width: 50px;"})
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                            Grupo Familiar
+                        </div>
+                        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+                            @{
+                                Html.Telerik().Grid(Model.ListaGrupoFamiliar)
+                                    .Name("gridGrupoFamiliarCMRecibir")
+                                    .Localizable("es-AR")
+                                    .DataKeys(keys =>
+                                    {
+                                        keys.Add(p => p.agtfId);
+                                    })
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(c => c.agtfDNI).Width("80px").Title("DNI").Visible(true);
+                                        columns.Bound(c => c.agtfApellidoyNombre).Width("170px").Title("Apellido y Nombre").Visible(true).HtmlAttributes(new {style = "white-space: nowrap;"})
+                                            .ClientTemplate("<label title='<#= agtfApellidoyNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= agtfApellidoyNombre #> </label>");
+                                        columns.Bound(c => c.Vinculo).Width("70px").Title("Vínculo").Visible(true);
+                                    })
+                                    .Footer(false)
+                                    .Selectable()
+                                    .Scrollable(scroll => scroll.Enabled(true).Height(110))
+                                    .Render();
+                            }
+                        </div>
+                    </td>
+                    <td style="border: none;">
+                        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                            Reparticiones
+                        </div>
+                        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+                            @{
+                                Html.Telerik().Grid(Model.ListaReparticiones)
+                                    .Name("gridReparticionesCMRecibir")
+                                    .Localizable("es-AR")
+                                    .DataKeys(keys =>
+                                    {
+                                        keys.Add(p => p.agtId);
+                                    })
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(c => c.repCodigo).Width("70px").Title("Código").Visible(true);
+                                        columns.Bound(c => c.repNombre).Width("170px").Title("Repartición").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                                            .ClientTemplate("<label title='<#= repNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= repNombre #> </label>");
+                                        columns.Bound(c => c.minNombre).Width("170px").Title("Ministerio").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                                            .ClientTemplate("<label title='<#= minNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= minNombre #> </label>");
+                                    })
+                                    .Footer(false)
+                                    .HtmlAttributes(new { style = "text-align: left;" })
+                                    .Selectable()
+                                    .Scrollable(scroll => scroll.Enabled(true).Height(110))
+                                    .Render();
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Tarea:</label>
+                @Html.TextBoxFor(model => Model.DatosAgente.Tarea, new {@class = "desactivar", id = "Tarea", style = "width: 230px;"})
+                <label style="vertical-align: baseline; margin-left: 10px;">Fecha de Ingreso:</label>
+                @Html.TextBoxFor(model => Model.DatosAgente.agtFechaIngreso, new {@class = "desactivar", id = "agtFechaIngreso", style = "text-align: center; width: 68px;"})
+                <label style="vertical-align: baseline; margin-left: 10px;">Lugar de Trabajo:</label>
+                @Html.TextBoxFor(model => Model.DatosAgente.agtLugarTrabajo, new {@class = "desactivar", id = "agtLugarTrabajo", style = "width: 360px;"})
+            </div>
+        </div>
+        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+            Información para Recibir Carta Médica
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+            <div style="height: 30px;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none;">
+                            <label style="vertical-align: super;">Especialidad:</label>
+                            @Html.EditorFor(model => Model.espId, "", "espId")
+                        </td>
+                        <td style="border: none; text-align: right;">
+                            <label style="vertical-align: super;">Prioridad:</label>
+                            @(Html.Telerik().DropDownList()
+                                .Name("cbxPrioridad")
+                                .Items(item => 
+                                {
+                                    item.Add().Text("Alta").Value("PA").Selected(Model.DatosCM.prioridad == "PA");
+                                    item.Add().Text("Normal").Value("PB").Selected(Model.DatosCM.prioridad != "PA");
+                                }))
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="height: 30px;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none;">
+                            @(Html.RadioButtonFor(m => Model.DatosCM.cmedMotivoSolicitud, "EA")) Enfermedad del Agente
+                        </td>
+                        <td style="border: none; text-align: right;">
+                            @(Html.RadioButtonFor(m => Model.DatosCM.cmedMotivoSolicitud, "EF")) Enfermedad de un Familiar
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptargesCartaMedicaRecepcion();" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelargesCartaMedicaRecepcion();" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.DatosCM.cmedId, new { id = "cmedId" })
+    </div>
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalgesCartaMedicaRecepcion").ready(function () {
+        //Aplicamos algunos estilos
+        debugger;
+        $(".desactivar").attr("disabled", "disabled");
+        $(".t-dropdown-wrap.t-state-default").css("text-align", "left");
+
+        @{
+            var FechaNacimiento = "";
+            if (Model.DatosAgente.agtFechaNacimiento != null)
+            {
+                FechaNacimiento = Model.DatosAgente.agtFechaNacimiento.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#agtFechaNacimiento').val('@(FechaNacimiento)');
+
+        //Asignamos los valores de los campos\\
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+
+        //Paso con enter de campo a campo
+        //$(":input").bind("keypress", function (e) {
+        //    if (e.which === 13) {
+        //        e.preventDefault();
+        //        e.stopPropagation();
+        //        Avanzar(this);
+        //    }
+        //});
+    });
+
+</script>

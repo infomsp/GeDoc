@@ -1,0 +1,2040 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="efAccesoADatosJMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="efAccesoADatosJMModelStoreContainer">
+          <EntitySet Name="catAgente" EntityType="efAccesoADatosJMModel.Store.catAgente" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catAgenteGrupoFamiliar" EntityType="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catAgenteReparticion" EntityType="efAccesoADatosJMModel.Store.catAgenteReparticion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatArticulos" EntityType="efAccesoADatosJMModel.Store.CatArticulos" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catCalle" EntityType="efAccesoADatosJMModel.Store.catCalle" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatCambioEstado" EntityType="efAccesoADatosJMModel.Store.CatCambioEstado" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatCiudad" EntityType="efAccesoADatosJMModel.Store.CatCiudad" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catDepartamento" EntityType="efAccesoADatosJMModel.Store.catDepartamento" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatDivision" EntityType="efAccesoADatosJMModel.Store.CatDivision" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatEspecialidad" EntityType="efAccesoADatosJMModel.Store.CatEspecialidad" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catLocalidad" EntityType="efAccesoADatosJMModel.Store.catLocalidad" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catMinisterio" EntityType="efAccesoADatosJMModel.Store.catMinisterio" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catMotivo" EntityType="efAccesoADatosJMModel.Store.catMotivo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatPais" EntityType="efAccesoADatosJMModel.Store.CatPais" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CatProvincia" EntityType="efAccesoADatosJMModel.Store.CatProvincia" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catReparticion" EntityType="efAccesoADatosJMModel.Store.catReparticion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catTarea" EntityType="efAccesoADatosJMModel.Store.catTarea" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="gesCartaMedicaUltimoEstado" EntityType="efAccesoADatosJMModel.Store.gesCartaMedicaUltimoEstado" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ospEstadoCivil" EntityType="efAccesoADatosJMModel.Store.ospEstadoCivil" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ospVinculoFamiliar" EntityType="efAccesoADatosJMModel.Store.ospVinculoFamiliar" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_catAgente_catLocalidad" Association="efAccesoADatosJMModel.Store.FK_catAgente_catLocalidad">
+            <End Role="catLocalidad" EntitySet="catLocalidad" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgente_catTarea" Association="efAccesoADatosJMModel.Store.FK_catAgente_catTarea">
+            <End Role="catTarea" EntitySet="catTarea" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgente_ospEstadoCivil" Association="efAccesoADatosJMModel.Store.FK_catAgente_ospEstadoCivil">
+            <End Role="ospEstadoCivil" EntitySet="ospEstadoCivil" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteGrupoFamiliar_catAgente" Association="efAccesoADatosJMModel.Store.FK_catAgenteGrupoFamiliar_catAgente">
+            <End Role="catAgente" EntitySet="catAgente" />
+            <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" Association="efAccesoADatosJMModel.Store.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+            <End Role="ospVinculoFamiliar" EntitySet="ospVinculoFamiliar" />
+            <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteReparticion_catAgente" Association="efAccesoADatosJMModel.Store.FK_catAgenteReparticion_catAgente">
+            <End Role="catAgente" EntitySet="catAgente" />
+            <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteReparticion_catReparticion" Association="efAccesoADatosJMModel.Store.FK_catAgenteReparticion_catReparticion">
+            <End Role="catReparticion" EntitySet="catReparticion" />
+            <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catCiudad_catProvincia" Association="efAccesoADatosJMModel.Store.FK_catCiudad_catProvincia">
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+            <End Role="CatCiudad" EntitySet="CatCiudad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catDepartamento_CatProvincia" Association="efAccesoADatosJMModel.Store.FK_catDepartamento_CatProvincia">
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+            <End Role="catDepartamento" EntitySet="catDepartamento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catLocalidad_catDepartamento" Association="efAccesoADatosJMModel.Store.FK_catLocalidad_catDepartamento">
+            <End Role="catDepartamento" EntitySet="catDepartamento" />
+            <End Role="catLocalidad" EntitySet="catLocalidad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catProvincia_catPais" Association="efAccesoADatosJMModel.Store.FK_catProvincia_catPais">
+            <End Role="CatPais" EntitySet="CatPais" />
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catReparticion_catMinisterio" Association="efAccesoADatosJMModel.Store.FK_catReparticion_catMinisterio">
+            <End Role="catMinisterio" EntitySet="catMinisterio" />
+            <End Role="catReparticion" EntitySet="catReparticion" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="catAgente">
+          <Key>
+            <PropertyRef Name="agtId" />
+          </Key>
+          <Property Name="agtId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="agtDNI" Type="int" Nullable="false" />
+          <Property Name="agtCUIL" Type="varchar" MaxLength="13" />
+          <Property Name="agtApellidoyNombre" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="ospeId" Type="char" Nullable="false" MaxLength="1" />
+          <Property Name="agtFechaNacimiento" Type="datetime" Nullable="false" />
+          <Property Name="agtEdad" Type="tinyint" Nullable="false" />
+          <Property Name="tarId" Type="int" Nullable="false" />
+          <Property Name="agtLugarTrabajo" Type="varchar" MaxLength="50" />
+          <Property Name="agtFechaIngreso" Type="datetime" Nullable="false" />
+          <Property Name="agtCalle" Type="varchar" MaxLength="80" />
+          <Property Name="agtCalleNumero" Type="smallint" />
+          <Property Name="agtBlock" Type="varchar" MaxLength="5" />
+          <Property Name="agtBlockPiso" Type="varchar" MaxLength="2" />
+          <Property Name="agtBlockDepto" Type="varchar" MaxLength="2" />
+          <Property Name="agtBarrio" Type="varchar" MaxLength="30" />
+          <Property Name="agtManzana" Type="varchar" MaxLength="6" />
+          <Property Name="agtSector" Type="varchar" MaxLength="5" />
+          <Property Name="agtCodigoPostal" Type="smallint" />
+          <Property Name="locId" Type="int" />
+          <Property Name="agtOrigenInfOSP" Type="bit" Nullable="false" />
+          <Property Name="agtFoto" Type="varchar" MaxLength="4000" />
+          <Property Name="agtSexo" Type="varchar" MaxLength="15" />
+          <Property Name="agtFuma" Type="bit" />
+          <Property Name="agtHTA" Type="bit" />
+          <Property Name="agtColesterol" Type="bit" />
+          <Property Name="agtDiabetes" Type="bit" />
+          <Property Name="agtActividadFisica" Type="bit" />
+          <Property Name="agtAlergias" Type="bit" />
+          <Property Name="agtPeso" Type="decimal" Scale="2" />
+          <Property Name="agtTalla" Type="decimal" Scale="2" />
+          <Property Name="agtTelefonoFijo" Type="varchar" MaxLength="50" />
+          <Property Name="agtTelefonoMovil" Type="varchar" MaxLength="50" />
+          <Property Name="agtCorreoElectronico" Type="varchar" MaxLength="50" />
+          <Property Name="agtDomicilioReferencia" Type="varchar" MaxLength="500" />
+          <Property Name="agtApellido" Type="varchar" MaxLength="50" />
+          <Property Name="agtNombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="catAgenteGrupoFamiliar">
+          <Key>
+            <PropertyRef Name="agtfId" />
+          </Key>
+          <Property Name="agtfId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="agtfApellidoyNombre" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="agtfDNI" Type="int" Nullable="false" />
+          <Property Name="ospvId" Type="char" Nullable="false" MaxLength="3" />
+          <Property Name="agtId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catAgenteReparticion">
+          <Key>
+            <PropertyRef Name="agtrId" />
+          </Key>
+          <Property Name="agtrId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="agtId" Type="int" Nullable="false" />
+          <Property Name="repId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CatArticulos">
+          <Key>
+            <PropertyRef Name="artId" />
+          </Key>
+          <Property Name="artId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="artCodigo" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="artNombre" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="artObservaciones" Type="varchar" MaxLength="50" />
+          <Property Name="artTipoLicencia" Type="char" Nullable="false" MaxLength="2" />
+          <Property Name="artTopeDias" Type="int" Nullable="false" />
+          <Property Name="artControl" Type="bit" Nullable="false" />
+          <Property Name="artConfirmaAlta" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catCalle">
+          <Key>
+            <PropertyRef Name="callId" />
+          </Key>
+          <Property Name="callId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="callNombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CatCambioEstado">
+          <Key>
+            <PropertyRef Name="caesId" />
+          </Key>
+          <Property Name="caesId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="caesCodigo" Type="varchar" Nullable="false" MaxLength="10" />
+          <Property Name="caesDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="estEstado" Type="char" Nullable="false" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="CatCiudad">
+          <Key>
+            <PropertyRef Name="cddId" />
+          </Key>
+          <Property Name="cddId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="cddNombre" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="prvId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catDepartamento">
+          <Key>
+            <PropertyRef Name="depId" />
+          </Key>
+          <Property Name="depId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="depNombre" Type="varchar" Nullable="false" MaxLength="60" />
+          <Property Name="prvId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CatDivision">
+          <Key>
+            <PropertyRef Name="DivId" />
+          </Key>
+          <Property Name="DivId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DivNombre" Type="nvarchar" MaxLength="50" />
+          <Property Name="DivObservaciones" Type="nvarchar" MaxLength="50" />
+          <Property Name="estEstado" Type="char" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="CatEspecialidad">
+          <Key>
+            <PropertyRef Name="espId" />
+          </Key>
+          <Property Name="espId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="espNombre" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="espDescripcion" Type="nvarchar" MaxLength="50" />
+          <Property Name="espPermiteOtraEspecialidad" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catLocalidad">
+          <Key>
+            <PropertyRef Name="locId" />
+          </Key>
+          <Property Name="locId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="locNombre" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="depId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catMinisterio">
+          <Key>
+            <PropertyRef Name="minId" />
+          </Key>
+          <Property Name="minId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="minNombre" Type="varchar" Nullable="false" MaxLength="80" />
+        </EntityType>
+        <EntityType Name="catMotivo">
+          <Key>
+            <PropertyRef Name="motId" />
+          </Key>
+          <Property Name="motId" Type="int" Nullable="false" />
+          <Property Name="motNombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CatPais">
+          <Key>
+            <PropertyRef Name="paisId" />
+          </Key>
+          <Property Name="paisId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="paisNombre" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CatProvincia">
+          <Key>
+            <PropertyRef Name="prvId" />
+          </Key>
+          <Property Name="prvId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="prvNombre" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="paisId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catReparticion">
+          <Key>
+            <PropertyRef Name="repId" />
+          </Key>
+          <Property Name="repId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="repCodigo" Type="char" Nullable="false" MaxLength="6" />
+          <Property Name="repNombre" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="repCorreo" Type="varchar" MaxLength="100" />
+          <Property Name="minId" Type="int" />
+          <Property Name="repCodigoNew" Type="char" MaxLength="6" />
+        </EntityType>
+        <EntityType Name="catTarea">
+          <Key>
+            <PropertyRef Name="tarId" />
+          </Key>
+          <Property Name="tarId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="tarDescripcion" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="gesCartaMedicaUltimoEstado">
+          <Key>
+            <PropertyRef Name="cmedId" />
+          </Key>
+          <Property Name="cmedId" Type="bigint" Nullable="false" />
+          <Property Name="estEstado" Type="char" Nullable="false" MaxLength="2" />
+          <Property Name="estFecha" Type="datetime" Nullable="false" />
+          <Property Name="usrId" Type="int" />
+          <Property Name="cmedObservaciones" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="ospEstadoCivil">
+          <Key>
+            <PropertyRef Name="ospeId" />
+          </Key>
+          <Property Name="ospeId" Type="char" Nullable="false" MaxLength="1" />
+          <Property Name="ospeDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ospVinculoFamiliar">
+          <Key>
+            <PropertyRef Name="ospvId" />
+          </Key>
+          <Property Name="ospvId" Type="char" Nullable="false" MaxLength="3" />
+          <Property Name="ospvDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_catAgente_catLocalidad">
+          <End Role="catLocalidad" Type="efAccesoADatosJMModel.Store.catLocalidad" Multiplicity="0..1" />
+          <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catLocalidad">
+              <PropertyRef Name="locId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="locId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgente_catTarea">
+          <End Role="catTarea" Type="efAccesoADatosJMModel.Store.catTarea" Multiplicity="1" />
+          <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catTarea">
+              <PropertyRef Name="tarId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="tarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgente_ospEstadoCivil">
+          <End Role="ospEstadoCivil" Type="efAccesoADatosJMModel.Store.ospEstadoCivil" Multiplicity="1" />
+          <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ospEstadoCivil">
+              <PropertyRef Name="ospeId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="ospeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteGrupoFamiliar_catAgente">
+          <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="catAgenteGrupoFamiliar" Type="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catAgente">
+              <PropertyRef Name="agtId" />
+            </Principal>
+            <Dependent Role="catAgenteGrupoFamiliar">
+              <PropertyRef Name="agtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+          <End Role="ospVinculoFamiliar" Type="efAccesoADatosJMModel.Store.ospVinculoFamiliar" Multiplicity="1" />
+          <End Role="catAgenteGrupoFamiliar" Type="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ospVinculoFamiliar">
+              <PropertyRef Name="ospvId" />
+            </Principal>
+            <Dependent Role="catAgenteGrupoFamiliar">
+              <PropertyRef Name="ospvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteReparticion_catAgente">
+          <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="1" />
+          <End Role="catAgenteReparticion" Type="efAccesoADatosJMModel.Store.catAgenteReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catAgente">
+              <PropertyRef Name="agtId" />
+            </Principal>
+            <Dependent Role="catAgenteReparticion">
+              <PropertyRef Name="agtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteReparticion_catReparticion">
+          <End Role="catReparticion" Type="efAccesoADatosJMModel.Store.catReparticion" Multiplicity="1" />
+          <End Role="catAgenteReparticion" Type="efAccesoADatosJMModel.Store.catAgenteReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catReparticion">
+              <PropertyRef Name="repId" />
+            </Principal>
+            <Dependent Role="catAgenteReparticion">
+              <PropertyRef Name="repId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catCiudad_catProvincia">
+          <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CatCiudad" Type="efAccesoADatosJMModel.Store.CatCiudad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatProvincia">
+              <PropertyRef Name="prvId" />
+            </Principal>
+            <Dependent Role="CatCiudad">
+              <PropertyRef Name="prvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catDepartamento_CatProvincia">
+          <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="1" />
+          <End Role="catDepartamento" Type="efAccesoADatosJMModel.Store.catDepartamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatProvincia">
+              <PropertyRef Name="prvId" />
+            </Principal>
+            <Dependent Role="catDepartamento">
+              <PropertyRef Name="prvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catLocalidad_catDepartamento">
+          <End Role="catDepartamento" Type="efAccesoADatosJMModel.Store.catDepartamento" Multiplicity="1" />
+          <End Role="catLocalidad" Type="efAccesoADatosJMModel.Store.catLocalidad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catDepartamento">
+              <PropertyRef Name="depId" />
+            </Principal>
+            <Dependent Role="catLocalidad">
+              <PropertyRef Name="depId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catProvincia_catPais">
+          <End Role="CatPais" Type="efAccesoADatosJMModel.Store.CatPais" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatPais">
+              <PropertyRef Name="paisId" />
+            </Principal>
+            <Dependent Role="CatProvincia">
+              <PropertyRef Name="paisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catReparticion_catMinisterio">
+          <End Role="catMinisterio" Type="efAccesoADatosJMModel.Store.catMinisterio" Multiplicity="0..1" />
+          <End Role="catReparticion" Type="efAccesoADatosJMModel.Store.catReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catMinisterio">
+              <PropertyRef Name="minId" />
+            </Principal>
+            <Dependent Role="catReparticion">
+              <PropertyRef Name="minId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fnValidaDeterminacionFechaJM" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Fecha" Type="datetime" Mode="In" />
+          <Parameter Name="Especialidades" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="getBusquedaAgenteByDocumento" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="nroDocumento" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="getBusquedaCMByDocumentoByFecha" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="nroDocumento" Type="varchar" Mode="In" />
+          <Parameter Name="FechaLicencia" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="getCartaMedicaByAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="agtId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="getDatosAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="agtId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosAgenteGrupoFamiliar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="agtId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosAgenteReparticiones" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="agtId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosEspecialidades" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getDatosTableroDeComandoDCRM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getDatosTableroDeComandoDCRM_Linea_Pato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+          <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+          <Parameter Name="espId" Type="int" Mode="In" />
+          <Parameter Name="diagId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosTableroDeComandoDCRM_Top10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+          <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+          <Parameter Name="espId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosTableroDeComandoDCRM_Top5Espera" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getDatosTableroDeComandoDCRM_Torta_Pato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+          <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+          <Parameter Name="espId" Type="int" Mode="In" />
+          <Parameter Name="diagId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="getDatosTiposJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getEstadisticaDCRM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+          <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="getJuntaMedicaByAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="agtId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="getListaCMGestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Estados" Type="varchar(max)" Mode="In" />
+          <Parameter Name="TextoBuscado" Type="varchar" Mode="In" />
+          <Parameter Name="Usuario" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="getListaCMGestionFiltroEspecial" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="minId" Type="int" Mode="In" />
+          <Parameter Name="FechaDesde" Type="datetime" Mode="In" />
+          <Parameter Name="FechaHasta" Type="datetime" Mode="In" />
+          <Parameter Name="TipoFecha" Type="char" Mode="In" />
+        </Function>
+        <Function Name="getListaCMPorEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Estados" Type="varchar(max)" Mode="In" />
+          <Parameter Name="TextoBuscado" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="getListaDesplegableMinisterios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getListadoJuntasMedicas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getListaEspecialidades" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="getListaMedicos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="setAnulacionJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="turId" Type="int" Mode="In" />
+          <Parameter Name="Motivo" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="setCartaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cmedId" Type="bigint" Mode="In" />
+          <Parameter Name="espId" Type="int" Mode="In" />
+          <Parameter Name="cmedMotivoSolicitud" Type="char" Mode="In" />
+          <Parameter Name="prioridad" Type="char" Mode="In" />
+          <Parameter Name="usrNombre" Type="varchar" Mode="In" />
+          <Parameter Name="Accion" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="setJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="turFecha" Type="datetime" Mode="In" />
+          <Parameter Name="tjId" Type="smallint" Mode="In" />
+          <Parameter Name="agtId" Type="int" Mode="In" />
+          <Parameter Name="turResultadoJM" Type="varchar(max)" Mode="In" />
+          <Parameter Name="turEstado" Type="char" Mode="In" />
+          <Parameter Name="turEstadoFecha" Type="datetime" Mode="In" />
+          <Parameter Name="usrNombre" Type="varchar" Mode="In" />
+          <Parameter Name="Especialidades" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EsSobreTurno" Type="bit" Mode="In" />
+          <Parameter Name="Accion" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="setMedicosJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="turId" Type="int" Mode="In" />
+          <Parameter Name="Medicos" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="setResultadoJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="turId" Type="int" Mode="In" />
+          <Parameter Name="Resultado" Type="varchar(max)" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="efAccesoADatosJMModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="efAccesoADatosJMJuntaMedicaEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="getListaCMPorEstados" ReturnType="Collection(efAccesoADatosJMModel.getListaCMPorEstados_Result)">
+            <Parameter Name="Estados" Mode="In" Type="String" />
+            <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosAgente" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgente_Result)">
+          <Parameter Name="agtId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosAgenteGrupoFamiliar" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgenteGrupoFamiliar_Result)">
+          <Parameter Name="agtId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosAgenteReparticiones" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgenteReparticiones_Result)">
+          <Parameter Name="agtId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getListaEspecialidades" ReturnType="Collection(efAccesoADatosJMModel.getListaEspecialidades_Result)" />
+          <FunctionImport Name="setCartaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+            <Parameter Name="cmedId" Mode="In" Type="Int64" />
+            <Parameter Name="espId" Mode="In" Type="Int32" />
+            <Parameter Name="cmedMotivoSolicitud" Mode="In" Type="String" />
+            <Parameter Name="prioridad" Mode="In" Type="String" />
+            <Parameter Name="usrNombre" Mode="In" Type="String" />
+            <Parameter Name="Accion" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getBusquedaAgentes" ReturnType="Collection(efAccesoADatosJMModel.getBusquedaAgentes_Result)">
+          <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getBusquedaAgenteByDocumento" ReturnType="Collection(efAccesoADatosJMModel.getBusquedaAgenteByDocumento_Result)">
+          <Parameter Name="nroDocumento" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getCartaMedicaByAgente" ReturnType="Collection(efAccesoADatosJMModel.getCartaMedicaByAgente_Result)">
+          <Parameter Name="agtId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="getListaCMGestion" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestion_Result)">
+            <Parameter Name="Estados" Mode="In" Type="String" />
+            <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+            <Parameter Name="Usuario" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosEspecialidades" ReturnType="Collection(efAccesoADatosJMModel.getDatosEspecialidades_Result)" />
+          <FunctionImport Name="getDatosTiposJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.getDatosTiposJuntaMedica_Result)" />
+          <FunctionImport Name="setJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+            <Parameter Name="turFecha" Mode="In" Type="DateTime" />
+            <Parameter Name="tjId" Mode="In" Type="Int16" />
+            <Parameter Name="agtId" Mode="In" Type="Int32" />
+            <Parameter Name="turResultadoJM" Mode="In" Type="String" />
+            <Parameter Name="turEstado" Mode="In" Type="String" />
+            <Parameter Name="turEstadoFecha" Mode="In" Type="DateTime" />
+            <Parameter Name="usrNombre" Mode="In" Type="String" />
+            <Parameter Name="Especialidades" Mode="In" Type="String" />
+            <Parameter Name="EsSobreTurno" Mode="In" Type="Boolean" />
+            <Parameter Name="Accion" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getListadoJuntasMedicas" ReturnType="Collection(efAccesoADatosJMModel.getListadoJuntasMedicas_Result)" />
+          <FunctionImport Name="getListaMedicos" ReturnType="Collection(efAccesoADatosJMModel.getListaMedicos_Result)" />
+          <FunctionImport Name="setMedicosJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+            <Parameter Name="turId" Mode="In" Type="Int32" />
+            <Parameter Name="Medicos" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="setResultadoJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+            <Parameter Name="turId" Mode="In" Type="Int32" />
+            <Parameter Name="Resultado" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getJuntaMedicaByAgente" ReturnType="Collection(efAccesoADatosJMModel.getJuntaMedicaByAgente_Result)">
+          <Parameter Name="agtId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="setAnulacionJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+            <Parameter Name="turId" Mode="In" Type="Int32" />
+            <Parameter Name="Motivo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getBusquedaCMByDocumentoByFecha" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestion_Result)">
+            <Parameter Name="nroDocumento" Mode="In" Type="String" />
+            <Parameter Name="FechaLicencia" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="getListaCMGestionFiltroEspecial" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestionFiltroEspecial_Result)">
+            <Parameter Name="minId" Mode="In" Type="Int32" />
+            <Parameter Name="FechaDesde" Mode="In" Type="DateTime" />
+            <Parameter Name="FechaHasta" Mode="In" Type="DateTime" />
+            <Parameter Name="TipoFecha" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getListaDesplegableMinisterios" ReturnType="Collection(efAccesoADatosJMModel.getListaDesplegableMinisterios_Result)" />
+          <EntitySet Name="catAgente" EntityType="efAccesoADatosJMModel.catAgente" />
+          <EntitySet Name="catAgenteGrupoFamiliar" EntityType="efAccesoADatosJMModel.catAgenteGrupoFamiliar" />
+          <EntitySet Name="CatArticulos" EntityType="efAccesoADatosJMModel.CatArticulos" />
+          <EntitySet Name="CatCambioEstado" EntityType="efAccesoADatosJMModel.CatCambioEstado" />
+          <EntitySet Name="CatCiudad" EntityType="efAccesoADatosJMModel.CatCiudad" />
+          <EntitySet Name="catDepartamento" EntityType="efAccesoADatosJMModel.catDepartamento" />
+          <EntitySet Name="CatDivision" EntityType="efAccesoADatosJMModel.CatDivision" />
+          <EntitySet Name="catLocalidad" EntityType="efAccesoADatosJMModel.catLocalidad" />
+          <EntitySet Name="catMinisterio" EntityType="efAccesoADatosJMModel.catMinisterio" />
+          <EntitySet Name="catMotivo" EntityType="efAccesoADatosJMModel.catMotivo" />
+          <EntitySet Name="CatPais" EntityType="efAccesoADatosJMModel.CatPais" />
+          <EntitySet Name="CatProvincia" EntityType="efAccesoADatosJMModel.CatProvincia" />
+          <EntitySet Name="catReparticion" EntityType="efAccesoADatosJMModel.catReparticion" />
+          <EntitySet Name="catTarea" EntityType="efAccesoADatosJMModel.catTarea" />
+          <EntitySet Name="ospEstadoCivil" EntityType="efAccesoADatosJMModel.ospEstadoCivil" />
+          <EntitySet Name="ospVinculoFamiliar" EntityType="efAccesoADatosJMModel.ospVinculoFamiliar" />
+          <AssociationSet Name="FK_catAgente_catLocalidad" Association="efAccesoADatosJMModel.FK_catAgente_catLocalidad">
+            <End Role="catLocalidad" EntitySet="catLocalidad" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgente_catTarea" Association="efAccesoADatosJMModel.FK_catAgente_catTarea">
+            <End Role="catTarea" EntitySet="catTarea" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgente_ospEstadoCivil" Association="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil">
+            <End Role="ospEstadoCivil" EntitySet="ospEstadoCivil" />
+            <End Role="catAgente" EntitySet="catAgente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteGrupoFamiliar_catAgente" Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente">
+            <End Role="catAgente" EntitySet="catAgente" />
+            <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+            <End Role="ospVinculoFamiliar" EntitySet="ospVinculoFamiliar" />
+            <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catCiudad_catProvincia" Association="efAccesoADatosJMModel.FK_catCiudad_catProvincia">
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+            <End Role="CatCiudad" EntitySet="CatCiudad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catDepartamento_CatProvincia" Association="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia">
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+            <End Role="catDepartamento" EntitySet="catDepartamento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catLocalidad_catDepartamento" Association="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento">
+            <End Role="catDepartamento" EntitySet="catDepartamento" />
+            <End Role="catLocalidad" EntitySet="catLocalidad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catReparticion_catMinisterio" Association="efAccesoADatosJMModel.FK_catReparticion_catMinisterio">
+            <End Role="catMinisterio" EntitySet="catMinisterio" />
+            <End Role="catReparticion" EntitySet="catReparticion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catProvincia_catPais" Association="efAccesoADatosJMModel.FK_catProvincia_catPais">
+            <End Role="CatPais" EntitySet="CatPais" />
+            <End Role="CatProvincia" EntitySet="CatProvincia" />
+          </AssociationSet>
+          <EntitySet Name="catCalle" EntityType="efAccesoADatosJMModel.catCalle" />
+          <EntitySet Name="catAgenteReparticion" EntityType="efAccesoADatosJMModel.catAgenteReparticion" />
+          <AssociationSet Name="FK_catAgenteReparticion_catAgente" Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente">
+            <End Role="catAgente" EntitySet="catAgente" />
+            <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catAgenteReparticion_catReparticion" Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion">
+            <End Role="catReparticion" EntitySet="catReparticion" />
+            <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+          </AssociationSet>
+          <FunctionImport Name="getEstadisticaDCRM" ReturnType="Collection(efAccesoADatosJMModel.getEstadisticaDCRM_Result)">
+            <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+            <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosTableroDeComandoDCRM" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Result)" />
+          <EntitySet Name="CatEspecialidad" EntityType="efAccesoADatosJMModel.CatEspecialidad" />
+          <FunctionImport Name="getDatosTableroDeComandoDCRM_Top10" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top10_Result)">
+            <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+            <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+            <Parameter Name="espId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="gesCartaMedicaUltimoEstado" EntityType="efAccesoADatosJMModel.gesCartaMedicaUltimoEstado" />
+          <FunctionImport Name="getDatosTableroDeComandoDCRM_Top5Espera" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top5Espera_Result)" />
+          <FunctionImport Name="getDatosTableroDeComandoDCRM_Linea_Pato" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Linea_Pato_Result)">
+            <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+            <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+            <Parameter Name="espId" Mode="In" Type="Int32" />
+            <Parameter Name="diagId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getDatosTableroDeComandoDCRM_Torta_Pato" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Torta_Pato_Result)">
+            <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+            <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+            <Parameter Name="espId" Mode="In" Type="Int32" />
+            <Parameter Name="diagId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="getListaCMPorEstados_Result">
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="usrId" Nullable="true" />
+          <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="espId" Nullable="true" />
+          <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="Int32" Name="sucId" Nullable="false" />
+          <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+          <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+          <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+          <Property Type="String" Name="EstadoCM" Nullable="false" />
+          <Property Type="String" Name="espNombre" Nullable="true" />
+          <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Ministerios" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Reparticiones" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TieneJM" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="getDatosAgente_Result">
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="String" Name="agtCUIL" Nullable="true" MaxLength="13" />
+          <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" />
+          <Property Type="DateTime" Name="agtFechaNacimiento" Nullable="false" Precision="23" />
+          <Property Type="Byte" Name="agtEdad" Nullable="false" />
+          <Property Type="Int32" Name="tarId" Nullable="false" />
+          <Property Type="String" Name="agtLugarTrabajo" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="agtFechaIngreso" Nullable="false" Precision="23" />
+          <Property Type="String" Name="agtCalle" Nullable="true" MaxLength="80" />
+          <Property Type="Int16" Name="agtCalleNumero" Nullable="true" />
+          <Property Type="String" Name="agtBlock" Nullable="true" MaxLength="5" />
+          <Property Type="String" Name="agtBlockPiso" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="agtBlockDepto" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="agtBarrio" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="agtManzana" Nullable="true" MaxLength="6" />
+          <Property Type="String" Name="agtSector" Nullable="true" MaxLength="5" />
+          <Property Type="Int16" Name="agtCodigoPostal" Nullable="true" />
+          <Property Type="Int32" Name="locId" Nullable="true" />
+          <Property Type="Binary" Name="agtFoto" Nullable="true" MaxLength="Max" />
+          <Property Type="Boolean" Name="agtOrigenInfOSP" Nullable="false" />
+          <Property Type="Int32" Name="Edad" Nullable="true" />
+          <Property Type="String" Name="EstadoCivil" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Tarea" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="getDatosAgenteGrupoFamiliar_Result">
+          <Property Type="Int32" Name="agtfId" Nullable="false" />
+          <Property Type="String" Name="agtfApellidoyNombre" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="agtfDNI" Nullable="false" />
+          <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="String" Name="Vinculo" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="getDatosAgenteReparticiones_Result">
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="Int32" Name="repId" Nullable="false" />
+          <Property Type="String" Name="repCodigo" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="repNombre" Nullable="false" MaxLength="80" />
+          <Property Type="String" Name="repCorreo" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="repCodigoNew" Nullable="true" MaxLength="6" />
+          <Property Type="Int32" Name="minId" Nullable="false" />
+          <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" />
+        </ComplexType>
+        <ComplexType Name="getListaEspecialidades_Result">
+          <Property Type="Int32" Name="espId" Nullable="false" />
+          <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="espDescripcion" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="espPermiteOtraEspecialidad" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="MensajeDeProceso" >
+          <Property Type="Boolean" Name="IsValid" Nullable="false" />
+          <Property Type="String" Name="Mensaje" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="getBusquedaAgentes_Result" >
+          <Property Type="Int64" Name="agtId" Nullable="false" />
+          <Property Type="String" Name="agtDNI" Nullable="false" />
+          <Property Type="String" Name="agtApellidoyNombre" Nullable="false" />
+          <Property Type="String" Name="agtLugarDeTrabajo" Nullable="false" />
+          <Property Type="String" Name="agtDomicilio" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="getBusquedaAgenteByDocumento_Result">
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="agtDomicilio" Nullable="true" MaxLength="168" />
+        </ComplexType>
+        <ComplexType Name="getCartaMedicaByAgente_Result" >
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="cmedNumero" Nullable="false" />
+          <Property Type="DateTime" Name="cmedFecha" Nullable="false" />
+          <Property Type="Int64" Name="turId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="getListaCMGestion_Result">
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="usrId" Nullable="true" />
+          <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="espId" Nullable="true" />
+          <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="Int32" Name="sucId" Nullable="false" />
+          <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+          <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+          <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+          <Property Type="String" Name="EstadoCM" Nullable="false" />
+          <Property Type="String" Name="espNombre" Nullable="true" />
+          <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Ministerios" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Reparticiones" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="licCantidad" Nullable="false" />
+          <Property Type="String" Name="Articulo" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="getDatosEspecialidades_Result">
+          <Property Type="Int32" Name="espId" Nullable="false" />
+          <Property Type="String" Name="espNombre" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="getDatosTiposJuntaMedica_Result">
+          <Property Type="Int16" Name="tjId" Nullable="false" />
+          <Property Type="String" Name="tjDescripcion" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="getListadoJuntasMedicas_Result">
+          <Property Type="Int64" Name="turId" Nullable="false" />
+          <Property Type="DateTime" Name="turFecha" Nullable="false" Precision="23" />
+          <Property Type="Int16" Name="tjId" Nullable="false" />
+          <Property Type="String" Name="tjDescripcion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="agtId" Nullable="true" />
+          <Property Type="String" Name="agtApellidoYNombre" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="String" Name="agtCUIL" Nullable="true" MaxLength="13" />
+          <Property Type="String" Name="turResultadoJM" Nullable="true" />
+          <Property Type="String" Name="turEstado" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="tipoDescripcion" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="turEstadoFecha" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="usrId" Nullable="false" />
+          <Property Type="String" Name="usrUsuario" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="usrNombre" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="usrApellido" Nullable="false" MaxLength="20" />
+          <Property Type="Boolean" Name="turEsSobreTurno" Nullable="false" />
+          <Property Type="Int32" Name="CantidadMedicos" Nullable="true" />
+          <Property Type="Int32" Name="CantidadEspecialidades" Nullable="true" />
+          <Property Type="String" Name="Especialidades" Nullable="true" />
+          <Property Type="String" Name="Medicos" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="getListaMedicos_Result">
+          <Property Type="Int32" Name="medId" Nullable="false" />
+          <Property Type="String" Name="medApellidoyNombre" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="medDNI" Nullable="false" />
+          <Property Type="Int32" Name="medMatricula" Nullable="false" />
+          <Property Type="Int32" Name="espId" Nullable="false" />
+          <Property Type="Int32" Name="usrId" Nullable="true" />
+          <Property Type="Int16" Name="medTopeDiasLicencia" Nullable="true" />
+          <Property Type="String" Name="medConsultorio" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="getJuntaMedicaByAgente_Result">
+          <Property Type="Int64" Name="turId" Nullable="false" />
+          <Property Type="DateTime" Name="turFecha" Nullable="false" Precision="23" />
+          <Property Type="Int16" Name="tjId" Nullable="false" />
+          <Property Type="Int32" Name="agtId" Nullable="true" />
+          <Property Type="String" Name="turResultadoJM" Nullable="true" />
+          <Property Type="String" Name="turEstado" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="turEstadoFecha" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="usrId" Nullable="false" />
+          <Property Type="Boolean" Name="turEsSobreTurno" Nullable="false" />
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="getListaCMGestionFiltroEspecial_Result">
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="cmedFecha" Nullable="true" Precision="23" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="usrId" Nullable="true" />
+          <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="espId" Nullable="true" />
+          <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="Int32" Name="sucId" Nullable="false" />
+          <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+          <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+          <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+          <Property Type="String" Name="EstadoCM" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="espNombre" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Ministerios" Nullable="true" />
+          <Property Type="String" Name="Reparticiones" Nullable="true" />
+          <Property Type="Int32" Name="licCantidad" Nullable="false" />
+          <Property Type="String" Name="Articulo" Nullable="false" MaxLength="103" />
+        </ComplexType>
+        <ComplexType Name="getListaDesplegableMinisterios_Result">
+          <Property Type="Int32" Name="minId" Nullable="false" />
+          <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" />
+        </ComplexType>
+        <EntityType Name="catAgente">
+          <Key>
+            <PropertyRef Name="agtId" />
+          </Key>
+          <Property Type="Int32" Name="agtId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="agtDNI" Nullable="false" />
+          <Property Type="String" Name="agtCUIL" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Type="DateTime" Name="agtFechaNacimiento" Nullable="false" Precision="3" />
+          <Property Type="Byte" Name="agtEdad" Nullable="false" />
+          <Property Type="Int32" Name="tarId" Nullable="false" />
+          <Property Type="String" Name="agtLugarTrabajo" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="agtFechaIngreso" Nullable="false" Precision="3" />
+          <Property Type="String" Name="agtCalle" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="agtCalleNumero" />
+          <Property Type="String" Name="agtBlock" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtBlockPiso" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtBlockDepto" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtBarrio" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtManzana" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtSector" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="agtCodigoPostal" />
+          <Property Type="Int32" Name="locId" />
+          <Property Type="Boolean" Name="agtOrigenInfOSP" Nullable="false" />
+          <Property Type="String" Name="agtFoto" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtSexo" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="agtFuma" />
+          <Property Type="Boolean" Name="agtHTA" />
+          <Property Type="Boolean" Name="agtColesterol" />
+          <Property Type="Boolean" Name="agtDiabetes" />
+          <Property Type="Boolean" Name="agtActividadFisica" />
+          <Property Type="Boolean" Name="agtAlergias" />
+          <Property Type="Decimal" Name="agtPeso" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="agtTalla" Precision="18" Scale="2" />
+          <Property Type="String" Name="agtTelefonoFijo" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtTelefonoMovil" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtCorreoElectronico" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catLocalidad" Relationship="efAccesoADatosJMModel.FK_catAgente_catLocalidad" FromRole="catAgente" ToRole="catLocalidad" />
+          <NavigationProperty Name="catTarea" Relationship="efAccesoADatosJMModel.FK_catAgente_catTarea" FromRole="catAgente" ToRole="catTarea" />
+          <NavigationProperty Name="ospEstadoCivil" Relationship="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil" FromRole="catAgente" ToRole="ospEstadoCivil" />
+          <NavigationProperty Name="catAgenteGrupoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente" FromRole="catAgente" ToRole="catAgenteGrupoFamiliar" />
+          <Property Type="String" Name="agtDomicilioReferencia" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtApellido" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="agtNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catAgenteReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente" FromRole="catAgente" ToRole="catAgenteReparticion" />
+        </EntityType>
+        <EntityType Name="catAgenteGrupoFamiliar">
+          <Key>
+            <PropertyRef Name="agtfId" />
+          </Key>
+          <Property Type="Int32" Name="agtfId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="agtfApellidoyNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="agtfDNI" Nullable="false" />
+          <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente" FromRole="catAgenteGrupoFamiliar" ToRole="catAgente" />
+          <NavigationProperty Name="ospVinculoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" FromRole="catAgenteGrupoFamiliar" ToRole="ospVinculoFamiliar" />
+        </EntityType>
+        <EntityType Name="CatArticulos">
+          <Key>
+            <PropertyRef Name="artId" />
+          </Key>
+          <Property Type="Int32" Name="artId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="artCodigo" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="artNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="artObservaciones" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="artTipoLicencia" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Type="Int32" Name="artTopeDias" Nullable="false" />
+          <Property Type="Boolean" Name="artControl" Nullable="false" />
+          <Property Type="Boolean" Name="artConfirmaAlta" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CatCambioEstado">
+          <Key>
+            <PropertyRef Name="caesId" />
+          </Key>
+          <Property Type="Int16" Name="caesId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="caesCodigo" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="caesDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CatCiudad">
+          <Key>
+            <PropertyRef Name="cddId" />
+          </Key>
+          <Property Type="Int32" Name="cddId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="cddNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="prvId" Nullable="false" />
+          <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catCiudad_catProvincia" FromRole="CatCiudad" ToRole="CatProvincia" />
+        </EntityType>
+        <EntityType Name="catDepartamento">
+          <Key>
+            <PropertyRef Name="depId" />
+          </Key>
+          <Property Type="Int32" Name="depId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="depNombre" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="prvId" Nullable="false" />
+          <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia" FromRole="catDepartamento" ToRole="CatProvincia" />
+          <NavigationProperty Name="catLocalidad" Relationship="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento" FromRole="catDepartamento" ToRole="catLocalidad" />
+        </EntityType>
+        <EntityType Name="CatDivision">
+          <Key>
+            <PropertyRef Name="DivId" />
+          </Key>
+          <Property Type="Int32" Name="DivId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="DivNombre" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DivObservaciones" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="estEstado" MaxLength="2" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="catLocalidad">
+          <Key>
+            <PropertyRef Name="locId" />
+          </Key>
+          <Property Type="Int32" Name="locId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="locNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="depId" Nullable="false" />
+          <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_catLocalidad" FromRole="catLocalidad" ToRole="catAgente" />
+          <NavigationProperty Name="catDepartamento" Relationship="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento" FromRole="catLocalidad" ToRole="catDepartamento" />
+        </EntityType>
+        <EntityType Name="catMinisterio">
+          <Key>
+            <PropertyRef Name="minId" />
+          </Key>
+          <Property Type="Int32" Name="minId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catReparticion" Relationship="efAccesoADatosJMModel.FK_catReparticion_catMinisterio" FromRole="catMinisterio" ToRole="catReparticion" />
+        </EntityType>
+        <EntityType Name="catMotivo">
+          <Key>
+            <PropertyRef Name="motId" />
+          </Key>
+          <Property Type="Int32" Name="motId" Nullable="false" />
+          <Property Type="String" Name="motNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CatPais">
+          <Key>
+            <PropertyRef Name="paisId" />
+          </Key>
+          <Property Type="Int32" Name="paisId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="paisNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catProvincia_catPais" FromRole="CatPais" ToRole="CatProvincia" />
+        </EntityType>
+        <EntityType Name="CatProvincia">
+          <Key>
+            <PropertyRef Name="prvId" />
+          </Key>
+          <Property Type="Int32" Name="prvId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="prvNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="paisId" Nullable="false" />
+          <NavigationProperty Name="CatCiudad" Relationship="efAccesoADatosJMModel.FK_catCiudad_catProvincia" FromRole="CatProvincia" ToRole="CatCiudad" />
+          <NavigationProperty Name="catDepartamento" Relationship="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia" FromRole="CatProvincia" ToRole="catDepartamento" />
+          <NavigationProperty Name="CatPais" Relationship="efAccesoADatosJMModel.FK_catProvincia_catPais" FromRole="CatProvincia" ToRole="CatPais" />
+        </EntityType>
+        <EntityType Name="catReparticion">
+          <Key>
+            <PropertyRef Name="repId" />
+          </Key>
+          <Property Type="Int32" Name="repId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="repCodigo" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Type="String" Name="repNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="repCorreo" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="minId" />
+          <Property Type="String" Name="repCodigoNew" MaxLength="6" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="catMinisterio" Relationship="efAccesoADatosJMModel.FK_catReparticion_catMinisterio" FromRole="catReparticion" ToRole="catMinisterio" />
+          <NavigationProperty Name="catAgenteReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion" FromRole="catReparticion" ToRole="catAgenteReparticion" />
+        </EntityType>
+        <EntityType Name="catTarea">
+          <Key>
+            <PropertyRef Name="tarId" />
+          </Key>
+          <Property Type="Int32" Name="tarId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="tarDescripcion" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_catTarea" FromRole="catTarea" ToRole="catAgente" />
+        </EntityType>
+        <EntityType Name="ospEstadoCivil">
+          <Key>
+            <PropertyRef Name="ospeId" />
+          </Key>
+          <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Type="String" Name="ospeDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil" FromRole="ospEstadoCivil" ToRole="catAgente" />
+        </EntityType>
+        <EntityType Name="ospVinculoFamiliar">
+          <Key>
+            <PropertyRef Name="ospvId" />
+          </Key>
+          <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Type="String" Name="ospvDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catAgenteGrupoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" FromRole="ospVinculoFamiliar" ToRole="catAgenteGrupoFamiliar" />
+        </EntityType>
+        <Association Name="FK_catAgente_catLocalidad">
+          <End Type="efAccesoADatosJMModel.catLocalidad" Role="catLocalidad" Multiplicity="0..1" />
+          <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catLocalidad">
+              <PropertyRef Name="locId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="locId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgente_catTarea">
+          <End Type="efAccesoADatosJMModel.catTarea" Role="catTarea" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catTarea">
+              <PropertyRef Name="tarId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="tarId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgente_ospEstadoCivil">
+          <End Type="efAccesoADatosJMModel.ospEstadoCivil" Role="ospEstadoCivil" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ospEstadoCivil">
+              <PropertyRef Name="ospeId" />
+            </Principal>
+            <Dependent Role="catAgente">
+              <PropertyRef Name="ospeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteGrupoFamiliar_catAgente">
+          <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="efAccesoADatosJMModel.catAgenteGrupoFamiliar" Role="catAgenteGrupoFamiliar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catAgente">
+              <PropertyRef Name="agtId" />
+            </Principal>
+            <Dependent Role="catAgenteGrupoFamiliar">
+              <PropertyRef Name="agtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+          <End Type="efAccesoADatosJMModel.ospVinculoFamiliar" Role="ospVinculoFamiliar" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catAgenteGrupoFamiliar" Role="catAgenteGrupoFamiliar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ospVinculoFamiliar">
+              <PropertyRef Name="ospvId" />
+            </Principal>
+            <Dependent Role="catAgenteGrupoFamiliar">
+              <PropertyRef Name="ospvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catCiudad_catProvincia">
+          <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="efAccesoADatosJMModel.CatCiudad" Role="CatCiudad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatProvincia">
+              <PropertyRef Name="prvId" />
+            </Principal>
+            <Dependent Role="CatCiudad">
+              <PropertyRef Name="prvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catDepartamento_CatProvincia">
+          <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catDepartamento" Role="catDepartamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatProvincia">
+              <PropertyRef Name="prvId" />
+            </Principal>
+            <Dependent Role="catDepartamento">
+              <PropertyRef Name="prvId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catLocalidad_catDepartamento">
+          <End Type="efAccesoADatosJMModel.catDepartamento" Role="catDepartamento" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catLocalidad" Role="catLocalidad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catDepartamento">
+              <PropertyRef Name="depId" />
+            </Principal>
+            <Dependent Role="catLocalidad">
+              <PropertyRef Name="depId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catReparticion_catMinisterio">
+          <End Type="efAccesoADatosJMModel.catMinisterio" Role="catMinisterio" Multiplicity="0..1" />
+          <End Type="efAccesoADatosJMModel.catReparticion" Role="catReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catMinisterio">
+              <PropertyRef Name="minId" />
+            </Principal>
+            <Dependent Role="catReparticion">
+              <PropertyRef Name="minId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catProvincia_catPais">
+          <End Type="efAccesoADatosJMModel.CatPais" Role="CatPais" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CatPais">
+              <PropertyRef Name="paisId" />
+            </Principal>
+            <Dependent Role="CatProvincia">
+              <PropertyRef Name="paisId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="catCalle">
+          <Key>
+            <PropertyRef Name="callId" />
+          </Key>
+          <Property Type="Int32" Name="callId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="callNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="catAgenteReparticion">
+          <Key>
+            <PropertyRef Name="agtrId" />
+          </Key>
+          <Property Type="Int32" Name="agtrId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="agtId" Nullable="false" />
+          <Property Type="Int32" Name="repId" Nullable="false" />
+          <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente" FromRole="catAgenteReparticion" ToRole="catAgente" />
+          <NavigationProperty Name="catReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion" FromRole="catAgenteReparticion" ToRole="catReparticion" />
+        </EntityType>
+        <Association Name="FK_catAgenteReparticion_catAgente">
+          <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catAgenteReparticion" Role="catAgenteReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catAgente">
+              <PropertyRef Name="agtId" />
+            </Principal>
+            <Dependent Role="catAgenteReparticion">
+              <PropertyRef Name="agtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catAgenteReparticion_catReparticion">
+          <End Type="efAccesoADatosJMModel.catReparticion" Role="catReparticion" Multiplicity="1" />
+          <End Type="efAccesoADatosJMModel.catAgenteReparticion" Role="catAgenteReparticion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catReparticion">
+              <PropertyRef Name="repId" />
+            </Principal>
+            <Dependent Role="catAgenteReparticion">
+              <PropertyRef Name="repId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="getEstadisticaDCRM_Result">
+          <Property Type="String" Name="Medico" Nullable="true" MaxLength="41" />
+          <Property Type="String" Name="EspecialidadMedico" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="EspecialidadCM" Nullable="false" MaxLength="20" />
+          <Property Type="DateTime" Name="Fecha" Nullable="true" />
+          <Property Type="Int32" Name="MinimoTiempoDeEspera" Nullable="true" />
+          <Property Type="Int32" Name="PromedioTiempoDeEspera" Nullable="true" />
+          <Property Type="Int32" Name="MaximoTiempoDeEspera" Nullable="true" />
+          <Property Type="Int32" Name="MinimoTiempoDeAtencion" Nullable="true" />
+          <Property Type="Int32" Name="PromedioTiempoDeAtencion" Nullable="true" />
+          <Property Type="Int32" Name="MaximoTiempoDeAtencion" Nullable="true" />
+          <Property Type="Int32" Name="MinimoTiempoOcioso" Nullable="true" />
+          <Property Type="Int32" Name="PromedioTiempoOcioso" Nullable="true" />
+          <Property Type="Int32" Name="MaximoTiempoOcioso" Nullable="true" />
+          <Property Type="Int32" Name="CantidadDeAtenciones" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="getDatosTableroDeComandoDCRM_Result">
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+          <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Medico" Nullable="true" MaxLength="41" />
+          <Property Type="Int32" Name="UsuarioMedico" Nullable="true" />
+          <Property Type="DateTime" Name="Emitida" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EnEspera" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ListaParaAtencion" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="AtencionMedica" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="Atendido" Nullable="true" Precision="23" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="EspecialidadMedico" Nullable="false" MaxLength="20" />
+          <Property Type="DateTime" Name="Ocio" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="Fecha" Nullable="true" />
+          <Property Type="Int32" Name="TiempoDeEspera" Nullable="true" />
+          <Property Type="Int32" Name="TiempoDeAtencion" Nullable="true" />
+          <Property Type="Int32" Name="TiempoOcioso" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="CatEspecialidad">
+          <Key>
+            <PropertyRef Name="espId" />
+          </Key>
+          <Property Type="Int32" Name="espId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="espDescripcion" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="espPermiteOtraEspecialidad" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="getDatosTableroDeComandoDCRM_Top10_Result">
+          <Property Type="String" Name="Especialidad" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="espId" Nullable="false" />
+          <Property Type="Int32" Name="diagId" Nullable="false" />
+          <Property Type="String" Name="Cantidad" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="diagDescripcion" Nullable="false" MaxLength="250" />
+        </ComplexType>
+        <EntityType Name="gesCartaMedicaUltimoEstado">
+          <Key>
+            <PropertyRef Name="cmedId" />
+          </Key>
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="usrId" />
+          <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="getDatosTableroDeComandoDCRM_Top5Espera_Result">
+          <Property Type="Int64" Name="cmedId" Nullable="false" />
+          <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="Minutos" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="getDatosTableroDeComandoDCRM_Linea_Pato_Result">
+          <Property Type="String" Name="Periodo" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="Cantidad" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="getDatosTableroDeComandoDCRM_Torta_Pato_Result">
+          <Property Type="Int32" Name="depId" Nullable="true" />
+          <Property Type="String" Name="depNombre" Nullable="true" MaxLength="60" />
+          <Property Type="Decimal" Name="Promedio" Nullable="true" Precision="10" Scale="3" />
+        </ComplexType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="efAccesoADatosJMModelStoreContainer" CdmEntityContainer="efAccesoADatosJMJuntaMedicaEntities">
+          <FunctionImportMapping FunctionImportName="getListaCMPorEstados" FunctionName="efAccesoADatosJMModel.Store.getListaCMPorEstados">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMPorEstados_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+                <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="sucId" ColumnName="sucId" />
+                <ScalarProperty Name="estHora" ColumnName="estHora" />
+                <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+                <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+                <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosAgente" FunctionName="efAccesoADatosJMModel.Store.getDatosAgente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgente_Result">
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+                <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+                <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+                <ScalarProperty Name="agtFechaNacimiento" ColumnName="agtFechaNacimiento" />
+                <ScalarProperty Name="agtEdad" ColumnName="agtEdad" />
+                <ScalarProperty Name="tarId" ColumnName="tarId" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="agtFechaIngreso" ColumnName="agtFechaIngreso" />
+                <ScalarProperty Name="agtCalle" ColumnName="agtCalle" />
+                <ScalarProperty Name="agtCalleNumero" ColumnName="agtCalleNumero" />
+                <ScalarProperty Name="agtBlock" ColumnName="agtBlock" />
+                <ScalarProperty Name="agtBlockPiso" ColumnName="agtBlockPiso" />
+                <ScalarProperty Name="agtBlockDepto" ColumnName="agtBlockDepto" />
+                <ScalarProperty Name="agtBarrio" ColumnName="agtBarrio" />
+                <ScalarProperty Name="agtManzana" ColumnName="agtManzana" />
+                <ScalarProperty Name="agtSector" ColumnName="agtSector" />
+                <ScalarProperty Name="agtCodigoPostal" ColumnName="agtCodigoPostal" />
+                <ScalarProperty Name="locId" ColumnName="locId" />
+                <ScalarProperty Name="agtFoto" ColumnName="agtFoto" />
+                <ScalarProperty Name="agtOrigenInfOSP" ColumnName="agtOrigenInfOSP" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
+                <ScalarProperty Name="Tarea" ColumnName="Tarea" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosAgenteGrupoFamiliar" FunctionName="efAccesoADatosJMModel.Store.getDatosAgenteGrupoFamiliar">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgenteGrupoFamiliar_Result">
+                <ScalarProperty Name="agtfId" ColumnName="agtfId" />
+                <ScalarProperty Name="agtfApellidoyNombre" ColumnName="agtfApellidoyNombre" />
+                <ScalarProperty Name="agtfDNI" ColumnName="agtfDNI" />
+                <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="Vinculo" ColumnName="Vinculo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosAgenteReparticiones" FunctionName="efAccesoADatosJMModel.Store.getDatosAgenteReparticiones">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgenteReparticiones_Result">
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="repId" ColumnName="repId" />
+                <ScalarProperty Name="repCodigo" ColumnName="repCodigo" />
+                <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+                <ScalarProperty Name="repCorreo" ColumnName="repCorreo" />
+                <ScalarProperty Name="repCodigoNew" ColumnName="repCodigoNew" />
+                <ScalarProperty Name="minId" ColumnName="minId" />
+                <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListaEspecialidades" FunctionName="efAccesoADatosJMModel.Store.getListaEspecialidades">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaEspecialidades_Result">
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="espDescripcion" ColumnName="espDescripcion" />
+                <ScalarProperty Name="espPermiteOtraEspecialidad" ColumnName="espPermiteOtraEspecialidad" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="setCartaMedica" FunctionName="efAccesoADatosJMModel.Store.setCartaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getBusquedaAgenteByDocumento" FunctionName="efAccesoADatosJMModel.Store.getBusquedaAgenteByDocumento">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getBusquedaAgenteByDocumento_Result">
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="agtDomicilio" ColumnName="agtDomicilio" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getCartaMedicaByAgente" FunctionName="efAccesoADatosJMModel.Store.getCartaMedicaByAgente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getCartaMedicaByAgente_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListaCMGestion" FunctionName="efAccesoADatosJMModel.Store.getListaCMGestion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestion_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+                <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="sucId" ColumnName="sucId" />
+                <ScalarProperty Name="estHora" ColumnName="estHora" />
+                <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+                <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+                <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+                <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+                <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+                <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+                <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosEspecialidades" FunctionName="efAccesoADatosJMModel.Store.getDatosEspecialidades">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosEspecialidades_Result">
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTiposJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.getDatosTiposJuntaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTiposJuntaMedica_Result">
+                <ScalarProperty Name="tjId" ColumnName="tjId" />
+                <ScalarProperty Name="tjDescripcion" ColumnName="tjDescripcion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="setJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setJuntaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListadoJuntasMedicas" FunctionName="efAccesoADatosJMModel.Store.getListadoJuntasMedicas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListadoJuntasMedicas_Result">
+                <ScalarProperty Name="turId" ColumnName="turId" />
+                <ScalarProperty Name="turFecha" ColumnName="turFecha" />
+                <ScalarProperty Name="tjId" ColumnName="tjId" />
+                <ScalarProperty Name="tjDescripcion" ColumnName="tjDescripcion" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="agtApellidoYNombre" ColumnName="agtApellidoYNombre" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+                <ScalarProperty Name="turResultadoJM" ColumnName="turResultadoJM" />
+                <ScalarProperty Name="turEstado" ColumnName="turEstado" />
+                <ScalarProperty Name="tipoDescripcion" ColumnName="tipoDescripcion" />
+                <ScalarProperty Name="turEstadoFecha" ColumnName="turEstadoFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="usrUsuario" ColumnName="usrUsuario" />
+                <ScalarProperty Name="usrNombre" ColumnName="usrNombre" />
+                <ScalarProperty Name="usrApellido" ColumnName="usrApellido" />
+                <ScalarProperty Name="turEsSobreTurno" ColumnName="turEsSobreTurno" />
+                <ScalarProperty Name="CantidadMedicos" ColumnName="CantidadMedicos" />
+                <ScalarProperty Name="CantidadEspecialidades" ColumnName="CantidadEspecialidades" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListaMedicos" FunctionName="efAccesoADatosJMModel.Store.getListaMedicos">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaMedicos_Result">
+                <ScalarProperty Name="medId" ColumnName="medId" />
+                <ScalarProperty Name="medApellidoyNombre" ColumnName="medApellidoyNombre" />
+                <ScalarProperty Name="medDNI" ColumnName="medDNI" />
+                <ScalarProperty Name="medMatricula" ColumnName="medMatricula" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="medTopeDiasLicencia" ColumnName="medTopeDiasLicencia" />
+                <ScalarProperty Name="medConsultorio" ColumnName="medConsultorio" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="setMedicosJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setMedicosJuntaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="setResultadoJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setResultadoJuntaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getJuntaMedicaByAgente" FunctionName="efAccesoADatosJMModel.Store.getJuntaMedicaByAgente">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getJuntaMedicaByAgente_Result">
+                <ScalarProperty Name="turId" ColumnName="turId" />
+                <ScalarProperty Name="turFecha" ColumnName="turFecha" />
+                <ScalarProperty Name="tjId" ColumnName="tjId" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="turResultadoJM" ColumnName="turResultadoJM" />
+                <ScalarProperty Name="turEstado" ColumnName="turEstado" />
+                <ScalarProperty Name="turEstadoFecha" ColumnName="turEstadoFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="turEsSobreTurno" ColumnName="turEsSobreTurno" />
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="setAnulacionJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setAnulacionJuntaMedica">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getBusquedaCMByDocumentoByFecha" FunctionName="efAccesoADatosJMModel.Store.getBusquedaCMByDocumentoByFecha">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestion_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+                <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="sucId" ColumnName="sucId" />
+                <ScalarProperty Name="estHora" ColumnName="estHora" />
+                <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+                <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+                <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+                <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+                <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+                <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+                <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListaCMGestionFiltroEspecial" FunctionName="efAccesoADatosJMModel.Store.getListaCMGestionFiltroEspecial">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestionFiltroEspecial_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+                <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="sucId" ColumnName="sucId" />
+                <ScalarProperty Name="estHora" ColumnName="estHora" />
+                <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+                <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+                <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+                <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+                <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+                <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+                <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getListaDesplegableMinisterios" FunctionName="efAccesoADatosJMModel.Store.getListaDesplegableMinisterios">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaDesplegableMinisterios_Result">
+                <ScalarProperty Name="minId" ColumnName="minId" />
+                <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="catAgente">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgente">
+              <MappingFragment StoreEntitySet="catAgente">
+                <ScalarProperty Name="agtNombre" ColumnName="agtNombre" />
+                <ScalarProperty Name="agtApellido" ColumnName="agtApellido" />
+                <ScalarProperty Name="agtDomicilioReferencia" ColumnName="agtDomicilioReferencia" />
+                <ScalarProperty Name="agtCorreoElectronico" ColumnName="agtCorreoElectronico" />
+                <ScalarProperty Name="agtTelefonoMovil" ColumnName="agtTelefonoMovil" />
+                <ScalarProperty Name="agtTelefonoFijo" ColumnName="agtTelefonoFijo" />
+                <ScalarProperty Name="agtTalla" ColumnName="agtTalla" />
+                <ScalarProperty Name="agtPeso" ColumnName="agtPeso" />
+                <ScalarProperty Name="agtAlergias" ColumnName="agtAlergias" />
+                <ScalarProperty Name="agtActividadFisica" ColumnName="agtActividadFisica" />
+                <ScalarProperty Name="agtDiabetes" ColumnName="agtDiabetes" />
+                <ScalarProperty Name="agtColesterol" ColumnName="agtColesterol" />
+                <ScalarProperty Name="agtHTA" ColumnName="agtHTA" />
+                <ScalarProperty Name="agtFuma" ColumnName="agtFuma" />
+                <ScalarProperty Name="agtSexo" ColumnName="agtSexo" />
+                <ScalarProperty Name="agtFoto" ColumnName="agtFoto" />
+                <ScalarProperty Name="agtOrigenInfOSP" ColumnName="agtOrigenInfOSP" />
+                <ScalarProperty Name="locId" ColumnName="locId" />
+                <ScalarProperty Name="agtCodigoPostal" ColumnName="agtCodigoPostal" />
+                <ScalarProperty Name="agtSector" ColumnName="agtSector" />
+                <ScalarProperty Name="agtManzana" ColumnName="agtManzana" />
+                <ScalarProperty Name="agtBarrio" ColumnName="agtBarrio" />
+                <ScalarProperty Name="agtBlockDepto" ColumnName="agtBlockDepto" />
+                <ScalarProperty Name="agtBlockPiso" ColumnName="agtBlockPiso" />
+                <ScalarProperty Name="agtBlock" ColumnName="agtBlock" />
+                <ScalarProperty Name="agtCalleNumero" ColumnName="agtCalleNumero" />
+                <ScalarProperty Name="agtCalle" ColumnName="agtCalle" />
+                <ScalarProperty Name="agtFechaIngreso" ColumnName="agtFechaIngreso" />
+                <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+                <ScalarProperty Name="tarId" ColumnName="tarId" />
+                <ScalarProperty Name="agtEdad" ColumnName="agtEdad" />
+                <ScalarProperty Name="agtFechaNacimiento" ColumnName="agtFechaNacimiento" />
+                <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+                <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+                <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+                <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catAgenteGrupoFamiliar">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgenteGrupoFamiliar">
+              <MappingFragment StoreEntitySet="catAgenteGrupoFamiliar">
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+                <ScalarProperty Name="agtfDNI" ColumnName="agtfDNI" />
+                <ScalarProperty Name="agtfApellidoyNombre" ColumnName="agtfApellidoyNombre" />
+                <ScalarProperty Name="agtfId" ColumnName="agtfId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatArticulos">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatArticulos">
+              <MappingFragment StoreEntitySet="CatArticulos">
+                <ScalarProperty Name="artConfirmaAlta" ColumnName="artConfirmaAlta" />
+                <ScalarProperty Name="artControl" ColumnName="artControl" />
+                <ScalarProperty Name="artTopeDias" ColumnName="artTopeDias" />
+                <ScalarProperty Name="artTipoLicencia" ColumnName="artTipoLicencia" />
+                <ScalarProperty Name="artObservaciones" ColumnName="artObservaciones" />
+                <ScalarProperty Name="artNombre" ColumnName="artNombre" />
+                <ScalarProperty Name="artCodigo" ColumnName="artCodigo" />
+                <ScalarProperty Name="artId" ColumnName="artId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatCambioEstado">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatCambioEstado">
+              <MappingFragment StoreEntitySet="CatCambioEstado">
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="caesDescripcion" ColumnName="caesDescripcion" />
+                <ScalarProperty Name="caesCodigo" ColumnName="caesCodigo" />
+                <ScalarProperty Name="caesId" ColumnName="caesId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatCiudad">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatCiudad">
+              <MappingFragment StoreEntitySet="CatCiudad">
+                <ScalarProperty Name="prvId" ColumnName="prvId" />
+                <ScalarProperty Name="cddNombre" ColumnName="cddNombre" />
+                <ScalarProperty Name="cddId" ColumnName="cddId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catDepartamento">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catDepartamento">
+              <MappingFragment StoreEntitySet="catDepartamento">
+                <ScalarProperty Name="prvId" ColumnName="prvId" />
+                <ScalarProperty Name="depNombre" ColumnName="depNombre" />
+                <ScalarProperty Name="depId" ColumnName="depId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatDivision">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatDivision">
+              <MappingFragment StoreEntitySet="CatDivision">
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="DivObservaciones" ColumnName="DivObservaciones" />
+                <ScalarProperty Name="DivNombre" ColumnName="DivNombre" />
+                <ScalarProperty Name="DivId" ColumnName="DivId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catLocalidad">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catLocalidad">
+              <MappingFragment StoreEntitySet="catLocalidad">
+                <ScalarProperty Name="depId" ColumnName="depId" />
+                <ScalarProperty Name="locNombre" ColumnName="locNombre" />
+                <ScalarProperty Name="locId" ColumnName="locId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catMinisterio">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catMinisterio">
+              <MappingFragment StoreEntitySet="catMinisterio">
+                <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+                <ScalarProperty Name="minId" ColumnName="minId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catMotivo">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catMotivo">
+              <MappingFragment StoreEntitySet="catMotivo">
+                <ScalarProperty Name="motNombre" ColumnName="motNombre" />
+                <ScalarProperty Name="motId" ColumnName="motId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatPais">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatPais">
+              <MappingFragment StoreEntitySet="CatPais">
+                <ScalarProperty Name="paisNombre" ColumnName="paisNombre" />
+                <ScalarProperty Name="paisId" ColumnName="paisId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CatProvincia">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatProvincia">
+              <MappingFragment StoreEntitySet="CatProvincia">
+                <ScalarProperty Name="paisId" ColumnName="paisId" />
+                <ScalarProperty Name="prvNombre" ColumnName="prvNombre" />
+                <ScalarProperty Name="prvId" ColumnName="prvId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catReparticion">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catReparticion">
+              <MappingFragment StoreEntitySet="catReparticion">
+                <ScalarProperty Name="repCodigoNew" ColumnName="repCodigoNew" />
+                <ScalarProperty Name="minId" ColumnName="minId" />
+                <ScalarProperty Name="repCorreo" ColumnName="repCorreo" />
+                <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+                <ScalarProperty Name="repCodigo" ColumnName="repCodigo" />
+                <ScalarProperty Name="repId" ColumnName="repId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catTarea">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catTarea">
+              <MappingFragment StoreEntitySet="catTarea">
+                <ScalarProperty Name="tarDescripcion" ColumnName="tarDescripcion" />
+                <ScalarProperty Name="tarId" ColumnName="tarId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ospEstadoCivil">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.ospEstadoCivil">
+              <MappingFragment StoreEntitySet="ospEstadoCivil">
+                <ScalarProperty Name="ospeDescripcion" ColumnName="ospeDescripcion" />
+                <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ospVinculoFamiliar">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.ospVinculoFamiliar">
+              <MappingFragment StoreEntitySet="ospVinculoFamiliar">
+                <ScalarProperty Name="ospvDescripcion" ColumnName="ospvDescripcion" />
+                <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catCalle">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catCalle">
+              <MappingFragment StoreEntitySet="catCalle">
+                <ScalarProperty Name="callNombre" ColumnName="callNombre" />
+                <ScalarProperty Name="callId" ColumnName="callId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catAgenteReparticion">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgenteReparticion">
+              <MappingFragment StoreEntitySet="catAgenteReparticion">
+                <ScalarProperty Name="repId" ColumnName="repId" />
+                <ScalarProperty Name="agtId" ColumnName="agtId" />
+                <ScalarProperty Name="agtrId" ColumnName="agtrId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="getEstadisticaDCRM" FunctionName="efAccesoADatosJMModel.Store.getEstadisticaDCRM" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getEstadisticaDCRM_Result">
+                <ScalarProperty Name="Medico" ColumnName="Medico" />
+                <ScalarProperty Name="EspecialidadMedico" ColumnName="EspecialidadMedico" />
+                <ScalarProperty Name="EspecialidadCM" ColumnName="EspecialidadCM" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="MinimoTiempoDeEspera" ColumnName="MinimoTiempoDeEspera" />
+                <ScalarProperty Name="PromedioTiempoDeEspera" ColumnName="PromedioTiempoDeEspera" />
+                <ScalarProperty Name="MaximoTiempoDeEspera" ColumnName="MaximoTiempoDeEspera" />
+                <ScalarProperty Name="MinimoTiempoDeAtencion" ColumnName="MinimoTiempoDeAtencion" />
+                <ScalarProperty Name="PromedioTiempoDeAtencion" ColumnName="PromedioTiempoDeAtencion" />
+                <ScalarProperty Name="MaximoTiempoDeAtencion" ColumnName="MaximoTiempoDeAtencion" />
+                <ScalarProperty Name="MinimoTiempoOcioso" ColumnName="MinimoTiempoOcioso" />
+                <ScalarProperty Name="PromedioTiempoOcioso" ColumnName="PromedioTiempoOcioso" />
+                <ScalarProperty Name="MaximoTiempoOcioso" ColumnName="MaximoTiempoOcioso" />
+                <ScalarProperty Name="CantidadDeAtenciones" ColumnName="CantidadDeAtenciones" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="Medico" ColumnName="Medico" />
+                <ScalarProperty Name="UsuarioMedico" ColumnName="UsuarioMedico" />
+                <ScalarProperty Name="Emitida" ColumnName="Emitida" />
+                <ScalarProperty Name="EnEspera" ColumnName="EnEspera" />
+                <ScalarProperty Name="ListaParaAtencion" ColumnName="ListaParaAtencion" />
+                <ScalarProperty Name="AtencionMedica" ColumnName="AtencionMedica" />
+                <ScalarProperty Name="Atendido" ColumnName="Atendido" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="EspecialidadMedico" ColumnName="EspecialidadMedico" />
+                <ScalarProperty Name="Ocio" ColumnName="Ocio" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="TiempoDeEspera" ColumnName="TiempoDeEspera" />
+                <ScalarProperty Name="TiempoDeAtencion" ColumnName="TiempoDeAtencion" />
+                <ScalarProperty Name="TiempoOcioso" ColumnName="TiempoOcioso" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="CatEspecialidad">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatEspecialidad">
+              <MappingFragment StoreEntitySet="CatEspecialidad">
+                <ScalarProperty Name="espPermiteOtraEspecialidad" ColumnName="espPermiteOtraEspecialidad" />
+                <ScalarProperty Name="espDescripcion" ColumnName="espDescripcion" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Top10" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Top10">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top10_Result">
+                <ScalarProperty Name="Especialidad" ColumnName="Especialidad" />
+                <ScalarProperty Name="espId" ColumnName="espId" />
+                <ScalarProperty Name="diagId" ColumnName="diagId" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="diagDescripcion" ColumnName="diagDescripcion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="gesCartaMedicaUltimoEstado">
+            <EntityTypeMapping TypeName="efAccesoADatosJMModel.gesCartaMedicaUltimoEstado">
+              <MappingFragment StoreEntitySet="gesCartaMedicaUltimoEstado">
+                <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+                <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Top5Espera" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Top5Espera">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top5Espera_Result">
+                <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+                <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+                <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+                <ScalarProperty Name="Minutos" ColumnName="Minutos" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Linea_Pato" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Linea_Pato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Linea_Pato_Result">
+                <ScalarProperty Name="Periodo" ColumnName="Periodo" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Torta_Pato" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Torta_Pato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Torta_Pato_Result">
+                <ScalarProperty Name="depId" ColumnName="depId" />
+                <ScalarProperty Name="depNombre" ColumnName="depNombre" />
+                <ScalarProperty Name="Promedio" ColumnName="Promedio" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="efAccesoADatosJM" ZoomLevel="85">
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catAgente" Width="1.5" PointX="8.0585378781233619" PointY="12.99137469240994" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catAgenteGrupoFamiliar" Width="1.5" PointX="8.6589303559898081" PointY="14.07299270391138" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatArticulos" Width="1.5" PointX="11.34303911931023" PointY="20.199458995926872" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatCambioEstado" Width="1.5" PointX="2.9586090179898816" PointY="6.0517042456435526" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatCiudad" Width="1.5" PointX="6.3734851192559514" PointY="1.22886492369178" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catDepartamento" Width="1.5" PointX="7.45619142216453" PointY="11.382899379070336" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatDivision" Width="1.5" PointX="10.354473334902187" PointY="4.7409209631108311" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catLocalidad" Width="1.5" PointX="0.29071880145497564" PointY="27.9618999343188" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catMinisterio" Width="1.5" PointX="7.2032840564862282" PointY="3.4606565998218284" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catMotivo" Width="1.5" PointX="3.4432050229251407" PointY="14.316252744903906" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatPais" Width="1.5" PointX="6.7183131401978038" PointY="10.318789755142662" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatProvincia" Width="1.5" PointX="2.6078996782227883" PointY="19.828563371593393" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catReparticion" Width="1.5" PointX="5.9338455190574031" PointY="13.408962002680154" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catTarea" Width="1.5" PointX="7.6829699369533788" PointY="14.339658103110109" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.ospEstadoCivil" Width="1.5" PointX="7.2337400760658728" PointY="16.202857799922516" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.ospVinculoFamiliar" Width="1.5" PointX="0.25747270335325628" PointY="1.0358858560379063" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgente_catLocalidad" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgente_catTarea" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catCiudad_catProvincia" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catReparticion_catMinisterio" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catProvincia_catPais" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catCalle" Width="1.5" PointX="9.6885564689005523" PointY="18.147987672196695" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.catAgenteReparticion" Width="1.5" PointX="10.667826677983546" PointY="17.55078401488754" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente" />
+        <AssociationConnector Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.CatEspecialidad" Width="1.5" PointX="8.625" PointY="25" />
+        <EntityTypeShape EntityType="efAccesoADatosJMModel.gesCartaMedicaUltimoEstado" Width="1.5" PointX="2.192836298697086" PointY="16.479581691548034" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

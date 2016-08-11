@@ -1,0 +1,199 @@
+﻿@model GeDoc.catHCAdjuntoWS
+
+@{ Html.RenderPartial("WaitingCRUD"); }
+
+<script src="@(Url.Content("~/Scripts/dropzone/dropzone.min.js"))" type="text/javascript"></script>
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatHCAdjunto").ready(function () {
+        //Aplicamos algunos estilos
+        $('.t-widget.t-combobox.t-header').attr("style", "vertical-align: middle; width: 310px;");
+        $("#hcadjAccion").attr("style", "display: none;");
+        $("#hcadjpacId").attr("style", "display: none;");
+        $("#hcadjId").attr("style", "display: none;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#hcadjAccion").val() == "Consultar" || $("#hcadjAccion").val() == "Eliminar") {
+            $("#divGridPrincipalcatHCAdjunto").find(":input:visible:enabled").attr("disabled", "disabled");
+        }
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    function onAceptarHCAdjunto() {
+        if ($("#hcadjAccion").val() == "Consultar") {
+            onCancelarHCAdjunto();
+            return;
+        }
+        if (!TieneArchivo && $("#hcadjAccion").val() != "Eliminar") {
+            jAlert("Debe cargar un archivo.", "¡Atención!", function () {
+                //$("form:not(.filter) :input:visible:enabled:first").focus().select();
+                $("#jumbotron").css("border-color", "red");
+            });
+            return;
+        }
+
+        var $form = $('#frmcatHCAdjunto');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatHCAdjunto").data("tGrid").ajaxRequest();
+                    onCancelarHCAdjunto();
+                }
+            }
+        });
+    }
+
+    function onCancelarHCAdjunto() {
+        var windowElement = $('#wcatHCAdjunto').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setHCDocumentacion", "HistoriaClinica", FormMethod.Post, new { id = "frmcatHCAdjunto" }))
+{
+    <div id="divGridPrincipalcatHCAdjunto" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="">
+            Estudios Complementarios
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div id="divSubeArchivos">
+                <label style="vertical-align: baseline;">Archivo:</label>
+                <div id="jumbotron" style="border-color: cornflowerblue; border-style: dashed !important; height: 200px; margin-bottom: 30px;" class="BordeRedondeado dropzone"></div>
+                @{
+                if (Model.hcadjAccion == "Eliminar")
+                    {
+                        <div class="t-overlay t-state-disabled" style="height: 280px;"></div>
+                    }
+                }
+            </div>
+            <div>
+                <label style="vertical-align: baseline;">Observaciones:</label>
+                @Html.TextAreaFor(model => Model.hcadjObservaciones, new {id = "hcadjObservaciones", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 99%;", maxlength = "500", placeholder = "Ingrese un comentario sobre el estudio digitalizado."})
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarHCAdjunto();" title="@(Model.hcadjAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarHCAdjunto();" title="Cancelar" style="@(Model.hcadjAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.hcadjAccion, new { style = "width: 200px; display: none;", id = "hcadjAccion" })
+        @Html.HiddenFor(model => Model.hcadjpacId, new { style = "width: 200px; display: none;", id = "hcadjpacId" })
+        @Html.HiddenFor(model => Model.hcadjId, new { style = "width: 200px; display: none;", id = "hcadjId" })
+        @Html.HiddenFor(model => Model.hcadjArchivo, new { style = "width: 200px; display: none;", id = "hcadjArchivo" })
+    </div>
+}
+
+<style type="text/css">
+    .dz-max-files-reached {
+        background-color: white;
+    }
+</style>
+
+<script>
+    var _Post = GetPathApp("HistoriaClinica/Descargar");
+    var TieneArchivo = false;
+    $("div#jumbotron").dropzone({
+        maxFiles: 1,
+        url: _Post,
+        acceptedFiles: 'image/*, application/pdf',
+        uploadMultiple: false,
+        addRemoveLinks: false,
+        dictMaxFilesExceeded: "No puede agregar más de 1 Archivo",
+        init: function () {
+            if ($("#hcadjAccion").val() != "Agregar") {
+                var thisDropzone = this;
+                if ($("#hcadjArchivo").val() != "") {
+                    TieneArchivo = true;
+                    var mockFile = {
+                        name: $("#hcadjArchivo").val(),
+                        size: 2000,
+                        progress: 100
+                    };
+
+                    // Call the default addedfile event handler
+                    thisDropzone.emit("addedfile", mockFile);
+
+                    var removeButton = Dropzone.createElement("<div style='text-align: center; margin-top: 8px; cursor: pointer;'><div class='t-button'>Quitar archivo</div></div>");
+                    // Capture the Dropzone instance as closure.
+                    var _this = this;
+                    // Listen to the click event
+                    removeButton.addEventListener("click", function (e) {
+                        // Make sure the button click doesn't submit the form:
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Remove the file preview.
+                        _this.removeFile(mockFile);
+                        // If you want to the delete the file on the server as well,
+                        // you can do the AJAX request here.
+                        TieneArchivo = false;
+                    });
+
+                    // Add the button to the file preview element.
+                    mockFile.previewElement.appendChild(removeButton);
+                    $(".dz-size").css("display", "none");
+                    $(".dz-progress").css("display", "none");
+                }
+            }
+            this.on("maxfilesexceeded", function (data) {
+                var res = eval('(' + data.xhr.responseText + ')');
+                //alert('Aquí');
+                //e.preventDefault();
+                //e.stopPropagation();
+            });
+            $(".dz-default.dz-message").attr('style', 'font-family: monospace; font-size: xx-large;');
+            this.on("addedfile", function (file) {
+                // Create the remove button
+                $("#jumbotron").css("border-color", "cornflowerblue");
+                var removeButton = Dropzone.createElement("<div style='text-align: center; margin-top: 8px; cursor: pointer;'><div class='t-button'>Quitar archivo</div></div>");
+                // Capture the Dropzone instance as closure.
+                var _this = this;
+                // Listen to the click event
+                removeButton.addEventListener("click", function (e) {
+                    // Make sure the button click doesn't submit the form:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Remove the file preview.
+                    _this.removeFile(file);
+                    // If you want to the delete the file on the server as well,
+                    // you can do the AJAX request here.
+                    TieneArchivo = false;
+                });
+
+                // Add the button to the file preview element.
+                file.previewElement.appendChild(removeButton);
+                TieneArchivo = true;
+            });
+        }
+    });
+</script>

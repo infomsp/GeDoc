@@ -1,0 +1,147 @@
+﻿@model GeDoc.catHCAduProCronicosWS
+@{
+    ViewBag.Title = "setHistoriaClinicaExamenFisico";
+    ViewBag.eventoOnChange = "onChange";
+}
+
+<script>
+    function onChangeaduCRFecha() {
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorProblemasCronicos").hide("slide");
+    }
+
+    function ValidarfrmHCProblemasCronicos() {
+        $("#divHCMensajeErrorProblemasCronicos").hide("slide");
+
+        if (ValidarHCFecha("aduCRFecha")) {
+            onMostarErrorGeneralHC("Fecha incorrecta, no puede ser ni mayor a la fecha actual, ni menor a 1920.", "#aduCRFecha", "spanMensajeProblemasCronicos", "divHCMensajeErrorProblemasCronicos", null);
+            return false;
+        }
+
+        if ($("#aduCRProblema").val() === "") {
+            onMostarErrorGeneralHC("Debe ingresar el problema crónico del paciente.", "#aduCRProblema", "spanMensajeProblemasCronicos", "divHCMensajeErrorProblemasCronicos", null);
+            return false;
+        }
+
+        if ($("#aduCRMedi").val() === "") {
+            onMostarErrorGeneralHC("Debe ingresar el medicamento.", "#aduCRMedi", "spanMensajeProblemasCronicos", "divHCMensajeErrorProblemasCronicos", null);
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+
+@using (Html.BeginForm("setHistoriaClinicaProblemasCronicos", "HistoriaClinica", FormMethod.Post, new { id = "popCronicos" }))
+{ 
+ @Html.HiddenFor(model => model.hcaduid)
+ @Html.HiddenFor(model => model.aduCRId)
+
+    @*<div style="text-align: center; margin-top: 10px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarProblemasCronicos();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+            <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarProblemasCronicos()" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+            <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>*@
+
+<table style="width: 100%; border: none;">
+    <tr style="border: none; height: 62px;">
+        <td colspan="1" style="border: none;">
+            <div id="btnGuardarProblemasCronicos" class="t-button" onclick="onAceptarProblemasCronicos();" title="Guardar cambios en Historial Familiar">
+                <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+                <label style="cursor: pointer; vertical-align: super;">Guardar cambios</label>
+            </div>
+        </td>
+        <td colspan="3" style="border: none;">
+            <div id="divHCMensajeErrorProblemasCronicos" class="BordeRedondeado alert-danger" style="text-align: center; display: none; width: 100%;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; text-align: center; width: 5%;" rowspan="2">
+                            <i class="fa fa-2x fa-warning"></i>
+                        </td>
+                        <td colspan="1" style="border: none;">
+                            <div style="font-weight: bold; text-align: center;">¡Atención!</div>
+                        </td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2" style="border: none;">
+                            <span id="spanMensajeProblemasCronicos">Mensaje</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<hr/>
+    <table style="border: none;">
+        <tr style="border: none;">
+            <td style="border: none;">Fecha</td>
+            <td style="border: none;">@Html.EditorFor(model => model.aduCRFecha, new { id = "aduCRFecha" })</td>
+        </tr>
+        <tr style="border: none;">
+            <td style="border: none;">Problema</td>
+            <td style="border: none;">@Html.EditorFor(model => model.aduCRProblema, new { id = "aduCRProblema" })</td>
+        </tr>
+        @*<tr style="border: none;">
+            <td style="border: none;">Código</td>
+            <td style="border: none;">@Html.TextBoxFor(model => model.aduCRCodigo, new { id = "aduCRProblema" })</td>
+        </tr>*@
+        <tr style="border: none;">
+            <td style="border: none;">Medicación</td>
+            <td style="border: none;">@Html.EditorFor(model => model.aduCRMedi, new { id = "aduCRMedi"})</td>
+        </tr>
+    </table>
+}
+
+<script type="text/javascript">
+    $(".t-icon.t-icon-calendar").attr("title", "Abrir calendario");
+    $("#popCronicos :input").bind("keypress", function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorProblemasCronicos").hide("slide");
+    });
+
+
+    $("#aduCRProblema").css("width", "300px");
+    $("#aduCRMedi").css("width", "410px");
+    $("#popCronicos :input:visible:enabled:first").focus().select();
+
+    function onAceptarProblemasCronicos() {
+        if (!ValidarfrmHCProblemasCronicos()) {
+            return;
+        }
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $('#popCronicos').attr("action"),
+            data: $('#popCronicos').serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                onMostarErrorGeneralHC("Error al intentar guardar información.", "#aduCRMedi", "spanMensajeProblemasCronicos", "divHCMensajeErrorProblemasCronicos", null);
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    onMostarErrorGeneralHC(respuesta.Mensaje, "#" + respuesta.Foco, "spanMensajeProblemasCronicos", "divHCMensajeErrorProblemasCronicos", null);
+                }
+                else {
+                    $("#gridHCListaProblemasCronicos").data("tGrid").ajaxRequest();
+                    onCancelarProblemasCronicos();
+                }
+            }
+        });
+    }
+
+</script>

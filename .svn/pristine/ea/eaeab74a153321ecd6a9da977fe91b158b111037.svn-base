@@ -1,0 +1,147 @@
+﻿@model GeDoc.Models.proRegistroProfesionalTramite
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#frmProfesionalTramiteDetalle").ready(function () {    
+        $("#rpDetalleDNI").focus();
+    });
+
+    function onAceptarProfesionalDetalle() {        
+        var dni =$('#rpDetalleDNI').val();        
+        if (dni == 0) {
+            jAlert("Debe ingresar el DNI .", "¡Atención!", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        var $form = $('#frmProfesionalTramiteDetalle');
+        AbrirWaitingCRUD("waitingRegistroProfesional");
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: { traId: @Model.traId, rptDNI: dni },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {                
+                
+                if (respuesta.Error) 
+                {
+                    CerrarWaitingCRUD("waitingRegistroProfesional");
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+
+                } else
+                {                    
+                    var _Post = GetPathApp("registroProfesional/getDetalleMenu");
+                    $.ajax({
+                        type: "POST",
+                        url: _Post,
+                        data: { p_rptId: respuesta.Id },
+                        before: function ()
+                        {
+                            AbrirWaitingCRUD("waitingRegistroProfesional");
+                        },
+                        error: function() {
+                            $('#divProcesando').hide();
+                            CerrarWaitingCRUD("waitingRegistroProfesional");
+                            onCancelarProfesionalDetalle();                    
+                            jAlert("Error al cargar la información", "Error...", function() {
+                                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                            });
+                        },
+                        success: function (respuesta) {
+                            onCancelarProfesionalDetalle();                    
+                            var wRecibir = $("#wDetalleItemsTramite").data("tWindow");                               
+                            wRecibir.center().open();
+                            if (respuesta != null) 
+                            {
+                                $("#divwDetalleItemsTramite").html(respuesta);
+                            }                            
+                            CerrarWaitingCRUD("waitingRegistroProfesional");
+                            $('#divProcesando').hide();
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+
+    function onCancelarProfesionalDetalle() {
+        var windowElement = $("#wCRUDRegistroProfesionalesRecibir").data("tWindow");
+        windowElement.close();
+    }
+
+
+    function onActivate_wDetalleItemsTramite() {
+        AbrirWaitingCRUD();
+    }
+
+    function onLoad_wDetalleItemsTramite() {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'divwDetalleItemsTramite' ></div>";
+        wRecibir.content(wContenido);
+    }
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            $("#btnAceptar").click();
+        }
+    });   
+
+</script>
+
+@using (Html.BeginForm("setProfesionalDetalle", "registroProfesional", FormMethod.Post, new { id = "frmProfesionalTramiteDetalle" }))
+{ 
+    <div style="text-align: center;padding-bottom: 20px;">
+        <h1>Trámite : @Model.catRPTramites.traDescripcion</h1>
+    </div>
+    <div style="text-align: center;padding-bottom: 20px;">
+        <h1>Ingrese el DNI del Profesional</h1>
+    </div>
+    <div>
+         <label>Número de Documento: </label>
+          <input type="text" id="rpDetalleDNI" value="" placeholder="Ingrese el Número de Documento del Profesional" maxlength="8" style="width: 305px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" />                    
+    </div>
+    
+     <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarProfesionalDetalle();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarProfesionalDetalle();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+        </div>
+     </div>
+}
+
+
+@*En esta windows ingresamos el DNI del profesinal*@
+@{
+    Html.Telerik().Window()
+      .Name("wDetalleItemsTramite")
+      .Title("Tramites")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "waitingDetalleItemsTramite");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+       .Width(1000)
+      .Height(600)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wDetalleItemsTramite").OnLoad("onLoad_wDetalleItemsTramite"))
+      .Render();
+}
+

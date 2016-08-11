@@ -1,0 +1,171 @@
+<script>
+    function onComplete_wHCListaAdultos(e) {
+        debugger;
+        if (e.name != "update" && e.name != "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function onActivate_wCRUDwHCListaAdultos() {
+        AbrirWaitingCRUD();
+    }
+
+    function onLoad_wCRUDwHCListaAdultos() {
+        var wHCListaAdultos = $(this).data("tWindow");
+        var wContenido = wHCListaAdultos.content() + "<div id = 'divCRUDwHCListaAdultos_Content'  ></div>";
+        wHCListaAdultos.content(wContenido);
+    }
+
+    function onDataBinding_wHCListaAdultos(args) {
+        AbrirWaiting();
+        args.data = $.extend(args.data, { pacId: _pacId });
+    }
+
+    function onEjecutaAccionHCListaAdultos(pAccion, hcId) {
+        debugger;
+        if (pAccion === "Agregar") {
+            var wHCListaAdultos = $("#wCRUDwHCListaAdultos").data("tWindow");
+            debugger;
+            if (wHCListaAdultos.isMaximized){
+                wHCListaAdultos.open().title(pAccion + " Historia Clínica Adultos");
+            } else {
+                wHCListaAdultos.maximize().open().title(pAccion + " Historia Clínica Adultos");
+            }
+
+            var _Post = GetPathApp("HistoriaClinica/getHistoriaClinicaAdulto");
+            $.ajax({
+                type: "POST",
+                url: _Post,
+                data: { hcaduid: hcId, pAccion: pAccion, pacId: _pacId },
+                error: function () {
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                },
+                success: function (respuesta) {
+                    if (respuesta != null) {
+                        $("#divCRUDwHCListaAdultos_Content").html(respuesta);
+                        CerrarWaitingCRUD();
+                    }
+                }
+            });
+            return;
+        }
+
+        var wHCListaAdultos = $("#wCRUDwHCListaAdultos").data("tWindow");
+        wHCListaAdultos.center().open().title(pAccion + " Carta Médica");
+        var _Post = GetPathApp("JuntaMedica/getDatosHCListaAdultos");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { cmedId: cmId, pAccion: pAccion },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta != null) {
+                    $("#divCRUDwHCListaAdultos_Content").html(respuesta);
+                }
+            }
+        });
+    }
+
+    function onCommand_wHCListaAdultos(e) {
+        switch (e.name) {
+            case "cmdEliminar":
+                onEjecutaAccionHCListaAdultos("Eliminar", e.dataItem["cmedId"]);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdConsultar":
+                if (e.dataItem["licFechaFinal"] == null) {
+                    jAlert('La carta médica seleccionada no tiene aprobada la Licencia Médica', '¡Atención!');
+                    return;
+                }
+
+                var _Parametros = new Array(new Array(e.dataItem["cmedId"] * -1, 'licenciaId'));
+                InvocarReporte('ComprobanteLicencia', _Parametros, true);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+    }
+
+</script>
+@(Html.Telerik().Grid<GeDoc.catHCAdultoWS>()
+      .Name("gridHCListaAdultos")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.hcaduid);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+              <div style="margin-top: 5px; margin-left: 10px; margin-bottom: 5px;">
+                  <label class="t-button">
+                      <img class="t-icon t-add" onclick="onEjecutaAccionHCListaAdultos('Agregar', -1);" title="Agregar Historia Clínica Adultos"/>
+                  </label>
+              </div>
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getHCListaAdultos", "HistoriaClinica", new { pacId = -1 });
+      })
+      .Columns(columns =>
+      {
+          columns.Command(commands =>
+          {
+              commands.Custom("cmdConsultar")
+                  .Ajax(true)
+                  .ButtonType(GridButtonType.Image)
+                  .SendDataKeys(false)
+                  .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Acuse de Recibo de licencia médica" })
+                  //.HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("HistoriaClinica", "Examinar") })
+                  .SendState(false)
+                  .DataRouteValues(route =>
+                  {
+                      route.Add(o => o.hcaduid).RouteKey("hcaduid");
+                  });
+          }).Width("80px").Title("Acciones");
+          columns.Bound(c => c.hcaduid).Width("100px").Title("Id").Visible(false);
+          //columns.Bound(c => c.activa).Width("35px").Title("").Visible(true);
+          columns.Bound(c => c.Fecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnComplete("onComplete_wHCListaAdultos").OnCommand("onCommand_wHCListaAdultos").OnDataBinding("onDataBinding_wHCListaAdultos"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(250))
+      .Sortable()
+      )
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDwHCListaAdultos")
+      .Title("Historia Clínica Adultos")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+
+      .Scrollable(true)      
+      .Modal(true)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDwHCListaAdultos").OnLoad("onLoad_wCRUDwHCListaAdultos"))
+      .Render();
+}

@@ -1,0 +1,2778 @@
+@model GeDoc.catHCPerinatalWS
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<style>
+    .CirculoAmarillo {
+        width: 25px;
+        height: 25px;
+        padding: 5px;
+        border-color: black;
+        background: yellow;
+       -moz-border-radius: 50%; 
+       -webkit-border-radius: 50%;
+       border-radius: 50%;
+        border-style: solid;
+        border-width: thin;
+    }
+    .SacaSombra:focus {
+        box-shadow: 0 0 0px white;
+        -webkit-box-shadow: 0 0 0px white;
+        -moz-box-shadow: 0 0 0px white;
+    }
+    .ES-RadioButton {
+        display: inline-block;
+        vertical-align: middle;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+        position: relative;
+        bottom: 1px;
+        content: "";
+        border: 1px solid #ccc;
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+        background-color: yellow;
+    }
+    .sinBorde {
+        border: none;
+    }
+    .inline-block {
+        display: inline-block;
+        padding: 3px;
+    }
+    .block {
+        padding: 3px;
+        display: block;
+    }
+    .inline-block-sn {
+        display: inline-block;
+    }
+    .block-sn {
+        display: block;
+    }
+    .textCenter {
+        text-align:center;
+    }
+    .padding0 {
+        padding: 0px !important;
+    } 
+     .padding2px {
+        padding: 2px !important;
+    }
+    #divCRUDwHCListaPerinatales_Content {
+        width:1820px;
+        overflow-x: scroll !important;
+    }
+</style>
+<script type="text/javascript">
+    function onAceptarwHCCRUDPerinatales() {
+        //var tipoCM = $("input:radio[name=DatosCM.cmedMotivoSolicitud]:checked").val();
+        //var prioridad = $("#cbxPrioridad").data("tDropDownList").value();
+        //var especialidad = $("#espId").data("tComboBox").value();
+
+        //if (especialidad == null || especialidad === 0 || especialidad === "") {
+        //    jAlert("Debe ingresar la especialidad.", "¡Atención!", function () {
+        //        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+        //    });
+        //    return;
+        //}
+
+        //var $form = $('#frmwHCCRUDPerinatales');
+        //AbrirWaitingCRUD();
+        //$.ajax({
+        //    type: "POST",
+        //    url: $form.attr("action"),
+        //    data: { cmedId: $("#cmedId").val(), tipoCM: tipoCM, prioridad: prioridad, espId: especialidad },
+        //    error: function () {
+        //        CerrarWaitingCRUD();
+        //        jAlert("Error al guardar datos.", "Error...", function () {
+        //            $("form:not(.filter) :input:visible:enabled:first").focus().select();
+        //        });
+        //    },
+        //    success: function (respuesta) {
+        //        CerrarWaitingCRUD();
+        //        if (respuesta.Error) {
+        //            var FocusControl = respuesta.Foco;
+        //            jAlert(respuesta.Mensaje, "Error...", function () {
+        //                $("#" + FocusControl)[0].focus().select();
+        //            });
+        //        } else {
+        //            onCancelarwHCCRUDPerinatales();
+        //            jAlert(respuesta.Mensaje, "Información...", function () {
+        //                $("#txtBusquedaRecepcionCM").val("");
+        //                $("#gridRecepcionCM").data("tGrid").ajaxRequest();
+        //                $("#txtBusquedaRecepcionCM").focus();
+        //            });
+        //        }
+        //    }
+        //});
+    }
+
+    function onCancelarwHCCRUDPerinatales() {
+        var windowElement = $("#wCRUDwHCListaPerinatales").data("tWindow");
+        $("#divCRUDwHCListaPerinatales_Content").html("");
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setHistoriaClinicaPerinatal", "HistoriaClinica", FormMethod.Post, new { id = "frmwHCCRUDPerinatales" }))
+{  @(Html.Telerik().TabStrip()
+          .Name("tabstrip")
+          .Items(tabstrip =>
+          {
+              tabstrip.Add().Text("General")
+                  .Selected(true)
+                  .Content(@<text>
+                <div id="divGridPrincipalwHCCRUDPerinatales" tabindex="1" style="height:1000px;width: 1801px;">
+        <table>
+            <tr>
+                <td class="tituloHC" colspan="2">
+                    HISTORIA CLINICA PERINATAL - CLAP - OPS/OMS
+                </td>
+                <td style="border-bottom: none;">
+                    FECHA DE NACIMIENTO
+                </td>
+                <td style="border-bottom: none; text-align: center;    width: 85px;">
+                    ETNIA
+                </td>
+                <td style="border-bottom: none; text-align: center;">
+                    ALFABETA
+                </td>
+                <td style="border-bottom: none; text-align: center;     width: 235px;">
+                    ESTUDIOS
+                </td>
+                <td style="border-bottom: none; text-align: center;">
+                    ESTADO CIVIL
+                </td>
+                 <td style="border-bottom: none; text-align: center;">
+                   
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>NOMBRE:</label>
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacApellidoyNombre, new { @class = "desactivar", id = "pacApellidoyNombre", style="width: 300px;" })
+                </td>
+                <td style="text-align: center; border-top: none;">
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacFechaNacimiento, new { @class = "desactivar", id = "pacFechaNacimiento", style="width: 70px; text-align: center;" })
+                </td>
+                <td style="text-align: left; border-top: none; border-bottom: none;" rowspan="3">
+                    <div> <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEtnia, "B", new { @class = "editable SacaSombra", id = "perEtnia" ,style = "margin: 7px;"})</label>blanca</div>
+                    <div> <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEtnia, "I", new { @class = "editable SacaSombra", id = "perEtnia" , style = "margin: 7px;"})</label>indigena</div>
+                    <div> <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEtnia, "M", new { @class = "editable", id = "perEtnia",style = "margin: 7px;" })</label>mestiza</div>
+                    <div> <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEtnia, "N", new { @class = "editable", id = "perEtnia" ,style = "margin: 7px;" })</label>negro</div>
+                    <div> <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEtnia, "O", new { @class = "editable", id = "perEtnia" ,style = "margin: 7px;" })</label>otra</div>
+                </td>
+                <td style="text-align: center; border-top: none; border-bottom: none; width: 160px;" rowspan="3">
+                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionPaciente.perAlfabeta, false, new {@class = "editable SacaSombra", id = "perAlfabeta", style="margin: 7px;" })</label> NO
+                    <div style="height: 10px;"></div>
+                    <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionPaciente.perAlfabeta, true, new {@class = "editable SacaSombra", id = "perAlfabeta", style="margin: 7px;"})</label> SI
+                </td>
+                <td style="text-align: left; border-top: none; border-bottom: none;" rowspan="3">
+                    <table class="sinBorde">
+                        <tr class="sinBorde">
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstudio, "Ninguno", new {@class = "editable SacaSombra", id = "perEstudio", style = "margin: 7px;"})</label> Ninguno
+                            </td>
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstudio, true, new {@class = "editable SacaSombra", id = "perEstudio", style = "margin: 7px;"})</label> Primaria
+                            </td>
+                        </tr>
+                        <tr class="sinBorde">
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstudio, true, new {@class = "editable SacaSombra", id = "perEstudio", style = "margin: 7px;"})</label> Secundaria
+                            </td>
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstudio, true, new {@class = "editable SacaSombra", id = "perEstudio", style = "margin: 7px;"})</label> Universitaria
+                            </td>
+                        </tr>
+                        <tr class="sinBorde">
+                            <td colspan="2" class="sinBorde">
+                                <label>Años en el Mayor Nivel: </label>
+                                @Html.TextBoxFor(model => model.InformacionPaciente.perEstudioAnios, new {@class = "editable", id = "perEstudioAnios", style = "width: 50px; text-align: right;"})
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: left; border-top: none; border-bottom: none;" rowspan="3">
+                    <table class="sinBorde" style="width: 347px;text-align: center;">
+                        <tr class="sinBorde">
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstadoCivil, "Casada", new {@class = "editable SacaSombra", id = "perEstadoCivil", style = "margin: 7px;"})</label> Casada
+                            </td>
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstadoCivil, "Unión estable", new {@class = "editable SacaSombra", id = "perEstadoCivil", style = "margin: 7px;"})</label> Unión estable
+                            </td>
+                        </tr>
+                        <tr class="sinBorde">
+                            <td class="sinBorde"style="border-bottom-style: dashed; border-bottom-width: 1px;border-color: #EBEBE4;">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstadoCivil, "Soltera", new {@class = "editable SacaSombra", id = "perEstadoCivil", style = "margin: 7px;"})</label> Soltera
+                            </td>
+                            <td class="sinBorde">
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perEstadoCivil, "Otro", new {@class = "editable SacaSombra", id = "perEstadoCivil", style = "margin: 7px;"})</label> Otro
+                            </td>
+                        </tr>
+                        <tr class="sinBorde" style="border-top-style: dashed; border-top-width: 1px;">
+                            <td colspan="2" class="sinBorde" style="border-top-style: dashed; border-top-width: 1px; border-top-color: gainsboro;">
+                                <label>Vive Sola: </label>
+                                <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionPaciente.perViveSola, false, new {@class = "editable SacaSombra", id = "perViveSola", style = "margin: 7px;"})</label> NO
+                                <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionPaciente.perViveSola, true, new {@class = "editable SacaSombra", id = "perViveSola", style = "margin: 7px;"})</label> SI
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="sinBorde" style="width:340px;border-bottom: none;border-top: none;"  rowspan="3">
+                    <table class="sinBorde">
+                        <tbody>
+                            <tr class="sinBorde">
+                            <td class="sinBorde">   <div class="block-sn">
+                        <div class="block-sn" style="border-bottom: 1px dashed  #EBEBE4; height: 30px;">
+                              <div class="inline-block-sn">
+                                  <div class="inline-block-sn" style="width: 130px;">
+                                       <div class="block-sn">
+                                            <div class="block-sn">CONTROL</div>
+                                            <div class="block-sn">PRENATAL EN</div>
+                                        </div>
+                                  </div>
+                                  <div class="inline-block-sn" style="position: relative; left: 116px; top: -30px;">
+                                        @Html.Partial("EditorTemplates/_ListaDesplegable", "csIdPrenatal_Lista")
+                                  </div>
+                              </div>
+                        </div>
+                        <div class="block-sn" style="border-bottom: 1px dashed #EBEBE4; margin-bottom: 8px; margin-top: 10px;">
+                            <div class="inline-block-sn">
+                                 <div class="inline-block-sn">PARTO EN</div>
+                                  <div class="inline-block-sn" style="position:relative; left: 53px; top: -5px;">
+                                        @Html.Partial("EditorTemplates/_ListaDesplegable", "csIdParto_Lista")
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="block-sn">
+                            <div class="inline-block-sn">
+                                 <div class="inline-block-sn"  style="width: 130px;">
+                                      <div class="block-sn">
+                                            <div class="block-sn">NUMERO</div>
+                                            <div class="block-sn">IDENTIDAD</div>
+                                        </div>
+                                 </div>
+                                  <div class="inline-block-sn">
+                                         @Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacNumeroDocumento, new { @class = "desactivar", id = "pacNumeroDocumento", style="width: 180px; text-align: center; margin-left: -10px;" })
+                                  </div>
+                            </div>
+                        </div>
+                   </div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>DOMICILIO:</label>
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perDomicilio, new { @class = "editable", id = "perDomicilio", style="width: 300px;" })
+                </td>
+                <td style="text-align: center; border-bottom: none;">
+                    <label>EDAD(años)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>LOCALIDAD:</label>
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perLocalidad, new { @class = "editable", id = "perLocalidad", style="width: 100px;" })
+                </td>
+                <td>
+                    <label>Telefono:</label>
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perTelefono", style="width: 100px;" })
+                </td>
+                <td style="text-align: left; border-top: none;">
+                    @Html.TextBoxFor(model => model.InformacionPaciente.perEdad, new { @class = "desactivar", id = "perEdad", style="width: 20px; text-align: center; margin-left: 10px;" })
+                    <div style="position: absolute; top: 171px; left: 480px;">
+                        <div class="ES-RadioButton"></div>
+                        <div style="margin-left: 30px; margin-top: -30px;">
+                            <div> < de 15 </div>
+                            <div> > de 35 </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+              <tr >
+                <td class="tituloHC" colspan="2">
+                    ANTECEDENTES
+                </td>
+                <td class="tituloHC" colspan="2">
+                    <table  class="sinBorde">
+                        <tbody>
+                             <tr>
+                                OBSTETRICOS
+                            </tr>
+                         </tbody>
+                    </table>
+                </td>
+                <td class="tituloHC" colspan="2">
+                    FIN EMBARAZO ANTERIOR
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="sinBorde">
+                    <table class="sinBorde">
+                        <tbody>
+                            <tr class="sinBorde">
+                                <td class="sinBorde"  style="padding-left: 10px;"></td>
+                                <td class="sinBorde"  style="padding-left: 10px;">si</td>                               
+                            </tr>
+                            <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perTBCFam, false, new {@class = "editable SacaSombra", id = "perTBCFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perTBCFam, true, new {@class = "editable SacaSombra", id = "perTBCFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 44px;">TBC</label>
+                                </td>
+                            </tr>
+                            <tr class="sinBorde">
+
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perDiabetesFam, false, new {@class = "editable SacaSombra", id = "perDiabetesFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perDiabetesFam, true, new {@class = "editable SacaSombra", id = "perDiabetesFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 32px;">diabetes</label>
+                                </td>
+                            </tr>
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperFam, false, new {@class = "editable SacaSombra", id = "perHiperFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperFam, true, new {@class = "editable SacaSombra", id = "perHiperFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 20px;">hipertensión</label>
+                                </td>
+                            </tr>
+
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perPreclaFam, false, new {@class = "editable SacaSombra", id = "perPreclaFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perPreclaFam, true, new {@class = "editable SacaSombra", id = "perPreclaFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 18px;">preeclampsia</label>
+                                </td>
+                            </tr>
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perEclaFam, false, new {@class = "editable SacaSombra", id = "perEclaFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perEclaFam, true, new {@class = "editable SacaSombra", id = "perEclaFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 28px;">eclampsia</label>
+                                </td>
+                            </tr>
+
+                              
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perOtrosFam, false, new {@class = "editable SacaSombra", id = "perOtrosFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perOtrosFam, true, new {@class = "editable SacaSombra", id = "perOtrosFam", style="margin: 7px;"})</label>
+                                </td>
+                                <td class="sinBorde">
+                                    <label style="margin-left: 40px;">otros</label>
+                                </td>
+                            </tr>
+
+
+                         </tbody>
+                    </table>
+                </td>
+                
+                <td class="sinBorde">
+                      <table class="sinBorde">
+                        <tbody>
+                            @*TBC*@
+                        <tr class="sinBorde" style="color: white;">
+                            <td class="sinBorde"  style="padding-left: 10px;">no</td>
+                            <td class="sinBorde"  style="padding-left: 10px;">si</td>
+                        </tr>
+                        <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perTBCPer, false, new {@class = "editable SacaSombra", id = "perTBCPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perTBCPer, true, new {@class = "editable SacaSombra", id = "perTBCPer", style="margin: 7px;"})</label>
+                                </td>
+                                 <td class="sinBorde"></td>
+                                 <td class="sinBorde"></td>
+                                 <td class="sinBorde">
+                                   <table class="sinBorde">
+                                        <tr class="sinBorde">
+                                            <td class="sinBorde" style="font-size: 10px;">Cirugia</td>
+                                        </tr>
+                                        <tr class="sinBorde" style="font-size: 10px;">
+                                            <td class="sinBorde"> Genito-urinaria</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                              
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perCiruPer, false, new {@class = "editable SacaSombra", id = "perCiruPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perCiruPer, true, new {@class = "editable SacaSombra", id = "perCiruPer", style="margin: 7px;"})</label>
+                                </td>
+                            </tr>
+                            @*diabtes*@
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perDiabetesPer, false, new {@class = "editable SacaSombra", id = "perDiabetesPer", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perDiabetesPer, true, new {@class = "editable SacaSombra", id = "perDiabetesPer", style="margin: 7px;"})</label>
+                                </td>
+                                  <td class="sinBorde" style="padding-left: 15px;">2</td>
+                                 <td class="sinBorde" style="padding-left: 15px;">G</td>
+                                 <td class="sinBorde">
+                                    <label>infertilidad</label>
+                                </td>
+                                 <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perInferPer, false, new {@class = "editable SacaSombra", id = "perInferPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perInferPer, true, new {@class = "editable SacaSombra", id = "perInferPer", style="margin: 7px;"})</label>
+                                </td>                                   
+                            </tr>
+                            @*hipertension*@
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperPer, false, new {@class = "editable SacaSombra", id = "perHiperPer", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperPer, true, new {@class = "editable SacaSombra", id = "perHiperPer", style="margin: 7px;"})</label>
+                                </td>                                 
+                                 <td class="sinBorde">
+                                  <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperPer, false, new {@class = "editable SacaSombra", id = "perHiperPer", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perHiperPer, true, new {@class = "editable SacaSombra", id = "perHiperPer", style="margin: 7px;"})</label>
+                                </td>
+
+                                 <td class="sinBorde">
+                                    <label>Cardiopatia</label>
+                                </td>
+                                 <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perCardioPer, false, new {@class = "editable SacaSombra", id = "perCardioPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perCardioPer, true, new {@class = "editable SacaSombra", id = "perCardioPer", style="margin: 7px;"})</label>
+                                </td>
+                            </tr>
+                            @*preeclampasia*@
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perPreclaFam, false, new {@class = "editable SacaSombra", id = "perPreclaFam", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perPreclaFam, true, new {@class = "editable SacaSombra", id = "perPreclaFam", style="margin: 7px;"})</label>
+                                </td>
+                                  <td class="sinBorde"></td>
+                                  <td class="sinBorde"></td>
+                                <td class="sinBorde">
+                                    <label >Nefropatia</label>
+                                </td>
+                                 <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perNefroPer, false, new {@class = "editable SacaSombra", id = "perNefroPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perNefroPer, true, new {@class = "editable SacaSombra", id = "perNefroPer", style="margin: 7px;"})</label>
+                                </td>
+                            </tr>
+
+                            @*eclampasia*@
+
+                             <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perEclaper, false, new {@class = "editable SacaSombra", id = "perEclaper", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perEclaper, true, new {@class = "editable SacaSombra", id = "perEclaper", style="margin: 7px;"})</label>
+                                </td>
+                                  <td class="sinBorde"></td>
+                                  <td class="sinBorde"></td>
+                                 <td class="sinBorde">
+                                    <label >Violencia</label>
+                                </td>
+                                 <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perViolenPer, false, new {@class = "editable SacaSombra", id = "perViolenPer", style="margin: 7px;" })</label>                                                                    
+                                </td>
+                                <td class="sinBorde">
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perViolenPer, true, new {@class = "editable SacaSombra", id = "perViolenPer", style="margin: 7px;"})</label>
+                                </td>
+                            </tr>
+                            @*otros*@
+                               <tr class="sinBorde">
+                                <td class="sinBorde">
+                                  <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perOtrosPer, false, new {@class = "editable SacaSombra", id = "perOtrosPer", style="margin: 7px;" })</label>                                                                   
+                                </td>
+                                <td class="sinBorde"> 
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perOtrosPer, true, new {@class = "editable SacaSombra", id = "perOtrosPer", style="margin: 7px;"})</label>
+                                </td>                               
+                            </tr>
+                         </tbody>
+                    </table>
+                </td>
+
+                <td class="sinBorde" style="      width: 330px; text-align:center;  border-left: 2px solid #DEDEDE; border-right: 1px solid #fff;">
+                  <div style="    position: relative;top: -15px;">                      
+                      <div class="block">
+                           <div class="block">
+                                   <label>ULTIMO PREVIO</label>
+                           </div>
+                          <div style="border: 1px solid #BCB9B9;border-radius: 10px;">
+                          <div class="block">                              
+                            <div class="inline-block">
+                                <label style="    margin-left: 24px;">   n/c</label>
+                                <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perUltPrev, true, new {@class = "editable SacaSombra", id = "perUltPrev", style="margin: 7px;"})</label>
+                                <label> < 2500g</label>
+                                <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perUltPrev, true, new {@class = "editable SacaSombra", id = "perUltPrev", style="margin: 7px;"})</label>
+                            </div>                                                       
+                          </div>
+
+                          <div class="block">
+                            <div class="inline-block">
+                                <label>normal</label>
+                                <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perUltPrev, true, new {@class = "editable SacaSombra", id = "perUltPrev", style="margin: 7px;"})</label>
+                                 <label> > 4000g</label>
+                                <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perUltPrev, true, new {@class = "editable SacaSombra", id = "perUltPrev", style="margin: 7px;"})</label>
+                            </div>                            
+                          </div>
+                         </div>
+
+                          <div style="border: 1px solid #BCB9B9; border-radius: 10px;margin-top: 15px;">
+                          <div class="block">                              
+                            <div class="inline-block">
+                                 <div class="inline-block">
+                                     <div class="block">
+                                       <label>Antecentes</label>
+                                     </div>
+                                     <div class="block">
+                                        <label>de gemelares</label>
+                                     </div>
+                                </div>
+                                <div class="inline-block">
+                                    <label class="ES-RadioButton" style="background: white;" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perAntGem, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})</label>                                
+                                    <label class="ES-RadioButton">@Html.RadioButtonFor(model => model.InformacionAntecedentes.perAntGem, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})</label>
+                                    <div style="position: absolute; margin-top: -45px; margin-left: 6px;">
+                                        <label>no</label>
+                                        <label style="margin-left: 19px;">si</label>
+                                    </div>
+                                  </div>
+                                </div>                                                              
+                            </div>                                                       
+                          </div>                         
+                         </div>
+                  </div>
+               </td>
+              
+                <td style="width: 513px;text-align: center;">
+
+
+                     <div class="inline-block-sn">
+                         @*columna 1*@
+                    <div class="inline-block-sn textCenter" style="position: relative;vertical-align: top;margin-top: 12%;">
+                         <div class="block" style="text-align: center;position: relative;top: -75px;">
+                            <div class="block" style="" >
+                                <div class="block">
+                                    <label>gestas</label>
+                                    </div>                                     
+                                    <div class="block">
+                                    <label>previas</label>
+                                    </div>
+                            </div>
+                            <div class="block">
+                                @Html.TextBoxFor(model => model.InformacionAntecedentes.perGesPrev, new { @class = "editable", id = "perGesPrev", style="width: 30px; z-index: 10; position: absolute; margin-left: -20px; margin-top: -2px;" })
+                            </div>
+                        </div>
+                    </div>
+                         @*columna 2*@
+                    <div class="inline-block-sn textCenter">
+                        <div class="block" style="text-align: center;position: relative;">
+                        <div class="block">
+                        <label>abortos</label>
+                        </div>                                    
+                        <div class="block">
+                                @Html.TextBoxFor(model => model.InformacionAntecedentes.perAbortos, new { @class = "editable", id = "perAbortos", style="width: 30px; background: yellow;" })
+                        </div>
+                     </div>
+                        <div class="block" style="" >
+                                <div class="block">
+                                    <label>3 espont.</label>
+                                    </div>                                     
+                                    <div class="block">
+                                    <label>consecutivos</label>
+                                    </div>
+                            </div>
+                        <div class="block" >
+                                <label class="ES-RadioButton" >@Html.RadioButtonFor(model => model.InformacionAntecedentes.perTresAbortos, true, new {@class = "editable SacaSombra", id = "perTresAbortos", style="margin: 7px;"})</label>
+                            </div>
+                        <div class="block" style="position: relative;">
+                                <div class="block">
+                                <label>partos</label>
+                                </div>                                    
+                                <div class="block">
+                                        @Html.TextBoxFor(model => model.InformacionAntecedentes.perParPrev, new { @class = "editable", id = "perParPrev", style="width: 30px;" })
+                                </div>
+                        </div>
+                    </div>
+                         @*columna 3*@                    
+                    <div class="inline-block-sn textCenter" style="position: relative;vertical-align: top;">
+                        <div class="block" style="text-align: center;position: relative;">
+                        <div class="block">
+                        <label>vaginales</label>
+                        </div>                                    
+                        <div class="block">
+                                @Html.TextBoxFor(model => model.InformacionAntecedentes.perParVag, new { @class = "editable", id = "perParVag", style="width: 30px;" })
+                        </div>
+                </div>
+
+                    <div class="block" style="text-align: center;position: relative;top: 77px;">
+                        <div class="block">
+                        <label>cesáreas</label>
+                        </div>                                    
+                        <div class="block">
+                                @Html.TextBoxFor(model => model.InformacionAntecedentes.perCesareas, new { @class = "editable", id = "perCesareas", style="width: 30px; background: yellow;" })
+                        </div>
+                </div>
+                    </div>
+                         @*columna 4*@                   
+                    <div class="inline-block-sn textCenter" style="position: relative;vertical-align: top;margin-top: -6%;">
+                       <div class="block" style="text-align: center;position: relative;">
+                            <div class="block" style="" >
+                                <div class="block">
+                                    <label>nacidos</label>
+                                    </div>                                     
+                                    <div class="block">
+                                    <label>vivos</label>
+                                    </div>
+                            </div>
+                            <div class="block">
+                                    @Html.TextBoxFor(model => model.InformacionAntecedentes.perViven, new { @class = "editable", id = "perViven", style="width: 30px;" })
+                            </div>
+                        </div>
+                         <div class="block" style="text-align: center;position: relative;    top: 50px;">
+                            <div class="block" style="" >
+                                <div class="block">
+                                    <label>nacidos</label>
+                                    </div>                                     
+                                    <div class="block">
+                                    <label>muertos</label>
+                                    </div>
+                            </div>
+                            <div class="block">
+                                    @Html.TextBoxFor(model => model.InformacionAntecedentes.perNacVivos, new { @class = "editable", id = "perNacVivos", style="width: 30px;    background: yellow;" })
+                            </div>
+                        </div>
+                    </div>
+                         @*columna 5*@
+                   <div class="inline-block-sn" style="text-align: right;  position: relative;top: -5px;">
+                         <div class="block" style="position: relative;top: -21px;">
+                            <div class="block">
+                            <label>viven</label>
+                            </div>                                    
+                            <div class="block">
+                                    @Html.TextBoxFor(model => model.InformacionAntecedentes.perViven, new { @class = "editable", id = "perViven", style="width: 30px;" })
+                            </div>
+                        </div>
+                        <div class="block">
+                                    <div class="inline-block">
+                                            <div class="block">
+                                                <label>muertos</label>
+                                                </div>                                     
+                                                <div class="block">
+                                                <label>1º sem.</label>
+                                                </div>
+                                        </div>
+
+                                    <div class="inline-block">                           
+                                            @Html.TextBoxFor(model => model.InformacionAntecedentes.perParVag, new { @class = "editable", id = "perParPrev", style="width: 30px; background: yellow;" })                       
+                                    </div>
+                                </div>
+                                <div class="block">
+                                    <div class="inline-block">
+                                            <div class="block">
+                                                <label>después</label>
+                                                </div>                                     
+                                                <div class="block">
+                                                <label>2º sem.</label>
+                                                </div>
+                                        </div>
+
+                                    <div class="inline-block">                           
+                                            @Html.TextBoxFor(model => model.InformacionAntecedentes.perParVag, new { @class = "editable", id = "perParPrev", style="width: 30px; background: yellow;" })                       
+                                    </div>
+                                </div>
+                    </div>
+                         
+                         
+
+                    </div>
+
+
+                </td>
+
+                <td style="width:342px; text-align:center;">
+                    <div class="block">
+                        <div class="block">
+                            <div class="inline-block" style="position: relative;">
+                            </div>
+                            <div class="inline-block" style="text-align: center;">
+                                <div class="block">
+                                    <div class="block">
+                                        @Html.EditorFor(model => model.InformacionPaciente.perInfoPaciente.pacFechaNacimiento, new { @class = "desactivar", id = "pacFechaNacimiento" , style="width: 200px;" })
+                                        <canvas id="lnFinEmbarazoAnterior" width="150" height="10"></canvas>
+                                        <label style="margin-left: -4px;" class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style = "margin: 7px;"})
+                                        </label>
+                                        <label style="margin-left: 190px;">menos de 1 año</label>
+                                        <br/>
+                                        <label style="margin-left: 190px;">mas de 5 años</label>
+                                    </div>
+                                </div>
+                            </div>
+                              
+                            <div class="block">
+                                    <div class="inline-block-sn">
+                                        <div class="inline-block-sn">
+                                        <label>
+                                            EMBARAZO PLANEADO
+                                        </label>
+                                    </div>
+                                    <div class="inline-block-sn">
+                                            <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbPla, true, new {@class = "editable SacaSombra", id = "perEmbPla", style="margin: 7px;"})                                              
+                                            </label>
+                                    </div>
+                                    <div class="inline-block-sn">
+                                        <label>
+                                            no
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn">
+                                            <label class="ES-RadioButton" style="background-color: white;">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbPla, true, new {@class = "editable SacaSombra", id = "perEmbPla", style="margin: 7px;"})                                              
+                                            </label>
+                                    </div>
+                                        <div class="inline-block-sn">
+                                        <label>
+                                            si
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                                <div class="inline-block-sn" style="margin-top: 15px;">
+                                    <div class="inline-block-sn">
+                                    <label>
+                                        FRACASO METODO ANTICONCEPTIVO
+                                    </label>
+                                </div>
+                                <div class="block-sn" style="margin-top: -10px;">
+                                    <div class="inline-block-sn" style="text-align: center;position:relative;top: 14px;">
+                                        <div class="block-sn">
+                                            <label class="ES-RadioButton" style="background-color: white;">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})
+                                            </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            <div class="block-sn">no</div>
+                                            <div class="block-sn">usaba</div>                                               
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            barrera
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            DIU
+                                        </div>
+                                    </div>
+
+
+                                        <div class="inline-block-sn" style="text-align: center;position:relative;top: 14px;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            <div class="block-sn">horm</div>
+                                            <div class="block-sn">onal</div>                                               
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center; position:relative;top: 14px;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            <div class="block-sn">emer</div>
+                                            <div class="block-sn">gencia</div>                                               
+                                        </div>
+                                    </div>
+
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perEmbMetAnti, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            natural
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            </td>                              
+            </tr>           
+        </table>
+       <table>
+             <tr >                
+                 <td class="tituloHC" colspan="1">GESTACION ACTUAL</td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+                <td class="sinBorde" style="border-right: 1px solid #E0E0E0; border-top: 1px solid #E0E0E0;"></td>
+            </tr>
+            <tr>
+                <td  style="width: 213px;">
+                     <div class="inline-block-sn">                                              
+                     <div class="inline-block-sn">
+                         <div class="block">
+                             <div class="block"  style="font-size:12px;">
+                                 PESO ANTERIOR
+                             </div>
+                              <div class="block">
+                                 @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" })
+                                  <label>kg</label>
+                             </div>
+                             
+                         </div>
+                         
+                      </div>
+                         
+                     <div class="inline-block-sn">
+                     <div class="block">
+                             <div class="block"  style="font-size:12px;">
+                                 TALLA (cm)
+                             </div>
+                              <div class="block">
+                                  <label style="font-size:15px;font-weight:bold;">1</label>
+                                 @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width: 60px;" })
+                             </div>
+                         </div>
+                      </div>
+
+                      </div>
+                </td>
+                <td style=" border-top: 0px;top: -15px;position: relative;">
+                    <div class="block">
+                        <div class="block">                            
+                            <div class="inline-block">
+                                <div class="inline-block">FUM</div>
+                                <div class="inline-block">  @Html.EditorFor(model => model.InformacionGestacionActual.perFUM, new { @class = "desactivar", id = "perFUM" , style="width: 200px;" })</div>
+                            </div>                               
+                        </div>
+                        <div class="block">
+                           <div class="inline-block">
+                                <div class="inline-block">FPP</div>
+                                <div class="inline-block">  @Html.EditorFor(model => model.InformacionGestacionActual.perFPP, new { @class = "desactivar", id = "perFPP" , style="width: 200px;" })</div>
+                            </div>  
+                        </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px; position: relative; width: 146px;">
+                     <div class="block">
+                        <div class="block"  style="font-weight: bold; text-align: center;">
+                            <label>EG CONFIABLE por</label>
+                        </div>
+                         <div class="block">
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: left;">
+                                    <div class="block-sn"  style="font-weight: bold;    padding-bottom: 5px;">
+                                        <label>FUM</label>
+                                        <label style="margin-left: 25px;">Eco < 20s.</label>
+                                    </div>
+                                    <div class="block-sn" style="text-align: left;">
+                                        <div style="margin-bottom: 5px;">
+                                            no
+                                            <label class="ES-RadioButton">
+                                             @Html.RadioButtonFor(model => model.InformacionGestacionActual.perEGFUM, true, new {@class = "editable SacaSombra", id = "perEGFUM", style="margin: 7px;"})                                              
+                                            </label>
+                                            <label class="ES-RadioButton" style="margin-left: 20px;">
+                                             @Html.RadioButtonFor(model => model.InformacionGestacionActual.perEGECO, true, new {@class = "editable SacaSombra", id = "perEGECO", style="margin: 7px;"})                                              
+                                            </label>
+                                        </div>
+                                        <div style="margin-left: 6px;">
+                                            si
+                                           <label class="ES-RadioButton" style="background: white;">
+                                             @Html.RadioButtonFor(model => model.InformacionGestacionActual.perEGFUM, true, new {@class = "editable SacaSombra", id = "perEGFUM", style="margin: 7px;"})                                              
+                                            </label>
+                                           <label class="ES-RadioButton" style="background: white; margin-left: 20px;">
+                                             @Html.RadioButtonFor(model => model.InformacionGestacionActual.perEGECO, true, new {@class = "editable SacaSombra", id = "perEGECO", style="margin: 7px;"})                                              
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px;top: -12px;position: relative;width:550px;text-align:center">
+                     <div class="block">                        
+                         <div class="block">
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">                                    
+                                    <div class="block" style="position:relative;top:-25px;">
+                                         1º trim
+                                    </div>
+                                    <div class="block" style="position:relative;top:-12px;">
+                                         2º trim
+                                    </div>
+                                    <div class="block">
+                                         3º trim
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">
+                                    <div class="block"  style="font-weight: bold;">
+                                        FUMA act.
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn" style="margin-left:-11px;">
+                                                <label>
+                                                   no
+                                                </label>
+                                            </div>
+                                          <div class="inline-block-sn" style="margin-left:20px;">
+                                                 <label>
+                                                    si
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                               <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">
+                                    <div class="block"  style="font-weight: bold;">
+                                        FUMA pas.
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn" style="margin-left:-11px;">
+                                                <label>
+                                                   no
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn" style="margin-left:20px;">
+                                                 <label>
+                                                    si
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                               <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">
+                                    <div class="block"  style="font-weight: bold;">
+                                        DROGAS
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                           <div class="inline-block-sn" style="margin-left:-11px;">
+                                                <label>
+                                                   no
+                                                </label>
+                                            </div>
+                                             <div class="inline-block-sn" style="margin-left:20px;">
+                                                 <label>
+                                                    si
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                               <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">
+                                    <div class="block"  style="font-weight: bold;">
+                                        ALCOHOL
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                           <div class="inline-block-sn" style="margin-left:-11px;">
+                                                <label>
+                                                   no
+                                                </label>
+                                            </div>
+                                           <div class="inline-block-sn" style="margin-left:20px;">
+                                                 <label>
+                                                    si
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                               <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inline-block-sn">
+                                <div class="block" style="text-align: center;">
+                                    <div class="block"  style="font-weight: bold;">
+                                        VIOLENCIA
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                             <div class="inline-block-sn" style="margin-left:-11px;">
+                                                <label>
+                                                   no
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn" style="margin-left:20px;">
+                                                 <label>
+                                                    si
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                               <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                    <div class="block">                                        
+                                         <div class="inline-block-sn">
+                                            <div class="inline-block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                            <div class="inline-block-sn">
+                                                 <label class="ES-RadioButton">
+                                                    @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px;top: -12px;position: relative;">
+                    <div class="block" style="    position: relative;text-align: center;top: -12px;">
+                        <div class="block" style="font-weight:bold;">ANTIRUBEOLA</div>
+                        <div class="block-sn">
+                             <div class="inline-block-sn">
+                                <div class="inline-block-sn">
+                                    <div class="block">previa</div>
+                                    <div class="block">
+                                        <label class="ES-RadioButton" style="background: white;">
+                                           @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>                                    
+                                </div>
+                                <div class="inline-block-sn">
+                                  <div class="block">no sabe</div>
+                                    <div class="block">
+                                        <label class="ES-RadioButton">
+                                           @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                             </div>
+                        </div>
+                         <div class="block-sn">
+                             <div class="inline-block-sn" style="    position: relative;left: -8px;">
+                                <div class="inline-block-sn">
+                                    <div class="block">embar.</div>
+                                    <div class="block">
+                                        <label class="ES-RadioButton">
+                                           @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>                                    
+                                </div>
+                                <div class="inline-block-sn">
+                                  <div class="block">no</div>
+                                    <div class="block">
+                                        <label class="ES-RadioButton">
+                                           @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px;top: -21px;position: relative; width:330px;">
+                    <div class="block" style="    position: relative;text-align: center;top: -12px;">
+                        <div class="block" style="font-weight:bold;">ANTITETANICA</div>
+                        <div class="block-sn">
+                            <div class="inline-block-sn">
+                                <div class="inline-block-sn">vigente</div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        no
+                                        <label class="ES-RadioButton">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        si
+                                        <label class="ES-RadioButton" style="background: white;">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="block-sn">
+
+                            <div class="inline-block-sn">
+                               <div class="block-sn">DOSIS</div>
+                                <div class="block-sn">mes</div>
+                                <div class="block-sn">gestación</div>
+                            </div>
+                            <div class="inline-block-sn" style="position: relative;top: -25px;">
+                                <label style="font-size: 15px;font-weight: bold;">1º</label> 
+                                  @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" })
+                            </div>
+                            <div class="inline-block-sn" style="position: relative;top: -21px;left: 31px;">
+                                <label style="font-size: 15px;font-weight: bold;">2º</label> 
+                                  @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" })
+                            </div>
+
+                        </div>
+
+                    </div>
+                </td>
+                <td style=" border-top: 0px;top: -21px;position: relative;     width: 192px;">
+                    <div class="block" style="    position: relative;text-align: center;top: -21px;">
+                        <div class="block" style="font-weight:bold;">EX. NORMAL</div>
+                        <div class="block-sn">
+                            <div class="inline-block-sn">
+                                <div class="inline-block-sn" style="    margin-left: -14px;">ODONT.</div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        no
+                                        <label class="ES-RadioButton">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        si
+                                        <label class="ES-RadioButton" style="background: white;">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="block-sn">
+                            <div class="inline-block-sn">
+                                <div class="inline-block-sn" style="    margin-left: -14px;">MAMAS.</div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        no
+                                        <label class="ES-RadioButton">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="inline-block-sn">
+                                    <div class="block-sn">
+                                        si
+                                        <label class="ES-RadioButton" style="background: white;">
+                                         @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        </div>
+                     </td>
+            </tr>
+       </table>
+
+
+        <div class="inline-block-sn">
+              <div class="inline-block-sn">
+                  <div class="block-sn">
+                      <div class="block-sn">
+                            <table>
+                                 <tr>
+                                    <td style=" border-top: 0px;    padding: 0 ;position: relative;">
+                             <div class="block">
+                                     <div class="block tituloHC">
+                                        <label style="position: relative;top: 3px;">CERVIX</label> 
+                                     </div>
+                                 <div class="block">
+                                    <div class="inline-block-sn">
+                                        <div class="block-sn" style="text-align: center;">                                    
+                                            <div class="block" style="position:relative;top:-40px;">
+                                                 Insp. Visual
+                                            </div>
+                                            <div class="block" style="position:relative;top:-20px;">
+                                                 PAP
+                                            </div>
+                                            <div class="block">
+                                                 COLP
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn">
+                                        <div class="block-sn" style="text-align: center;">                                   
+                                            <div class="block">                                        
+                                                 <div class="inline-block">
+                                                    <div class="inline-block">
+                                                        <label>
+                                                          normal
+                                                        </label>
+                                                    </div>                                            
+                                                 </div>
+
+                                            </div>
+                                            <div class="block ">                                                                                 
+                                                    <div class="inline-block">
+                                                      <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">
+                                                    <div class="inline-block">
+                                                       <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">                                         
+                                                    <div class="inline-block">
+                                                        <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                    <div class="inline-block-sn">
+                                        <div class="block-sn" style="text-align: center;">                                   
+                                            <div class="block">                                        
+                                                 <div class="inline-block">
+                                                    <div class="inline-block">
+                                                        <label>
+                                                          anormal
+                                                        </label>
+                                                    </div>                                            
+                                                 </div>
+
+                                            </div>
+                                            <div class="block ">                                                                                 
+                                                    <div class="inline-block">
+                                                      <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">
+                                                    <div class="inline-block">
+                                                       <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">                                         
+                                                    <div class="inline-block">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                          
+                                       <div class="inline-block-sn">
+                                        <div class="block-sn" style="text-align: center;">                                   
+                                            <div class="block">                                        
+                                                 <div class="inline-block">
+                                                    <div class="inline-block">
+                                                        <label>
+                                                          no se hizo
+                                                        </label>
+                                                    </div>                                            
+                                                 </div>
+
+                                            </div>
+                                            <div class="block " >                                                                                 
+                                                    <div class="inline-block">
+                                                      <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">
+                                                    <div class="inline-block">
+                                                       <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                            </div>
+                                            <div class="block ">                                         
+                                                    <div class="inline-block">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                          
+
+                                      </div>
+                         
+                    
+                                  </div>
+                    
+                           </td>
+                                    <td>
+                            <div class="inline-block-sn">
+                                    <div class="block">
+                                          <div class="block-sn">
+                                             <div class="block-sn">
+                                                <div class="inline-block-sn">
+                                                    <div class="inline-block-sn" style="font-size: 24px;    margin-left: 6px;">
+                                                       GRUPO
+                                                    </div>
+                                                    <div class="inline-block-sn" style="font-size: 24px;margin-left: 25px;">
+                                                        Rh
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block-sn">                                   
+                                            <div class="block">
+                                                <div class="inline-block">
+                                                    <div class="inline-block">
+                                                         @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:67px;" })
+                                                    </div>
+                                                    <div class="inline-block padding0 textCenter">
+                                                        <div class="block">
+                                                            -
+                                                        </div>
+                                                        <div class="block">                                                    
+                                                            <label class="ES-RadioButton">
+                                                             @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="inline-block padding0 textCenter">
+                                                        <div class="block">
+                                                            +
+                                                        </div>
+                                                        <div class="block"   style="margin-left: 12px;">                                                  
+                                                            <label class="ES-RadioButton" style="background: white;">
+                                                             @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block-sn textCenter">
+                                             <div class="block " >
+                                                <div class="inline-block">
+                                                    <div class="inline-block">
+                                                        Inmuniz.
+                                                    </div>
+                                                    <div class="inline-block padding0">
+                                                        <div class="block ">
+                                                            no
+                                                            <label class="ES-RadioButton">
+                                                             @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="inline-block padding0">
+                                                        <div class="block">
+                                                            si
+                                                            <label class="ES-RadioButton" style="background: white;">
+                                                             @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>                
+                                        </div>
+                                    </div>
+                                </div>                          
+                        </td>
+                                    <td style=" border-top: 0px;top: -12px;position: relative;width:254px">
+                             <div class="block">                        
+                                 <div class="block">
+                                    <div class="inline-block-sn">
+                                        <div class="block" style="text-align: center;">                                    
+                                            <div class="block" style="position:relative;top:-25px;">
+                                                 < 20 sem lgG
+                                            </div>
+                                            <div class="block" style="position:relative;top:-12px;">
+                                                 > 20 SEM lgG
+                                            </div>
+                                            <div class="block">
+                                                 1º consulta lgM
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="inline-block-sn">
+                                        <div class="block" style="text-align: center;">
+                                            <div class="block"  style="font-weight: bold;">
+                                                TOXOPLASMOSIS
+                                            </div>
+                                            <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                   <div class="inline-block-sn" style="margin-left:21px;">
+                                                        <label>
+                                                            -
+                                                        </label>
+                                                    </div>
+                                                     <div class="inline-block-sn" style="margin-left:20px;">
+                                                         <label>                                                    
+                                                             +
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn" style="margin-left:6px;">
+                                                         <div class="block-sn">
+                                                            <div class="block-sn">no</div>
+                                                            <div class="block-sn">se hizo</div>                                               
+                                                        </div>
+                                                    </div>
+                                                 </div>
+
+                                            </div>
+                                            <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                      <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                 </div>
+
+                                            </div>
+                                            <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                       <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                 </div>
+
+                                            </div>
+                                            <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                        <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                 </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                     </div>
+                                 </div>
+                               </td>
+                                    <td style=" border-top: 0px;top: -12px;position: relative;width:218px">
+                             <div class="block"> 
+                                 <div class="block">
+                                    <div class="inline-block-sn">
+                                        <div class="block" style="text-align: center;">                                    
+                                            <div class="block" style="position:relative;top: 5px;">
+                                                 <div class="block-sn">
+                                                    <div class="block-sn">solici</div>
+                                                    <div class="block-sn">tado</div>                                               
+                                                </div>
+                                            </div>
+                                            <div class="block" style="position:relative;top: 5px;">
+                                                 <div class="block-sn">
+                                                    <div class="block-sn">reali</div>
+                                                    <div class="block-sn">zado</div>                                               
+                                                </div>
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                    <div class="inline-block-sn">
+                                           <div class="block" style="text-align: center;">
+                                            <div class="block"  style="font-weight: bold;">
+                                               <div class="inline-block-sn">
+                                                     <div class="inline-block-sn" style="margin-left:-70px;">
+                                                        <label>
+                                                            HIV
+                                                        </label>
+                                                    </div>
+                                                   <div class="inline-block-sn" style="margin-left:5px;">
+                                                        <label>
+                                                            < 20 sem
+                                                        </label>
+                                                    </div>
+                                                     <div class="inline-block-sn" style="margin-left:20px;">
+                                                         <label>                                                    
+                                                             > 20 sem
+                                                        </label>
+                                                    </div>                                             
+                                                 </div>
+                                                </div>
+                                            </div>
+                                           <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                     <div class="inline-block-sn" style="margin-left:5px;">
+                                                        <label>
+                                                            no
+                                                        </label>
+                                                    </div>
+                                                   <div class="inline-block-sn" style="margin-left:21px;">
+                                                        <label>
+                                                            si
+                                                        </label>
+                                                    </div>
+                                                     <div class="inline-block-sn" style="margin-left:20px;">
+                                                         <label>                                                    
+                                                            no
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn" style="margin-left:17px;">
+                                                         <label>                                                    
+                                                            si
+                                                        </label>
+                                                    </div>
+                                                 </div>
+
+                                            </div>
+                                           <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                      <label class="ES-RadioButton" >
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                 </div>
+                                            </div>
+                                           <div class="block">                                        
+                                                 <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                      <label class="ES-RadioButton" >
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                      <div class="inline-block-sn">
+                                                         <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                    </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                 </div>
+                             </div>
+                        </td>
+                                    <td>
+                                        <div class="block-sn">
+                                            <div class="block" style="font-size: 15px;margin-left: 25px;">                            
+                                                Hb > 20 sem
+                                            </div>
+                                            <div class="block">
+                                                <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                         @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" }) , 
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:30px;" })
+                                                        g
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="block textCenter">
+                                                <div class="inline-block-sn">
+                                                        <div class="inline-block-sn">
+                                                            < 11.0g
+                                                        </div>
+                                                       <div class="inline-block-sn">
+                                                            <label class="ES-RadioButton">
+                                                              @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                       </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="inline-block-sn">
+                                                    <div class="block" style="text-align: center;">
+                                                        <div class="block"  style="font-weight: bold;">
+                                                             <div class="block-sn">
+                                                                <div class="block-sn">Fe/FOLTAOS</div>
+                                                                <div class="block-sn">indicadores</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="block" style="margin-left: 35px;">
+                                                             <div class="inline-block-sn">
+                                                                <div class="inline-block-sn" style="margin-left:-11px;">
+                                                                    <label>
+                                                                       Fe
+                                                                    </label>
+                                                                </div>
+                                                              <div class="inline-block-sn" style="margin-left:20px;">
+                                                                     <label>
+                                                                        Folatos
+                                                                    </label>
+                                                                </div>
+                                                             </div>
+
+                                                        </div>
+                                                        <div class="block">
+                                                             <div class="inline-block-sn">
+                                                                <div class="inline-block-sn">
+                                                                    no
+                                                                  <label class="ES-RadioButton" style="background: white;">
+                                                                        @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                                    </label>
+                                                                </div>
+                                                                <div class="inline-block-sn">
+                                                                    no
+                                                                     <label class="ES-RadioButton">
+                                                                        @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                                    </label>
+                                                                </div>
+                                                             </div>
+
+                                                        </div>
+                                                        <div class="block">
+                                                             <div class="inline-block-sn">
+                                                                <div class="inline-block-sn">
+                                                                    si
+                                                                   <label class="ES-RadioButton" style="background: white;">
+                                                                        @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                                    </label>
+                                                                </div>
+                                                                <div class="inline-block-sn">
+                                                                    si
+                                                                     <label class="ES-RadioButton" style="background: white;">
+                                                                        @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                                    </label>
+                                                                </div>
+                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="block-sn">
+                                            <div class="block" style="font-size: 15px;margin-left: 25px;">                            
+                                                Hb < 20 sem
+                                            </div>
+                                            <div class="block">
+                                                <div class="inline-block-sn">
+                                                    <div class="inline-block-sn">
+                                                         @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" }) , 
+                                                    </div>
+                                                    <div class="inline-block-sn">
+                                                         @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:30px;" })
+                                                        g
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="block textCenter">
+                                                <div class="inline-block-sn">
+                                                        <div class="inline-block-sn">
+                                                            < 11.0g
+                                                        </div>
+                                                       <div class="inline-block-sn">
+                                                            <label class="ES-RadioButton">
+                                                              @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                       </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+
+                                    </td>            
+                                </tr>           
+                          </table>
+                      </div>
+                      <div class="block-sn">
+                      <table>
+             <tr>
+                <td style="width: 200px;text-align: center;">
+                    <div class="inline-block-sn">
+                        <div class="block" style="text-align: center;">
+                            <div class="block"  style="font-weight: bold;">
+                               <div class="block-sn">
+                               CHAGAS
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block" style="text-align: center;">
+                               <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                              </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            <div class="block-sn">-</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            +
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;position:relative; top:13px;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         <div class="block-sn">
+                                            <div class="block-sn">no se</div>
+                                            <div class="block-sn">hizo</div>                                               
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px;position: relative; text-align: center;width: 301px;">
+                <div class="block-sn">                        
+                    <div class="block-sn">
+                    <div class="inline-block-sn">
+                        <div class="block-sn" style="text-align: center;">                                    
+                            <div class="block" style="position:relative;">
+                                < 20
+                            </div>
+                            <div class="block" style="position:relative;">
+                                    > 20
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline-block-sn">
+                        <div class="block" style="text-align: center;">
+                            <div class="block-sn"  style="font-weight: bold;">
+                                BACTERIURIA
+                            </div>
+                            <div class="block" style="position: relative;left: -50px;">
+                                    <div class="inline-block-sn">
+                                    <div class="inline-block-sn" style="position: relative;left:15px;">
+                                        <label>
+                                            sem
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn" style="position: relative;left:28px;">
+                                            <label>
+                                                normal
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn" style="position: relative;left:30px;">
+                                            <label>
+                                                anormal
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn" style="position: relative;left:30px;">
+                                            <div class="block-sn">
+                                            <div class="block-sn">no</div>
+                                            <div class="block-sn">se hizo</div>                                               
+                                        </div>
+                                    </div>
+                                    </div>
+
+                            </div>
+                            <div class="block">                                        
+                                    <div class="inline-block-sn">
+                                    <div class="inline-block-sn" style="    position: relative;left: -15px;">
+                                        <label class="ES-RadioButton" style="background: white;">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                    <div class="inline-block-sn">
+                                            <label class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn"  style="    position: relative;left: 15px;">
+                                            <label class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>                                            
+                                    </div>
+
+                            </div>
+                            <div class="block">                                        
+                                    <div class="inline-block-sn">
+                                    <div class="inline-block-sn">                                          
+                                    <div class="inline-block-sn"  style="    position: relative;left: -15px;">
+                                            <label class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn">
+                                            <label class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                        <div class="inline-block-sn"  style="    position: relative;left: 15px;">
+                                            <label class="ES-RadioButton">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                    </div>
+                                    </div>
+
+                            </div>                            
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                    </div>
+                </td>
+                <td style=" border-top: 0px;position: relative; text-align: center;width: 345px;">
+                     <div class="inline-block-sn">
+                         <div class="inline-block-sn">
+                             <div class="block">
+                                 <div class="block"  style="font-size:12px;">
+                                     < 20 sem
+                                 </div>
+                                  <div class="block">
+                                     @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width:60px;" })
+                                      <label></label>
+                                 </div>
+                             
+                             </div>
+                         
+                          </div>
+                         
+                         <div class="inline-block-sn">
+                         <div class="block">
+                                 <div class="block"  style="font-size:12px; font-weight:bold;">
+                                     GLUCEMIA EN AYUNAS
+                                 </div>
+                                  <div class="block">                                    
+                                   <div class="inline-block-sn">
+                                        <label class="ES-RadioButton">
+                                          @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                        </label>
+                                   </div>
+                                   <div class="inline-block-sn">
+                                        > 1.5 mg/dl
+                                    </div>
+                                    <div class="inline-block-sn">
+                                        <label class="ES-RadioButton">
+                                          @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                    </label>
+                                   </div>
+                                 </div>
+                             </div>
+                          </div>
+
+                         <div class="inline-block-sn">
+                             <div class="block">
+                                 <div class="block"  style="font-size:12px;">
+                                     >30 sem
+                                 </div>
+                                  <div class="block">
+                                      <label>
+                                     @Html.TextBoxFor(model => model.InformacionPaciente.perTelefono, new { @class = "editable", id = "perDomicilio", style="width: 60px;" })
+                                          </label>
+                                 </div>
+                             </div>
+                          </div>
+                      </div>
+                </td>
+                <td style="width: 200px;text-align: center;">
+                    <div class="inline-block-sn">
+                        <div class="block" style="text-align: center;">
+                            <div class="block"  style="font-weight: bold;">
+                               <div class="block-sn">
+                               ESTREPTO.B 35-37 S.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block" style="text-align: center;">
+                               <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                              <label class="ES-RadioButton" style="background: white;">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                              </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            <div class="block-sn">-</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            <label class="ES-RadioButton">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                            </div>
+                                        <div class="block-sn">
+                                            +
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;position:relative; top:13px;">
+                                        <div class="block-sn">
+                                                <label class="ES-RadioButton" style=" background: white">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                            </div>
+                                         <div class="block-sn">
+                                            <div class="block-sn">no se</div>
+                                            <div class="block-sn">hizo</div>                                               
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </td>
+
+                <td style="width: 168px;text-align: center;">
+                    <div class="inline-block-sn">
+                        <div class="block" style="text-align: center;">
+                            <div class="block"  style="font-weight: bold;">
+                               <div class="block-sn">
+                                    <div class="block-sn">PREPARACION</div>
+                                    <div class="block-sn">PARA EL PARTO</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block" style="text-align: center;">
+                               <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            si
+                                              <label class="ES-RadioButton" style="background: white;">                                                  
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                              </label>
+                                            </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            no
+                                            <label class="ES-RadioButton">                                              
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                            </div>                                        
+                                    </div>
+                        </div>
+                    </div>
+                </td>
+                    <td style="width: 168px;text-align: center;">
+                    <div class="inline-block-sn">
+                        <div class="block" style="text-align: center;">
+                            <div class="block"  style="font-weight: bold;">
+                               <div class="block-sn">
+                                    <div class="block-sn">CONSEJERIA</div>
+                                    <div class="block-sn">LACTANCIA</div>
+                                   <div class="block-sn">MATERNA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block" style="text-align: center;">
+                               <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            si
+                                              <label class="ES-RadioButton" style="background: white;">                                                  
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                              </label>
+                                            </div>
+                                    </div>
+
+                                    <div class="inline-block-sn" style="text-align: center;">
+                                        <div class="block-sn">
+                                            no
+                                            <label class="ES-RadioButton">                                              
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                            </div>
+                                    </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+                      </div>
+                  </div>
+              </div>
+              <div class="inline-block-sn">
+                     <table style="height: 317px; position: relative;left: -6px;">
+                       <tr>
+                          <td>
+                            <div class="block-sn">
+                                <div class="inline-block-sn">
+                                    <div class="inline-block textCenter" style="border-right: 1px dashed #AAA;padding: 10px;">
+                                         <div class="block-sn" style="top: -50px;position: relative;">
+                                              <div class="block-sn">
+                                                    <div class="block-sn">VDRL/RPR</div>
+                                                    <div class="block-sn">< 20 sem</div>
+                                              </div>
+                                          </div>
+                                         <div class="block-sn">
+                                                <label class="ES-RadioButton" style="background: white;">
+                                                @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                </label>
+                                           </div>
+                                         <div class="block-sn">
+                                              <div class="inline-block-sn" style="text-align: center;">
+                                                    <div class="block-sn">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        +
+                                                    </div>
+                                                </div>
+
+                                                <div class="inline-block-sn" style="text-align: center;position:relative; top:13px;">
+                                                    <div class="block-sn">
+                                                            <label class="ES-RadioButton" style=" background: white">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                     <div class="block-sn">
+                                                        <div class="block-sn">no se</div>
+                                                        <div class="block-sn">hizo</div>                                               
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                    <div class="inline-block textCenter" style="position: relative;border-right: 1px dashed #EBEBE4;padding: 10px;" >
+                                         <div class="block-sn" style="top: -50px;position: relative;">
+                                              <div class="block-sn">
+                                                    <div class="block-sn">SIFILIS</div>
+                                                    <div class="block-sn">confirmada</div>
+                                                    <div class="block-sn">por FTA</div>
+                                              </div>
+                                          </div>
+                                        <div class="block-sn">
+                                            n/c
+                                            <label class="ES-RadioButton" style="background: white;">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                        </div>
+                                           <div class="block-sn" style="position: relative;">
+                                              <div class="inline-block-sn" style="text-align: center;">
+                                                    <div class="block-sn">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        no
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block-sn" style="text-align: center;">
+                                                    <div class="block-sn">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        si
+                                                    </div>
+                                                </div>
+
+                                                <div class="inline-block-sn" style="text-align: center;position:relative; top:13px;">
+                                                    <div class="block-sn">
+                                                            <label class="ES-RadioButton" style=" background: white">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                     <div class="block-sn">
+                                                        <div class="block-sn">no se</div>
+                                                        <div class="block-sn">hizo</div>                                               
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                    <div class="inline-block textCenter" style="padding: 10px;" >
+                                        <div class="block-sn" style="top: -50px;position: relative;">
+                                              <div class="block-sn">
+                                                    <div class="block-sn">VDRL/RPR</div>
+                                                    <div class="block-sn">>20 sem</div>
+                                              </div>
+                                          </div>
+                                        <div class="block-sn">
+                                            <label class="ES-RadioButton" style="background: white;">
+                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                            </label>
+                                         </div>
+                                        <div class="block-sn">
+                                              <div class="inline-block-sn" style="text-align: center;">
+                                                    <div class="block-sn">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        +
+                                                    </div>
+                                                </div>
+
+                                                <div class="inline-block-sn" style="text-align: center;position:relative; top:13px;">
+                                                    <div class="block-sn">
+                                                            <label class="ES-RadioButton" style=" background: white">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                                        </div>
+                                                     <div class="block-sn">
+                                                        <div class="block-sn">no se</div>
+                                                        <div class="block-sn">hizo</div>                                               
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </div>
+                                </div>
+                                <div class="block" style="text-align: center; margin-top:20px ; border-top:1px dashed #EBEBE4;">
+                                    <div class="inline-block-sn" style="text-align: center; position: relative; margin-right: 20px;">
+                                        <label>TTO. SIFILIS</label>
+                                    </div>
+                                           <div class="inline-block-sn" style="text-align: center;     padding-top: 10px;">
+                                                    <div class="block-sn">
+                                                          <label class="ES-RadioButton" style="background: white;">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                          </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        <div class="block-sn">-</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="inline-block-sn" style="text-align: center;">
+                                                    <div class="block-sn">
+                                                        <label class="ES-RadioButton">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                        </label>
+                                                        </div>
+                                                    <div class="block-sn">
+                                                        +
+                                                    </div>
+                                                </div>
+
+                                                <div class="inline-block-sn" style="text-align: center;position:relative;">
+                                                    <div class="block-sn">
+                                                            <label class="ES-RadioButton" style=" background: white">
+                                                            @Html.RadioButtonFor(model => model.InformacionAntecedentes.perCesareas, true, new {@class = "editable SacaSombra", id = "perAntGem", style="margin: 7px;"})                                              
+                                                            </label>
+                                           
+                                                    </div>
+                                                   <div class="block-sn">no corresponde</div>
+                                                </div>
+                                    </div>
+                            </div>
+                       </td>
+                      </tr>
+                     </table>
+              </div>
+        </div>
+
+        @Html.HiddenFor(model => Model.hcperid, new {id = "hcperid"})
+        @Html.HiddenFor(model => Model.hcperAccion, new {idAccion = "hcperAccion"})
+    </div>
+                   </text>);
+              tabstrip.Add().Text("Consultas Antenatales")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasAntenatales", "HistoriaClinica", new { Id = Model.hcperid});
+              tabstrip.Add().Text("Calendario")
+                            .Selected(false)
+                            .ContentHtmlAttributes(new { style = "height: 460px;" })
+                            .LoadContentFrom("CalendarioDeProgramacion", "HistoriaClinica", new { Id = Model.hcperid });
+
+                            }))
+    
+    
+      
+     
+        <div style="text-align: center; margin-top: 30px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarwHCCRUDPerinatales();" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarwHCCRUDPerinatales();" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+}
+
+<canvas id="lnObstetricos4Lineas" style="position: absolute; top: 295px; left: 918px;" width="150" height="160"></canvas>
+<canvas id="lnObstetricosAborto" style="position: absolute; top: 305px; left: 1027px;" width="42" height="10"></canvas>
+<canvas id="lnObstetricosVaginales" style="position: absolute; top: 295px; left: 1107px;" width="42" height="160"></canvas>
+<canvas id="lnObstetricosNacidos" style="position: absolute; top: 295px; left: 1187px;" width="42" height="160"></canvas>
+<canvas id="lnObstetricosVivos" style="position: absolute; top: 305px; left: 1259px;" width="92" height="160"></canvas>
+<label style="position: absolute; top: 235px; left: 33px;">FAMILIARES</label>
+<div style="position: absolute; top: 235px; left: 226px;">
+    <label>PERSONALES</label>
+    <div style="margin-left: 15px;">
+        <label>no</label>
+        <label style="margin-left: 28px;">si</label>
+    </div>
+</div>
+<div style="position: absolute; top: 250px; left: 490px;">
+    <div style="margin-left: 15px;">
+        <label>no</label>
+        <label style="margin-left: 28px;">si</label>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalwHCCRUDPerinatales").ready(function () {
+        //Aplicamos algunos estilos
+        $(".desactivar").attr("disabled", "disabled");
+        //$("#InformacionPaciente_perInfoPaciente_pacFechaNacimiento").attr("disabled", "disabled");
+        $(".t-dropdown-wrap.t-state-default").css("text-align", "left");
+
+        $("#csIdPrenatal_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function (e) {
+            //var pValor = $("#tjId_Lista").val();
+            //$("#tjId").val(e.val == null ? pValor : e.val);
+            //RecargarTabs();
+        });
+        var $ListaPrenatalEn = $("#csIdPrenatal_Lista");
+        $ListaPrenatalEn.on("select2:open", function (e) {
+            $(".select2-dropdown.select2-dropdown--above").css("z-index", "19301");
+            $(".select2-dropdown.select2-dropdown--below").css("z-index", "19301");
+            $(".select2-dropdown.select2-dropdown--open").css("z-index", "19301");
+        });
+
+        $("#csIdParto_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function (e) {
+            //var pValor = $("#tjId_Lista").val();
+            //$("#tjId").val(e.val == null ? pValor : e.val);
+            //RecargarTabs();
+        });
+        var $ListaPartoEn = $("#csIdParto_Lista");
+        $ListaPartoEn.on("select2:open", function (e) {
+            $(".select2-dropdown.select2-dropdown--above").css("z-index", "19301");
+            $(".select2-dropdown.select2-dropdown--below").css("z-index", "19301");
+            $(".select2-dropdown.select2-dropdown--open").css("z-index", "19301");
+        });
+
+
+@*        @{
+            var FechaNacimiento = "";
+            if (Model.DatosAgente.agtFechaNacimiento != null)
+            {
+                FechaNacimiento = Model.DatosAgente.agtFechaNacimiento.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#agtFechaNacimiento').val('@(FechaNacimiento)');
+*@
+        //Asignamos los valores de los campos\\
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    //Dibuja Línea en Fin de Embarazo Anterior
+    var canvas2 = document.getElementById("lnFinEmbarazoAnterior");
+    if (canvas2 && canvas2.getContext) {
+        var ctx = canvas2.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(150, 5);
+            ctx.stroke();
+        }
+    }
+
+    //Dibuja Línea en Fin de Embarazo Anterior
+    var cvObstetricos = document.getElementById("lnObstetricos4Lineas");
+    if (cvObstetricos && cvObstetricos.getContext) {
+        var ctx = cvObstetricos.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(100, 30);
+            ctx.lineTo(150, 160);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 30);
+            ctx.lineTo(150, 160);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 50);
+            ctx.lineTo(150, 160);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 120);
+            ctx.lineTo(150, 160);
+            ctx.stroke();
+        }
+    }
+
+    //Dibuja Línea de Abortos
+    var canvas2 = document.getElementById("lnObstetricosAborto");
+    if (canvas2 && canvas2.getContext) {
+        var ctx = canvas2.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(150, 5);
+            ctx.stroke();
+        }
+    }
+
+    //Dibuja Línea de Vaginales
+    var canvas2 = document.getElementById("lnObstetricosVaginales");
+    if (canvas2 && canvas2.getContext) {
+        var ctx = canvas2.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(150, 150);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(50, 0);
+            ctx.stroke();
+        }
+    }
+
+    //Dibuja Línea de Vaginales
+    var canvas2 = document.getElementById("lnObstetricosNacidos");
+    if (canvas2 && canvas2.getContext) {
+        var ctx = canvas2.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 15);
+            ctx.lineTo(15, 15);
+            ctx.stroke();
+            //-------------------
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(15, 150);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(15, 150);
+            ctx.lineTo(15, 15);
+            ctx.stroke();
+            //
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(15, 100);
+            ctx.lineTo(35, 150);
+            ctx.stroke();
+            //
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(15, 70);
+            ctx.lineTo(35, 15);
+            ctx.stroke();
+        }
+    }
+
+    //Dibuja Línea de Abortos
+    var canvas2 = document.getElementById("lnObstetricosVivos");
+    if (canvas2 && canvas2.getContext) {
+        var ctx = canvas2.getContext("2d");
+        if (ctx) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#BCB9B9";
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(150, 5);
+            ctx.stroke();
+            // dibuja una segunda línea  MÁS FINA;
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(0, 5);
+            ctx.lineTo(30, 120);
+            ctx.stroke();
+            //
+            ctx.translate(0, .5);
+            ctx.beginPath();
+            ctx.moveTo(20, 80);
+            ctx.lineTo(30, 65);
+            ctx.stroke();
+        }
+    }
+
+</script>

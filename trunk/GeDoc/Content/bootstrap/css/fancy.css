@@ -1,0 +1,132 @@
+.fancy-checkbox {
+  display: block;
+}
+/* line 101, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox input[type="checkbox"] {
+  display: none;
+}
+/* line 104, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox input[type="checkbox"] + span {
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  cursor: pointer;
+  position: relative;
+  font-size: 13px;
+}
+/* line 111, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox input[type="checkbox"] + span:before {
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  position: relative;
+  bottom: 1px;
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  content: "";
+  border: 1px solid #ccc;
+  background-color: white;
+}
+/* line 124, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox input[type="checkbox"]:checked + span:before {
+  font-family: FontAwesome;
+  content: '\f00c';
+  font-size: 12px;
+  color: #99a1a7;
+  text-align: center;
+  line-height: 16px;
+  background: #ededed;
+  border: 1px solid #ccc;
+}
+/* line 137, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox.custom-color-green input[type="checkbox"]:checked + span:before {
+  color: #53D76A;
+  background-color: #fff;
+}
+/* line 144, ../../sass/partials/_ui-elements.scss */
+.fancy-checkbox.custom-bgcolor-green input[type="checkbox"]:checked + span:before {
+  color: #fff;
+  background-color: #53D76A;
+  border-color: #32cf4d;
+}
+
+.fancy-radio {
+  display: block;
+}
+/* line 155, ../../sass/partials/_ui-elements.scss */
+.fancy-radio input[type="radio"] {
+  display: none;
+}
+/* line 158, ../../sass/partials/_ui-elements.scss */
+.fancy-radio input[type="radio"] + span {
+  display: block;
+  cursor: pointer;
+  position: relative;
+  font-size: 13px;
+}
+/* line 164, ../../sass/partials/_ui-elements.scss */
+.fancy-radio input[type="radio"] + span i {
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  -moz-border-radius: 9px;
+  -webkit-border-radius: 9px;
+  border-radius: 9px;
+  position: relative;
+  bottom: 1px;
+  content: "";
+  border: 1px solid #ccc;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+/* line 178, ../../sass/partials/_ui-elements.scss */
+.fancy-radio input[type="radio"]:checked + span i:after {
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  top: 3px;
+  left: 3px;
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #99a1a7;
+}
+/* line 193, ../../sass/partials/_ui-elements.scss */
+.fancy-radio.custom-color-green input[type="radio"]:checked + span i:after {
+  background-color: #53D76A;
+}
+/* line 199, ../../sass/partials/_ui-elements.scss */
+.fancy-radio.custom-bgcolor-green input[type="radio"]:checked + span i {
+  background-color: #53D76A;
+}
+/* line 202, ../../sass/partials/_ui-elements.scss */
+.fancy-radio.custom-bgcolor-green input[type="radio"]:checked + span i:after {
+  background-color: #fff;
+}
+
+/* fancy checkbox and fancy radio */
+/* line 211, ../../sass/partials/_ui-elements.scss */
+.input-group-addon .fancy-radio,
+.input-group-addon .fancy-checkbox {
+  margin: 0;
+}
+/* line 216, ../../sass/partials/_ui-elements.scss */
+.input-group-addon .fancy-radio input[type="radio"] + span i,
+.input-group-addon .fancy-checkbox input[type="checkbox"] + span {
+  margin: 0;
+}
+/* line 220, ../../sass/partials/_ui-elements.scss */
+.input-group-addon .fancy-radio input[type="radio"] + span i:before,
+.input-group-addon .fancy-checkbox input[type="checkbox"] + span:before {
+  margin: 0;
+}

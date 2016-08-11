@@ -1,0 +1,336 @@
+﻿@using GeDoc
+@{
+    var recibo = ViewData["recibo"] != null ? ViewData["recibo"] as catEncuestaAPSRecibos : new catEncuestaAPSRecibos();
+}
+<style type="text/css">
+
+    #inp-recibonumero {
+        width: 45px;
+        text-align: center;
+    }
+
+    #inp-recibofecha {
+        width: 120px;
+        text-align: center;
+    }
+
+    #datos-detalle {
+        position: relative;
+    }
+
+    #datos-recibo {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    #gridover.block {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 99999999;
+        background-color: rgb(219, 219, 200);
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+        filter: alpha(opacity=30);
+        opacity: 0.3;
+    }
+
+    #wrecibocontent {
+        margin: auto;
+    }
+
+    #inp-observacion {
+        width: 50%;
+        margin-top: 10px;
+    }
+
+    #contenedorBotones {
+        text-align: center;
+        margin: 7px;
+    }
+
+    #printDocument {
+        display: none;
+    }
+
+    @@media print {
+        .noPrint {
+            display: none;
+        }
+
+        #printDocument {
+            position: relative;
+            display: block;
+            padding: 20px;
+        }
+
+        #pf-encabezado {
+            text-align: right;
+        }
+
+        #pf-user {
+            margin: 0;
+        }
+
+        #pf-user, #pf-printDate {
+            margin-top: 0;
+            font-size: 12px;
+        }
+
+        #pf-observacion {
+            text-indent: 7em;
+        }
+
+        #pf-t-detalles {
+            margin: auto;
+        }
+
+        #pf-observacion {
+            margin-top: 20px;
+        }
+
+        #pf-pie {
+            text-align: center;
+            position: fixed;
+            bottom: 10%;
+            width: 100%;
+        }
+    }
+
+</style>
+
+<script type="text/javascript">
+
+    $("#DetallesGrid_AddButton").click(function() {
+        var detallesGrid = $("#DetallesGrid").data("tGrid");
+        detallesGrid.addRow();
+    });
+
+    function blockGrid() {
+        $("#gridover").addClass("block");
+    }
+
+    function releaseGrid() {
+        $("#gridover").removeClass("block");
+    }
+
+    function DetallesGrid_OnEdit() {
+        recibo.updateDeptCombo();
+    }
+
+    var recibo = {
+        encReciboId: "",
+        encReciboFecha: "",
+        encReciboObservacion: "",
+        cszId: "",
+        depArray: "",
+        cszNombre: "",
+        updateDeptCombo: function() {
+            var tddl = $("#depId").data("tDropDownList");
+            tddl.dataBind(this.depArray);
+            tddl.select(0);
+            tddl.dropDownAttr = "";
+        },
+        csValueChanged: function(val) {
+            var t = this;
+            $.post("@Url.Content(@"~/catEncuestaAPSReciboDetalle/PopulateDepartmentDropDownList")", { cszId: val }, function(d) {
+                t.depArray = d;
+            });
+        }
+    }
+
+    $("#btn-detalles-generar").click(function() {
+        $(this).prop("disabled", "disabled").addClass("t-state-disabled");
+        createNewReceipt();
+        recibo.csValueChanged($("#cszId").data("tDropDownList").value());
+        $(".t-window-content.t-content").css("height", "auto");
+    });
+
+    function createNewReceipt() {
+        var postData = {};
+        $("#datos-recibo *[name]").each(function() {
+            postData[$(this).prop("name")] = $(this).prop("value");
+        });
+
+        $.post("@Url.Content(@"~/catEncuestaAPSRecibo/_InsertEditing")", postData, function(d) {
+            recibo.encReciboFecha = d.data[d.data.length - 1].encReciboFecha;
+            recibo.encReciboFecha = "new " + recibo.encReciboFecha.replace(/\//g, "");
+            recibo.encReciboFecha = eval(recibo.encReciboFecha);
+            recibo.encReciboId = ZeroFill(d.data[d.data.length - 1].encReciboId, 5);
+            recibo.cszNombre = $("#cszId").data("tDropDownList").text();
+            recibo.observacion = $("#inp-observacion").val();
+            $("#inp-observacion").prop("disabled", "disabled");
+            $("#cszId").data("tDropDownList").disable();
+            $("#inp-recibonumero").val(recibo.encReciboId);
+            $("#inp-recibofecha").val(recibo.encReciboFecha.toLocaleDateString() + " " + recibo.encReciboFecha.toLocaleTimeString());
+            releaseGrid();
+        });
+    }
+
+    function ZeroFill(str, max) {
+        str = str.toString();
+        return str.length < max ? ZeroFill("0" + str, max) : str;
+    }
+
+    function DetallesGrid_OnSave(e) {
+        e.values.encReciboId = recibo.encReciboId;
+    }
+
+    function DetallesGrid_OnDataBinding(e) {
+        debugger;
+        e.data = { encReciboId: recibo.encReciboId };
+    }
+
+    function createPrintDocument() {
+        var printDate = new Date();
+        var totalSurveys = 0;
+        $($("#DetallesGrid").data("tGrid").data).each(function() { totalSurveys += this.cantidad; });
+
+
+        var printHtml = "<div id='printDocument'>";
+        printHtml += "<div id='pf-encabezado'>";
+        printHtml += "<p id='pf-user'>" + $("#lblUserName").text().replace("Hola ", "").replace("...", "") + "</p>";
+        printHtml += "<p id='pf-printDate'>" + printDate.toLocaleDateString() + " " + printDate.toLocaleTimeString() + "</p>";
+        printHtml += "<p id='pf-fecha'>San Juan, " + recibo.encReciboFecha.toLocaleString("es-ar", { day: "2-digit", month: "long", year: "numeric" }) + "</p>";
+        printHtml += "</div>";
+        printHtml += "<div id='pf-cuerpo'>";
+        printHtml += "<h3>Recibo Nº: <b>" + recibo.encReciboId + "</b></h3>";
+        printHtml += "<p>El día de la fecha recibí de la " + recibo.cszNombre + " la cantidad de " + numberWithDot(totalSurveys) + " encuestas según siguiente detalle:</p>";
+        printHtml += "<div id='pf-tableContainer'><table id='pf-t-detalles'><thead><th>Encuestador</th><th>Departamento</th><th>Total</th></thead>";
+        printHtml += "<tbody>";
+
+        $($("#DetallesGrid").data("tGrid").data).each(function() {
+            printHtml += "<tr>";
+            printHtml += "<td>" + this.encuestadorApyNom + "</td>";
+            printHtml += "<td>" + this.depNombre + "</td>";
+            printHtml += "<td>" + numberWithDot(this.cantidad) + "</td>";
+            printHtml += "</tr>";
+        });
+
+        printHtml += "</tbody></table></div>";
+        if (recibo.observacion && recibo.observacion.length > 0)
+            printHtml += "<div><span>Observaciones:</span><p id='pf-observacion'>" + recibo.observacion + "</p></div>";
+        printHtml += "</div>";
+        printHtml += "<div id='pf-pie'><p>Firma en representación de Atención Primaria de la Salud</p>";
+        printHtml += "<br />";
+        printHtml += "<br />";
+        printHtml += "<p>______________________________</p></div>";
+        printHtml += "</div>";
+
+        $("html").append(printHtml);
+    }
+
+    $("#btn-close").click(function() {
+        $("#WRecibo").data("tWindow").close();
+    });
+
+    function printReceipt() {
+        createPrintDocument();
+        $("body").addClass("noPrint");
+        window.print();
+        $("#printDocument").remove();
+        $("body").removeClass("noPrint");
+    }
+
+    function numberWithDot(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function DetallesGrid_OnDataBound(e) {
+        if ($(e.currentTarget).data("tGrid").total > 0) {
+            $("#btn-print").removeClass("t-state-disabled").removeProp("disabled");
+        } else {
+            $("#btn-print").addClass("t-state-disabled").prop("disabled", "disabled");
+        }
+    }
+</script>
+
+@if(recibo.encReciboId != null)
+{
+    <script type="text/javascript">
+        
+        recibo.encReciboId = @recibo.encReciboId;
+        recibo.encReciboFecha = '@recibo.encReciboFecha.ToString("dd/mm/yyyy HH:mm")';
+        recibo.encReciboObservacion = '@recibo.encReciboObservacion';
+        recibo.cszId = @recibo.cszId;
+        recibo.cszNombre = '@recibo.cszNombre';
+    </script>
+}
+
+<div id="wrecibocontent">
+    <div id="datos-recibo">
+        <p>Seleccione la zona deseada, al momento de selecionar, el recibo será generado y podra agregar los detalles.</p>
+        <span id="lbl-recibonumero">Nº:</span>
+        <input id="inp-recibonumero" type="text" disabled="disabled" value="@((recibo.encReciboId ?? 0).ToString("D5"))"/>
+        <span id="lbl-recibofecha">Fecha:</span>
+        <input id="inp-recibofecha" disabled="disabled" type="text" value="@( (DateTimeOffset.Compare(recibo.encReciboFecha, new DateTime()) != 0 ? recibo.encReciboFecha.ToString("dd/mm/yyyy HH:mm") : "N/A"))"/>
+        <span id="lbl-recibozona">Zona:</span>
+        @if (recibo.cszId != null)
+        {
+
+            @:<input id="cszId" type="text" style="width: 200px" disabled="disabled" value="@((recibo.cszNombre ?? ""))"/>
+        }
+        else
+        {
+            Html.Telerik().DropDownList().Name("cszId")
+                .BindTo((ViewData["cszId"] as SelectList))
+                .HtmlAttributes(new {style = "width:200px;top:6px"}).Render();
+        }
+        <input id="btn-detalles-generar" value="Generar" type="button" class="t-button @(recibo.encReciboId != null ? "t-state-disabled" : "")" @(recibo.encReciboId != null ? "disabled" : "")/>
+        <br/>
+        <label for="inp-observacion">Observación:</label>
+        <input type="text" name="encReciboObservacion" id="inp-observacion" value="@(recibo.encReciboObservacion ?? "")" @(recibo.encReciboId != null ? "disabled" : "")/>
+    </div>
+    <div id="datos-detalle" class="print-element">
+        @{
+            Html.Telerik().Grid<catEncuestaAPSReciboDetalles>()
+                .Name("DetallesGrid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(p => p.encReciboDetalleId);
+                })
+                .ToolBar(t =>
+                {
+                    t.Custom().Text("Agregar").ButtonType(GridButtonType.Text).HtmlAttributes(new {id = "DetallesGrid_AddButton"}).Url("javascript:void(0)");
+                })
+                .Localizable("es-AR")
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("_SelectEditing", "catEncuestaAPSReciboDetalle")
+                        .Insert("_InsertEditing", "catEncuestaAPSReciboDetalle")
+                        .Update("_SaveEditing", "catEncuestaAPSReciboDetalle")
+                        .Delete("_DeleteEditing", "catEncuestaAPSReciboDetalle");
+                })
+                .Columns(columns =>
+                {
+                    columns.Command(commands =>
+                    {
+                        commands.Edit().ButtonType(GridButtonType.Image);
+                        commands.Delete().ButtonType(GridButtonType.Image);
+                    }).Width(45).Title("Acciones");
+                    columns.Bound(c => c.depId).Width(80).Title("Departamento").Visible(true).ClientTemplate("<#= depNombre #>");
+                    columns.Bound(c => c.encuestadorId).Width(80).Title("Encuestador").Visible(true).ClientTemplate("<#= encuestadorApyNom #>");
+                    columns.Bound(c => c.cantidad).Width(80).Title("Cantidad").Visible(true);
+                    columns.Bound(c => c.encReciboId).Visible(false);
+                })
+                .Editable(editing => editing.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(true))
+                .ClientEvents(e => e.OnEdit("DetallesGrid_OnEdit")
+                                    .OnSave("DetallesGrid_OnSave")
+                                    .OnDataBinding("DetallesGrid_OnDataBinding")
+                                    .OnDataBound("DetallesGrid_OnDataBound")
+                )
+                .Selectable()
+                .TableHtmlAttributes(new {disabled = "disabled"})
+                .Render();
+
+        }
+        <div id="gridover" class="block"></div>
+    </div>
+    <div id="contenedorBotones">
+        <input type="button" disabled="disabled" class="t-button t-state-disabled" id="btn-print" value="Imprimir" onclick=" printReceipt() "/>
+        <input type="button" class="t-button" id="btn-close" value="Cerrar"/>
+    </div>
+</div>
+

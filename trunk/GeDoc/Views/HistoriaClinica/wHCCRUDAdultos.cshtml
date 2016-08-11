@@ -1,0 +1,402 @@
+@using GeDoc
+@using GeDoc.Models
+@model GeDoc.catHCAdultoWS
+
+<style>
+    .CirculoAmarillo {
+        width: 25px;
+        height: 25px;
+        padding: 5px;
+        border-color: black;
+        background: yellow;
+       -moz-border-radius: 50%; 
+       -webkit-border-radius: 50%;
+       border-radius: 50%;
+        border-style: solid;
+        border-width: thin;
+    }
+    .SacaSombra:focus {
+        box-shadow: 0 0 0px white;
+        -webkit-box-shadow: 0 0 0px white;
+        -moz-box-shadow: 0 0 0px white;
+    }
+    .ES-RadioButton {
+        display: inline-block;
+        vertical-align: middle;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+        position: relative;
+        bottom: 1px;
+        content: "";
+        border: 1px solid #ccc;
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+        background-color: yellow;
+    }
+    .sinBorde {
+        border: none;
+    }
+    .inline-block {
+        display: inline-block;
+        padding: 3px;
+    }
+    .block {
+        padding: 3px;
+        display: block;
+    }
+    .inline-block-sn {
+        display: inline-block;
+    }
+    .block-sn {
+        display: block;
+    }
+    .textCenter {
+        text-align:center;
+    }
+    .padding0 {
+        padding: 0px !important;
+    } 
+     .padding2px {
+        padding: 2px !important;
+    }
+    #divCRUDwHCListaAdultos_Content {
+        width:1000px;
+        overflow-x: scroll !important;
+    }
+</style>
+<script type="text/javascript">
+    function onAceptarwHCCRUDAdultos() {
+
+        var $form = $('#formAdultosWS');
+        var $tab1 = $('#tab1');
+        var $tab2 = $('#tab2');
+        var $tab3 = $('#tab3');
+        var $tab4 = $('#tab4');
+        var $tab5 = $('#tab5');
+        var $tab6 = $('#tab6');
+        var tabs = [];
+
+        if ($tab1.serialize() != "") {
+            tabs.push($tab1);
+        }
+
+        if ($tab2.serialize() != "") {
+            tabs.push($tab2);
+        }
+
+        if ($tab3.serialize() != "") {
+            tabs.push($tab3);
+        }
+
+        if ($tab4.serialize() != "") {
+            tabs.push($tab4);
+        }
+
+        if ($tab5.serialize() != "") {
+            tabs.push($tab5);
+        }
+
+        if ($tab6.serialize() != "") {
+            tabs.push($tab6);
+        }
+
+        //for (i = 0; i < tabs.length; i++) {
+            //text += cars[i] + "<br>";
+        //}
+
+        var inicio = 0;
+        var final = tabs.length;
+
+        if (inicio != final) {
+            AbrirWaitingCRUD();
+            SaveTab(tabs, inicio, final);
+        }
+    }
+
+    function SaveTab(tabs, inicio, final) {
+
+        $.ajax({
+            type: "POST",
+            url: tabs[inicio].attr("action"),
+            data: tabs[inicio].serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                inicio++;
+                if (inicio >= final) {
+                    CerrarWaitingCRUD();
+                    onCancelarwHCCRUDAdultos();
+                    jAlert(respuesta.Mensaje, "Información...", function () {
+                    });
+                }
+
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    SaveTab(tabs[inicio], inicio, final);
+                }
+            }
+        });
+    }
+
+    function onCancelarwHCCRUDAdultos() {
+        var windowElement = $("#wHCListaAdultos").data("tWindow");
+        $("#divCRUDwHCListaAdultos_Content").html("");
+        windowElement.close();
+    }
+
+    function onActivate_wHCFamiligrama() {
+        $('#wPaint').wPaint('menuOrientation', $('#wPaint').wPaint('menuOrientation') === 'vertical' ? 'horizontal' : 'vertical');
+        $('#wPaint').wPaint('menuOrientation', $('#wPaint').wPaint('menuOrientation') === 'vertical' ? 'horizontal' : 'vertical');
+        $("wPaint-menu-icon.wPaint-menu-icon-name-loadBg.wPaint-menu-icon-group.wPaint-menu-icon-group-loadImg.wPaint-menu-icon-select active").css("display", "none");
+        $("wPaint-menu.ui-draggable.wPaint-menu-alignment-horizontal").css("width", "549px");
+        var _WindowHC = $(this).data("tWindow");
+        _WindowHC.center();
+    }
+</script>
+@*
+@using (Html.BeginForm("setHistoriaClinicaAdulto", "HistoriaClinica", FormMethod.Post, new { id = "formAdultosWS" }))
+{  *@
+
+@{
+    Model.Fecha = Model.Fecha == null ? DateTime.Now : Model.Fecha;
+}
+<div>
+    @(Html.Telerik().TabStrip()
+          .Name("tabstrip")
+          .Items(tabstrip =>
+          {
+              tabstrip.Add().Text("General")
+                  .Selected(true)
+                  .Content(@<text>
+                <div id="divGridPrincipalwHCCRUDAdultos" tabindex="1" style="height:auto;width: 100%;">
+                    <form id="tab1">
+                    <table style="width: 100%; border: hidden;">
+                        <tr style="border: none;">
+                            <td style="border: none;">FECHA:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.Fecha, new { @class = "desactivar", id = "Fecha", style = "width: 68px;" })</td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;">CAPS:</td>
+                            <td style="border: none;"><input type="text" class = "desactivar" value="@((Session["UsuarioCentroDeSalud"] as sisUsuariosCentroDeSalud).ucsCentroDeSalud)" style="width: 300px;" /></td>
+                            <td style="border: none;">ZONA SANITARIA:</td>
+                            <td style="border: none;"><input type="text" class = "desactivar" value="@(Session["ZonaSanitaria"] == null ? "Nivel Central" : Session["ZonaSanitaria"].ToString() )" /></td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">APELLIDO:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacApellido, new { @class = "desactivar", id = "pacApellido" })</td>
+                            <td style="border: none;">NOMBRE:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacNombre, new { @class = "desactivar", id = "pacNombre" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">TIPO DOCUMENTO:</td>
+                            <td colspan="2" style="border: none;">
+                                <label>DNI @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "DN", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                                <label>LC  @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "LC", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                                <label>LE  @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "LE", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                                <label>CI  @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "00", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                                <label>PAS @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "11", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                                <label>C.E @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, "22", new { @class = "desactivar", id = "tipoDescDocumento" ,style = "margin-left: 5px;"})</label>
+                            </td>
+                            <td style="border: none;">N°@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacNumeroDocumento, new { @class = "desactivar", id = "pacNumeroDocumento", style = "width:65px;" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">CUIL/CUIT:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacCUIL, new { @class = "desactivar", id = "pacCUIL" })</td>
+                            <td style="border: none;">NACIONALIDAD:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.paisNombre, new { @class = "desactivar", id = "paisNombre" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">SEXO: @*@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.tipoDescDocumento, new { @class = "desactivar", id = "tipoDescDocumento" })*@</td>
+                            <td style="border: none;">
+                                <label>VARÓN @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoSexoNombre, "MA", new { @class = "desactivar", id = "tipoSexoNombre" ,style = "margin: 7px;"})</label>
+                                <label>MUJER @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tipoSexoNombre, "FE", new { @class = "desactivar", id = "tipoSexoNombre" ,style = "margin: 7px;"})</label>
+                            </td>
+                            <td colspan="2" style="border: none;">FECHA DE NAC: @Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacFechaNacimiento, new { @class = "desactivar", id = "pacFechaNacimiento" , format = "dd/mm/yyyy", style = "width: 65px;"})</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">ESTADO CIVIL:</td>
+                            <td colspan="3" style="border: none;">
+                                <label>SOLTERO          @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.DescEstadoCivil, "SO", new { @class = "desactivar", id = "DescEstadoCivil" ,style = "margin-left: 5px;"})</label>
+                                <label>CASADO           @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.DescEstadoCivil, "CA", new { @class = "desactivar", id = "DescEstadoCivil" ,style = "margin-left: 5px;"})</label>
+                                <label>UNION ESTABLE    @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.DescEstadoCivil, "XX", new { @class = "desactivar", id = "DescEstadoCivil" ,style = "margin-left: 5px;"})</label>
+                                <label>SEPARADO         @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.DescEstadoCivil, "XX", new { @class = "desactivar", id = "DescEstadoCivil" ,style = "margin-left: 5px;"})</label>
+                                <label>DIVORCIADO       @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.DescEstadoCivil, "DI", new { @class = "desactivar", id = "DescEstadoCivil" ,style = "margin-left: 5px;"})</label>
+                            </td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">DONANTE DE ÓRGANOS:</td>
+                            <td style="border: none;">
+                                <label>SI   @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.pacDonaOrganos, true, new { @class = "desactivar", id = "pacDonaOrganos" ,style = "margin-left: 5px;"})</label>
+                                <label>NO   @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.pacDonaOrganos, false, new { @class = "desactivar", id = "pacDonaOrganos" ,style = "margin-left: 5px;"})</label>
+                            </td>
+                            <td style="border: none;">GRUPO SANGUINEO:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.grupoSanguineo, new { @class = "desactivar", id = "grupoSanguineo" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td colspan="4" style="border: none;"><hr /></td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">OCUPACIÓN</td>
+                            <td colspan="3" style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.OcupacionDescripcion, new { @class = "desactivar", id = "OcupacionDescripcion" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">COBERTURA OBRA SOCIAL:</td>
+                            <td style="border: none;">
+                                <label>SI @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tieneOS, true, new { @class = "desactivar", id = "osId" ,style = "margin-left: 5px;"})</label>
+                                <label>NO @Html.RadioButtonFor(model => model.InformacionPaciente.perInfoPaciente.tieneOS, false, new { @class = "desactivar", id = "osId" ,style = "margin-left: 5px;"})</label>
+                            </td>
+                            <td style="border: none;">¿CUAL?</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.osNombre, new { @class = "desactivar", id = "osNombre" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">ESTUDIOS ALCANZADOS:</td>
+                            <td colspan="3" style="border: none;">
+                                <label>PRIMARIA<input type="radio"/></label>
+                                <label>SECUNDARIA<input type="radio"/></label>
+                                <label>TERCIARIA/UNIVERSITARIA<input type="radio"/></label>
+                                <label>ANALFABETO<input type="radio"/></label>
+                            </td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">CALLE</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacCalle, new { @class = "desactivar", id = "pacCalle" })</td>
+                            <td style="border: none;">N°@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacCalleNumero, new { @class = "desactivar", id = "pacCalleNumero" })</td>
+                            <td style="border: none;">REFERENCIAS:@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacDomicilioReferencias, new { @class = "desactivar", id = "pacDomicilioReferencias" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">LOCALIDAD:</td>
+                            <td style="border: none;"><input type="text"/></td>
+                            <td style="border: none;">DEPARTAMENTO:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.depNombre, new { @class = "desactivar", id = "depNombre" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">TELÉFONOS:</td>
+                            <td colspan="3" style="border: none;">@*@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.pacTelefonoCasa != null ? model.InformacionPaciente.perInfoPaciente.pacTelefonoCasa + " - " : "", new { @class = "desactivar", id = "pacTelefono" })*@</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none;">PROVINCIA:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.provNombre, new { @class = "desactivar", id = "provNombre" })</td>
+                            <td style="border: none;">PAÍS:</td>
+                            <td style="border: none;">@Html.TextBoxFor(model => model.InformacionPaciente.perInfoPaciente.paisNombre, new { @class = "desactivar", id = "paisNombre" })</td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td colspan="4" style="border: none;">
+                                <hr/>
+                                <div>
+                                    @{
+                                        if (Model.FechaFamiligrama == null)
+                                        {
+                                            Model.FechaFamiligrama = DateTime.Now;
+                                        }
+                                    }
+
+                                    @Html.TextBoxFor(model => model.FechaFamiligrama, new {@class = "desactivar", id = "FechaFamiligrama", style = "width: 68px;"})
+                                    <div class="t-button" onclick="onEditarFamiligrama();" title="Editar familigrama" style="cursor: pointer;">
+                                        <label>Editar familigrama</label>
+                                    </div>
+                                </div>
+                                <div id="divPaint" class="BordeRedondeado" style="margin-top: 10px; height: 300px; border-color: gray;">
+                                    <img src="@(Model.Familigrama == "" || Model.Familigrama == null ? "" : Url.Content("~/Content/Fotos/Familigramas/") + Model.Familigrama)" id="wPaint-img" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    </form>
+                    @*@Html.HiddenFor(model => Model.hcperid, new {id = "hcperid"})
+                    @Html.HiddenFor(model => Model.hcperAccion, new {idAccion = "hcperAccion"})*@
+                </div>
+                </text>);
+    
+              tabstrip.Add().Text("Historial Familiar y Personal")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasHistoriaFamiliarYPersonal", "HistoriaClinica", new { pacId = Model.pacid});
+
+              tabstrip.Add().Text("Historial")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasHistorialFamiliarYPersonal", "HistoriaClinica", new { pacId = Model.pacid });
+
+              tabstrip.Add().Text("Cuidados Preventivos")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasHistoriaCuidadosPreventivos", "HistoriaClinica", new { pacId = Model.pacid });
+
+              tabstrip.Add().Text("Examen Físico")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasHistoriaExamenFisico", "HistoriaClinica", new { pacId = Model.pacid });
+
+              tabstrip.Add().Text("Evolución Periódica")
+                            .Selected(false)
+                            .LoadContentFrom("ConsultasHistoriaEvolucion", "HistoriaClinica", new { pacId = Model.pacid });
+         }
+         )//.Items(.... end 
+    )     
+    
+      
+     
+        <div style="text-align: center; margin-top: 30px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarwHCCRUDAdultos();" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarwHCCRUDAdultos();" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+</div>
+
+@Html.HiddenFor(model => model.hcaduid, new { @class = "desactivar", id = "hcaduid" })
+
+@{
+    Html.Telerik().Window()
+      .Name("wHCFamiligrama")
+      .Title("Edición del Familigrama")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("FamiligramaAdultos");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wHCFamiligrama"))
+      .Height(420)
+      .Width(900)
+      .Render();
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalwHCCRUDAdultos").ready(function () {
+        //Aplicamos algunos estilos
+        $(".desactivar").attr("disabled", "disabled");
+        $(".t-dropdown-wrap.t-state-default").css("text-align", "left");
+
+@*        @{
+            var FechaNacimiento = "";
+            if (Model.DatosAgente.agtFechaNacimiento != null)
+            {
+                FechaNacimiento = Model.DatosAgente.agtFechaNacimiento.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#agtFechaNacimiento').val('@(FechaNacimiento)');
+*@
+        //Asignamos los valores de los campos\\
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    function onEditarFamiligrama() {
+        var _WindowHC = $("#wHCFamiligrama").data("tWindow");
+        _WindowHC.open();
+    }
+</script>

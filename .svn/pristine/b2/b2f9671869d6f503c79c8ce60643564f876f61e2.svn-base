@@ -1,0 +1,362 @@
+﻿<script type="text/javascript">
+    var _DatosRegistro;
+
+    function onRowSelectedTurnoPaciente(e) {
+        var row = e.row;
+        var grid = $("#gridPacientes").data("tGrid");
+        var dataItem = grid.dataItem(row);
+        _DatosRegistro = dataItem;
+    }
+
+    function onCommandTurnoPaciente(e) {
+        switch (e.name) {
+            case "cmdAsignar":
+                if (_DatosRegistro["pacId"] != null) {
+                    checkForPatientHC();
+                }
+                else {
+                    jAlert("Debe seleccionar el Paciente", "Error...");
+                    return;
+                }
+                break;
+            case "cmdAgregar":
+            {
+                abrirFichaPaciente();
+            }
+        }
+    }
+
+    function abrirFichaPaciente(pacId) {
+        var contentUrl = "../catPaciente/Paciente" + (pacId ? "?pacId=" + pacId : "");
+        var thePatient = $.telerik.window.create({
+            title: "Un momento...",
+            html: "<img width='150px' src='/GeDoc/Content/General/WaitingIndicator.gif'/>",
+            contentUrl: contentUrl,
+            modal: true,
+            resizable: false,
+            draggable: true,
+            scrollable: false,
+            onLoad: function () {
+                $(this).data("tWindow").center();
+            },
+            onRefresh: function () {
+                $(this).data("tWindow").center();
+            },
+            onClose: function () {
+                $("#gridPacientes .t-icon.t-refresh").click();
+                this.remove();
+            }
+        });
+        window.fichaPaciente = $(thePatient).data("tWindow");
+    }
+
+    function onCancelarPaciente() {
+        var _Window = $("#WPacientes").data("tWindow");
+        _Window.close();
+    }
+
+    function onDataBindingTurnoPaciente(e) {
+        var BuscarTexto = "";
+        var txtBus = $("#txtBusquedaPaciente");
+        if (txtBus != null) {
+            BuscarTexto = txtBus.val().trim();
+        }
+        e.data = $.extend(e.data, { TextoBuscado: BuscarTexto });
+    }
+
+    function onCompleteTurnoPaciente(e) {
+        if (e.name !== "update" || e.name !== "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function AsignarPaciente(pacienteId, Nombre, Preguntar) {
+        if (Preguntar === 1) {
+            jConfirm('¿Confirma Asignación del Paciente "' + Nombre + '"?', "Asignación de Paciente...", function (r) {
+                if (r) {
+                    onCancelarPaciente();
+                    $.post("@Url.Content("~/catTurno/AsignarPaciente")", { pacId: pacienteId, turId: _DatosRegistroTurno["turId"], turFecha: $("#Agenda").val() }, function (data) {
+                        CerrarWaiting();
+                        if (!data.IsValid) {
+                            jAlert(data.Mensaje, 'Error...');
+                        }
+                        Refrescar();
+                        $("#txtBusquedaPaciente").val("");
+                    });
+                }
+            });
+        } else {
+           // AbrirWaiting();
+            onCancelarPaciente();
+            $.post("@(Url.Content("~/catTurno/AsignarPaciente"))", { pacId: pacienteId, turId: _DatosRegistroTurno.turId, turFecha: $("#Agenda").val() }, function (data) {
+                CerrarWaiting();
+                if (!data.IsValid) {
+                    jAlert(data.Mensaje, 'Error...');
+                }
+                Refrescar();
+                $("#txtBusquedaPaciente").val("");
+            });
+        }
+    }
+
+    $("#txtBusquedaPaciente").keydown(function (e) {
+        if (e.which == 13) {
+            BusquedaPaciente();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $("#txtBusquedaPaciente").focus(function (e) {
+        $(this).select();
+    });
+
+    function BusquedaPaciente() {
+        AbrirWaiting();
+        var grid = $('#gridPacientes').data("tGrid");
+        grid.ajaxRequest();
+    }
+
+    function checkForPatientHC() {
+        debugger;
+        document.getSelection().empty();
+        var nroHC = _DatosRegistro.nroHC;
+        if (typeof nroHC == "string" && nroHC.length > 0) {
+            checkForOtherTurns();
+        } else {
+            $("#hc-patientName").text(_DatosRegistro.pacApellido + ", " + _DatosRegistro.pacNombre);
+            $("#WHistoriaClinica").data("tWindow").center().open();
+        }
+    }
+
+    function checkForOtherTurns() {
+        p_turId = _DatosRegistroTurno.turId;
+        p_pacId = _DatosRegistro.pacId;
+        $.post("@Url.Content("~/catTurno/patientAlreadyHasATurnOnThatDay")", { _pacId: p_pacId, _turId: p_turId }, function (d) {
+            debugger;
+            if (d.length == 0) {
+                AsignarPaciente(_DatosRegistro["pacId"], _DatosRegistro.pacApellido + ", " + _DatosRegistro.pacNombre, 0);
+            } else {
+                var msg = "<span style='margin-bottom:5px'>El paciente <b>" + _DatosRegistro.pacApellido + ", " + _DatosRegistro.pacNombre + "</b> ya posee otros turnos para el día de la fecha:</span>";
+                msg += "<div class='ot-anotherTurns'><table><thead><th>Hora</th><th>Especialidad</th><th>Medico</th><th>Estado</th></thead>";
+                msg += "<tbody>";
+                $(d).each(function () {
+                    msg += "<tr>";
+                    msg += "<td>" + this.Hora + "</td>";
+                    msg += "<td>" + this.Especialidad + "</td>";
+                    msg += "<td>" + this.Profesional + "</td>";
+                    msg += "<td>" + this.Estado + "</td>";
+                });
+                msg += "</tbody></table></div>";
+                msg += "<span style='margin-top: 5px;font-weight: bold;display: block;text-align: center;font-size: 13px;'>¿Desea asignarlo de todas formas?</span>";
+                jConfirm(msg, "¡Atención!", function (r) {
+                    if (r) {
+                        AsignarPaciente(_DatosRegistro["pacId"], _DatosRegistro.pacApellido + ", " + _DatosRegistro.pacNombre, 0);
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        });
+    }
+
+    function validateHC() {
+        debugger;
+        var newNroHC = $("#HistoriaClinica").val().trim();
+        var lastValue = $("#HistoriaClinica").data("lastValue");
+        var hasBeenWarned = lastValue == newNroHC ? $("#HistoriaClinica").data("hasBeenWarned") : false;
+        if (newNroHC === "" && hasBeenWarned) {
+            checkForOtherTurns();
+            $("#HistoriaClinica").data("hasBeenWarned", false);
+            $("#WHistoriaClinica").data("tWindow").close();
+            $(".t-overlay").fadeOut();
+        } else if (newNroHC === "") {
+            $(".hc-resultMessage").animate({ height: "0px" }, function () {
+                $("#hc-message").text("¿Continuar sin ingresar un número de historia clínica?");
+                $(".hc-resultMessage").animate({ height: "15px" });
+            });
+            $(".hc-repeatedList tbody").empty();
+            $("#WHistoriaClinica .t-window-content").animate({ height: "180px" });
+            $("#HistoriaClinica").data("hasBeenWarned", true);
+            $("#hc-button").animate({ height: "toggle" }, 100, function () {
+                $(this).val("Confirmar");
+                $(this).animate({ height: "toggle" }, 100);
+            });
+            $("#HistoriaClinica").data("lastValue", newNroHC);
+        } else {
+            $.post(GetPathApp('catTurno/updatePatientHC'), { pacId: _DatosRegistro["pacId"], nroHc: newNroHC, hasBeenWarned: hasBeenWarned }, function (r) {
+                if (r === "ok") {
+                    checkForOtherTurns();
+                    $("#HistoriaClinica").data("hasBeenWarned", false);
+                    $("#WHistoriaClinica").data("tWindow").close();
+                    $(".t-overlay").fadeOut();
+                } else {
+
+                    if (hasBeenWarned) {
+                        checkForOtherTurns();
+                        $("#HistoriaClinica").data("lastValue", undefined);
+                    } else {
+                        $(".hc-repeatedList tbody").empty();
+                        $(r).each(function () {
+                            var obj = this;
+                            $(".hc-repeatedList tbody").append(
+                            $("<tr><td><td>").find("td").each(function (k) {
+                                if (k == 0) {
+                                    $(this).text(obj.pacApellido + ", " + obj.pacNombre);
+                                } else {
+                                    $(this).text(obj.pacNumeroDocumento);
+                                }
+                            }).parent()
+                            );
+                        });
+                        $("#WHistoriaClinica .t-window-content").animate({ height: "245px" });
+                        var msgPart = r.length > 1 ? "para los pacientes:" : "para el paciente:";
+                        $("#hc-message").text("El número de historia clinica ya existe " + msgPart + ".");
+                        $(".hc-resultMessage").animate({ height: "15px" });
+                        $("#HistoriaClinica").data("hasBeenWarned", true);
+                        $("#hc-button").animate({ height: "toggle" }, 100, function () {
+                            $(this).val("Confirmar");
+                            $(this).animate({ height: "toggle" }, 100);
+                        });
+                    }
+                    $("#HistoriaClinica").data("lastValue", newNroHC);
+                }
+            });
+        }
+    }
+
+    function historiaClinicaClosed() {
+        $("#WHistoriaClinica .t-window-content").css("height", "180px");
+        $(".hc-resultMessage").css("height", "0px");
+        $("#hc-message").text("");
+        $("#HistoriaClinica").data("hasBeenWarned", undefined);
+        $("#HistoriaClinica").data("lastValue", undefined);
+        $(".hc-repeatedList tbody").empty();
+        $("#HistoriaClinica").val("");
+    }
+
+
+</script>
+<div>
+    <div style="margin-top: 5px; margin-bottom: 8px;">
+        <label style="">Búsqueda:</label>
+        <input type="text" id="txtBusquedaPaciente" style="width: 949px;" />
+    </div>
+    @(Html.Telerik().Grid((IEnumerable<GeDoc.Models.spGetBusquedaPaciente_Result>)ViewData["catTurnosPacientes"])
+    .Name("gridPacientes")
+    .DataKeys(keys =>
+    {
+        keys.Add(p => p.pacId);
+    })
+    .ToolBar(commands =>
+    {
+        commands.Custom().Ajax(true).Name("cmdAsignar").ButtonType(GridButtonType.ImageAndText)
+            .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -33px -335px;" })
+            .Text("Asignar");
+        commands.Custom().Ajax(true).Name("cmdAgregar").ButtonType(GridButtonType.ImageAndText)
+            .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;" })
+            .Text("Agregar Paciente");
+    })
+    //.DataBinding(dataBinding =>
+    //{
+    //    dataBinding.Ajax()
+    //        .Select("_SelectEditingPacienteBusqueda", "catTurno", new {TextoBuscado = ""});
+    //})
+    .Localizable("es-AR")
+    .Columns(columns =>
+    {      
+        columns.Bound(c => c.pacApellido).Width("250px").Title("Apellido y Nombre").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= pacApellido + \" \" + pacNombre #>' style='cursor: pointer;' ondblclick='checkForPatientHC()'><#= pacApellido + \" \" + pacNombre #></div>");
+        columns.Bound(c => c.pacNumeroDocumento).Width("250px").Title("Numero Documento").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= pacNumeroDocumento #>' style='cursor: pointer;' ondblclick='checkForPatientHC()'><#= pacNumeroDocumento #></div>");
+        columns.Bound(c => c.nroHC).Width("250px").Title("Historia Clinica").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= nroHC #>' style='cursor: pointer;' ondblclick='checkForPatientHC()'><#= nroHC #></div>");
+        
+    })
+    .Editable(editing => editing.Enabled(true)
+        .Mode(GridEditMode.PopUp))
+        .Pageable((paging) =>
+        paging.Enabled(true)
+        .PageSize(((int)Session["FilasPorPagina"])))
+        .DataBinding(dataBinding => dataBinding.Ajax().Select("_SelectEditingPacienteBusqueda", "catTurno", new { TextoBuscado = "" }))
+        .ClientEvents(clientEvents => clientEvents.OnCommand("onCommandTurnoPaciente").OnRowSelect("onRowSelectedTurnoPaciente").OnDataBinding("onDataBindingTurnoPaciente").OnComplete("onCompleteTurnoPaciente"))
+        .Footer(true)
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(510))
+        .Resizable(resizing => resizing.Columns(true)))
+</div>
+
+@(Html.Telerik().Window()
+        .Name("WHistoriaClinica")
+        .Title("Agregar Historia Clinica")
+        .Visible(false)
+        .Modal(true)
+        .Content(@<text>
+            
+                <style type="text/css">
+                    .hc-topic,.hc-input-container,.hc-button-container,.hc-resultMessage {
+                        text-align:center;
+                    }
+                    .hc-resultMessage {
+                        width: 100%;
+                        /*overflow: hidden;*/
+                        height: 0px;
+                    }
+                    .hc-button-container > input {
+                        margin:10px;
+                    }
+
+                    .hc-repeatedList {
+                          text-align: left;
+                          overflow: scroll;
+                          max-height: 87px;
+                          margin: auto;
+                          width: 550px;
+                          overflow-x: visible;
+                          margin-top:5px;
+                    }
+                    .hc-repeatedList > table, .ot-anotherTurns > table {
+                        width:100%;
+                    }
+
+                    .ot-anotherTurns {
+                          text-align: left;
+                          overflow: scroll;
+                          max-height: 103px;
+                          margin: auto;
+                          max-width: 500px; 
+                          overflow-x: visible;
+                          margin-top: 5px;              
+                    }
+                </style>
+                
+                <h3 class="hc-topic">El paciente <span id="hc-patientName"></span> no posee historia clinica.</h3>
+                <h3 class="hc-topic"> A continuación, puede ingresarla.</h3>               
+                <div class="hc-input-container">
+                    <label for="nroHC">Nº de H.C. :</label>
+                    <input type="text" id="HistoriaClinica" name="nroHC" />
+                </div>
+                <div class="hc-button-container">
+                    <input id="hc-button" type="button" value="Aceptar" onclick="validateHC()" />
+                </div>
+                <div class="hc-resultMessage">
+                    <span id="hc-message"></span>
+                    <div class="hc-repeatedList">
+                        <table>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script>
+                    $("#HistoriaClinica").keypress(function (e) {
+                        if (e.keyCode == 13)
+                            $("#hc-button").click();
+                    });
+                </script>
+        </text>)
+        .Width(700)
+        .Height(180)
+        .ClientEvents(e => e.OnClose("historiaClinicaClosed"))
+);

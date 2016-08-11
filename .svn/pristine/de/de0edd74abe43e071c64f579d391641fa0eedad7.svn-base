@@ -1,0 +1,268 @@
+﻿@using GeDoc
+@using GeDoc.Models
+<style>
+    #pacManzana, #pacDepto, #pacPiso {
+        width: 115px;
+        text-align: center;
+    }
+
+    #pacDomicilio td:nth-child(2) {
+        text-align: center;
+    }
+    #pacCalle {
+        width: 80%;
+    }
+
+    #pacDomicilioReferencias {
+        width: 98%;
+    }
+
+</style>
+@{
+    catPaciente modelo = Model as catPaciente;
+}
+<script>
+    function gComboBox_OnChange(e) {
+        debugger;
+        onChangeCombo(e);
+        var textHwd = $(e.target);
+        if (textHwd && textHwd.data("cascadechildrens")) {
+            var childrens = textHwd.data("cascadechildrens").split(",");
+            for (var i = 0; i < childrens.length; i++) {
+                reloadChildren(childrens[i]);
+            }
+        }
+    }
+
+    function toggleChildrens(target, enable) {
+        if (!target.data("cascadechildrens")) return;
+        var childrens = target.data("cascadechildrens").split(",");
+        for (var i = 0; i < childrens.length; i++) {
+            var child = $("#" + childrens[i]).data("tComboBox");
+            if (!child) continue;
+            if (enable)
+                child.enable();
+            else
+                child.disable();
+        }
+    }
+
+    function reloadChildren(child) {
+        var postUrl = "../catPaciente/_GetComboBox" + child;
+        var data = {};
+        var targetE = $("#" + child);
+        $(targetE.data("tComboBox").$wrapper).find(".t-icon").addClass("t-loading");
+        toggleChildrens(targetE, false);
+        var parents = targetE.data("cascadeparents").split(",");
+        for (var i = 0; i < parents.length; i++) {
+            data[parents[i]] = $("#" + parents[i]).val();
+        }
+        if (targetE.data("savedvalue") !== "") {
+            data["selected"] = targetE.data("savedvalue");
+            targetE.data("savedvalue", "");
+        }
+        $.post(postUrl, data, function (d) {
+            targetE.data("tComboBox").dataBind(d);
+            $(targetE.data("tComboBox").$wrapper).find(".t-icon").removeClass("t-loading");
+            toggleChildrens(targetE, true);
+            gComboBox_OnDataBound(targetE);
+        });   
+    }
+
+    function gComboBox_OnDataBound(targetE) {    
+        var tComboData = targetE.data("tComboBox");
+        var idx = tComboData.data.findIndex(function (e) {
+            return e.Selected;
+        });
+        tComboData.select(idx !== -1 ? idx : 0);
+        if (tComboData.previousValue === tComboData.value() || tComboData.previousValue === "")
+            return;
+        gComboBox_OnChange({ target: targetE.get(0) });
+    }
+
+    function depId_OnLoad(e) {
+        reloadChildren(e.target.id);
+    }
+
+    function onChangeCombo(e) {
+        debugger;
+        var _obj = '#' + e.currentTarget.id;
+        var _comboBox = $(_obj).data('tComboBox');
+        var _comboBoxValue = $(_obj).data('tComboBox').value();
+        var _elemento = _comboBox.data[1];
+        if (!$.isNumeric(_comboBoxValue)) {
+            _comboBox.select(0);
+        }
+    }
+
+</script>
+<div id="pacDomicilio" class="pacDatos">
+        <table>
+            <tbody>
+            <tr>
+                <td>Provincia</td>
+                <td>
+                    @(Html.Telerik().ComboBox().Name("provId")
+                          .SelectedIndex(0)
+                          .BindTo((SelectList) ViewData["select_provId"])
+                          .HtmlAttributes(new
+                          {
+                              style = "width:70%"
+                          })
+                          .InputHtmlAttributes(new
+                          {
+                              style = "text-overflow: ellipsis;"                             
+                          })
+                          .HiddenInputHtmlAttributes(new
+                          {
+                              data_field="provId",
+                              data_cascadechildrens = "depId"
+                          })
+                          .AutoFill(true)
+                          .HighlightFirstMatch(true)
+                          .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                          .ClientEvents(e => e.OnChange("gComboBox_OnChange")))
+                </td>
+            </tr>
+            <tr>
+                <td>Departamento</td>
+                <td>
+                    @(Html.Telerik().ComboBox().Name("depId")
+                    .SelectedIndex(0)
+                    .HtmlAttributes(new
+                    {
+                        style = "width:70%"
+                    })
+                    .InputHtmlAttributes(new
+                    {
+                        style = "text-overflow: ellipsis;",                        
+                    })
+                    .HiddenInputHtmlAttributes(new
+                    {
+                        data_field="depId",
+                        data_cascadeparents = "provId",
+                        data_cascadechildrens="locId,barId,csId",
+                        data_savedvalue = modelo.depId ?? -1
+                    })
+                    .AutoFill(true)
+                    .HighlightFirstMatch(true)
+                    .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                    .ClientEvents(e => e
+                        .OnChange("gComboBox_OnChange")
+                        .OnLoad("depId_OnLoad")))
+                </td>
+            </tr>
+            <tr>
+                <td>Localidad</td>
+                <td>
+                    @(Html.Telerik().ComboBox().Name("locId")
+                          .SelectedIndex(0)
+                          .HtmlAttributes(new
+                          {
+                              style = "width:70%"
+                          })
+                          .InputHtmlAttributes(new
+                          {
+                              style = "text-overflow: ellipsis;"
+                          })
+                          .HiddenInputHtmlAttributes(new
+                          {
+                              data_field="locId",
+                              data_cascadeparents = "depId",
+                              data_savedvalue = modelo.locId
+                          })
+                          .AutoFill(true)
+                          .HighlightFirstMatch(true)
+                          .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                          .ClientEvents(e => e.OnChange("onChangeCombo"))
+                    )
+                </td>
+            </tr>
+            <tr>
+                <td>Barrio</td>
+                <td>
+                    @(Html.Telerik().ComboBox().Name("barId")
+                          .SelectedIndex(0)
+                          .HtmlAttributes(new
+                          {
+                              style = "width:70%"
+                          })
+                          .InputHtmlAttributes(new
+                          {
+                              style = "text-overflow: ellipsis;"
+                          })
+                          .HiddenInputHtmlAttributes(new
+                          {
+                              data_field="barId",                             
+                              data_cascadeparents = "depId",
+                              data_savedvalue = modelo.barId,
+                          })
+                          .AutoFill(true)
+                          .HighlightFirstMatch(true)
+                          .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                          .ClientEvents(e => e.OnChange("onChangeCombo"))
+                          )
+                </td>
+            </tr>
+            <tr>
+                <td>Calle y Número</td>
+                <td>
+                    <input data-field="pacCalle" type="text" id="pacCalle" placeholder="Calle" value="@(String.IsNullOrEmpty(modelo.pacCalle) ? "" : modelo.pacCalle)"/>
+                    @(Html.Telerik().IntegerTextBox().Name("pacCalleNumero")
+                    .EmptyMessage("")
+                    .Spinners(false)
+                    .InputHtmlAttributes(new
+                    {
+                        placeholder = "Número", 
+                        style="width:50px;text-align:center",
+                        data_field="pacCalleNumero"
+                    }))
+                </td>
+            </tr>
+            <tr>
+                <td>Manzana, Piso y Depto</td>
+                <td>
+                    <input data-field="pacManzana" type="text" id="pacManzana" placeholder="Manzana" value="@modelo.pacManzana"/>
+                    <input data-field="pacPiso" type="text" id="pacPiso" placeholder="# de piso" value="@modelo.pacPiso"/>
+                    <input data-field="pacDepto" type="text" id="pacDepto" placeholder="# de departamento" value="@modelo.pacDepto"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Referencias de domicilio</td>
+                <td>
+                    <input data-field="pacDomicilioReferencias" type="text" id="pacDomicilioReferencias" placeholder="Referencias" value="@modelo.pacDomicilioReferencias"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Area Programatica</td>
+                <td>
+                    @(Html.Telerik().ComboBox().Name("csId")
+                          .SelectedIndex(0)
+                          .HtmlAttributes(new
+                          {
+                              style="width:100%"
+                          })
+                          .InputHtmlAttributes(new
+                          {
+                              style = "text-overflow: ellipsis;"
+                          })
+                          .HiddenInputHtmlAttributes(new
+                          {
+                              data_field="csId", 
+                              data_cascadeparents = "depId,provId",
+                              data_savedvalue = modelo.csId,
+                          })
+                          .DropDownHtmlAttributes(new
+                          {
+                              style="max-height:140px"
+                          })
+                          .AutoFill(true)
+                          .HighlightFirstMatch(true)
+                          .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                          .ClientEvents(e => e.OnChange("onChangeCombo"))
+                          )
+                </td>
+            </tr>
+            </tbody>
+        </table>
+</div>

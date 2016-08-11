@@ -1,0 +1,116 @@
+@using GeDoc
+
+@model MedicosTurnoJMWS
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script type="text/javascript">
+    function onAceptarwCRUDTurnoJuntaMedicaMedicos() {
+        var MedicosElegidos = 0;
+        var Medicos = "";
+        debugger;
+        $('.select2-selection__choice').each(function (Index, Elemento) {
+            Medicos = Medicos + '#' + Elemento.innerText + '#';
+            MedicosElegidos++;
+        });
+        $("#TurnosMedicos").val(Medicos);
+
+        if (MedicosElegidos < 2) {
+            jAlert("Debe seleccionar al menos 2 Médicos.", "¡Atención!", function () {
+                $('.select2-search__field')[0].focus();
+            });
+            return;
+        }
+
+        var _Post = GetPathApp("JuntaMedica/setMedicosTurnosJM");
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { turId: idTurno, Medicos: Medicos },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error guardar los médicos asignados a junta médica.", "Error...", function () {
+                    $('.select2-search__field')[0].focus();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (!respuesta.Error) {
+                    var grid = $("#gridTurnosJuntaMedica").data("tGrid");
+                    grid.ajaxRequest();
+                    onCancelarwCRUDTurnoJuntaMedicaMedicos();
+                } else {
+                    jAlert(respuesta.Mensaje, "¡Error!", function () {
+                        $('.select2-search__field')[0].focus();
+                    });
+                }
+            }
+        });
+    }
+
+    function onCancelarwCRUDTurnoJuntaMedicaMedicos() {
+        var windowElement = $("#wCRUDTurnoJuntaMedicaMedicos").data("tWindow");
+        windowElement.close();
+        $("#divwCRUDTurnoJuntaMedicaMedicos_Content").html("");
+    }
+</script>
+
+<div id="divGridPrincipalCRUDTurnoJM" tabindex="1" style="overflow: hidden; outline: none;" >
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+        Médicos
+    </div>
+    <div style="padding-bottom: 15px;">
+        <div class="turMedicos">
+            <select class="select2" id="turMedicos" multiple="multiple" placeholder="Médicos" style="width: 99.5%; z-index: 10200;">
+                @foreach (ListaDesplegableWS item in Model.Medicos)
+                {
+                    <option value="@item.Texto" >@item.Texto</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarwCRUDTurnoJuntaMedicaMedicos();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarwCRUDTurnoJuntaMedicaMedicos();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+    @Html.HiddenFor(model => Model.TurnosMedicos)
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    AbrirWaitingCRUD("CRUDJuntaMedicaMedicos");
+    $("#divGridPrincipalCRUDTurnoJM").ready(function () {
+        CerrarWaitingCRUD("CRUDJuntaMedicaMedicos");
+        $("#turMedicos").select2({
+            maximumSelectionLength: 5,
+            language: "es",
+            placeholder: "Selecciones los Médicos a integrar la Junta Médica",
+            allowClear: true
+        });
+        var $ListaMedicos = $("#turMedicos");
+        $ListaMedicos.val(null).trigger("change");
+        $ListaMedicos.on("select2:open", function(e) {
+            $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+            $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+            $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+        });
+        debugger;
+        if ($('#TurnosMedicos').val() != "") {
+            $ListaMedicos.val($("#TurnosMedicos").val().split(", ")).trigger("change");
+        }
+        //Aplicamos algunos estilos
+        //Asignamos los valores de los campos\\
+        $('.select2-search__field')[0].focus();
+    });
+
+</script>

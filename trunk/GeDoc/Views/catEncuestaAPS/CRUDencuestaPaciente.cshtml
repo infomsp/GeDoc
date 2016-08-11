@@ -1,0 +1,1054 @@
+﻿<!DOCTYPE html>
+@using System.Web.Mvc.Html
+@using GeDoc.Models
+@model GeDoc.catEncuestasPacientes
+<script type="text/javascript" src="@{ Url.Content("~/Scripts/CRUDGrillas.js"); }"></script>
+@{ Html.RenderPartial("WaitingCRUD"); }
+<style type="text/css">
+    #wCrudTabPacientes .t-window-title {
+        font-size:11px;
+    }
+/*----- Tabs -----*/
+.tabs {
+    /*width:100%;*/
+    display:inline-block;
+}
+ 
+    /*----- Tab Links -----*/
+    /* Clearfix */
+    .tab-links:after {
+        display:block;
+        clear:both;
+        content:'';
+    }
+
+    .tab-content>.tab>.BordeRedondeado {
+        border: 1px solid #7FB5DA;
+        border-top-width: 7px;
+    }
+
+    .tab-links {
+        margin-bottom: 0;
+    }
+ 
+    .tab-links li {
+        margin:0px 1px;
+        float:left;
+        list-style:none;
+    }
+ 
+        .tab-links a {
+            padding:9px 15px;
+            display:inline-block;
+            border-radius:3px 3px 0px 0px;
+            background:#fff;
+            font-size:13px;
+            font-weight:600;
+            color:#4c4c4c;
+            transition:all linear 0.15s;
+        }
+ 
+        .tab-links a:hover {
+            background:#a7cce5;
+            text-decoration:none;
+        }
+ 
+    li.active a, li.active a:hover {
+        background:#7FB5DA;
+        color:#4c4c4c;
+    }
+ 
+    /*----- Content of Tabs -----*/
+    .tab-content {
+        padding:8px;
+        padding-top: 0;
+        border-radius:1px;
+        box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+        background:#fff;
+    }
+ 
+        .tab {
+            display:none;
+        }
+ 
+        .tab.active {
+            display:block;
+        }
+    input[type="text"] {
+        width: 150px;
+    }
+</style>
+<script type="text/javascript">
+   
+    $(document).ready(function() {
+        
+
+       
+        $('.tabs .tab-links a').on('click', function(e) {
+            var currentAttrValue = jQuery(this).attr('href');
+
+            // Show/Hide Tabs
+            $('.tabs ' + currentAttrValue).show().siblings().hide();
+
+            // Change/remove current tab to active
+            $(this).parent('li').addClass('active').siblings().removeClass('active');
+
+            e.preventDefault();
+            $("#pacNumeroDocumento").focus().select();
+
+        });
+
+    });
+    
+
+    //**** COMBOS GENERAL******//
+
+    function onChangeComboBoxCRUD_tipoIdTipoDocumento() {
+        var combobox = $('#tipoIdTipoDocumento').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_tipoIdTipoDocumento() {
+        
+        var combobox = $('#tipoIdTipoDocumento').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@Model.tipoIdTipoDocumento";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_tipoIdSexo() {
+        var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_tipoIdSexo() {
+        
+        var combobox = $('#tipoIdSexo').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@Model.tipoIdSexo";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_tipoIdOcupacion() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_tipoIdOcupacion() {
+        
+        var combobox = $('#tipoIdOcupacion').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.tipoIdOcupacion ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_paisId() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_paisId() {
+        
+        var combobox = $('#paisId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.paisId ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+@*        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }*@
+
+    }
+
+    function onChangeComboBoxCRUD_tipoIdEstadoCivil() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_tipoIdEstadoCivil() {
+        debugger;
+        var combobox = $('#tipoIdEstadoCivil').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.tipoIdEstadoCivil ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+
+    function onChangeComboBoxCRUD_osId() {
+       
+    }
+
+    function onComboBoxLoadCRUD_osId() {
+        
+        var combobox = $('#osId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.osId ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+        $("#osId").parent().width(500);
+    }
+
+    function onDataBindingEnfermedadesEncuestados(e) {
+        
+        var grid = $('#gridPacienteEnfermdedad2').data('tGrid');
+        if (grid != null) {
+            if (_DatosRegistro_persona != null) {
+                _encPerId = _DatosRegistro_persona.encPerId;
+            }
+            e.data = $.extend(e.data, { _encPerId: _encPerId });
+        }
+    }
+
+//**** COMBOS DOMICILIO******//
+    function onChangeComboBoxCRUD_provId() {
+        $("#provId").data("tComboBox").disable();
+
+    }
+
+    function onComboBoxLoadCRUD_provId() {
+        
+        var combobox = $('#provId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@Model.provId";
+
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable(false);
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_depId() {
+        $("#depId").data("tComboBox").disable();
+    }
+
+    function onComboBoxLoadCRUD_depId() {
+        
+        var combobox = $('#depId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.depId ?? 0)";
+        };
+        combobox.select(selectItem);
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable(false);
+        } else {
+            combobox.enable();
+        }
+    }
+
+
+    function onChangeComboBoxCRUD_locId() {
+        $("#locId").data("tComboBox").disable();
+    }
+
+    function onComboBoxLoadCRUD_locId() {
+        
+        var combobox = $('#locId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.locId ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable(false);
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_barId() {
+        $("#barId").data("tComboBox").disable();
+    }
+
+    function onComboBoxLoadCRUD_barId() {
+        
+        var combobox = $('#barId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.barId ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable(false);
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_csaId() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_csaId() {
+        
+        var combobox = $('#csaId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@Model.csaId";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+        $("#csaId").parent().width(300);
+    }
+
+    //**** COMBOS SALUD******//
+    function onChangeComboBoxCRUD_etnId() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_etnId() {
+        
+        var combobox = $('#etnId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@Model.etnId";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+    function onChangeComboBoxCRUD_tipoIdGrupoSanguineo() {
+        //var combobox = $('#tipoIdSexo').data('tComboBox');
+    }
+
+    function onComboBoxLoadCRUD_tipoIdGrupoSanguineo() {
+        
+        var combobox = $('#tipoIdGrupoSanguineo').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.tipoIdGrupoSanguineo ?? 0)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.pacAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.enable();
+        }
+
+    }
+
+
+    $("#Datos").ready(function() {
+        debugger;
+        //Aplicamos algunos estilos
+        //$('.t-widget.t-combobox.t-header').attr("style", "vertical-align: middle; width: 310px;");
+        if ($("#pacAccion").val() == "Agregar") {
+            $("#pacAccion").attr("style", "display: none;");
+            $("#pacId").attr("style", "display: none;");
+            $("#encId").attr("style", "display: none;");
+            $("#csId").attr("style", "display: none;");
+            /*general*/
+            $("#pacApellido").attr("disabled", true);
+            $("#pacNombre").attr("disabled", true);
+            $("#pacCUIL").attr("disabled", true);
+            //$("#tipoIdSexo").attr("disabled", true);
+            //$("#tipoIdOcupacion").attr("disabled", true);
+            $("#pacFechaNacimiento").attr("disabled", true);
+            //$("#tipoIdEstadoCivil").attr("disabled", true);
+            $("#pacMail").attr("disabled", true);
+            //$("#paisId").attr("disabled", true);
+            //$("#osId").attr("disabled", true);
+        }
+
+
+        /*Domicilio */
+        debugger;
+        $("#locId").attr("disabled", true);
+        $("#nroHC").attr("disabled", true);
+        $("#pacCalle").attr("disabled", true);
+        $("#pacDomicilioReferencias").attr("disabled", true);
+        $("#pacPiso").attr("disabled", true);
+        $("#pacPiso").attr("width",400 );
+        $("#pacDepto").attr("disabled", true);
+        $("#pacManzana").attr("disabled", true);
+        $("#pacTelefonoCasa").attr("disabled", true);
+        $("#csId").attr("style", "display: none;");
+        $("#csNombre").attr("style", "width: 240px;");
+        $("#csNombre").attr("disabled", true);
+        $("#pacCalleNumero").attr("disabled", true);
+
+        /*salud*/
+        var _pacAccion = $("#pacAccion").val();
+    });
+    //Paso con enter de campo a campo
+
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+        if (e.which == 09) {
+            //e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+
+    if ($("#pacAccion").val() == "Modificar") {
+        $("#pacAccion").attr("style", "display: none;");
+        $("#pacId").attr("style", "display: none;");
+        $("#encId").attr("style", "display: none;");
+        
+        $("#pacNumeroDocumento").focus().select();
+        //General
+        $("#pacId").val("@(Model.pacId)");
+        $("#pacApellido").val("@(Model.pacApellido)");
+        $(".tab-links [href='#tab4']").removeAttr("style");
+
+    }
+
+    //evento para ingreso del dni
+    $('#pacNumeroDocumento')
+        .bind('valueChange', function(e) {
+            
+            var _documento = $('#pacNumeroDocumento').val();
+            var _tipoDoc = $('#tipoIdTipoDocumento').val();
+            var _Post = GetPathApp('catEncuestaAPS/getValidaSiPacienteAsignado');
+            $.ajax({
+                url: _Post,
+                data: { _pacNumeroDocumento: _documento, _tipoDoc: _tipoDoc },
+                type: 'POST',
+                error: function(xhr, ajaxOptions, thrownError) {
+                    jAlert('Falló el acceso al servidor', '¡Atención!', function() {
+                    });
+                    $('#popup_container').focus();
+                    $('#popup_ok').focus();
+                },
+
+                success: function(data) {
+                    
+                    if (!data.Error) {
+                        
+                        Obtenerdatos_CONPADxEncuesta();
+
+                    } else {
+
+                        if (data.Error) {
+
+                            jAlert(data.Mensaje, "Alerta!", function() {
+                                $("#" + FocusControl)[0].focus().select();
+                            });
+                        }
+                        var _Grid = $('#Grid').data('tGrid');
+                        return;
+                    }
+                }
+            });
+        });
+
+
+    function onAceptarEncuestaPaciente() {
+        
+        if ($("#pacAccion").val() == "Consultar") {
+            var windowElement = $('#wCrudTabPacientes').data('tWindow');
+            windowElement.close();
+            return;
+        }
+        if ($("#pacAccion").val() == "Confirmar") {
+            if (typeof r_saveData === "function") {
+                r_saveData();
+            }
+            var windowElement = $('#wCrudTabPacientes').data('tWindow');
+            windowElement.close();
+            $("#gridEncuestados").data("tGrid").ajaxRequest();
+            pacAccion == "Agregar";
+            $("#lblbtnAgregar").val("Agregar");
+        }
+        var $form = $('#frmEncuestaPacienteAPS');
+        AbrirWaitingCRUD();
+        
+        if ($("#pacAccion").val() == "Modificar" || $("#pacAccion").val() == "Agregar") {
+            
+            var pacAccion = $("#pacAccion").val();
+            var pacId = $("#pacId").val();
+            var pacApellido = $("#pacApellido").val().trim().toUpperCase();
+            var pacNombre = $("#pacNombre").val().trim().toUpperCase();
+            var pacNumeroDocumento = $("#pacNumeroDocumento").val();
+            var tipoIdTipoDocumento = $("#tipoIdTipoDocumento").val();
+            var pacCUIL = $("#pacCUIL").val();
+            var paisId = $("#paisId").val();
+            var tipoIdSexo = $("#tipoIdSexo").val();
+            var pacFechaNacimiento = $("#pacFechaNacimiento").val();
+            var tipoIdEstadoCivil = $("#tipoIdEstadoCivil").val();
+            var tipoIdOcupacion = $("#tipoIdOcupacion").val();
+            var tipoIdGrupoSanguineo = $("#tipoIdGrupoSanguineo").val();
+            var pacCalle = $("#pacCalle").val();
+            var pacCalleNumero = $("pacCalleNumero").val();
+            var pacDomicilioReferencias = $("#pacDomicilioReferencias").val();
+            var provId = $("#provId").data("tComboBox").value();
+            var depId = $("#depId").data("tComboBox").value();
+            var locId = $("#locId").data("tComboBox").value();
+            var barId = $("#barId").data("tComboBox").value();
+            var pacTelefonoCasa = $("#pacTelefonoCasa").val();
+            var pacTelefonoTrabajo = $("#pacTelefonoTrabajo").val();
+            var pacTelefonoCelular = $("#pacTelefonoCelular").val();
+            var pacNotificarXSMS = $("#pacNotificarxSMS").val();
+            var osId = $("#osId").data("tComboBox").value();
+            var pacMail = $("#pacMail").val();
+          
+            var etnId = $("#etnId").val();
+            var csaId = $("#csaId").val();
+            var csId = $("#csId").val();
+            var encId = $("#encId").val();
+            var pacDepto = $("#pacDepto").val();
+            var pacManzana = $("#pacManzana").val();
+            var pacPiso = $("#pacPiso").val();
+
+            //var PacienteEnfermedad = _grillaEnf;
+            //var PacienteEnfermedad = _grillaEnf;
+            var objectPac = {
+                pacId: pacId,
+                pacAccion: pacAccion,
+                pacApellido: pacApellido,
+                pacNombre: pacNombre,
+                pacNumeroDocumento: pacNumeroDocumento,
+                tipoIdTipoDocumento: tipoIdTipoDocumento,
+                pacCUIL: pacCUIL,
+                paisId: paisId,
+                tipoIdSexo: tipoIdSexo,
+                pacFechaNacimiento: pacFechaNacimiento,
+                tipoIdEstadoCivil: tipoIdEstadoCivil,
+                tipoIdOcupacion: tipoIdOcupacion,
+                tipoIdGrupoSanguineo: tipoIdGrupoSanguineo,
+                pacCalle: pacCalle,
+                pacCalleNumero: pacCalleNumero,
+                pacDomicilioReferencias: pacDomicilioReferencias,
+                provId: provId,
+                depId: depId,
+                locId: locId,
+                barId: barId,
+                pacTelefonoCasa: pacTelefonoCasa,
+                pacTelefonoTrabajo: pacTelefonoTrabajo,
+                pacTelefonoCelular: pacTelefonoCelular,
+                pacNotificarXSMS: pacNotificarXSMS,
+                osId: osId,
+                pacMail: pacMail,
+                etnId: etnId,
+                csaId: csaId,
+                csId: csId,
+                encId: encId,
+                pacDepto: pacDepto,
+                pacManzana: pacManzana,
+                pacPiso: pacPiso,
+                //PacienteEnfermedad: PacienteEnfermedad,
+                //ListadoEnfermedadesPaciente: PacienteEnfermedad
+            };
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: objectPac,
+            error: function() {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function(respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function() {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    
+                    if (pacId != null && pacAccion == "Agregar") {
+                        
+                        // AsignarPaciente(resp_encPerIduesta.pacId, respuesta.pacNombre, 1, _grillaEnf);
+                        var d = respuesta;
+                        //document.getElementById('grillaPacEnf').style.visibility = 'visible';
+
+                        _encPerId = d._encPerId;
+                        pacAccion = "Confirmar";
+                        $("#pacAccion").val("Confirmar");
+                        $(".tab-links [href='#tab4']").removeAttr("style");
+                        
+                        $("#lblbtnAgregar").text("Confirmar");
+
+                        var windowElement = $('#wCrudTabPacientes').data('tWindow');
+                        jAlert(respuesta.Mensaje, "Confirmación", function () {
+                            $("#" + FocusControl)[0].focus().select();
+                        });
+                        windowElement.close();
+                    }
+                    if (pacAccion == "Modificar") {
+                        if (typeof r_saveData === "function") {
+                            r_saveData();
+                        }
+
+                        var windowElement = $('#wCrudTabPacientes').data('tWindow');
+                        jAlert(respuesta.Mensaje, "Confirmación", function () {
+                            $("#" + FocusControl)[0].focus().select();
+                        });
+                        windowElement.close();
+                        //return;
+                    }
+
+                }
+            }
+        });
+    }
+
+    function onCancelarEncuestaPaciente() {
+        
+        var windowElement = $('#wCrudTabPacientes').data('tWindow');
+        windowElement.close();
+    }
+
+    function onChangeCombo(e) {
+        debugger;
+        var _obj = '#' + e.currentTarget.id;
+        var _comboBox = $(_obj).data('tComboBox');
+        var _comboBoxValue = $(_obj).data('tComboBox').value();
+        var _elemento = _comboBox.data[1];
+        if (!$.isNumeric(_comboBoxValue)) {
+            _comboBox.select(0);
+            //_comboBox.data[1].selected = true;
+        }
+    }
+</script>
+
+@using (Html.BeginForm("setDatosPaciente", "catEncuestaAPS", FormMethod.Post, new { id = "frmEncuestaPacienteAPS" }))
+{    
+      @Html.EditorFor(model => Model.csId, new { style = "width: 200px; display: none;", id = "csId" })
+       @Html.EditorFor(model => Model.pacAccion, new { style = "width: 200px; display: none;", id = "pacAccion" })
+    @Html.EditorFor(model => Model.pacId, new { style = "width: 200px; display: none;", id = "pacId" })
+    @Html.EditorFor(model => Model.encId, new { style = "width: 200px; display: none;", id = "encId" })
+    <div id="divEncuestaPaciente" tabindex="1" style="overflow: hidden; outline:none;" >
+    <div style="text-align: center; margin-top: 10px;">
+        <div id="btnAceptar" class="t-button" onclick=" onAceptarEncuestaPaciente(); " title="@(Model.pacAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+            <label id="lblbtnAgregar" style="cursor: pointer;">@Model.pacAccion</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick=" onCancelarEncuestaPaciente(); " title="Cancelar" style="@(Model.pacAccion == "Consultar" ? "display: none;" : "")">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+    
+    <div class="tabs">
+
+
+    <ul class="tab-links">
+        <li class="active"><a href="#tab1">General</a></li>
+        <li><a href="#tab2">Domicilio</a></li>
+        <li><a href="#tab3" id="tab3Button">Salud</a></li>
+        <li><a href="#tab4" style="display:none" id="tab4Button">Redes</a></li>
+    </ul>
+    <div id="Datos" class="tab-content">
+    <div id="tab1" class="tab active">
+        <div id="div2" class="BordeRedondeado" style="width: auto; height: 100%;">
+            <div class="editor-label" style="vertical-align: middle">
+
+                <label id="Label5" style="vertical-align: super">
+                    @Html.LabelFor(model => Model.tipoIdTipoDocumento, "Tipo de Doc.: ")
+                </label>
+                @(Html.Telerik().DropDownList()
+                    .Name("tipoIdTipoDocumento")
+                    .SelectedIndex(0)
+                    .BindTo((SelectList) ViewData["tipoIdTipoDocumento_Data"])
+                    .HtmlAttributes(new
+                    {
+                        style = "text-align:center"
+                    })
+                    .HiddenInputHtmlAttributes(new
+                    {
+                        data_field = "tipoIdTipoDocumento"
+                    }))
+                @*@Html.EditorFor(model => Model.tipoIdTipoDocumento, "tipoIdTipoDocumento", "tipoIdTipoDocumento")*@
+                @Html.ValidationMessageFor(moddel => Model.tipoIdTipoDocumento)
+
+                <label id="lblNumeroDocumento" style="vertical-align: super; margin-left: 177px;">
+                    @Html.LabelFor(model => Model.pacNumeroDocumento, "Número: ")
+                </label>
+                <label id="lbl18" style="vertical-align: super;">
+                    @Html.EditorFor(model => Model.pacNumeroDocumento, "", "pacNumeroDocumento")
+                    @Html.ValidationMessageFor(model => Model.pacNumeroDocumento)
+                </label>
+                
+
+
+                <div class="editor-label" style="vertical-align: middle; margin-top: 15px;margin-left: 0px;">
+                    @Html.LabelFor(model => Model.pacApellido)
+                    @Html.EditorFor(model => Model.pacApellido, "", "pacApellido", new { style = "width: 300px; visible:enabled; disable: disable;" })
+
+
+                    <label id="Label2" style="margin-left: 150px;">
+                        @Html.LabelFor(model => Model.pacNombre, "Nombre: ")
+                    </label>
+                    @Html.EditorFor(model => Model.pacNombre, "LimitedTextBox", "pacNombre")
+                    @Html.ValidationMessageFor(model => Model.pacNombre)
+                </div>
+
+                <div class="editor-label" style="vertical-align: super; margin-top: 15px;margin-left: 0px;">
+                    <label id="lbl80" style="vertical-align:super">
+                        @Html.LabelFor(model => Model.pacCUIL, "CUIL/CUIT:")
+                    </label>
+                    <label id="lbl81" style="vertical-align:super">
+                        @Html.EditorFor(model => Model.pacCUIL, "", "pacCUIL")
+                        @Html.ValidationMessageFor(model => Model.pacCUIL)
+                    </label>
+
+                    <label id="Label1" style="margin-left: 100px; vertical-align: super;">
+                        @Html.LabelFor(model => Model.tipoIdSexo, "Sexo:")
+                    </label>
+                    @(Html.Telerik().DropDownList().Name("tipoIdSexo").SelectedIndex(2)
+                      .BindTo((SelectList) ViewData["tipoIdSexo_Data"]).HtmlAttributes(new {style = "text-align:center"})
+                      .HiddenInputHtmlAttributes(new {data_field = "tipoId"}))
+                    @*@Html.EditorFor(model => Model.tipoIdSexo, "tipoIdSexo")*@
+
+
+                    <label id="lblOcupacion" style="margin-left: 100px; vertical-align: super;">
+                        @Html.LabelFor(model => Model.tipoIdOcupacion, "Ocupación:")
+                    </label>
+                    @(Html.Telerik().DropDownList().Name("tipoIdOcupacion").SelectedIndex(2)
+                      .BindTo((SelectList) ViewData["tipoIdOcupacion_Data"]).HtmlAttributes(new {style = "text-align:center"})
+                      .HiddenInputHtmlAttributes(new {data_field = "tipoId"}))
+                    @*@Html.EditorFor(model => Model.tipoIdOcupacion, "tipoIdOcupacion")*@
+                </div>
+
+                <div class="editor-label" style="vertical-align: super;  margin-top: 15px;margin-left: 0px;">
+                    <label id="lblpacFechaNacimiento" style="vertical-align:super">
+                        @Html.LabelFor(model => Model.pacFechaNacimiento)
+                    </label>
+                    @Html.EditorFor(model => Model.pacFechaNacimiento,"OnlyDate")
+
+                    <label id="Label3" style="margin-left: 67px; vertical-align: super;">
+                        @Html.LabelFor(model => Model.paisId, "Nacionalidad:")
+                    </label>
+                    @(Html.Telerik().ComboBox().Name("paisId").SelectedIndex(0)
+                      .BindTo((SelectList) ViewData["paisId_Data"]).HtmlAttributes(new {style = "text-align:center;width:20%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "paisId"})
+                      .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"}).AutoFill(true).HighlightFirstMatch(true)
+                      .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                      .ClientEvents(e => e.OnChange("onChangeCombo")))
+                    @*@Html.EditorFor(model => Model.paisId)*@
+
+                    <label id="lblEstadoCivil" style="vertical-align: middle; margin-left: 60px; vertical-align: super;">
+                        @Html.LabelFor(model => Model.tipoIdEstadoCivil, "Estado Civil:")
+                    </label>
+                    @(Html.Telerik().DropDownList().Name("tipoIdEstadoCivil").SelectedIndex(2)
+                      .BindTo((SelectList) ViewData["tipoIdEstadoCivil_Data"]).HtmlAttributes(new {style = "text-align:center;width:20%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "tipoId"}))
+                    @*@Html.EditorFor(model => Model.tipoIdEstadoCivil)*@
+                </div>
+
+                <div class="editor-label" style="vertical-align: super; margin-top: 15px;margin-left: 0px;">
+                    @Html.LabelFor(model => Model.pacMail, "Correo Electrónico:")
+                    @Html.EditorFor(model => Model.pacMail, "", "pacMail")
+
+                    <label id="Label35" style="width: 350px; margin-left: 85px;">
+                        @Html.LabelFor(model => Model.osId, "Obra Social:")
+                    </label>
+                    @(Html.Telerik().ComboBox().Name("osId").SelectedIndex(0)
+                      .BindTo((SelectList) ViewData["osId_Data"]).HtmlAttributes(new {style = "text-align:center;width:48%;vertical-align:middle"})
+                      .HiddenInputHtmlAttributes(new {data_field = "osId"})
+                      .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"}).AutoFill(true).HighlightFirstMatch(true)
+                      .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                      .ClientEvents(e => e.OnChange("onChangeCombo")))
+                    @*@Html.EditorFor(model => Model.osId, "osId")*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tab2" class="tab">
+        <div id="div3" class="BordeRedondeado" style="width: auto; height: 100%;">
+            <div id="DatosDomicilio2" style="width: auto; height: 100%;">
+                <div class="editor-label" style="vertical-align: middle;">
+
+                    <div style="vertical-align: middle">
+                        <label id="Label13" style="margin-left: 0px; vertical-align: super">
+                            @Html.LabelFor(model => Model.provId, "Provincia:")
+                        </label>
+                        @Html.EditorFor(model => Model.provId, "provId")
+
+                        <label id="Label28" style="margin-left: 20px; vertical-align: super">
+                            @Html.LabelFor(model => Model.depId, "Departamento:")
+                        </label>
+                        @Html.EditorFor(model => Model.depId, "depId")
+
+                        <label id="Label6" style="margin-left: 20px; vertical-align: super">
+
+                            @Html.LabelFor(model => Model.locId, "Localidad:")
+                        </label>
+                        @(Html.Telerik().ComboBox().Name("locId").SelectedIndex(0)
+                      .BindTo((SelectList) ViewData["locId_Data"]).HtmlAttributes(new {style = "text-align:center;width:16%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "locId"})
+                      .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"}).AutoFill(true).HighlightFirstMatch(true)
+                      .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                      .ClientEvents(e => e.OnChange("onChangeCombo")))
+                        @*@Html.EditorFor(model => Model.locId, "locId")*@
+
+                        <label id="Label7" style="margin-left: 20px; vertical-align: super">
+                            @Html.LabelFor(model => Model.barId, "Barrio:")
+                        </label>
+                        @Html.EditorFor(model => Model.barId, "barId")
+                    </div>
+
+                    @*<div style="vertical-align: middle; height: 40px; margin-top: 7px;">
+                        <label id="Label6" style="margin-left: 0px; vertical-align: super">
+
+                            @Html.LabelFor(model => Model.locId, "Localidad:")
+                        </label>
+                        @Html.EditorFor(model => Model.locId, "locId")
+
+                        <label id="Label7" style="margin-left: 20px; vertical-align: super">
+                            @Html.LabelFor(model => Model.barId, "Barrio:")
+                        </label>
+                        @Html.EditorFor(model => Model.barId, "barId")
+                    </div>*@
+
+                    <div style="vertical-align: middle; margin-top: 15px;margin-left: 0px;">
+                        <label id="Label95" style="margin-left: 0px;">
+                            @Html.LabelFor(model => Model.pacCalle, "Calle:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacCalle, "LimitedTextBox", "pacCalle")
+                        @Html.ValidationMessageFor(model => Model.pacCalle)
+
+                        <label id="Label26" style="margin-left: 100px;">
+                            @Html.LabelFor(model => Model.pacCalleNumero, "Número:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacCalleNumero, "Int16", "pacCalleNumero")
+
+
+                        <label id="Label27" style="margin-left: 100px">
+                            @Html.LabelFor(model => Model.pacDomicilioReferencias, "Referencia de Calle:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacDomicilioReferencias, "LimitedTextBox", "pacDomicilioReferencias", new { style = "width: 70px;" })
+
+                    </div>
+
+                    <div style="vertical-align: middle; margin-top: 15px;margin-left: 0px;">
+                        <label id="Label8" style="margin-left: 0px">
+                            @Html.LabelFor(model => Model.pacManzana, "Manzana:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacManzana, "LimitedTextBox", "pacManzana")
+
+
+                        <label id="Label9" style="margin-left: 117px; vertical-align: middle">
+                            @Html.LabelFor(model => Model.pacPiso, "Piso:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacPiso, "pacPiso",new { style = "width: 600px;" })
+
+
+                        <label id="Label10" style="margin-left: 110px">
+                            @Html.LabelFor(model => Model.pacDepto, "Dpto:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacDepto, "LimitedTextBox", "pacDepto")
+
+                    </div>
+
+                    <div style="vertical-align: middle; margin-top: 15px;margin-left: 0px;">
+                        <label id="Label31" style="margin-left: 0px">
+                            @Html.LabelFor(model => Model.pacTelefonoCasa, "Teléfono de Casa:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacTelefonoCasa, "LimitedTextBox", "pacTelefonoCasa", new { style = "width: 300px; visible:enabled; disable: disable;" })
+                        @Html.ValidationMessageFor(model => Model.pacTelefonoCasa)
+                        <label id="Label32" style="margin-left: 69px; vertical-align: middle">
+                            @Html.LabelFor(model => Model.pacTelefonoTrabajo, "Teléfono de Trabajo:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacTelefonoTrabajo, "LimitedTextBox", "pacTelefonoTrabajo")
+                        @Html.ValidationMessageFor(model => Model.pacTelefonoTrabajo)
+
+                        <label id="Label33" style="margin-left: 18px">
+                            @Html.LabelFor(model => Model.pacTelefonoCelular, "Teléfono Celular:")
+                        </label>
+                        @Html.EditorFor(model => Model.pacTelefonoCelular, "LimitedTextBox", "pacTelefonoCelular")
+                        @Html.ValidationMessageFor(model => Model.pacTelefonoCelular)
+                    </div>
+
+                    <div style="vertical-align: middle; margin-top: 15px;margin-left: 0px;">
+
+                        <label id="Label11" style="margin-left: 0px">
+                            @Html.LabelFor(model => Model.csNombre, "Area Programatica:")
+                        </label>
+                        @Html.EditorFor(model => Model.csNombre, "LimitedTextBox", "csNombre", new { style = "width: 240px; visible:enabled; disable: disable;" })
+
+                        <label id="Label12" style="margin-left: 60px; vertical-align: middle">
+                            @Html.LabelFor(model => Model.csaId, "Area de Influencia:")
+                        </label>
+                        @(Html.Telerik().ComboBox().Name("csaId").SelectedIndex(0)
+                              .BindTo((SelectList) ViewData["csaId_Data"]).HtmlAttributes(new {style = "text-align:left;width:41%; vertical-align: middle"})
+                              .HiddenInputHtmlAttributes(new {data_field = "csaId"})
+                              .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"}).AutoFill(true).HighlightFirstMatch(true)
+                              .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                              .ClientEvents(e => e.OnChange("onChangeCombo")))
+                        @*@Html.EditorFor(model => Model.csaId, "csaId")*@
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="tab3" class="tab" data-loaded="false">
+        <div id="DatosSalud" class="BordeRedondeado" style="width: 600px; height: 100%;">
+            <div class="editor-label" style="vertical-align: middle;">
+                <label id="Label25" style="margin-left: 0px;">
+                </label>
+                <label id="Label29" style="margin-left: 10px; vertical-align: super">
+                    @Html.LabelFor(model => Model.etnId, "Etnia:")
+                </label>
+                @(Html.Telerik().DropDownList().Name("etnId")
+                    .SelectedIndex(0)
+                    .BindTo((SelectList) ViewData["etnId_Data"])
+                    .HtmlAttributes(new
+                    {
+                        style="text-align:center;width:50%"
+                    })
+                    //.InputHtmlAttributes(new
+                    //{
+                    //    style = "text-overflow: ellipsis;",
+                    //})
+                    .HiddenInputHtmlAttributes(new
+                    {
+                        data_field="etnId"
+                    })
+                    .DropDownHtmlAttributes(new
+                    {
+                        style="max-height:140px"
+                    })
+                    //.AutoFill(true)
+                    //.HighlightFirstMatch(true)
+                    //.Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                    //.ClientEvents(e => e.OnChange("onChangeCombo"))
+                    )
+                @*@Html.EditorFor(model => Model.etnId, "etnId")*@
+
+                <label id="Label30" style="margin-left: 20px; vertical-align: super">
+                    @Html.LabelFor(model => Model.tipoIdGrupoSanguineo, "G. Sanguineo:")
+                </label>
+                @(Html.Telerik().DropDownList().Name("tipoIdGrupoSanguineo")
+                .SelectedIndex(0)
+                .BindTo((SelectList) ViewData["tipoIdGrupoSanguineo_Data"])
+                .HtmlAttributes(new
+                {
+                    style="text-align:center;width:20%"
+                })
+                .HiddenInputHtmlAttributes(new
+                {
+                    data_field = "tipoIdGrupoSanguineo"
+                }))
+                @*@Html.EditorFor(model => Model.tipoIdGrupoSanguineo, "tipoIdGrupoSanguineo")*@
+
+                <div id="ge-container" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.6%;">
+                    <!-- ENFERMEDADES -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tab4" class="tab" data-loaded="false">
+       <!-- REDES -->
+    </div>
+    </div>
+ 
+  
+    </div>          
+    </div>
+}
+<script type="text/javascript">
+    $("#tab4Button").click(function() {
+        if (!$("#tab4").data("loaded")) {
+            $.post("@Url.Content("~/catEncuestaAPS/Redes")", function(d) {
+                $("#tab4").html(d).data("loaded", true);
+            });
+        }
+    });
+
+    $("#tab3Button").click(function () {
+        if (!$("#ge-container").data("loaded") && _encPerId) {
+            $.post("@Url.Content("~/catEncuestaAPS/PacienteEnfermedades")", { encPerId: _encPerId }, function(d) {
+                $("#ge-container").html(d).data("loaded", true);
+            });
+        }
+    });
+
+</script>
+<style type="text/css" xml:lang="es-AR">
+    input[type="text"] 
+    {
+        text-transform: uppercase;
+    }
+</style>

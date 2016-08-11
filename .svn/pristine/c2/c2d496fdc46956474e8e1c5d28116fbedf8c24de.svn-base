@@ -1,0 +1,5 @@
+﻿@{
+    ViewBag.Title = "rptRangoEtario";
+}
+
+<h2>rptRangoEtario</h2>

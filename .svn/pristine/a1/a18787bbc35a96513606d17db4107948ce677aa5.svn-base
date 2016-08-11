@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>OrigenDeDatos</Name>
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=10.64.65.200\MSPSQL2008R2;Initial Catalog=MSP-GeDoc-GN</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>392344a5-ab9f-48f0-918e-dde0e0594616</DataSourceID>
+</RptDataSource>

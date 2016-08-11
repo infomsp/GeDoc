@@ -1,0 +1,386 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+@{
+    if (Session["Usuario"] == null)
+    {
+        @(Html.Telerik().StyleSheetRegistrar().DefaultGroup(group => group
+              .Add("telerik.common.css")
+              .Add("telerik.office2007.min.css")
+              .Add("telerik.rtl.css")
+              .Combined(true)
+              .Compress(true)))
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	    <script src="@Url.Content("~/Scripts/jquery-1.9.1.js")"></script>
+        <script src="@Url.Content("~/Scripts/CRUDGrillas.js")" type="text/javascript"></script>
+        <link href="@(Url.Content("~/Content/Site.css"))" rel="stylesheet" type="text/css"/>
+        <script src='https://www.google.com/recaptcha/api.js?onload=onloadCallbackReCaptcha&render=explicit&hl=es' async defer></script>
+        <style>
+            body {
+                background: white;
+            }
+        </style>
+    }
+    Html.RenderPartial("WaitingCRUD");
+}
+
+<div class="iconos BordeRedondeado" style="text-align: center; background: white; padding-top: 3px; padding-bottom: 3px;">
+    @*<div class="BordeRedondeado alert-info" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center;">
+        Ingrese el Número de documento del Agente, y haga click en Buscar
+    </div>*@
+    <div id="divCargaDeDocumentoJM" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center;">
+        <div>
+            <label>Número de Documento: </label>
+            <input type="text" placeholder="Ingrese el DNI" id="txtNumeroDocumentoJM" maxlength="8" style="width: 125px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+            <button id="btnBuscarJM" class="t-button t-button-icon" onclick="onBuscarAgenteJM();" style="width: 100px;">
+                <span class="t-icon t-search"></span> Buscar
+            </button>
+        </div>
+    </div>
+    <div id="divAgenteInexistente" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        El Número de Documento que ha ingresado no Existe!
+        <p>Debe dirigirse a la "Dirección de Control y Reconocimientos Médicos" y Solicitar el Turno Personalmente.</p>
+    </div>
+    <div id="divErrorEspecialidades" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        Debe seleccionar al menos una Especialidad
+    </div>
+    <div id="divErrorServidor" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        No se ha podido completar la operación, intente en unos minutos nuevamente.
+        <p>Si el problema persiste, dirigirse a la "Dirección de Control y Reconocimientos Médicos" y Solicite el Turno personalmente.</p>
+    </div>
+    <div id="divErrorCaptcha" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        Debe ingresar el captcha para poder confirmar la solicitud de carta médica.
+    </div>
+    <div id="divAgenteEncontrado" class="BordeRedondeado" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none; border-color: cornflowerblue;">
+        <label>Agente, <span id="spanNombreAgente" style="font-weight: bold;">CARLOS BUENO RICARDO</span></label>
+        <p>Seleccione el "Motivo" y al menos una "Especialidad" y luego "Confirme" el Turno para la Junta Médica.</p>
+        <div style="margin-left: 39.5%;">
+            <div class="BordeSombreado" style="width: 215px; padding: 15px; border-color: cornflowerblue;">
+                <table id="tblEspecialidades" style="border: none;">
+                    <tr style="height: 30px; padding: 8px; border: none; background-color: cornflowerblue; color: whitesmoke;">
+                        <td colspan="2"><b>MOTIVO</b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2">
+                            <div class="tjId" style="text-align: left;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "tjId_Lista")
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none; background-color: cornflowerblue; color: whitesmoke;">
+                        <td colspan="2"><b>ESPECIALIDADES</b></td>
+                    </tr>
+                    @foreach (var item in (List<getDatosEspecialidades_Result>) ViewBag.EspecialidadesJM)
+                    {
+                        <tr style="height: 30px; padding: 8px; border: none;">
+                            <td style="text-align: left; border: none;">
+                                @(item.espNombre):
+                            </td>
+                            <td style="border: none;">
+                                <input type="checkbox" id="chk@(item.espId)" value="@(item.espId)" class="my-checkbox">
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+        @*<p><b>IMPORTANTE:</b> No olvide llevar todos los estudios y certificados médicos correspondientes.
+        </p>*@
+        <!--
+        <p>Usted puede concurrir con su médico de cabecera (no siendo obligatorio).</p>
+        -->
+        <div id="htmlCaptcha" style="padding: 10px;">
+            <!--<div class="g-recaptcha" style="margin-left: 38%; padding: 10px;" data-sitekey="6LeHKw8TAAAAAEb8Gm_K2U_1V36Dqm8m1v3eQlFu"></div>-->
+        </div>
+        <button class="t-button t-insert t-button-icon" onclick="onGenerarJM();" style="width: 100px;">
+            <span class="t-icon t-insert"></span> Confirmar
+        </button>
+        <button class="t-button t-button-icon" onclick="onCancelarJM();" style="width: 100px;">
+            <span class="t-icon t-cancel"></span> Cancelar
+        </button>
+    </div>
+
+    @{
+        if (Session["Usuario"] == null)
+        {
+            @Html.Telerik().ScriptRegistrar().Globalization(true).DefaultGroup(group => group.Combined(true).Compress(true))
+        }
+    }
+
+    <div id="divOverlayCM" class="es-overlay" style="z-index: 19014; display: none;"></div>
+    <div id="wPopUpMensajeCM" class="t-widget" style="z-index: 19019; display: none;">
+        <div class="t-window-titlebar t-header" style="height: 17px;">
+            <span class="t-window-title">Solicitud de Turno de Junta Médica</span>
+        </div>
+        <div class="t-window-content t-content" style="">
+            <div>
+                @*<label>Carta Médica N°: </label><b><span id="spanNroCM"></span></b>
+                <br/>*@
+                <p>Debe presentarse por la <b>Dirección de Control y Reconocimientos Médicos</b> el día <b><span id="spanFechaCM"></span></b> a las <b><span id="spanHoraCM"></span></b> hs.
+                </p>
+                <br/>
+                <p>IMPORTANTE: No olvide llevar todos los estudios y certificados médicos correspondientes.</p>
+                <br/>
+                @*<p>Usted debe avisar a su jefe y/o director, antes de las 2 primeras horas de iniciada su jornada laboral, caso contrario será nulo todo lo actuado.
+                </p>*@
+            </div>
+            <hr/>
+            <div style="text-align: center; width: 100%;">
+                <button class="t-button t-close t-button-icon" onclick="onCerrarMensajeCM();" style="width: 100px;">
+                    <span class="t-icon t-close"></span> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    var IdAgente = -1;
+    var widgetIdCaptcha;
+    var captchaValue = "";
+
+    var verifyCallbackCaptcha = function (response) {
+        //alert(response);
+        captchaValue = response;
+        $("#divErrorCaptcha").hide();
+    };
+
+    var expiredCallback = function () {
+        captchaValue = "";
+    };
+
+    function resetCaptcha() {
+        captchaValue = "";
+        if (widgetIdCaptcha != null) {
+            grecaptcha.reset(widgetIdCaptcha);
+        }
+    }
+
+    var onloadCallbackReCaptcha = function () {
+        debugger;
+        widgetIdCaptcha = grecaptcha.render('htmlCaptcha', {
+            'sitekey': '6LeHKw8TAAAAAEb8Gm_K2U_1V36Dqm8m1v3eQlFu',
+            'callback': verifyCallbackCaptcha,
+            'theme': 'light',
+            'size': 'normal',
+            'expired-callback': expiredCallback
+        });
+    };
+
+    function AjustarAPantalla() {
+        if (isMobile()) {
+            zoomPantalla = '0.5';
+            $('.iconos').css({ 'zoom': zoomPantalla });
+        }
+    }
+    //Seleccionamos el primer campo
+    $("#divCargaDeDocumentoJM").ready(function () {
+        debugger;
+        CerrarWaiting();
+        AjustarAPantalla();
+    });
+
+    function onCancelarJM() {
+        if (!isMobile()) {
+            resetCaptcha();
+        }
+        $("#divAgenteEncontrado").hide();
+        $("#divAgenteInexistente").hide();
+        $("#divErrorEspecialidades").hide();
+        $("#divErrorServidor").hide();
+        $("#divErrorCaptcha").hide();
+        $("#txtNumeroDocumentoJM").val("");
+        $("#btnBuscarJM").removeClass("t-state-disabled");
+        $("#txtNumeroDocumentoJM").removeAttr("disabled");
+        $("#txtNumeroDocumentoJM").focus().select();
+    }
+
+    function onBuscarAgenteJM() {
+        if ($("#txtNumeroDocumentoJM").val().trim() === "") {
+            $("#txtNumeroDocumentoJM").focus().select();
+            return;
+        }
+
+        if ($("#btnBuscarJM").is(".t-state-disabled")) {
+            return;
+        }
+
+        $($("#htmlCaptcha").find("div")[1]).css("width", "");
+
+        AbrirWaitingCRUD();
+        debugger;
+        IdAgente = -1;
+        var UrlAccion = "@(Session["Usuario"] == null ? Url.Content("onBuscarAgenteJM") : Url.Content("~/DCRM/onBuscarAgenteJM"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { nroDocumento: $("#txtNumeroDocumentoJM").val() },
+            error: function () {
+                CerrarWaitingCRUD();
+                $("#txtNumeroDocumentoJM").focus().select();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Encontrado) {
+                    debugger;
+                    $("#divAgenteInexistente").hide();
+                    $("#divError").hide();
+                    $("#divErrorServidor").hide();
+                    var Agente = respuesta.Datos.agtApellidoyNombre;
+                    $("#divAgenteEncontrado").show();
+                    $("#btnBuscarJM").addClass("t-state-disabled");
+                    $("#txtNumeroDocumentoJM").attr("disabled", "disabled");
+                    $("#spanNombreAgente").text(Agente);
+                    $(".t-button.t-insert.t-button-icon").focus().select();
+                    IdAgente = respuesta.Datos.agtId;
+                    if (respuesta.Datos.turId > 0) {
+                        onAbrirMensajeCM(respuesta.Datos);
+                    }
+                } else {
+                    $("#divAgenteInexistente").show();
+                    $("#txtNumeroDocumentoJM").val("");
+                    $("#txtNumeroDocumentoJM").focus().select();
+                }
+            }
+        });
+    }
+
+
+    function CentrarCRUDTurnoJM() {
+        var AnchoPantalla = $(window).width();
+        var AltoPantalla = $(window).height();
+        debugger;
+        if (isMobile()) {
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: 0,
+                top: 50
+            });
+        } else {
+            if ("@(Session["Usuario"] == null ? "AJUSTAR" : "NOAJUSTAR")" === "AJUSTAR" || isMobile()) {
+                AjustarAPantalla();
+            }// else {
+            //    //AnchoPantalla = $("#wCRUDJuntaMedicaTurnoJM").width();
+            //    //AltoPantalla = $("#wCRUDJuntaMedicaTurnoJM").height();
+            //}
+            //if ($(window).width() <= 640) {
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: (AnchoPantalla - $('#wPopUpMensajeCM').outerWidth()) / 2,
+                top: (AltoPantalla - $('#wPopUpMensajeCM').outerHeight()) / 2
+            });
+        }
+    }
+
+    $(window).resize(function () {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        CentrarCRUDTurnoJM();
+    });
+
+function onGenerarJM() {
+        //Genera una nueva carta médica//
+    if (!isMobile() && "@(Session["Usuario"] == null ? "VALIDAR" : "")" === "VALIDAR") {
+        if (captchaValue === "") {
+            $("#divErrorCaptcha").show();
+            return;
+            }
+    }
+    if ($('#tblEspecialidades').find('input[type=checkbox]:checked').length == 0) {
+        $("#divErrorEspecialidades").show();
+        return;
+    }
+    var Especialidades = "";
+    $('#tblEspecialidades').find('input[type=checkbox]:checked').each(function (index) {
+        //alert(index + ": " + );
+        Especialidades = Especialidades + "#" + $(this).val() + "#";
+    });
+
+    AbrirWaitingCRUD();
+    debugger;
+    var UrlAccion = "@(Session["Usuario"] == null ? Url.Content("onConfirmaJM") : Url.Content("~/DCRM/onConfirmaJM"))";
+    $.ajax({
+        type: "POST",
+        url: UrlAccion,
+        data: { agtId: IdAgente, tjId: $("#tjId_Lista").val(), Especialidades: Especialidades },
+        error: function () {
+            CerrarWaitingCRUD();
+            onCancelarJM();
+            $("#divErrorServidor").show();
+        },
+        success: function (respuesta) {
+            CerrarWaitingCRUD();
+            if (respuesta.Encontrado) {
+                onAbrirMensajeCM(respuesta.Datos);
+            } else {
+                CerrarWaitingCRUD();
+                onCancelarJM();
+                $("#divErrorServidor").show();
+            }
+        }
+    });
+}
+
+function onAbrirMensajeCM(Datos) {
+    // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+    CentrarCRUDTurnoJM();
+
+    $("#spanNroCM").text(Datos.cmedNumero);
+    $("#spanFechaCM").text(Datos.FechaTexto);
+    $("#spanHoraCM").text(Datos.Hora);
+    $("#divOverlayCM").show();
+    $("#wPopUpMensajeCM").show();
+    $(".t-button.t-close.t-button-icon").focus().select();
+
+    //Imprimimos el reporte de JM
+    CerrarWaiting();
+
+    //jConfirm("¿Confirma la Impresión de Notificaciones?", "Imprimir...", function (r) {
+    //    if (r) {
+    //        debugger;
+            var _Parametros = new Array(new Array(Datos.turId, 'turId'), new Array('A', 'Tipo'));
+            InvocarReporte('InformesJuntaMedicaUnificado', _Parametros, true);
+     //   }
+    //});
+}
+function onCerrarMensajeCM() {
+    // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+    $("#divOverlayCM").hide();
+    $("#wPopUpMensajeCM").hide();
+    onCancelarJM();
+}
+
+$("#txtNumeroDocumentoJM").keydown(function (e) {
+    $("#divErrorServidor").hide();
+    if (e.which === 13) {
+        onBuscarAgenteJM();
+
+        e.preventDefault();
+        e.stopPropagation();
+    }
+});
+
+$('input[class="my-checkbox"]').bootstrapSwitch();
+
+$("#tjId_Lista").select2({
+    placeholder: "Ningún item seleccionado",
+    allowClear: false,
+    language: "es",
+    theme: "classic"
+}).on("change", function (e) {
+    //var pValor = $("#tjId_Lista").val();
+    //$("#tjId").val(e.val == null ? pValor : e.val);
+    //RecargarTabs();
+});
+
+$("#txtNumeroDocumentoJM").focus().select();
+
+</script>

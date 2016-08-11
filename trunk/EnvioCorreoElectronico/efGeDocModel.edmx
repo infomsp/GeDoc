@@ -1,0 +1,1761 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="efGeDocModelo.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="efGeDocModeloStoreContainer">
+          <EntitySet Name="catPersona" EntityType="efGeDocModelo.Store.catPersona" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catReparticion" EntityType="efGeDocModelo.Store.catReparticion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimiento" EntityType="efGeDocModelo.Store.catRequerimiento" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoAdjunto" EntityType="efGeDocModelo.Store.catRequerimientoAdjunto" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoComentarios" EntityType="efGeDocModelo.Store.catRequerimientoComentarios" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoEstado" EntityType="efGeDocModelo.Store.catRequerimientoEstado" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoLogTrabajo" EntityType="efGeDocModelo.Store.catRequerimientoLogTrabajo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoNotificaciones" EntityType="efGeDocModelo.Store.catRequerimientoNotificaciones" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catRequerimientoNotificaUsuario" EntityType="efGeDocModelo.Store.catRequerimientoNotificaUsuario" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catSector" EntityType="efGeDocModelo.Store.catSector" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="catZona" EntityType="efGeDocModelo.Store.catZona" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="proResolucion" EntityType="efGeDocModelo.Store.proResolucion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="proResolucionExpedientes" EntityType="efGeDocModelo.Store.proResolucionExpedientes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="proResolucionNotificacionEmpleado" EntityType="efGeDocModelo.Store.proResolucionNotificacionEmpleado" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisLogEnvioEmail" EntityType="efGeDocModelo.Store.sisLogEnvioEmail" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisMenu" EntityType="efGeDocModelo.Store.sisMenu" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisTipo" EntityType="efGeDocModelo.Store.sisTipo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisTipoEntidad" EntityType="efGeDocModelo.Store.sisTipoEntidad" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisUsuario" EntityType="efGeDocModelo.Store.sisUsuario" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sisUsuarioEstado" EntityType="efGeDocModelo.Store.sisUsuarioEstado" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_catPersona_catSector" Association="efGeDocModelo.Store.FK_catPersona_catSector">
+            <End Role="catSector" EntitySet="catSector" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catPersona_catTipo" Association="efGeDocModelo.Store.FK_catPersona_catTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catPersona_sisTipo" Association="efGeDocModelo.Store.FK_catPersona_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimiento_catPersona" Association="efGeDocModelo.Store.FK_catRequerimiento_catPersona">
+            <End Role="catPersona" EntitySet="catPersona" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimiento_sisTipo" Association="efGeDocModelo.Store.FK_catRequerimiento_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimiento_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimiento_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoAdjunto_catRequerimiento" Association="efGeDocModelo.Store.FK_catRequerimientoAdjunto_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoAdjunto" EntitySet="catRequerimientoAdjunto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoAdjunto_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimientoAdjunto_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoAdjunto" EntitySet="catRequerimientoAdjunto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoComentarios_catRequerimiento" Association="efGeDocModelo.Store.FK_catRequerimientoComentarios_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoComentarios" EntitySet="catRequerimientoComentarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoComentarios_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimientoComentarios_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoComentarios" EntitySet="catRequerimientoComentarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_catRequerimiento" Association="efGeDocModelo.Store.FK_catRequerimientoEstado_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_sisTipo" Association="efGeDocModelo.Store.FK_catRequerimientoEstado_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimientoEstado_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoLogTrabajo_catRequerimiento" Association="efGeDocModelo.Store.FK_catRequerimientoLogTrabajo_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoLogTrabajo" EntitySet="catRequerimientoLogTrabajo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoLogTrabajo_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimientoLogTrabajo_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoLogTrabajo" EntitySet="catRequerimientoLogTrabajo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoNotificaUsuario_catRequerimiento" Association="efGeDocModelo.Store.FK_catRequerimientoNotificaUsuario_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoNotificaUsuario" EntitySet="catRequerimientoNotificaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoNotificaUsuario_sisUsuario" Association="efGeDocModelo.Store.FK_catRequerimientoNotificaUsuario_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoNotificaUsuario" EntitySet="catRequerimientoNotificaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catSector_catReparticion" Association="efGeDocModelo.Store.FK_catSector_catReparticion">
+            <End Role="catReparticion" EntitySet="catReparticion" />
+            <End Role="catSector" EntitySet="catSector" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionExpedientes_catZona" Association="efGeDocModelo.Store.FK_proResolucionExpedientes_catZona">
+            <End Role="catZona" EntitySet="catZona" />
+            <End Role="proResolucionExpedientes" EntitySet="proResolucionExpedientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionExpedientes_proResolucion" Association="efGeDocModelo.Store.FK_proResolucionExpedientes_proResolucion">
+            <End Role="proResolucion" EntitySet="proResolucion" />
+            <End Role="proResolucionExpedientes" EntitySet="proResolucionExpedientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionNotificacionEmpleado_catPersona" Association="efGeDocModelo.Store.FK_proResolucionNotificacionEmpleado_catPersona">
+            <End Role="catPersona" EntitySet="catPersona" />
+            <End Role="proResolucionNotificacionEmpleado" EntitySet="proResolucionNotificacionEmpleado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionNotificacionEmpleado_proResolucion" Association="efGeDocModelo.Store.FK_proResolucionNotificacionEmpleado_proResolucion">
+            <End Role="proResolucion" EntitySet="proResolucion" />
+            <End Role="proResolucionNotificacionEmpleado" EntitySet="proResolucionNotificacionEmpleado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisTipo_sisTipoEntidad" Association="efGeDocModelo.Store.FK_sisTipo_sisTipoEntidad">
+            <End Role="sisTipoEntidad" EntitySet="sisTipoEntidad" />
+            <End Role="sisTipo" EntitySet="sisTipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisUsuarioEstado_sisTipo" Association="efGeDocModelo.Store.FK_sisUsuarioEstado_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="sisUsuarioEstado" EntitySet="sisUsuarioEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisUsuarioEstado_sisUsuario" Association="efGeDocModelo.Store.FK_sisUsuarioEstado_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="sisUsuarioEstado" EntitySet="sisUsuarioEstado" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="catPersona">
+          <Key>
+            <PropertyRef Name="perId" />
+          </Key>
+          <Property Name="perId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="perPadron" Type="bigint" />
+          <Property Name="perApellidoyNombre" Type="varchar" MaxLength="150" />
+          <Property Name="tipoIdSexo" Type="smallint" />
+          <Property Name="perFechaNacimiento" Type="datetime" />
+          <Property Name="provId" Type="smallint" />
+          <Property Name="perDNI" Type="int" />
+          <Property Name="perCUIL" Type="varchar" MaxLength="13" />
+          <Property Name="perTelefono" Type="varchar" MaxLength="50" />
+          <Property Name="perCelular" Type="varchar" MaxLength="50" />
+          <Property Name="perEmail" Type="varchar" MaxLength="30" />
+          <Property Name="perEsContratado" Type="bit" Nullable="false" />
+          <Property Name="perAntiguedadAnios" Type="smallint" />
+          <Property Name="perAntiguedadMeses" Type="smallint" />
+          <Property Name="perAntiguedadDias" Type="smallint" />
+          <Property Name="secId" Type="smallint" Nullable="false" />
+          <Property Name="perObservaciones" Type="varchar" MaxLength="250" />
+          <Property Name="perAntiguedadAniosPago" Type="smallint" />
+          <Property Name="perAntiguedadMesesPago" Type="smallint" />
+          <Property Name="perAntiguedadDiasPago" Type="smallint" />
+          <Property Name="perAntiguedadAniosVacaciones" Type="smallint" />
+          <Property Name="perAntiguedadMesesVacaciones" Type="smallint" />
+          <Property Name="perAntiguedadDiasVacaciones" Type="smallint" />
+          <Property Name="perFoto" Type="varchar" MaxLength="255" />
+          <Property Name="profId" Type="smallint" />
+          <Property Name="perLeeoEscribe" Type="bit" />
+          <Property Name="tipoIdEstadoCivil" Type="smallint" />
+          <Property Name="paisId" Type="smallint" />
+          <Property Name="perFechaCasamiento" Type="datetime" />
+          <Property Name="perDomicilio" Type="varchar" MaxLength="250" />
+          <Property Name="perAutorizaNotificarSMS" Type="bit" />
+          <Property Name="perIdPersonaCronos" Type="int" />
+          <Property Name="ofiId" Type="smallint" />
+          <Property Name="gdId" Type="int" />
+          <Property Name="perFuncion" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="catReparticion">
+          <Key>
+            <PropertyRef Name="repId" />
+          </Key>
+          <Property Name="repId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="repNombre" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="catRequerimiento">
+          <Key>
+            <PropertyRef Name="reqId" />
+          </Key>
+          <Property Name="reqId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="tipoIdTipo" Type="smallint" Nullable="false" />
+          <Property Name="reqAsunto" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="reqDescripcion" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="perIdSolicitante" Type="int" Nullable="false" />
+          <Property Name="reqTiempoEstimado" Type="int" />
+          <Property Name="reqFechaEstimado" Type="datetime" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="reqLinkId" Type="int" />
+        </EntityType>
+        <EntityType Name="catRequerimientoAdjunto">
+          <Key>
+            <PropertyRef Name="reqaId" />
+          </Key>
+          <Property Name="reqaId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="reqaFecha" Type="datetime" Nullable="false" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="reqaArchivo" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="reqaObservaciones" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="reqId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catRequerimientoComentarios">
+          <Key>
+            <PropertyRef Name="reqcId" />
+          </Key>
+          <Property Name="reqcId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="reqcFecha" Type="datetime" Nullable="false" />
+          <Property Name="reqcComentario" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="reqId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catRequerimientoEstado">
+          <Key>
+            <PropertyRef Name="reqeId" />
+          </Key>
+          <Property Name="reqeId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="tipoIdEstado" Type="smallint" Nullable="false" />
+          <Property Name="reqeFecha" Type="datetime" Nullable="false" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="reqeObservaciones" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="reqId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catRequerimientoLogTrabajo">
+          <Key>
+            <PropertyRef Name="reqlId" />
+          </Key>
+          <Property Name="reqlId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="reqlFecha" Type="datetime" Nullable="false" />
+          <Property Name="reqlTiempo" Type="int" Nullable="false" />
+          <Property Name="reqlObservaciones" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="reqId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catRequerimientoNotificaciones">
+          <Key>
+            <PropertyRef Name="reqnId" />
+          </Key>
+          <Property Name="reqnId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="reqnMensaje" Type="varchar(max)" Nullable="false" />
+          <Property Name="reqnFecha" Type="datetime" Nullable="false" />
+          <Property Name="reqnDestinatario" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="reqnDestinatarioEmail" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="reqnEnviado" Type="bit" Nullable="false" />
+          <Property Name="reqnError" Type="varchar(max)" />
+          <Property Name="reqnArchivoAdjunto" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="catRequerimientoNotificaUsuario">
+          <Key>
+            <PropertyRef Name="requId" />
+          </Key>
+          <Property Name="requId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="requNotificar" Type="bit" Nullable="false" />
+          <Property Name="reqId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="catSector">
+          <Key>
+            <PropertyRef Name="secId" />
+          </Key>
+          <Property Name="secId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="secCodigo" Type="smallint" Nullable="false" />
+          <Property Name="secNombre" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="secUbicacionGeografica" Type="varchar" MaxLength="255" />
+          <Property Name="secLinkMapa" Type="varchar" MaxLength="255" />
+          <Property Name="repId" Type="int" Nullable="false" />
+          <Property Name="ccId" Type="smallint" />
+        </EntityType>
+        <EntityType Name="catZona">
+          <Key>
+            <PropertyRef Name="zonId" />
+          </Key>
+          <Property Name="zonId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="zonCodigo" Type="int" Nullable="false" />
+          <Property Name="zonNombre" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="zonIdDependencia" Type="int" />
+        </EntityType>
+        <EntityType Name="proResolucion">
+          <Key>
+            <PropertyRef Name="resId" />
+          </Key>
+          <Property Name="resId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="resNumero" Type="smallint" />
+          <Property Name="resFecha" Type="datetime" />
+          <Property Name="resConsiderando" Type="varchar(max)" />
+          <Property Name="resResuelve" Type="varchar(max)" />
+          <Property Name="resLinkArchivo" Type="varchar(max)" />
+          <Property Name="resEsImportante" Type="bit" Nullable="false" />
+          <Property Name="resNotificacionVencimiento" Type="datetime" />
+          <Property Name="resNotificacionDiaInicio" Type="smallint" />
+          <Property Name="tnlId" Type="int" />
+        </EntityType>
+        <EntityType Name="proResolucionExpedientes">
+          <Key>
+            <PropertyRef Name="reseId" />
+          </Key>
+          <Property Name="reseId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="zonId" Type="int" Nullable="false" />
+          <Property Name="reseExpedienteNumero" Type="int" Nullable="false" />
+          <Property Name="reseExpedienteAnio" Type="smallint" Nullable="false" />
+          <Property Name="resId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="proResolucionNotificacionEmpleado">
+          <Key>
+            <PropertyRef Name="resneId" />
+          </Key>
+          <Property Name="resneId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="resId" Type="bigint" Nullable="false" />
+          <Property Name="perId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sisLogEnvioEmail">
+          <Key>
+            <PropertyRef Name="leId" />
+          </Key>
+          <Property Name="leId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="leFecha" Type="datetime" Nullable="false" />
+          <Property Name="leDestinatario" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="leDestinatarioEmail" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="leEnviado" Type="bit" Nullable="false" />
+          <Property Name="leMensajeError" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="sisMenu">
+          <Key>
+            <PropertyRef Name="mnuId" />
+          </Key>
+          <Property Name="mnuId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="mnuNombre" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="mnuOrden" Type="smallint" Nullable="false" />
+          <Property Name="mnuTitulo" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="mnuImagen" Type="varchar" MaxLength="150" />
+          <Property Name="mnuAccion" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="mnuController" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sisTipo">
+          <Key>
+            <PropertyRef Name="tipoId" />
+          </Key>
+          <Property Name="tipoId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="tipoCodigo" Type="char" MaxLength="2" />
+          <Property Name="tipoeId" Type="smallint" Nullable="false" />
+          <Property Name="tipoDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="tipoImagen" Type="varchar" MaxLength="255" />
+          <Property Name="tipoColor" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="sisTipoEntidad">
+          <Key>
+            <PropertyRef Name="tipoeId" />
+          </Key>
+          <Property Name="tipoeId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="tipoeCodigo" Type="char" Nullable="false" MaxLength="2" />
+          <Property Name="tipoeDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sisUsuario">
+          <Key>
+            <PropertyRef Name="usrId" />
+          </Key>
+          <Property Name="usrId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="usrNombreDeUsuario" Type="varchar" Nullable="false" MaxLength="30" />
+          <Property Name="usrApellidoyNombre" Type="varchar" Nullable="false" MaxLength="80" />
+          <Property Name="usrPassword" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="estId" Type="smallint" />
+          <Property Name="usrEmail" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sisUsuarioEstado">
+          <Key>
+            <PropertyRef Name="usrId" />
+            <PropertyRef Name="tipoId" />
+            <PropertyRef Name="ueFecha" />
+          </Key>
+          <Property Name="usrId" Type="smallint" Nullable="false" />
+          <Property Name="tipoId" Type="smallint" Nullable="false" />
+          <Property Name="ueFecha" Type="datetime" Nullable="false" />
+          <Property Name="ueMotivo" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_catPersona_catSector">
+          <End Role="catSector" Type="efGeDocModelo.Store.catSector" Multiplicity="1" />
+          <End Role="catPersona" Type="efGeDocModelo.Store.catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catSector">
+              <PropertyRef Name="secId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="secId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catPersona_catTipo">
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="0..1" />
+          <End Role="catPersona" Type="efGeDocModelo.Store.catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="tipoIdSexo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catPersona_sisTipo">
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="0..1" />
+          <End Role="catPersona" Type="efGeDocModelo.Store.catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="tipoIdEstadoCivil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimiento_catPersona">
+          <End Role="catPersona" Type="efGeDocModelo.Store.catPersona" Multiplicity="1" />
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catPersona">
+              <PropertyRef Name="perId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="perIdSolicitante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimiento_sisTipo">
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="1" />
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="tipoIdTipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimiento_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoAdjunto_catRequerimiento">
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="1" />
+          <End Role="catRequerimientoAdjunto" Type="efGeDocModelo.Store.catRequerimientoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoAdjunto">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoAdjunto_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimientoAdjunto" Type="efGeDocModelo.Store.catRequerimientoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoAdjunto">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoComentarios_catRequerimiento">
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="1" />
+          <End Role="catRequerimientoComentarios" Type="efGeDocModelo.Store.catRequerimientoComentarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoComentarios">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoComentarios_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimientoComentarios" Type="efGeDocModelo.Store.catRequerimientoComentarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoComentarios">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_catRequerimiento">
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="1" />
+          <End Role="catRequerimientoEstado" Type="efGeDocModelo.Store.catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_sisTipo">
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="1" />
+          <End Role="catRequerimientoEstado" Type="efGeDocModelo.Store.catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="tipoIdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimientoEstado" Type="efGeDocModelo.Store.catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoLogTrabajo_catRequerimiento">
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="1" />
+          <End Role="catRequerimientoLogTrabajo" Type="efGeDocModelo.Store.catRequerimientoLogTrabajo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoLogTrabajo">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoLogTrabajo_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimientoLogTrabajo" Type="efGeDocModelo.Store.catRequerimientoLogTrabajo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoLogTrabajo">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoNotificaUsuario_catRequerimiento">
+          <End Role="catRequerimiento" Type="efGeDocModelo.Store.catRequerimiento" Multiplicity="1" />
+          <End Role="catRequerimientoNotificaUsuario" Type="efGeDocModelo.Store.catRequerimientoNotificaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoNotificaUsuario">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoNotificaUsuario_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="catRequerimientoNotificaUsuario" Type="efGeDocModelo.Store.catRequerimientoNotificaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoNotificaUsuario">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catSector_catReparticion">
+          <End Role="catReparticion" Type="efGeDocModelo.Store.catReparticion" Multiplicity="1" />
+          <End Role="catSector" Type="efGeDocModelo.Store.catSector" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catReparticion">
+              <PropertyRef Name="repId" />
+            </Principal>
+            <Dependent Role="catSector">
+              <PropertyRef Name="repId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionExpedientes_catZona">
+          <End Role="catZona" Type="efGeDocModelo.Store.catZona" Multiplicity="1" />
+          <End Role="proResolucionExpedientes" Type="efGeDocModelo.Store.proResolucionExpedientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catZona">
+              <PropertyRef Name="zonId" />
+            </Principal>
+            <Dependent Role="proResolucionExpedientes">
+              <PropertyRef Name="zonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionExpedientes_proResolucion">
+          <End Role="proResolucion" Type="efGeDocModelo.Store.proResolucion" Multiplicity="1" />
+          <End Role="proResolucionExpedientes" Type="efGeDocModelo.Store.proResolucionExpedientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proResolucion">
+              <PropertyRef Name="resId" />
+            </Principal>
+            <Dependent Role="proResolucionExpedientes">
+              <PropertyRef Name="resId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionNotificacionEmpleado_catPersona">
+          <End Role="catPersona" Type="efGeDocModelo.Store.catPersona" Multiplicity="1" />
+          <End Role="proResolucionNotificacionEmpleado" Type="efGeDocModelo.Store.proResolucionNotificacionEmpleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catPersona">
+              <PropertyRef Name="perId" />
+            </Principal>
+            <Dependent Role="proResolucionNotificacionEmpleado">
+              <PropertyRef Name="perId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionNotificacionEmpleado_proResolucion">
+          <End Role="proResolucion" Type="efGeDocModelo.Store.proResolucion" Multiplicity="1" />
+          <End Role="proResolucionNotificacionEmpleado" Type="efGeDocModelo.Store.proResolucionNotificacionEmpleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proResolucion">
+              <PropertyRef Name="resId" />
+            </Principal>
+            <Dependent Role="proResolucionNotificacionEmpleado">
+              <PropertyRef Name="resId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisTipo_sisTipoEntidad">
+          <End Role="sisTipoEntidad" Type="efGeDocModelo.Store.sisTipoEntidad" Multiplicity="1" />
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipoEntidad">
+              <PropertyRef Name="tipoeId" />
+            </Principal>
+            <Dependent Role="sisTipo">
+              <PropertyRef Name="tipoeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisUsuarioEstado_sisTipo">
+          <End Role="sisTipo" Type="efGeDocModelo.Store.sisTipo" Multiplicity="1" />
+          <End Role="sisUsuarioEstado" Type="efGeDocModelo.Store.sisUsuarioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="sisUsuarioEstado">
+              <PropertyRef Name="tipoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisUsuarioEstado_sisUsuario">
+          <End Role="sisUsuario" Type="efGeDocModelo.Store.sisUsuario" Multiplicity="1" />
+          <End Role="sisUsuarioEstado" Type="efGeDocModelo.Store.sisUsuarioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="sisUsuarioEstado">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="efGeDocModelo" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="efGeDocEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="catReparticion" EntityType="efGeDocModelo.catReparticion" />
+          <EntitySet Name="catSector" EntityType="efGeDocModelo.catSector" />
+          <EntitySet Name="catZona" EntityType="efGeDocModelo.catZona" />
+          <EntitySet Name="proResolucion" EntityType="efGeDocModelo.proResolucion" />
+          <EntitySet Name="proResolucionExpedientes" EntityType="efGeDocModelo.proResolucionExpedientes" />
+          <EntitySet Name="proResolucionNotificacionEmpleado" EntityType="efGeDocModelo.proResolucionNotificacionEmpleado" />
+          <EntitySet Name="sisLogEnvioEmail" EntityType="efGeDocModelo.sisLogEnvioEmail" />
+          <EntitySet Name="sisMenu" EntityType="efGeDocModelo.sisMenu" />
+          <EntitySet Name="sisTipo" EntityType="efGeDocModelo.sisTipo" />
+          <EntitySet Name="sisTipoEntidad" EntityType="efGeDocModelo.sisTipoEntidad" />
+          <EntitySet Name="sisUsuario" EntityType="efGeDocModelo.sisUsuario" />
+          <EntitySet Name="sisUsuarioEstado" EntityType="efGeDocModelo.sisUsuarioEstado" />
+          <AssociationSet Name="FK_catSector_catReparticion" Association="efGeDocModelo.FK_catSector_catReparticion">
+            <End Role="catReparticion" EntitySet="catReparticion" />
+            <End Role="catSector" EntitySet="catSector" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionExpedientes_catZona" Association="efGeDocModelo.FK_proResolucionExpedientes_catZona">
+            <End Role="catZona" EntitySet="catZona" />
+            <End Role="proResolucionExpedientes" EntitySet="proResolucionExpedientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionExpedientes_proResolucion" Association="efGeDocModelo.FK_proResolucionExpedientes_proResolucion">
+            <End Role="proResolucion" EntitySet="proResolucion" />
+            <End Role="proResolucionExpedientes" EntitySet="proResolucionExpedientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionNotificacionEmpleado_proResolucion" Association="efGeDocModelo.FK_proResolucionNotificacionEmpleado_proResolucion">
+            <End Role="proResolucion" EntitySet="proResolucion" />
+            <End Role="proResolucionNotificacionEmpleado" EntitySet="proResolucionNotificacionEmpleado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisTipo_sisTipoEntidad" Association="efGeDocModelo.FK_sisTipo_sisTipoEntidad">
+            <End Role="sisTipoEntidad" EntitySet="sisTipoEntidad" />
+            <End Role="sisTipo" EntitySet="sisTipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisUsuarioEstado_sisTipo" Association="efGeDocModelo.FK_sisUsuarioEstado_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="sisUsuarioEstado" EntitySet="sisUsuarioEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sisUsuarioEstado_sisUsuario" Association="efGeDocModelo.FK_sisUsuarioEstado_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="sisUsuarioEstado" EntitySet="sisUsuarioEstado" />
+          </AssociationSet>
+          <EntitySet Name="catRequerimiento" EntityType="efGeDocModelo.catRequerimiento" />
+          <EntitySet Name="catRequerimientoAdjunto" EntityType="efGeDocModelo.catRequerimientoAdjunto" />
+          <EntitySet Name="catRequerimientoComentarios" EntityType="efGeDocModelo.catRequerimientoComentarios" />
+          <EntitySet Name="catRequerimientoEstado" EntityType="efGeDocModelo.catRequerimientoEstado" />
+          <EntitySet Name="catRequerimientoLogTrabajo" EntityType="efGeDocModelo.catRequerimientoLogTrabajo" />
+          <EntitySet Name="catRequerimientoNotificaciones" EntityType="efGeDocModelo.catRequerimientoNotificaciones" />
+          <EntitySet Name="catRequerimientoNotificaUsuario" EntityType="efGeDocModelo.catRequerimientoNotificaUsuario" />
+          <AssociationSet Name="FK_catRequerimiento_sisTipo" Association="efGeDocModelo.FK_catRequerimiento_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimiento_sisUsuario" Association="efGeDocModelo.FK_catRequerimiento_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoAdjunto_catRequerimiento" Association="efGeDocModelo.FK_catRequerimientoAdjunto_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoAdjunto" EntitySet="catRequerimientoAdjunto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoComentarios_catRequerimiento" Association="efGeDocModelo.FK_catRequerimientoComentarios_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoComentarios" EntitySet="catRequerimientoComentarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_catRequerimiento" Association="efGeDocModelo.FK_catRequerimientoEstado_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoLogTrabajo_catRequerimiento" Association="efGeDocModelo.FK_catRequerimientoLogTrabajo_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoLogTrabajo" EntitySet="catRequerimientoLogTrabajo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoNotificaUsuario_catRequerimiento" Association="efGeDocModelo.FK_catRequerimientoNotificaUsuario_catRequerimiento">
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+            <End Role="catRequerimientoNotificaUsuario" EntitySet="catRequerimientoNotificaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoAdjunto_sisUsuario" Association="efGeDocModelo.FK_catRequerimientoAdjunto_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoAdjunto" EntitySet="catRequerimientoAdjunto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoComentarios_sisUsuario" Association="efGeDocModelo.FK_catRequerimientoComentarios_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoComentarios" EntitySet="catRequerimientoComentarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_sisTipo" Association="efGeDocModelo.FK_catRequerimientoEstado_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoEstado_sisUsuario" Association="efGeDocModelo.FK_catRequerimientoEstado_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoEstado" EntitySet="catRequerimientoEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoLogTrabajo_sisUsuario" Association="efGeDocModelo.FK_catRequerimientoLogTrabajo_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoLogTrabajo" EntitySet="catRequerimientoLogTrabajo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimientoNotificaUsuario_sisUsuario" Association="efGeDocModelo.FK_catRequerimientoNotificaUsuario_sisUsuario">
+            <End Role="sisUsuario" EntitySet="sisUsuario" />
+            <End Role="catRequerimientoNotificaUsuario" EntitySet="catRequerimientoNotificaUsuario" />
+          </AssociationSet>
+          <EntitySet Name="catPersona" EntityType="efGeDocModelo.catPersona" />
+          <AssociationSet Name="FK_catPersona_catSector" Association="efGeDocModelo.FK_catPersona_catSector">
+            <End Role="catSector" EntitySet="catSector" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catPersona_catTipo" Association="efGeDocModelo.FK_catPersona_catTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catPersona_sisTipo" Association="efGeDocModelo.FK_catPersona_sisTipo">
+            <End Role="sisTipo" EntitySet="sisTipo" />
+            <End Role="catPersona" EntitySet="catPersona" />
+          </AssociationSet>
+          <AssociationSet Name="FK_catRequerimiento_catPersona" Association="efGeDocModelo.FK_catRequerimiento_catPersona">
+            <End Role="catPersona" EntitySet="catPersona" />
+            <End Role="catRequerimiento" EntitySet="catRequerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_proResolucionNotificacionEmpleado_catPersona" Association="efGeDocModelo.FK_proResolucionNotificacionEmpleado_catPersona">
+            <End Role="catPersona" EntitySet="catPersona" />
+            <End Role="proResolucionNotificacionEmpleado" EntitySet="proResolucionNotificacionEmpleado" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="catReparticion">
+          <Key>
+            <PropertyRef Name="repId" />
+          </Key>
+          <Property Type="Int32" Name="repId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="repNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catSector" Relationship="efGeDocModelo.FK_catSector_catReparticion" FromRole="catReparticion" ToRole="catSector" />
+        </EntityType>
+        <EntityType Name="catSector">
+          <Key>
+            <PropertyRef Name="secId" />
+          </Key>
+          <Property Type="Int16" Name="secId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="secNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="secUbicacionGeografica" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="secLinkMapa" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="repId" Nullable="false" />
+          <NavigationProperty Name="catReparticion" Relationship="efGeDocModelo.FK_catSector_catReparticion" FromRole="catSector" ToRole="catReparticion" />
+          <Property Type="Int16" Name="secCodigo" Nullable="false" />
+          <Property Type="Int16" Name="ccId" />
+          <NavigationProperty Name="catPersona" Relationship="efGeDocModelo.FK_catPersona_catSector" FromRole="catSector" ToRole="catPersona" />
+        </EntityType>
+        <EntityType Name="catZona">
+          <Key>
+            <PropertyRef Name="zonId" />
+          </Key>
+          <Property Type="Int32" Name="zonId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="zonCodigo" Nullable="false" />
+          <Property Type="String" Name="zonNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="zonIdDependencia" />
+          <NavigationProperty Name="proResolucionExpedientes" Relationship="efGeDocModelo.FK_proResolucionExpedientes_catZona" FromRole="catZona" ToRole="proResolucionExpedientes" />
+        </EntityType>
+        <EntityType Name="proResolucion">
+          <Key>
+            <PropertyRef Name="resId" />
+          </Key>
+          <Property Type="Int64" Name="resId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="resNumero" />
+          <Property Type="DateTime" Name="resFecha" Precision="3" />
+          <Property Type="String" Name="resConsiderando" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="resResuelve" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="resLinkArchivo" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="resEsImportante" Nullable="false" />
+          <Property Type="DateTime" Name="resNotificacionVencimiento" Precision="3" />
+          <Property Type="Int16" Name="resNotificacionDiaInicio" />
+          <NavigationProperty Name="proResolucionExpedientes" Relationship="efGeDocModelo.FK_proResolucionExpedientes_proResolucion" FromRole="proResolucion" ToRole="proResolucionExpedientes" />
+          <NavigationProperty Name="proResolucionNotificacionEmpleado" Relationship="efGeDocModelo.FK_proResolucionNotificacionEmpleado_proResolucion" FromRole="proResolucion" ToRole="proResolucionNotificacionEmpleado" />
+          <Property Type="Int32" Name="tnlId" />
+        </EntityType>
+        <EntityType Name="proResolucionExpedientes">
+          <Key>
+            <PropertyRef Name="reseId" />
+          </Key>
+          <Property Type="Int64" Name="reseId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="zonId" Nullable="false" />
+          <Property Type="Int32" Name="reseExpedienteNumero" Nullable="false" />
+          <Property Type="Int16" Name="reseExpedienteAnio" Nullable="false" />
+          <Property Type="Int64" Name="resId" Nullable="false" />
+          <NavigationProperty Name="catZona" Relationship="efGeDocModelo.FK_proResolucionExpedientes_catZona" FromRole="proResolucionExpedientes" ToRole="catZona" />
+          <NavigationProperty Name="proResolucion" Relationship="efGeDocModelo.FK_proResolucionExpedientes_proResolucion" FromRole="proResolucionExpedientes" ToRole="proResolucion" />
+        </EntityType>
+        <EntityType Name="proResolucionNotificacionEmpleado">
+          <Key>
+            <PropertyRef Name="resneId" />
+          </Key>
+          <Property Type="Int64" Name="resneId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int64" Name="resId" Nullable="false" />
+          <Property Type="Int32" Name="perId" Nullable="false" />
+          <NavigationProperty Name="proResolucion" Relationship="efGeDocModelo.FK_proResolucionNotificacionEmpleado_proResolucion" FromRole="proResolucionNotificacionEmpleado" ToRole="proResolucion" />
+          <NavigationProperty Name="catPersona" Relationship="efGeDocModelo.FK_proResolucionNotificacionEmpleado_catPersona" FromRole="proResolucionNotificacionEmpleado" ToRole="catPersona" />
+        </EntityType>
+        <EntityType Name="sisLogEnvioEmail">
+          <Key>
+            <PropertyRef Name="leId" />
+          </Key>
+          <Property Type="Int64" Name="leId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="leFecha" Nullable="false" Precision="3" />
+          <Property Type="String" Name="leDestinatario" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="leDestinatarioEmail" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="leEnviado" Nullable="false" />
+          <Property Type="String" Name="leMensajeError" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sisMenu">
+          <Key>
+            <PropertyRef Name="mnuId" />
+          </Key>
+          <Property Type="Int32" Name="mnuId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="mnuNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="mnuOrden" Nullable="false" />
+          <Property Type="String" Name="mnuTitulo" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="mnuImagen" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="mnuAccion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="mnuController" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sisTipo">
+          <Key>
+            <PropertyRef Name="tipoId" />
+          </Key>
+          <Property Type="Int16" Name="tipoId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="tipoeId" Nullable="false" />
+          <Property Type="String" Name="tipoDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="tipoImagen" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="tipoColor" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sisTipoEntidad" Relationship="efGeDocModelo.FK_sisTipo_sisTipoEntidad" FromRole="sisTipo" ToRole="sisTipoEntidad" />
+          <NavigationProperty Name="sisUsuarioEstado" Relationship="efGeDocModelo.FK_sisUsuarioEstado_sisTipo" FromRole="sisTipo" ToRole="sisUsuarioEstado" />
+          <Property Type="String" Name="tipoCodigo" MaxLength="2" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimiento_sisTipo" FromRole="sisTipo" ToRole="catRequerimiento" />
+          <NavigationProperty Name="catRequerimientoEstado" Relationship="efGeDocModelo.FK_catRequerimientoEstado_sisTipo" FromRole="sisTipo" ToRole="catRequerimientoEstado" />
+          <NavigationProperty Name="catPersona" Relationship="efGeDocModelo.FK_catPersona_catTipo" FromRole="sisTipo" ToRole="catPersona" />
+          <NavigationProperty Name="catPersona1" Relationship="efGeDocModelo.FK_catPersona_sisTipo" FromRole="sisTipo" ToRole="catPersona" />
+        </EntityType>
+        <EntityType Name="sisTipoEntidad">
+          <Key>
+            <PropertyRef Name="tipoeId" />
+          </Key>
+          <Property Type="Int16" Name="tipoeId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="tipoeCodigo" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Type="String" Name="tipoeDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sisTipo" Relationship="efGeDocModelo.FK_sisTipo_sisTipoEntidad" FromRole="sisTipoEntidad" ToRole="sisTipo" />
+        </EntityType>
+        <EntityType Name="sisUsuario">
+          <Key>
+            <PropertyRef Name="usrId" />
+          </Key>
+          <Property Type="Int16" Name="usrId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="usrNombreDeUsuario" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="String" Name="usrApellidoyNombre" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Type="Binary" Name="usrPassword" Nullable="false" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="sisUsuarioEstado" Relationship="efGeDocModelo.FK_sisUsuarioEstado_sisUsuario" FromRole="sisUsuario" ToRole="sisUsuarioEstado" />
+          <Property Type="Int16" Name="estId" />
+          <Property Type="String" Name="usrEmail" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimiento_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimiento" />
+          <NavigationProperty Name="catRequerimientoAdjunto" Relationship="efGeDocModelo.FK_catRequerimientoAdjunto_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimientoAdjunto" />
+          <NavigationProperty Name="catRequerimientoComentarios" Relationship="efGeDocModelo.FK_catRequerimientoComentarios_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimientoComentarios" />
+          <NavigationProperty Name="catRequerimientoEstado" Relationship="efGeDocModelo.FK_catRequerimientoEstado_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimientoEstado" />
+          <NavigationProperty Name="catRequerimientoLogTrabajo" Relationship="efGeDocModelo.FK_catRequerimientoLogTrabajo_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimientoLogTrabajo" />
+          <NavigationProperty Name="catRequerimientoNotificaUsuario" Relationship="efGeDocModelo.FK_catRequerimientoNotificaUsuario_sisUsuario" FromRole="sisUsuario" ToRole="catRequerimientoNotificaUsuario" />
+        </EntityType>
+        <EntityType Name="sisUsuarioEstado">
+          <Key>
+            <PropertyRef Name="usrId" />
+            <PropertyRef Name="tipoId" />
+            <PropertyRef Name="ueFecha" />
+          </Key>
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="Int16" Name="tipoId" Nullable="false" />
+          <Property Type="DateTime" Name="ueFecha" Nullable="false" Precision="3" />
+          <Property Type="String" Name="ueMotivo" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sisTipo" Relationship="efGeDocModelo.FK_sisUsuarioEstado_sisTipo" FromRole="sisUsuarioEstado" ToRole="sisTipo" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_sisUsuarioEstado_sisUsuario" FromRole="sisUsuarioEstado" ToRole="sisUsuario" />
+        </EntityType>
+        <Association Name="FK_catSector_catReparticion">
+          <End Type="efGeDocModelo.catReparticion" Role="catReparticion" Multiplicity="1" />
+          <End Type="efGeDocModelo.catSector" Role="catSector" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catReparticion">
+              <PropertyRef Name="repId" />
+            </Principal>
+            <Dependent Role="catSector">
+              <PropertyRef Name="repId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionExpedientes_catZona">
+          <End Type="efGeDocModelo.catZona" Role="catZona" Multiplicity="1" />
+          <End Type="efGeDocModelo.proResolucionExpedientes" Role="proResolucionExpedientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catZona">
+              <PropertyRef Name="zonId" />
+            </Principal>
+            <Dependent Role="proResolucionExpedientes">
+              <PropertyRef Name="zonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionExpedientes_proResolucion">
+          <End Type="efGeDocModelo.proResolucion" Role="proResolucion" Multiplicity="1" />
+          <End Type="efGeDocModelo.proResolucionExpedientes" Role="proResolucionExpedientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proResolucion">
+              <PropertyRef Name="resId" />
+            </Principal>
+            <Dependent Role="proResolucionExpedientes">
+              <PropertyRef Name="resId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionNotificacionEmpleado_proResolucion">
+          <End Type="efGeDocModelo.proResolucion" Role="proResolucion" Multiplicity="1" />
+          <End Type="efGeDocModelo.proResolucionNotificacionEmpleado" Role="proResolucionNotificacionEmpleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proResolucion">
+              <PropertyRef Name="resId" />
+            </Principal>
+            <Dependent Role="proResolucionNotificacionEmpleado">
+              <PropertyRef Name="resId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisTipo_sisTipoEntidad">
+          <End Type="efGeDocModelo.sisTipoEntidad" Role="sisTipoEntidad" Multiplicity="1" />
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipoEntidad">
+              <PropertyRef Name="tipoeId" />
+            </Principal>
+            <Dependent Role="sisTipo">
+              <PropertyRef Name="tipoeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisUsuarioEstado_sisTipo">
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="1" />
+          <End Type="efGeDocModelo.sisUsuarioEstado" Role="sisUsuarioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="sisUsuarioEstado">
+              <PropertyRef Name="tipoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sisUsuarioEstado_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.sisUsuarioEstado" Role="sisUsuarioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="sisUsuarioEstado">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="catRequerimiento">
+          <Key>
+            <PropertyRef Name="reqId" />
+          </Key>
+          <Property Type="Int32" Name="reqId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="tipoIdTipo" Nullable="false" />
+          <Property Type="String" Name="reqAsunto" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reqDescripcion" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="perIdSolicitante" Nullable="false" />
+          <Property Type="Int32" Name="reqTiempoEstimado" />
+          <Property Type="DateTime" Name="reqFechaEstimado" Precision="3" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="Int32" Name="reqLinkId" />
+          <NavigationProperty Name="sisTipo" Relationship="efGeDocModelo.FK_catRequerimiento_sisTipo" FromRole="catRequerimiento" ToRole="sisTipo" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimiento_sisUsuario" FromRole="catRequerimiento" ToRole="sisUsuario" />
+          <NavigationProperty Name="catRequerimientoAdjunto" Relationship="efGeDocModelo.FK_catRequerimientoAdjunto_catRequerimiento" FromRole="catRequerimiento" ToRole="catRequerimientoAdjunto" />
+          <NavigationProperty Name="catRequerimientoComentarios" Relationship="efGeDocModelo.FK_catRequerimientoComentarios_catRequerimiento" FromRole="catRequerimiento" ToRole="catRequerimientoComentarios" />
+          <NavigationProperty Name="catRequerimientoEstado" Relationship="efGeDocModelo.FK_catRequerimientoEstado_catRequerimiento" FromRole="catRequerimiento" ToRole="catRequerimientoEstado" />
+          <NavigationProperty Name="catRequerimientoLogTrabajo" Relationship="efGeDocModelo.FK_catRequerimientoLogTrabajo_catRequerimiento" FromRole="catRequerimiento" ToRole="catRequerimientoLogTrabajo" />
+          <NavigationProperty Name="catRequerimientoNotificaUsuario" Relationship="efGeDocModelo.FK_catRequerimientoNotificaUsuario_catRequerimiento" FromRole="catRequerimiento" ToRole="catRequerimientoNotificaUsuario" />
+          <NavigationProperty Name="catPersona" Relationship="efGeDocModelo.FK_catRequerimiento_catPersona" FromRole="catRequerimiento" ToRole="catPersona" />
+        </EntityType>
+        <EntityType Name="catRequerimientoAdjunto">
+          <Key>
+            <PropertyRef Name="reqaId" />
+          </Key>
+          <Property Type="Int32" Name="reqaId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="reqaFecha" Nullable="false" Precision="3" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="String" Name="reqaArchivo" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reqaObservaciones" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="reqId" Nullable="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimientoAdjunto_catRequerimiento" FromRole="catRequerimientoAdjunto" ToRole="catRequerimiento" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimientoAdjunto_sisUsuario" FromRole="catRequerimientoAdjunto" ToRole="sisUsuario" />
+        </EntityType>
+        <EntityType Name="catRequerimientoComentarios">
+          <Key>
+            <PropertyRef Name="reqcId" />
+          </Key>
+          <Property Type="Int32" Name="reqcId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="reqcFecha" Nullable="false" Precision="3" />
+          <Property Type="String" Name="reqcComentario" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="Int32" Name="reqId" Nullable="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimientoComentarios_catRequerimiento" FromRole="catRequerimientoComentarios" ToRole="catRequerimiento" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimientoComentarios_sisUsuario" FromRole="catRequerimientoComentarios" ToRole="sisUsuario" />
+        </EntityType>
+        <EntityType Name="catRequerimientoEstado">
+          <Key>
+            <PropertyRef Name="reqeId" />
+          </Key>
+          <Property Type="Int32" Name="reqeId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="tipoIdEstado" Nullable="false" />
+          <Property Type="DateTime" Name="reqeFecha" Nullable="false" Precision="3" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="String" Name="reqeObservaciones" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="reqId" Nullable="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimientoEstado_catRequerimiento" FromRole="catRequerimientoEstado" ToRole="catRequerimiento" />
+          <NavigationProperty Name="sisTipo" Relationship="efGeDocModelo.FK_catRequerimientoEstado_sisTipo" FromRole="catRequerimientoEstado" ToRole="sisTipo" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimientoEstado_sisUsuario" FromRole="catRequerimientoEstado" ToRole="sisUsuario" />
+        </EntityType>
+        <EntityType Name="catRequerimientoLogTrabajo">
+          <Key>
+            <PropertyRef Name="reqlId" />
+          </Key>
+          <Property Type="Int32" Name="reqlId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="reqlFecha" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="reqlTiempo" Nullable="false" />
+          <Property Type="String" Name="reqlObservaciones" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="Int32" Name="reqId" Nullable="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimientoLogTrabajo_catRequerimiento" FromRole="catRequerimientoLogTrabajo" ToRole="catRequerimiento" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimientoLogTrabajo_sisUsuario" FromRole="catRequerimientoLogTrabajo" ToRole="sisUsuario" />
+        </EntityType>
+        <EntityType Name="catRequerimientoNotificaciones">
+          <Key>
+            <PropertyRef Name="reqnId" />
+          </Key>
+          <Property Type="Int64" Name="reqnId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="reqnMensaje" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="reqnFecha" Nullable="false" Precision="3" />
+          <Property Type="String" Name="reqnDestinatario" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reqnDestinatarioEmail" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="reqnEnviado" Nullable="false" />
+          <Property Type="String" Name="reqnError" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="reqnArchivoAdjunto" MaxLength="250" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="catRequerimientoNotificaUsuario">
+          <Key>
+            <PropertyRef Name="requId" />
+          </Key>
+          <Property Type="Int32" Name="requId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="usrId" Nullable="false" />
+          <Property Type="Boolean" Name="requNotificar" Nullable="false" />
+          <Property Type="Int32" Name="reqId" Nullable="false" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimientoNotificaUsuario_catRequerimiento" FromRole="catRequerimientoNotificaUsuario" ToRole="catRequerimiento" />
+          <NavigationProperty Name="sisUsuario" Relationship="efGeDocModelo.FK_catRequerimientoNotificaUsuario_sisUsuario" FromRole="catRequerimientoNotificaUsuario" ToRole="sisUsuario" />
+        </EntityType>
+        <Association Name="FK_catRequerimiento_sisTipo">
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="tipoIdTipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimiento_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoAdjunto_catRequerimiento">
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoAdjunto" Role="catRequerimientoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoAdjunto">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoComentarios_catRequerimiento">
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoComentarios" Role="catRequerimientoComentarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoComentarios">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_catRequerimiento">
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoEstado" Role="catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoLogTrabajo_catRequerimiento">
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoLogTrabajo" Role="catRequerimientoLogTrabajo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoLogTrabajo">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoNotificaUsuario_catRequerimiento">
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoNotificaUsuario" Role="catRequerimientoNotificaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catRequerimiento">
+              <PropertyRef Name="reqId" />
+            </Principal>
+            <Dependent Role="catRequerimientoNotificaUsuario">
+              <PropertyRef Name="reqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoAdjunto_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoAdjunto" Role="catRequerimientoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoAdjunto">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoComentarios_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoComentarios" Role="catRequerimientoComentarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoComentarios">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_sisTipo">
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoEstado" Role="catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="tipoIdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoEstado_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoEstado" Role="catRequerimientoEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoEstado">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoLogTrabajo_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoLogTrabajo" Role="catRequerimientoLogTrabajo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoLogTrabajo">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimientoNotificaUsuario_sisUsuario">
+          <End Type="efGeDocModelo.sisUsuario" Role="sisUsuario" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimientoNotificaUsuario" Role="catRequerimientoNotificaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisUsuario">
+              <PropertyRef Name="usrId" />
+            </Principal>
+            <Dependent Role="catRequerimientoNotificaUsuario">
+              <PropertyRef Name="usrId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="catPersona">
+          <Key>
+            <PropertyRef Name="perId" />
+          </Key>
+          <Property Type="Int32" Name="perId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int64" Name="perPadron" />
+          <Property Type="String" Name="perApellidoyNombre" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="tipoIdSexo" />
+          <Property Type="DateTime" Name="perFechaNacimiento" Precision="3" />
+          <Property Type="Int16" Name="provId" />
+          <Property Type="Int32" Name="perDNI" />
+          <Property Type="String" Name="perCUIL" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="perTelefono" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="perCelular" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="perEmail" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="perEsContratado" Nullable="false" />
+          <Property Type="Int16" Name="perAntiguedadAnios" />
+          <Property Type="Int16" Name="perAntiguedadMeses" />
+          <Property Type="Int16" Name="perAntiguedadDias" />
+          <Property Type="Int16" Name="secId" Nullable="false" />
+          <Property Type="String" Name="perObservaciones" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="perAntiguedadAniosPago" />
+          <Property Type="Int16" Name="perAntiguedadMesesPago" />
+          <Property Type="Int16" Name="perAntiguedadDiasPago" />
+          <Property Type="Int16" Name="perAntiguedadAniosVacaciones" />
+          <Property Type="Int16" Name="perAntiguedadMesesVacaciones" />
+          <Property Type="Int16" Name="perAntiguedadDiasVacaciones" />
+          <Property Type="String" Name="perFoto" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int16" Name="profId" />
+          <Property Type="Boolean" Name="perLeeoEscribe" />
+          <Property Type="Int16" Name="tipoIdEstadoCivil" />
+          <Property Type="Int16" Name="paisId" />
+          <Property Type="DateTime" Name="perFechaCasamiento" Precision="3" />
+          <Property Type="String" Name="perDomicilio" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="perAutorizaNotificarSMS" />
+          <Property Type="Int32" Name="perIdPersonaCronos" />
+          <Property Type="Int16" Name="ofiId" />
+          <Property Type="Int32" Name="gdId" />
+          <Property Type="String" Name="perFuncion" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="catSector" Relationship="efGeDocModelo.FK_catPersona_catSector" FromRole="catPersona" ToRole="catSector" />
+          <NavigationProperty Name="sisTipo" Relationship="efGeDocModelo.FK_catPersona_catTipo" FromRole="catPersona" ToRole="sisTipo" />
+          <NavigationProperty Name="sisTipo1" Relationship="efGeDocModelo.FK_catPersona_sisTipo" FromRole="catPersona" ToRole="sisTipo" />
+          <NavigationProperty Name="catRequerimiento" Relationship="efGeDocModelo.FK_catRequerimiento_catPersona" FromRole="catPersona" ToRole="catRequerimiento" />
+          <NavigationProperty Name="proResolucionNotificacionEmpleado" Relationship="efGeDocModelo.FK_proResolucionNotificacionEmpleado_catPersona" FromRole="catPersona" ToRole="proResolucionNotificacionEmpleado" />
+        </EntityType>
+        <Association Name="FK_catPersona_catSector">
+          <End Type="efGeDocModelo.catSector" Role="catSector" Multiplicity="1" />
+          <End Type="efGeDocModelo.catPersona" Role="catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catSector">
+              <PropertyRef Name="secId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="secId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catPersona_catTipo">
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="0..1" />
+          <End Type="efGeDocModelo.catPersona" Role="catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="tipoIdSexo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catPersona_sisTipo">
+          <End Type="efGeDocModelo.sisTipo" Role="sisTipo" Multiplicity="0..1" />
+          <End Type="efGeDocModelo.catPersona" Role="catPersona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sisTipo">
+              <PropertyRef Name="tipoId" />
+            </Principal>
+            <Dependent Role="catPersona">
+              <PropertyRef Name="tipoIdEstadoCivil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_catRequerimiento_catPersona">
+          <End Type="efGeDocModelo.catPersona" Role="catPersona" Multiplicity="1" />
+          <End Type="efGeDocModelo.catRequerimiento" Role="catRequerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catPersona">
+              <PropertyRef Name="perId" />
+            </Principal>
+            <Dependent Role="catRequerimiento">
+              <PropertyRef Name="perIdSolicitante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_proResolucionNotificacionEmpleado_catPersona">
+          <End Type="efGeDocModelo.catPersona" Role="catPersona" Multiplicity="1" />
+          <End Type="efGeDocModelo.proResolucionNotificacionEmpleado" Role="proResolucionNotificacionEmpleado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="catPersona">
+              <PropertyRef Name="perId" />
+            </Principal>
+            <Dependent Role="proResolucionNotificacionEmpleado">
+              <PropertyRef Name="perId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="efGeDocModeloStoreContainer" CdmEntityContainer="efGeDocEntities">
+          <EntitySetMapping Name="catReparticion">
+            <EntityTypeMapping TypeName="efGeDocModelo.catReparticion">
+              <MappingFragment StoreEntitySet="catReparticion">
+                <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+                <ScalarProperty Name="repId" ColumnName="repId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catSector">
+            <EntityTypeMapping TypeName="efGeDocModelo.catSector">
+              <MappingFragment StoreEntitySet="catSector">
+                <ScalarProperty Name="ccId" ColumnName="ccId" />
+                <ScalarProperty Name="secCodigo" ColumnName="secCodigo" />
+                <ScalarProperty Name="repId" ColumnName="repId" />
+                <ScalarProperty Name="secLinkMapa" ColumnName="secLinkMapa" />
+                <ScalarProperty Name="secUbicacionGeografica" ColumnName="secUbicacionGeografica" />
+                <ScalarProperty Name="secNombre" ColumnName="secNombre" />
+                <ScalarProperty Name="secId" ColumnName="secId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catZona">
+            <EntityTypeMapping TypeName="efGeDocModelo.catZona">
+              <MappingFragment StoreEntitySet="catZona">
+                <ScalarProperty Name="zonIdDependencia" ColumnName="zonIdDependencia" />
+                <ScalarProperty Name="zonNombre" ColumnName="zonNombre" />
+                <ScalarProperty Name="zonCodigo" ColumnName="zonCodigo" />
+                <ScalarProperty Name="zonId" ColumnName="zonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="proResolucion">
+            <EntityTypeMapping TypeName="efGeDocModelo.proResolucion">
+              <MappingFragment StoreEntitySet="proResolucion">
+                <ScalarProperty Name="tnlId" ColumnName="tnlId" />
+                <ScalarProperty Name="resNotificacionDiaInicio" ColumnName="resNotificacionDiaInicio" />
+                <ScalarProperty Name="resNotificacionVencimiento" ColumnName="resNotificacionVencimiento" />
+                <ScalarProperty Name="resEsImportante" ColumnName="resEsImportante" />
+                <ScalarProperty Name="resLinkArchivo" ColumnName="resLinkArchivo" />
+                <ScalarProperty Name="resResuelve" ColumnName="resResuelve" />
+                <ScalarProperty Name="resConsiderando" ColumnName="resConsiderando" />
+                <ScalarProperty Name="resFecha" ColumnName="resFecha" />
+                <ScalarProperty Name="resNumero" ColumnName="resNumero" />
+                <ScalarProperty Name="resId" ColumnName="resId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="proResolucionExpedientes">
+            <EntityTypeMapping TypeName="efGeDocModelo.proResolucionExpedientes">
+              <MappingFragment StoreEntitySet="proResolucionExpedientes">
+                <ScalarProperty Name="resId" ColumnName="resId" />
+                <ScalarProperty Name="reseExpedienteAnio" ColumnName="reseExpedienteAnio" />
+                <ScalarProperty Name="reseExpedienteNumero" ColumnName="reseExpedienteNumero" />
+                <ScalarProperty Name="zonId" ColumnName="zonId" />
+                <ScalarProperty Name="reseId" ColumnName="reseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="proResolucionNotificacionEmpleado">
+            <EntityTypeMapping TypeName="efGeDocModelo.proResolucionNotificacionEmpleado">
+              <MappingFragment StoreEntitySet="proResolucionNotificacionEmpleado">
+                <ScalarProperty Name="perId" ColumnName="perId" />
+                <ScalarProperty Name="resId" ColumnName="resId" />
+                <ScalarProperty Name="resneId" ColumnName="resneId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisLogEnvioEmail">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisLogEnvioEmail">
+              <MappingFragment StoreEntitySet="sisLogEnvioEmail">
+                <ScalarProperty Name="leMensajeError" ColumnName="leMensajeError" />
+                <ScalarProperty Name="leEnviado" ColumnName="leEnviado" />
+                <ScalarProperty Name="leDestinatarioEmail" ColumnName="leDestinatarioEmail" />
+                <ScalarProperty Name="leDestinatario" ColumnName="leDestinatario" />
+                <ScalarProperty Name="leFecha" ColumnName="leFecha" />
+                <ScalarProperty Name="leId" ColumnName="leId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisMenu">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisMenu">
+              <MappingFragment StoreEntitySet="sisMenu">
+                <ScalarProperty Name="mnuController" ColumnName="mnuController" />
+                <ScalarProperty Name="mnuAccion" ColumnName="mnuAccion" />
+                <ScalarProperty Name="mnuImagen" ColumnName="mnuImagen" />
+                <ScalarProperty Name="mnuTitulo" ColumnName="mnuTitulo" />
+                <ScalarProperty Name="mnuOrden" ColumnName="mnuOrden" />
+                <ScalarProperty Name="mnuNombre" ColumnName="mnuNombre" />
+                <ScalarProperty Name="mnuId" ColumnName="mnuId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisTipo">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisTipo">
+              <MappingFragment StoreEntitySet="sisTipo">
+                <ScalarProperty Name="tipoCodigo" ColumnName="tipoCodigo" />
+                <ScalarProperty Name="tipoColor" ColumnName="tipoColor" />
+                <ScalarProperty Name="tipoImagen" ColumnName="tipoImagen" />
+                <ScalarProperty Name="tipoDescripcion" ColumnName="tipoDescripcion" />
+                <ScalarProperty Name="tipoeId" ColumnName="tipoeId" />
+                <ScalarProperty Name="tipoId" ColumnName="tipoId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisTipoEntidad">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisTipoEntidad">
+              <MappingFragment StoreEntitySet="sisTipoEntidad">
+                <ScalarProperty Name="tipoeDescripcion" ColumnName="tipoeDescripcion" />
+                <ScalarProperty Name="tipoeCodigo" ColumnName="tipoeCodigo" />
+                <ScalarProperty Name="tipoeId" ColumnName="tipoeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisUsuario">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisUsuario">
+              <MappingFragment StoreEntitySet="sisUsuario">
+                <ScalarProperty Name="usrEmail" ColumnName="usrEmail" />
+                <ScalarProperty Name="estId" ColumnName="estId" />
+                <ScalarProperty Name="usrPassword" ColumnName="usrPassword" />
+                <ScalarProperty Name="usrApellidoyNombre" ColumnName="usrApellidoyNombre" />
+                <ScalarProperty Name="usrNombreDeUsuario" ColumnName="usrNombreDeUsuario" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sisUsuarioEstado">
+            <EntityTypeMapping TypeName="efGeDocModelo.sisUsuarioEstado">
+              <MappingFragment StoreEntitySet="sisUsuarioEstado">
+                <ScalarProperty Name="ueMotivo" ColumnName="ueMotivo" />
+                <ScalarProperty Name="ueFecha" ColumnName="ueFecha" />
+                <ScalarProperty Name="tipoId" ColumnName="tipoId" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimiento">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimiento">
+              <MappingFragment StoreEntitySet="catRequerimiento">
+                <ScalarProperty Name="reqLinkId" ColumnName="reqLinkId" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="reqFechaEstimado" ColumnName="reqFechaEstimado" />
+                <ScalarProperty Name="reqTiempoEstimado" ColumnName="reqTiempoEstimado" />
+                <ScalarProperty Name="perIdSolicitante" ColumnName="perIdSolicitante" />
+                <ScalarProperty Name="reqDescripcion" ColumnName="reqDescripcion" />
+                <ScalarProperty Name="reqAsunto" ColumnName="reqAsunto" />
+                <ScalarProperty Name="tipoIdTipo" ColumnName="tipoIdTipo" />
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoAdjunto">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoAdjunto">
+              <MappingFragment StoreEntitySet="catRequerimientoAdjunto">
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+                <ScalarProperty Name="reqaObservaciones" ColumnName="reqaObservaciones" />
+                <ScalarProperty Name="reqaArchivo" ColumnName="reqaArchivo" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="reqaFecha" ColumnName="reqaFecha" />
+                <ScalarProperty Name="reqaId" ColumnName="reqaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoComentarios">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoComentarios">
+              <MappingFragment StoreEntitySet="catRequerimientoComentarios">
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="reqcComentario" ColumnName="reqcComentario" />
+                <ScalarProperty Name="reqcFecha" ColumnName="reqcFecha" />
+                <ScalarProperty Name="reqcId" ColumnName="reqcId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoEstado">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoEstado">
+              <MappingFragment StoreEntitySet="catRequerimientoEstado">
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+                <ScalarProperty Name="reqeObservaciones" ColumnName="reqeObservaciones" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="reqeFecha" ColumnName="reqeFecha" />
+                <ScalarProperty Name="tipoIdEstado" ColumnName="tipoIdEstado" />
+                <ScalarProperty Name="reqeId" ColumnName="reqeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoLogTrabajo">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoLogTrabajo">
+              <MappingFragment StoreEntitySet="catRequerimientoLogTrabajo">
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="reqlObservaciones" ColumnName="reqlObservaciones" />
+                <ScalarProperty Name="reqlTiempo" ColumnName="reqlTiempo" />
+                <ScalarProperty Name="reqlFecha" ColumnName="reqlFecha" />
+                <ScalarProperty Name="reqlId" ColumnName="reqlId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoNotificaciones">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoNotificaciones">
+              <MappingFragment StoreEntitySet="catRequerimientoNotificaciones">
+                <ScalarProperty Name="reqnArchivoAdjunto" ColumnName="reqnArchivoAdjunto" />
+                <ScalarProperty Name="reqnError" ColumnName="reqnError" />
+                <ScalarProperty Name="reqnEnviado" ColumnName="reqnEnviado" />
+                <ScalarProperty Name="reqnDestinatarioEmail" ColumnName="reqnDestinatarioEmail" />
+                <ScalarProperty Name="reqnDestinatario" ColumnName="reqnDestinatario" />
+                <ScalarProperty Name="reqnFecha" ColumnName="reqnFecha" />
+                <ScalarProperty Name="reqnMensaje" ColumnName="reqnMensaje" />
+                <ScalarProperty Name="reqnId" ColumnName="reqnId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catRequerimientoNotificaUsuario">
+            <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoNotificaUsuario">
+              <MappingFragment StoreEntitySet="catRequerimientoNotificaUsuario">
+                <ScalarProperty Name="reqId" ColumnName="reqId" />
+                <ScalarProperty Name="requNotificar" ColumnName="requNotificar" />
+                <ScalarProperty Name="usrId" ColumnName="usrId" />
+                <ScalarProperty Name="requId" ColumnName="requId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="catPersona">
+            <EntityTypeMapping TypeName="efGeDocModelo.catPersona">
+              <MappingFragment StoreEntitySet="catPersona">
+                <ScalarProperty Name="perFuncion" ColumnName="perFuncion" />
+                <ScalarProperty Name="gdId" ColumnName="gdId" />
+                <ScalarProperty Name="ofiId" ColumnName="ofiId" />
+                <ScalarProperty Name="perIdPersonaCronos" ColumnName="perIdPersonaCronos" />
+                <ScalarProperty Name="perAutorizaNotificarSMS" ColumnName="perAutorizaNotificarSMS" />
+                <ScalarProperty Name="perDomicilio" ColumnName="perDomicilio" />
+                <ScalarProperty Name="perFechaCasamiento" ColumnName="perFechaCasamiento" />
+                <ScalarProperty Name="paisId" ColumnName="paisId" />
+                <ScalarProperty Name="tipoIdEstadoCivil" ColumnName="tipoIdEstadoCivil" />
+                <ScalarProperty Name="perLeeoEscribe" ColumnName="perLeeoEscribe" />
+                <ScalarProperty Name="profId" ColumnName="profId" />
+                <ScalarProperty Name="perFoto" ColumnName="perFoto" />
+                <ScalarProperty Name="perAntiguedadDiasVacaciones" ColumnName="perAntiguedadDiasVacaciones" />
+                <ScalarProperty Name="perAntiguedadMesesVacaciones" ColumnName="perAntiguedadMesesVacaciones" />
+                <ScalarProperty Name="perAntiguedadAniosVacaciones" ColumnName="perAntiguedadAniosVacaciones" />
+                <ScalarProperty Name="perAntiguedadDiasPago" ColumnName="perAntiguedadDiasPago" />
+                <ScalarProperty Name="perAntiguedadMesesPago" ColumnName="perAntiguedadMesesPago" />
+                <ScalarProperty Name="perAntiguedadAniosPago" ColumnName="perAntiguedadAniosPago" />
+                <ScalarProperty Name="perObservaciones" ColumnName="perObservaciones" />
+                <ScalarProperty Name="secId" ColumnName="secId" />
+                <ScalarProperty Name="perAntiguedadDias" ColumnName="perAntiguedadDias" />
+                <ScalarProperty Name="perAntiguedadMeses" ColumnName="perAntiguedadMeses" />
+                <ScalarProperty Name="perAntiguedadAnios" ColumnName="perAntiguedadAnios" />
+                <ScalarProperty Name="perEsContratado" ColumnName="perEsContratado" />
+                <ScalarProperty Name="perEmail" ColumnName="perEmail" />
+                <ScalarProperty Name="perCelular" ColumnName="perCelular" />
+                <ScalarProperty Name="perTelefono" ColumnName="perTelefono" />
+                <ScalarProperty Name="perCUIL" ColumnName="perCUIL" />
+                <ScalarProperty Name="perDNI" ColumnName="perDNI" />
+                <ScalarProperty Name="provId" ColumnName="provId" />
+                <ScalarProperty Name="perFechaNacimiento" ColumnName="perFechaNacimiento" />
+                <ScalarProperty Name="tipoIdSexo" ColumnName="tipoIdSexo" />
+                <ScalarProperty Name="perApellidoyNombre" ColumnName="perApellidoyNombre" />
+                <ScalarProperty Name="perPadron" ColumnName="perPadron" />
+                <ScalarProperty Name="perId" ColumnName="perId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="efGeDocModel">
+        <EntityTypeShape EntityType="efGeDocModelo.catReparticion" Width="1.5" PointX="7.75" PointY="10.25" Height="1.5956835937500031" />
+        <EntityTypeShape EntityType="efGeDocModelo.catSector" Width="1.5" PointX="10" PointY="9.875" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="efGeDocModelo.catZona" Width="1.5" PointX="5.75" PointY="13.625" Height="1.9802864583333388" />
+        <EntityTypeShape EntityType="efGeDocModelo.proResolucion" Width="1.5" PointX="5.75" PointY="6" Height="3.1340950520833388" />
+        <EntityTypeShape EntityType="efGeDocModelo.proResolucionExpedientes" Width="1.5" PointX="8" PointY="6.5" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="efGeDocModelo.proResolucionNotificacionEmpleado" Width="1.5" PointX="8" PointY="3.625" Height="1.9802864583333388" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisLogEnvioEmail" Width="1.5" PointX="0.75" PointY="8.75" Height="2.1725878906250067" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisMenu" Width="1.5" PointX="2.75" PointY="8.75" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisTipo" Width="1.5" PointX="3" PointY="1" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisTipoEntidad" Width="1.5" PointX="0.75" PointY="1.25" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisUsuario" Width="1.5" PointX="3" PointY="5.125" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="efGeDocModelo.sisUsuarioEstado" Width="1.5" PointX="5.25" PointY="1" Height="2.1725878906250102" />
+        <AssociationConnector Association="efGeDocModelo.FK_catSector_catReparticion" >
+          <ConnectorPoint PointX="9.25" PointY="11.047841796875002" />
+          <ConnectorPoint PointX="9.3229166666666661" PointY="11.047841796875002" />
+          <ConnectorPoint PointX="9.4895833333333339" PointY="11.047841796875002" />
+          <ConnectorPoint PointX="10" PointY="11.047841796875002" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_proResolucionExpedientes_catZona" >
+          <ConnectorPoint PointX="7.25" PointY="14.615143229166669" />
+          <ConnectorPoint PointX="9.40625" PointY="14.615143229166669" />
+          <ConnectorPoint PointX="9.40625" PointY="8.8648893229166674" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_proResolucionExpedientes_proResolucion" >
+          <ConnectorPoint PointX="7.25" PointY="7.6824446614583337" />
+          <ConnectorPoint PointX="7.416666666666667" PointY="7.6824446614583328" />
+          <ConnectorPoint PointX="7.583333333333333" PointY="7.6824446614583337" />
+          <ConnectorPoint PointX="8" PointY="7.6824446614583337" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_proResolucionNotificacionEmpleado_proResolucion" >
+          <ConnectorPoint PointX="6.5" PointY="6" />
+          <ConnectorPoint PointX="6.5" PointY="5.1414673437500049" />
+          <ConnectorPoint PointX="7.416666666666667" PointY="5.141467343750004" />
+          <ConnectorPoint PointX="7.583333333333333" PointY="5.1414673437500049" />
+          <ConnectorPoint PointX="8" PointY="5.1414673437500049" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_sisTipo_sisTipoEntidad" >
+          <ConnectorPoint PointX="2.25" PointY="2.1439925130208337" />
+          <ConnectorPoint PointX="3" PointY="2.1439925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_sisUsuarioEstado_sisTipo" >
+          <ConnectorPoint PointX="4.5" PointY="2.0862939453125051" />
+          <ConnectorPoint PointX="5.25" PointY="2.0862939453125051" />
+        </AssociationConnector>
+        <AssociationConnector Association="efGeDocModelo.FK_sisUsuarioEstado_sisUsuario" >
+          <ConnectorPoint PointX="4.5" PointY="5.5394836718750025" />
+          <ConnectorPoint PointX="5.46875" PointY="5.5394836718750025" />
+          <ConnectorPoint PointX="5.46875" PointY="3.1725878906250102" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimiento" Width="1.5" PointX="3.9655196368533741" PointY="26.239831400215547" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoAdjunto" Width="1.5" PointX="9.6715232849454154" PointY="3.6747316139166855" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoComentarios" Width="1.5" PointX="11.132814410670109" PointY="3.69423629515536" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoEstado" Width="1.5" PointX="1.0259054084429076" PointY="13.091525486247393" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoLogTrabajo" Width="1.5" PointX="6.6281675988008111" PointY="22.477844382858763" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoNotificaciones" Width="1.5" PointX="5.0003149812111243" PointY="2.096301079772553" />
+        <EntityTypeShape EntityType="efGeDocModelo.catRequerimientoNotificaUsuario" Width="1.5" PointX="1.6896851014763512" PointY="29.750175489927724" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimiento_sisTipo" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimiento_sisUsuario" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoAdjunto_catRequerimiento" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoComentarios_catRequerimiento" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoEstado_catRequerimiento" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoLogTrabajo_catRequerimiento" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoNotificaUsuario_catRequerimiento" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoAdjunto_sisUsuario" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoComentarios_sisUsuario" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoEstado_sisTipo" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoEstado_sisUsuario" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoLogTrabajo_sisUsuario" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimientoNotificaUsuario_sisUsuario" />
+        <EntityTypeShape EntityType="efGeDocModelo.catPersona" Width="1.5" PointX="0.8085991930256593" PointY="3.5699604170257042" />
+        <AssociationConnector Association="efGeDocModelo.FK_catPersona_catSector" />
+        <AssociationConnector Association="efGeDocModelo.FK_catPersona_catTipo" />
+        <AssociationConnector Association="efGeDocModelo.FK_catPersona_sisTipo" />
+        <AssociationConnector Association="efGeDocModelo.FK_catRequerimiento_catPersona" />
+        <AssociationConnector Association="efGeDocModelo.FK_proResolucionNotificacionEmpleado_catPersona" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

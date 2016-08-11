@@ -1,0 +1,58 @@
+﻿@using Telerik.Web.Mvc.UI.Fluent
+@model IEnumerable<GeDoc.Models.catEncuestaAPSEncuestador>
+
+<script type="text/javascript">
+
+    function Grid_OnRowDelete(e) {
+        console.log(e);
+    }
+
+    function Grid_OnEdit(e) {
+        console.log(e);
+    }
+
+</script>
+
+@(
+ Html.Telerik().Grid<GeDoc.catEncuestaAPSEncuestadores>()
+           .Name("Grid")
+           .DataKeys(keys =>
+           {
+               keys.Add(p => p.encuestadorId);
+           })
+           .Localizable("es-AR")
+           .ToolBar(commands =>
+           {
+               commands.Insert().ButtonType(GridButtonType.Image).ImageHtmlAttributes(new { style = "margin-left:0" });                  
+           })
+           .DataBinding(dataBinding =>
+           {
+               dataBinding.Ajax()
+                   .Select("_SelectEditing", "catEncuestaAPSEncuestador")
+                   .Insert("_InsertEditing", "catEncuestaAPSEncuestador")
+                   .Update("_SaveEditing", "catEncuestaAPSEncuestador")
+                   .Delete("_DeleteEditing", "catEncuestaAPSEncuestador");
+           })
+           .Columns(columns =>
+           {
+               columns.Command(commands =>
+               {
+                   commands.Edit().ButtonType(GridButtonType.Image);
+                   commands.Delete().ButtonType(GridButtonType.Image);
+               }).Width(22).Title("Acciones");
+               columns.Bound(c => c.encuestadorApyNom).Width(80).Title("Nombre").Visible(true);
+               columns.Bound(c => c.encuestadorDoc).Width(80).Title("Documento").Visible(true);
+               columns.Bound(c => c.repNombre).Width(80).Title("Zona").Visible(true);
+
+           })
+            .Editable(editing => editing
+                    .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true).FormHtmlAttributes(new {id = "asd"}).TemplateName("asd"))
+            .Pageable(p => p.Enabled(true).PageSize(15))
+            .ClientEvents(events => events.OnDelete("Grid_OnRowDelete").OnEdit("Grid_OnEdit"))
+            .Footer(true)
+            .Filterable()
+            .Selectable()
+            .Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+            .Sortable()
+      ) 
+

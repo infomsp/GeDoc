@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "ConsultaHistoriaEvolucion";
+}
+
+<center><label><b>EVOLUCIÓN PERIÓDICA POR SOAP (DESARROLLO DE PROBLEMAS)</b></label></center>
+<div><label><b>S:</b> SUBJETIVO (LO QUE MANIFIESTA EL PACIENTE) SÍNTOMAS </label></div>
+<div><label><b>O:</b> LO QUE OBJETIVA EL MÉDICO, SIGNOS</label></div>
+<div><label><b>A:</b> PROBLEMA (PROBLEMAS SOCISANITARIOS, DIAGNOSTICO PRESUNTIVO O CONFIRMADO)</label></div>
+<div><label><b>P:</b> PLAN TERAPEÚTICO, PLAN DE SEGUIMIENTO O PLANES PREVENTIVOS</label></div>
+
+<script type="text/javascript">
+    function onGuardarHCEvolucionAdulto(preguntar) {
+        if (preguntar) {
+            jConfirm("¿Confirma Agregar Evolución a la História Clínica del Paciente?", "Guardar...", function(r) {
+                if (r) {
+                    onGuardarHCEvolucion();
+                } else {
+                    $("#txtComentario").focus();
+                }
+            });
+        } else {
+            onGuardarHCEvolucion();
+        }
+
+    }
+
+    function onGuardarHCEvolucion() {
+        AbrirWaitingCRUD();
+        var _Post = GetPathApp("HistoriaClinica/setEvolucionAdulto");
+        var _idTurno = 0;
+        debugger;
+        if (_DatosRegistroHCTurno != null) {
+            _idTurno = _DatosRegistroHCTurno.turId;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { IdPaciente: $("#pacId").val(), Comentario: $("#txtComentario").val(), idTurno: _idTurno },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (data) {
+                CerrarWaitingCRUD();
+                if (data.IsValid) {
+                    MensajeEmergente("Información", "Evolución registrada en forma correcta.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                                $("#gridHCAduSOAP").data("tGrid").ajaxRequest();
+                                $("#txtComentario").val("");
+                                $("#txtComentario").focus();
+                            } else {
+                                jAlert(data.Mensaje, "Error...", function () {
+                                    $("#txtComentario").focus();
+                                });
+                }
+            }
+        });
+    }
+    function onDataBindingcatHCAduSOAP(e) {
+        e.data = $.extend(e.data, { idPaciente: $("#pacId").val() });
+    }
+
+    function onCerrarHCEvolucionAdulto() {
+        var wHCMenuOpciones = $("#wHCMenu").data("tWindow");
+        wHCMenuOpciones.close();
+    }
+
+    function onCompleteEvolucionHCAdulto() {
+        $("#txtComentario").focus();
+    }
+</script>
+
+@(Html.Telerik().Grid<GeDoc.catHCAduSOAPWS>()
+    .Name("gridHCAduSOAP")
+    .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                        .Select("_getEvolucionHCAdulto", "HistoriaClinica");
+        })
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.aduSOAPFecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").HeaderHtmlAttributes(new { style = "text-align: center;" }).Visible(true);
+        columns.Bound(c => c.aduSOAPFecha).Width("80px").Format("{0:HH:mm:ss}").Title("Hora").HeaderHtmlAttributes(new { style = "text-align: center;" }).Visible(true);
+        columns.Bound(c => c.CentroDeSalud).Width("150px").Title("Usuario").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= CentroDeSalud #>' style='cursor: pointer;' style='white-space: nowrap;'><#= CentroDeSalud #> </label>");
+        columns.Bound(c => c.Usuario.usrApellidoyNombre).Width("150px").Title("Usuario").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= Usuario.usrApellidoyNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Usuario.usrApellidoyNombre #> </label>");
+        columns.Bound(c => c.aduSOAPEvolucion).Width("1000px").Title("Descripción").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= aduSOAPEvolucion #>' style='cursor: pointer;' style='white-space: nowrap;'><#= aduSOAPEvolucion #> </label>");
+    })
+    .Footer(true)
+    .Selectable()
+    .Resizable(resizing => resizing.Columns(true))
+    .Pageable((paging) =>
+                paging.Enabled(true)
+                    .PageSize(((int)Session["FilasPorPagina"])))
+    .Scrollable(scroll => scroll.Enabled(true))
+    .ClientEvents(clientEvents => clientEvents.OnDataBinding("onDataBindingcatHCAduSOAP").OnComplete("onCompleteEvolucionHCAdulto"))
+    .HtmlAttributes(new { style = "width: 99.5%;" })
+        )
+<div class="si-wrapper" style="width: 99%;">
+    <textarea id="txtComentario" placeholder="Evolución..." class="text-box multi-line si-input" style="width: 100%; margin-top: 10px;"></textarea>
+    @*<div class="si-btn" style="cursor: pointer; top: 28px; right: 15px;" >
+        <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-4x fa-microphone"></i></span>
+    </div>*@
+</div>
+@*<div id="btnAceptar" class="t-button" onclick="onGuardarHCEvolucionAdulto();" title="Agregar evolución a História Clínica">
+    <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+    <label style="cursor: pointer;">Guardar Cambios</label>
+</div>*@
+
+<div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+    <div id="btnAceptar" style="width: 140px;" class="t-button" onclick="onGuardarHCEvolucionAdulto(true);" title="Agregar evolución a História Clínica">
+        <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+        <label style="cursor: pointer; vertical-align: super;">Guardar</label>
+    </div>
+    <div id="btnCancelar" style="width: 140px;" class="t-button" onclick="onCerrarHCEvolucionAdulto();" title="Cerrar ventana de evoluciones">
+        <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-close"></i></span>
+        <label style="cursor: pointer; vertical-align: super;">Cancelar</label>
+    </div>
+</div>

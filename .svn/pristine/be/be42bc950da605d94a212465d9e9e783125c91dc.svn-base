@@ -1,0 +1,133 @@
+﻿<script type="text/javascript">
+    var _DatosRegistro_BuscarAgente;
+
+    function onRowSelectedBuscarAgente(e) {
+        var row = e.row;
+        var grid = $("#gridAgentes").data("tGrid");
+        var dataItem = grid.dataItem(row);
+        _DatosRegistro_BuscarAgente = dataItem;
+    }
+
+    function onCommandBuscarAgente(e) {
+        switch (e.name) {
+            case "cmdAsignar":
+                if (_DatosRegistro_BuscarAgente["agtId"] != null) {
+                    checkForPatientHC();
+                }
+                else {
+                    jAlert("Debe seleccionar el Agente", "Error...");
+                    return;
+                }
+                break;
+        }
+    }
+
+    function onCancelarBuscarAgente() {
+        var _Window = $("#WBuscarAgentes").data("tWindow");
+        _Window.close();
+    }
+
+    function onDataBindingBuscarAgente(e) {
+        var BuscarTexto = "";
+        var txtBus = $("#txtBusquedaAgente");
+        if (txtBus != null) {
+            BuscarTexto = txtBus.val().trim();
+        }
+        e.data = $.extend(e.data, { TextoBuscado: BuscarTexto });
+    }
+
+    function onCompleteBuscarAgente(e) {
+        if (e.name !== "update" || e.name !== "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function AsignarAgente(AgenteId, Nombre, Preguntar) {
+        if (Preguntar === 1) {
+            jConfirm('¿Confirma Asignación del Agente "' + Nombre + '"?', "Asignación de Agente...", function (r) {
+                if (r) {
+                    onCancelarAgente();
+                    $.post("@Url.Content("~/catTurno/AsignarAgente")", { pacId: AgenteId, turId: _DatosRegistro_BuscarAgente["turId"], turFecha: $("#Agenda").val() }, function (data) {
+                        CerrarWaiting();
+                        if (!data.IsValid) {
+                            jAlert(data.Mensaje, 'Error...');
+                        }
+                        Refrescar();
+                        $("#txtBusquedaAgente").val("");
+                    });
+                }
+            });
+        } else {
+            // AbrirWaiting();
+            onCancelarAgente();
+            $.post("@(Url.Content("~/catTurno/AsignarAgente"))", { pacId: AgenteId, turId: _DatosRegistro_BuscarAgente.turId, turFecha: $("#Agenda").val() }, function (data) {
+                CerrarWaiting();
+                if (!data.IsValid) {
+                    jAlert(data.Mensaje, 'Error...');
+                }
+                Refrescar();
+                $("#txtBusquedaAgente").val("");
+            });
+        }
+    }
+
+    $("#txtBusquedaAgente").keydown(function (e) {
+        if (e.which == 13) {
+            BusquedaAgente();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $("#txtBusquedaAgente").focus(function (e) {
+        $(this).select();
+    });
+
+    function BusquedaAgente() {
+        AbrirWaiting();
+        var grid = $('#gridAgentes').data("tGrid");
+        grid.ajaxRequest();
+    }
+
+</script>
+<div>
+    <div style="margin-top: 5px; margin-bottom: 8px;">
+        <label style="">Búsqueda:</label>
+        <input type="text" id="txtBusquedaAgente" style="width: 949px;" />
+    </div>
+    @(Html.Telerik().Grid((IEnumerable<GeDoc.Models.JuntaMedica.Modelo.getBusquedaAgentes_Result>)ViewData["catAgentes"])
+    .Name("gridAgentes")
+    .DataKeys(keys =>
+    {
+        keys.Add(p => p.agtId);
+    })
+    .ToolBar(commands =>
+    {
+        commands.Custom().Ajax(true).Name("cmdAsignar").ButtonType(GridButtonType.ImageAndText)
+            .ImageHtmlAttributes(new {style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;"})
+            .Text("Asignar");
+    })
+    .Localizable("es-AR")
+    .Columns(columns =>
+    {      
+        columns.Bound(c => c.agtApellidoyNombre).Width("250px").Title("Apellido y Nombre").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= agtApellidoyNombre #>' style='cursor: pointer;' ondblclick='SeleccionaAgente(<#= agtId #>)'><#= agtApellidoyNombre #></div>");
+        columns.Bound(c => c.agtDNI).Width("110px").Title("DNI").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= agtDNI #>' style='cursor: pointer;' ondblclick='SeleccionaAgente(<#= agtId #>)'><#= agtDNI #></div>");
+        columns.Bound(c => c.agtLugarDeTrabajo).Width("250px").Title("Lugar de Trabajo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= agtLugarDeTrabajo #>' style='cursor: pointer;' ondblclick='SeleccionaAgente(<#= agtId #>)'><#= agtLugarDeTrabajo #></div>");
+        columns.Bound(c => c.agtDomicilio).Width("250px").Title("Domicilio").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<div title='<#= agtDomicilio #>' style='cursor: pointer;' ondblclick='SeleccionaAgente(<#= agtId #>)'><#= agtDomicilio #></div>");
+    })
+    .Editable(editing => editing.Enabled(true)
+        .Mode(GridEditMode.PopUp))
+        .Pageable((paging) =>
+        paging.Enabled(true)
+        .PageSize(((int)Session["FilasPorPagina"])))
+        .DataBinding(dataBinding => dataBinding.Ajax().Select("_SelectEditingAgenteBusqueda", "JuntaMedica", new { TextoBuscado = "" }))
+        .ClientEvents(clientEvents => clientEvents.OnCommand("onCommandBuscarAgente").OnRowSelect("onRowSelectedBuscarAgente").OnDataBinding("onDataBindingBuscarAgente").OnComplete("onCompleteBuscarAgente"))
+        .Footer(true)
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(510))
+        .Resizable(resizing => resizing.Columns(true)))
+</div>

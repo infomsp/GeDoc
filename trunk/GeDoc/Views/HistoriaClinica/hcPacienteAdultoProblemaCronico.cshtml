@@ -1,0 +1,113 @@
+﻿@model GeDoc.catHCAdultoWS
+
+@{
+    ViewBag.Title = "ConsultasHistorialFamiliarYPersonal";
+}
+<script>
+    function onEjecutaAccionHCListaProblemasCronicos(pAccion, aduCRId, hcaduid) {
+        if (pAccion === "Agregar") {
+            AbrirWaitingCRUD();
+            var _Post = GetPathApp("HistoriaClinica/getHistoriaClinicaProblemasCronicos");
+            $.ajax({
+                type: "POST",
+                url: _Post,
+                data: { id: aduCRId, phcaduid: hcaduid },
+                error: function () {
+                    CerrarWaitingCRUD();
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                    });
+                },
+                success: function (respuesta) {
+                    CerrarWaitingCRUD();
+                    var _WindowHC = $("#wHCCRUDProblemasCronicos").data("tWindow");
+                    _WindowHC.title("Problema Crónico");
+                    _WindowHC.center().open();
+                    _WindowHC.content(respuesta);
+                }
+            });
+            return;
+        }
+    }
+
+    function onCancelarProblemasCronicos() {
+        var windowElement = $("#wHCCRUDProblemasCronicos").data("tWindow");
+        windowElement.close();
+    }
+
+    function onActivate_wHCCRUDProblemasCronicos() {
+        $("#aduCRFecha").focus().select();
+    }
+</script>
+@(Html.Telerik().Grid<GeDoc.catHCAduProCronicosWS>()
+      .Name("gridHCListaProblemasCronicos")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.hcaduid);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+              <div style="margin-top: 5px; margin-left: 10px; margin-bottom: 5px;">
+                  <label class="t-button">
+                      <img class="t-icon t-add" onclick="onEjecutaAccionHCListaProblemasCronicos('Agregar', -1, @Model.hcaduid);" title="Agregar Historia Clínica Adultos"/>
+                  </label>
+              </div>
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getHCListaProblemasCronicos", "HistoriaClinica", new { hcaduId = Model.hcaduid });
+      })
+      .Columns(columns =>
+      {
+          //columns.Command(commands =>
+          //{
+          //    commands.Custom("cmdConsultar")
+          //        .Ajax(true)
+          //        .ButtonType(GridButtonType.Image)
+          //        .SendDataKeys(false)
+          //        .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Acuse de Recibo de licencia médica" })
+          //        //.HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("HistoriaClinica", "Examinar") })
+          //        .SendState(false)
+          //        .DataRouteValues(route =>
+          //        {
+          //            route.Add(o => o.hcaduid).RouteKey("hcaduid");
+          //        });
+          //}).Width("80px").Title("Acciones");
+          columns.Bound(c => c.hcaduid).Width("100px").Title("Id").Visible(false);
+          columns.Bound(c => c.aduCRFecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+          columns.Bound(c => c.aduCRProblema).Width("200px").Title("Problemas Crónicos").Visible(true);
+          columns.Bound(c => c.aduCRCodigo).Width("50px").Title("Código").Visible(true);
+          columns.Bound(c => c.aduCRMedi).Width("300px").Title("Medicación/Intervenciones del equipo de Salud").Visible(true);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      //.ClientEvents(events => events.OnComplete("onComplete_wHCListaAdultos").OnCommand("onCommand_wHCListaAdultos").OnDataBinding("onDataBinding_wHCListaAdultos"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(390))
+      .Sortable()
+      )
+@{
+    Html.Telerik().Window()
+      .Name("wHCCRUDProblemasCronicos")
+      .Title("Problemas Crónicos")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Height(250)
+      .Width(500)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wHCCRUDProblemasCronicos"))
+      .Render();
+}

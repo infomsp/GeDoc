@@ -1,0 +1,298 @@
+﻿@model GeDoc.catHCPerConsultasWS
+           
+<style>
+
+    .rowAntenatal {
+            padding: 5px;
+        display:inline-block;
+    }
+    .rowAntenataltem {
+        display:inline-block;
+    }
+    #perCpeso,
+    #perCEdadGes,
+    #perCPA,   
+    #perCTecnico {
+        width: 69px !important;
+    }
+    #perCAlturaUt,
+    #perCMovF,
+    #perCMovF {
+        width: 60px !important;
+    }
+
+     #perCSignos
+     {
+            margin-top: 10px;
+            width: 540px !important;
+     }
+      
+</style>
+
+<div id="waitingCRUD_ConsultaAntenatal" class="es-overlay" style="display: none; margin-top: -10px;text-align: center;">
+    <div style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>
+
+@using (Html.BeginForm("setConsultaAntenatal", "HistoriaClinica", FormMethod.Post, new { id = "frmCRUDConsultaAntenatal" }))
+{
+          <div   class="BordeRedondeado" style="border-color: Silver; padding: 3px 3px 3px 3px; display: inline-block;">                
+              @Html.HiddenFor(model => model.pAccion)
+              @Html.HiddenFor(model=>model.hcperid)
+              <div class="rowAntenatal">
+                    <div class="rowAntenataltem">
+                        <label>Fecha:</label>
+                        @Html.EditorFor(model => Model.perCFecha)                            
+                    </div>                   
+                  <div class="rowAntenataltem">
+                        <label>Edad gest:</label>
+                        @Html.EditorFor(model => Model.perCEdadGes)
+                    </div>
+                </div>
+
+                <div class="rowAntenatal">
+                    <label>Peso:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCpeso)
+                    </div>                    
+                </div>
+
+                <div class="rowAntenatal">
+                    <label>P.A:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCPA)
+                    </div>                    
+                </div>
+              <div class="rowAntenatal">
+                    <label>Altura uterina:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCAlturaUt)
+                    </div>                    
+                </div>
+
+              <div class="rowAntenatal">
+                    <label>Latidos fetales:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCMovF)
+                    </div>                    
+                </div>
+                            
+              <div class="rowAntenatal">
+                    <label>Movimientos fetales:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCMovF)
+                    </div>                    
+                </div>
+
+               <div class="rowAntenatal">
+                    <label>signos de alarmas, exámenes, tratamientos:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCSignos)
+                    </div>                    
+                </div>
+
+               <div class="rowAntenatal">
+                    <label>Iniciales Técnicos:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCTecnico)
+                    </div>                    
+                </div>
+               <div class="rowAntenatal">
+                    <label>Póxima cita:</label>
+                    <div class="rowAntenataltem">
+                        @Html.EditorFor(model => Model.perCFechaProx)
+                    </div>                    
+                </div>              
+        </div>
+
+         <div style="text-align: center; margin-top: 15px;">
+            <div id="btnAceptar" class="t-button"  onclick="aceptarAccionAntenatales()" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button"  onclick="cancelarAccionAntenatales()" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+}
+<script>
+
+    $(document).ready(function () {  
+        $("#perCMovF").val("@Model.perCMovF");
+        $("#perCAlturaUt").val("@Model.perCAlturaUt");
+        $("#perCTecnico").val("@Model.perCTecnico");
+        $("#perCEdadGes").val("@Model.perCEdadGes");
+        $("#perCPA").val("@Model.perCPA");
+        $("#perCpeso").val("@Model.perCpeso");
+        $("#perCSignos").val("@Model.perCSignos");
+        $("#perCTecnico").val("@Model.perCTecnico");
+        $("#perCFecha").val("@Model.perCFecha.Value.ToString("dd/MM/yyyy")");
+        $("#perCFechaProx").val("@Model.perCFechaProx.Value.ToString("dd/MM/yyyy")")
+    });
+    //Asignamos los valores de los campos\\
+    if ($("#pAccion").val() == "Consultar" || $("#pAccion").val() == "Eliminar") {
+        $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+    }
+
+    $("#perCMovF").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#perCAlturaUt").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#perCTecnico").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#perCEdadGes").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#perCPA").keypress(function (e) {
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+    $("#perCpeso").keypress(function (e) {      
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+
+    function aceptarAccionAntenatales()
+    {     
+        if ($("#pAccion").val() == "Consultar") {
+            var windowElement = $('#gridConsultasAntenatales').data('tWindow');
+            windowElement.close();
+            return;
+        }
+ 
+
+        if ($("#perCFecha").val().length == 0) {
+            jAlert("Ingrese una fecha", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#perCEdadGes").val().length == 0) {
+            jAlert("Debe ingresar una Edad de gest.", "Error...", function () {
+                $("#perCEdadGes").focus().select();
+            });
+            return;
+        }
+
+        if ($("#perCpeso").val().length == 0) {
+            jAlert("Debe ingresar un Peso", "Error...", function () {
+                $("#perCpeso").focus().select();
+            });
+            return;
+        }        
+        if ($("#perCPA").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para P.A", "Error...", function () {
+                $("#perCPA").focus().select();
+            });
+            return;
+        }
+
+        if ($("#perCAlturaUt").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para Altura uterina", "Error...", function () {
+                $("#perCAlturaUt").focus().select();
+            });
+            return;
+        }
+
+        if ($("#perCMovF").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para Latidos fetales", "Error...", function () {
+                $("#perCMovF").focus().select();
+            });
+            return;
+        }
+
+
+        if ($("#perCSignos").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para signos de alarmas, exámenes, tratamientos", "Error...", function () {
+                $("#perCSignos").focus().select();
+            });
+            return;
+        }
+        
+        if ($("#perCTecnico").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para Iniciales Técnicos", "Error...", function () {
+                $("#perCTecnico").focus().select();
+            });
+            return;
+        }
+        if ($("#perCFechaProx").val().length == 0)
+        {
+            jAlert("Debe ingresar un valor para Póxima cita", "Error...", function () {
+                $("#perCFechaProx").focus().select();
+            });
+            return;
+        }
+
+
+        $("#waitingCRUD_ConsultaAntenatal").show();
+        var $form = $('#frmCRUDConsultaAntenatal');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                $("#waitingCRUD_ConsultaAntenatal").hide();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    $("#waitingCRUD_ConsultaAntenatal").hide();
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });                   
+                } else
+                {
+                    debugger;                 
+                    $("#waitingCRUD_ConsultaAntenatal").hide();
+                    var windowElement = $('#wCRUDConsultasAntenatales').data('tWindow');
+                    windowElement.close();
+                    var grid = $("#gridConsultasAntenatales").data("tGrid");
+                    grid.ajaxRequest();
+                }
+              
+            }
+        });
+    }
+    //Seleccionamos el primer campo
+    $("#frmCRUDConsultaAntenatal").ready(function () {
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+    function cancelarAccionAntenatales() {
+        var window = $("#wCRUDConsultasAntenatales").data("tWindow");
+        window.close();
+    }
+</script>

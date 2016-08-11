@@ -1,0 +1,321 @@
+@using GeDoc
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+@{
+    ViewData["perId_Lista_Data"] = new List<ListaDesplegableWS>();
+}
+
+<script type="text/javascript">
+    var _DatosRegistroTurnoRA;
+
+    function onAceptarwReAgendar() {
+        var TurnosSeleccionados = "";
+        var CantidadTurnosSeleccionados = 0;
+        var _profesionalId = $("#perId_Lista").val();
+        var _especialidadId = $("#cbxEspecialidad").data("tComboBox");
+        var _espId = "0";
+
+        if (_especialidadId.value() != "") {
+            _espId = _especialidadId.value();
+        }
+
+        if (_profesionalId == "" || _profesionalId == null) {
+            jAlert("Debe seleccionar un Profesional. ", "¡Atención!");
+            return;
+        }
+
+        $.each($(".ckReAgendar:checked"), function (index, datos) {
+            TurnosSeleccionados += "#" + datos.id.substring(17);
+            CantidadTurnosSeleccionados++;
+        });
+
+        if (CantidadTurnosSeleccionados <= 0) {
+            jAlert("Debe seleccionar al menos un turno. ", "¡Atención!");
+            return;
+        }
+
+        if (CantidadTurnosSeleccionados > $("#lblDisponibles").text()) {
+            jAlert("El profesional seleccionado, no tiene la capacidad de turnos diponibles para atender la cantidad de pacientes seleccionados. ", "¡Atención!");
+            return;
+        }
+
+        TurnosSeleccionados += "#";
+        //alert(TurnosSeleccionados);
+
+        AbrirWaitingCRUD("wtTurnosAmbulatorios");
+        var _Post = "@Url.Content("~/catTurno/setReAgendar")";
+        $.ajax({
+            url: _Post,
+            data: { especialidadId: _espId, profesionalId: _profesionalId, Turno: TurnosSeleccionados },
+            type: "POST",
+            error: function (xhr, ajaxOptions, thrownError) {
+                CerrarWaitingCRUD("wtTurnosAmbulatorios");
+                jAlert("Falló el re-agendado de los turnos seleccionados", "¡Error!");
+                $("#popup_container").focus();
+                $("#popup_ok").focus();
+            },
+            success: function (data) {
+                CerrarWaitingCRUD("wtTurnosAmbulatorios");
+                if (data == "OK") {
+                    Refrescar();
+                    jAlert("Se re-agendaron los turnos en forma correcta.", "Información...", function() {
+                        onCancelarwReAgendar();
+                    });
+                } else {
+                    jAlert("Falló el re-agendado de los turnos seleccionados." + data, "Error...");
+                }
+            }
+        });
+    }
+
+    function onDataBindingTurnosRA(args) {
+        var _especialidadId = $("#cbxEspecialidad").data("tComboBox");
+        var _profesionalId = $("#cbxProfesional").data("tComboBox");
+        var _fecha = $("#Agenda").val();
+        var _espId = "0";
+        var _profId = "0";
+        debugger;
+        if (_especialidadId.value() != "") {
+            _espId = _especialidadId.value();
+        }
+        if (EsMedico === "SI") {
+            _profId = MedicoLogueado;
+        } else {
+            if (_profesionalId.value() != "") {
+                _profId = _profesionalId.value();
+            }
+        }
+        AbrirWaitingCRUD("wtTurnosAmbulatorios");
+        args.data = $.extend(args.data, { especialidadId: _espId, profesionalId: _profId, fecha: _fecha });
+    }
+
+    function onCompleteTurnosRA(e) {
+        if (e.name === "dataBinding") {
+            CerrarWaitingCRUD("wtTurnosAmbulatorios");
+            $("#lblSeleccionados").text("0");
+        }
+    }
+
+    function onRowSelectedTurnoRA(e) {
+        var row = e.row;
+        var grid = $(this).data("tGrid");
+        var dataItem = grid.dataItem(row);
+        _DatosRegistroTurnoRA = dataItem;
+    }
+
+    function onCancelarwReAgendar() {
+        var wAgendar = $("#wReAgendar").data("tWindow");
+        wAgendar.close();
+    }
+
+    function onComboBoxChangeProfesionalRA() {
+        var _fecha = $("#Agenda").val();
+        var _especialidadId = $("#cbxEspecialidad").data("tComboBox");
+        var _espId = "0";
+        var _profId = "0";
+        if (_especialidadId.value() != "") {
+            _espId = _especialidadId.value();
+        }
+        if ($("#perId_Lista").val() != null) {
+            _profId = $("#perId_Lista").val();
+        }
+        AbrirWaitingCRUD("wtTurnosAmbulatorios");
+        $.post("@Url.Content("~/catTurno/getTurnosDisponibles")", { especialidadId: _espId, profesionalId: _profId, fecha: _fecha }, function(data) {
+            CerrarWaitingCRUD("wtTurnosAmbulatorios");
+            if (data != null) {
+                $("#lblDisponibles").text(data);
+                $("#cbx_Seleccionado_All").focus().select();
+            }
+        });
+    }
+
+    function ValidaCheckBox_ReAgendar(ItemSeleccionado, cbxSel) {
+        if ($('#gridTurnosRA').data("tGrid").total == 0) {
+            return;
+        }
+        if ($(".ckReAgendar:checkbox:checked").length == 0) {
+            $(".chkReAgendarAll").removeAttr("checked");
+        } else if ($(".ckReAgendar:checkbox:checked").length == $("#gridTurnosRA").data('tGrid').total || $(".ckReAgendar:checkbox:checked").length == $("#gridTurnosRA").data('tGrid').pageSize) {
+            $(".chkReAgendarAll").attr("checked", "checked");
+        } else if ($(".ckReAgendar:checkbox:checked").length < $("#gridTurnosRA").data('tGrid').total || $(".ckReAgendar:checkbox:checked").length < $("#gridTurnosRA").data('tGrid').pageSize) {
+            $(".chkReAgendarAll").removeAttr("checked");
+        }
+        $("#lblSeleccionados").text($(".ckReAgendar:checked").length);
+    }
+
+    function onLoadTurnoRA() {
+        $("#cbx_Seleccionado_All").click(function (event) {
+            if ($("#gridTurnosRA").data('tGrid').data.length == 0) {
+                return;
+            }
+            var _Checked = false;
+            if ($(this).is(":checked")) {
+                $(".ckReAgendar:checkbox:not(:checked)").attr("checked", "checked");
+                _Checked = true;
+            } else {
+                $(".ckReAgendar:checkbox:checked").removeAttr("checked");
+            }
+            $("#lblSeleccionados").text($(".ckReAgendar:checked").length);
+        });
+    }
+
+</script>
+
+<div id="divGridPrincipalwReAgendar" tabindex="1" style="overflow: hidden; outline: none;">
+@{
+    Html.Telerik().Grid((IEnumerable<GeDoc.catTurnos>)ViewData["catTurnos"])
+       .Name("gridTurnosRA")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.turId);
+        })
+     .Localizable("es-AR")
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_SelectEditingRA", "catTurno", new { especialidadId = 0, profesionalId = 0, fecha = DateTime.Now });
+        })
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.turId).Width("15px").Title("").Visible(false).Filterable(false);
+            columns.Bound(c => c.Seleccionado).Width("120px").Visible(true)
+                .HeaderTemplate("<div style='width: 100%; text-align: center;'><input type='checkbox' id='cbx_Seleccionado_All' class='chkReAgendarAll' style='cursor: pointer;' title='Seleccionar todos los turnos' /></div>")
+                .ClientTemplate("<div style='width: 100%; text-align: center;'><input type='checkbox' id='cbx_Seleccionado_<#= turId #>' <#= Seleccionado ? 'checked: checked' : '' #> class='ckReAgendar' values='<#= turId #>' onclick='ValidaCheckBox_ReAgendar(<#= turId #>, this);' style='cursor: pointer;' /></div>");
+            columns.Bound(c => c.horayminutos).Width("60px").Title("Hora").Visible(true).HtmlAttributes(new { style = "text-align: center;" }).Filterable(false)
+            .ClientTemplate("<div style='width: 100%; text-align: center;'><#= horayminutos #></div>");
+            columns.Bound(c => c.tipoDescripcion).Width("120px").Title("Estado").Visible(true)
+            .ClientTemplate("<div style='width: 100%; text-align: left; vertical-align:middle;'><img src='" + Url.Content("~/Content") + "/Estados/<#= turEstadoImagen #>' title='<#= tmbDescripcion || tipoDescripcion #>' height='15' width='15' style='vertical-align:middle;' />  <#= tipoDescripcion #></div>");
+            columns.Bound(c => c.tipoAdmisionDescripcion).Width("165px").Title("Admisión").Visible(false);
+            columns.Bound(c => c.pacNombre).Width("250px").Title("Paciente").Visible(true).Filterable(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+            .ClientTemplate("<label title='<#= pacNombre #>' style='cursor: pointer; white-space: nowrap;' ><#= pacNombre #></label>");
+            columns.Bound(c => c.pacNumeroDocumento).Width("80px").Title("DNI").Visible(true).Filterable(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+            .ClientTemplate("<label title='<#= pacNumeroDocumento #>' style='cursor: pointer; white-space: nowrap;' ><#= pacNumeroDocumento #></label>");
+            columns.Bound(c => c.nroHC).Width("70px").Title("H.C.").Visible(true).Filterable(true)
+            .ClientTemplate("<div style='width: 100%; text-align: center;'><#= nroHC #></div>").Format("{0:N}");
+            columns.Bound(c => c.turEsSobreturno_descripcion).Width("80px").Title("Sobreturno").Visible(true).Filterable(true);
+         })
+         .Editable(editing => editing.Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+         .Pageable((paging) =>
+         paging.Enabled(true)
+         .PageSize(200))
+        .ClientEvents(events => events.OnDataBinding("onDataBindingTurnosRA").OnComplete("onCompleteTurnosRA").OnRowSelected("onRowSelectedTurnoRA").OnLoad("onLoadTurnoRA"))
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height((int)Session["AlturaGrilla"]))
+        .Resizable(resizing => resizing.Columns(true))
+        .Render();                     
+        }
+    
+    <div style="padding-bottom: 15px;">
+        <div>
+            <table style="border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label>Profesional al que le asignará los Pacientes:</label>
+                    </td>
+                    <td style="border: none;">
+                        <div class="perId" style="text-align: left;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "perId_Lista#NO#330px")
+                        </div>
+                        @*@(Html.Telerik().ComboBox()
+                              .Name("cbxProfesionalRA")
+                              .DropDownHtmlAttributes(new {style = "width:Auto;"})
+                              .OpenOnFocus(true)
+                              .AutoFill(true)
+                              .Filterable(filtering =>
+                              {
+                                  filtering.FilterMode(AutoCompleteFilterMode.Contains);
+                              })
+                              .HighlightFirstMatch(true)
+                              .ClientEvents(events => events.OnChange("onComboBoxChangeProfesionalRA"))
+                              .HtmlAttributes(new { style = "width: 300px; vertical-align: middle;" })   
+                              .SelectedIndex(0)
+                              .BindTo((SelectList) ViewData["perId_Data"]))*@
+                    </td>
+                    <td style="border: none; height: 38px;">
+                        <label>Disponibles:</label>
+                    </td>
+                    <td style="border: none;">
+                        <div class="BordeRedondeado" style="height: 30px; width: 70px; text-align: center; border-color: #c98400; background-color: #ffe79c; color: #c98400; font-size: x-large;">
+                            <label id="lblDisponibles">5</label>
+                        </div>
+                    </td>
+                    <td style="border: none; height: 38px;">
+                        <label>Seleccionados:</label>
+                    </td>
+                    <td style="border: none;">
+                        <div class="BordeRedondeado" style="height: 30px; width: 70px; text-align: center; border-color: green; background-color: #C9E4C9; color: green; font-size: x-large;">
+                            <label id="lblSeleccionados">0</label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="text-align: center; vertical-align: middle; height: 40px;">
+        <div class="t-button" onclick="onAceptarwReAgendar();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div class="t-button" onclick="onCancelarwReAgendar();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    function RecargarProfesionales() {
+        var _Especialidad = $("#cbxEspecialidad").data("tComboBox");
+        var _profesionalId = $("#cbxProfesional").data("tComboBox");
+        var _profId = "0";
+        if (EsMedico === "SI") {
+            _profId = MedicoLogueado;
+        } else {
+            if (_profesionalId.value() != "") {
+                _profId = _profesionalId.value();
+            }
+        }
+
+        ProcesandoListaDesplegable("listaDesplegable_perId_Lista");
+        var _Post = GetPathApp("catTurno/_BindingProfesionalesRA");
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { espId: _Especialidad.value(), profesionalId: _profId },
+            error: function () {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_perId_Lista").html(respuesta);
+
+                    $("#perId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function (e) {
+                        onComboBoxChangeProfesionalRA();
+                    });
+                    var $ListaSalas = $("#perId_Lista");
+                    $ListaSalas.on("select2:open", function (e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+                    $(".select2.select2-container.select2-container--classic").css("width", "330px");
+                    onComboBoxChangeProfesionalRA();
+                }
+            }
+        });
+    }
+
+</script>

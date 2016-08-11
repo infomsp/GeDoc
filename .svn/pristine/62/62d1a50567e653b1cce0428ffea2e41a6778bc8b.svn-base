@@ -1,0 +1,16 @@
+﻿@using GeDoc.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Random photos</h2>
+
+@Html.Partial("YsaUserControls/_YsaSS", new YsaSSModel(xpath: "random",
+                            xmlSource: "/xml/Random.xml", width: 536,
+                        height:400, autoPlay:false))
+
+@Html.ActionLink("Back", "Index", "Home", new { area = "" }, null)
+
+ <script src="@Url.Content("~/Scripts/simplegallery.js")" type="text/javascript"></script>

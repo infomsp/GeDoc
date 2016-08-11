@@ -1,0 +1,42 @@
+@( Html.Telerik().Grid<GeDoc.catJuzgadoWS>()
+        .Name("Grid")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.juzId);
+        })
+       .Localizable("es-AR")
+        .ToolBar(commands =>
+        {
+            commands.Insert().ButtonType(GridButtonType.Image).ImageHtmlAttributes(new { style = "margin-left:0" })
+                .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("catJuzgado", "Agregar") });
+        })
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_SelectEditing", "catJuzgado")
+                .Insert("_InsertEditing", "catJuzgado")
+                .Update("_SaveEditing", "catJuzgado")
+                .Delete("_DeleteEditing", "catJuzgado");
+        })
+        .Columns(columns =>
+        {
+            columns.Command(commands =>
+            {
+                commands.Edit().ButtonType(GridButtonType.Image).HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("catJuzgado", "Modificar") });
+                commands.Delete().ButtonType(GridButtonType.Image).HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("catJuzgado", "Eliminar") });
+            }).Width(25).Title("Acciones");
+            columns.Bound(c => c.juzDenominacion).Width(80).Title("Juzgado").Visible(true);
+        })
+            .Editable(editing => editing
+                        .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+            .Pageable((paging) =>
+                           paging.Enabled(true)
+                                .PageSize(((int)Session["FilasPorPagina"])))
+            .ClientEvents(events => events.OnEdit("onCommandEdit"))
+            .Footer(true)
+            .Filterable()
+            .Selectable()
+            .Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+            .Sortable()
+)
+

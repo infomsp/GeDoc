@@ -1,0 +1,116 @@
+﻿<script>
+
+    function onCommand_gridConsultasAntenatales(e) {
+        switch (e.name) {
+            case "cmdModificar_gridConsultasAntenatales":
+                onAccion_gridConsultasAntenatales("Modificar", e.dataItem['hcperid']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdEliminar_gridConsultasAntenatales":
+                onAccion_gridConsultasAntenatales("Eliminar", e.dataItem['hcperid']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+    }
+
+    function onAccion_gridConsultasAntenatales(pAccion, hcperid) {
+        switch (pAccion) {
+            case "Agregar":
+                break;
+            case "Modificar":
+                break;
+            case "Eliminar":
+                break;
+            case "Consultar":
+                break;
+        }
+
+        var wCliniMedica = $("#wCRUDConsultasAntenatales").data("tWindow");
+        $('#wCRUDConsultasAntenatales').css({ 'height': 300, 'width': 590 });
+        $('#wCRUDConsultasAntenatales').find('div.t-window-content').css({ 'height': 250, 'width': 575 });
+        wCliniMedica.content('<img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" width="22px" alt="" /><strong> Cargando...</strong>');
+        wCliniMedica.ajaxRequest(GetPathApp("HistoriaClinica/getConsultaAntenatal") + "?Id=" + hcperid + "&pAccion=" + pAccion);
+        wCliniMedica.center().title(pAccion).open();
+    }
+
+
+</script>
+@model GeDoc.catHCPerinatalWS
+
+<div>
+        @{Html.Telerik().Grid((List<GeDoc.catHCPerConsultasWS>)ViewData["vd_ProfesionalTitulos"])
+        .Name("gridConsultasAntenatales")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.hcperid);
+        })
+        .Localizable("es-AR")
+        .ToolBar(commands =>
+        {
+            commands.Template(
+                    @<text>
+                        <div title="Agregar" class="t-button" onclick="onAccion_gridConsultasAntenatales('Agregar', -1)" style="padding: 0px; width: 80px; height: 20px;">
+                            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="16" width="16" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -48px -319px; vertical-align: middle;" />
+                            <label style="cursor: pointer;">Agregar</label>                            
+                        </div>
+                     </text>
+                );
+        })
+            .DataBinding(dataBinding =>
+            {
+                dataBinding.Ajax().Select("getConsultasAntenatales", "HistoriaClinica", new { Id = Model.hcperid });
+            })
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.hcperid).Hidden(); columns.Command(commands =>
+            {
+                commands.Custom("cmdModificar_gridConsultasAntenatales")
+                    .Ajax(true)
+                    .ButtonType(GridButtonType.Image)
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                    .HtmlAttributes(new { title = "Editar" });
+                commands.Custom("cmdEliminar_gridConsultasAntenatales")
+                    .Ajax(true)
+                    .ButtonType(GridButtonType.Image)
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -16px -336px;" })
+                    .HtmlAttributes(new { title = "Eliminar" });
+            }).Width("30px").Title("Acciones");
+            columns.Bound(c => c.hcperid).Hidden(true);
+            columns.Bound(c => c.perCFecha).Width("40px").Title("Fecha").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCEdadGes).Width("40px").Title("Edades gest.").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCpeso).Width("40px").Title("Peso").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCPA).Width("40px").Title("PA").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCAlturaUt).Width("40px").Title("Alt. Uterina").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCPresenta).Width("40px").Title("Presentación").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCPresenta).Width("40px").Title("NO SE").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCPresenta).Width("40px").Title("NO SE").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCSignos).Width("100px").Title("signos de alarma, exámenes, tratamientos").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCTecnico).Width("40px").Title("Iniciales Técnico").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.perCFechaProx).Width("40px").Title("Prox. Cita").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+
+        })
+        .Footer(true)
+        .ClientEvents(clientEvents => clientEvents.OnCommand("onCommand_gridConsultasAntenatales"))
+        .Filterable()
+        .Selectable()
+        .Resizable(resizing => resizing.Columns(true))
+        .Scrollable(scroll => scroll.Enabled(true).Height(562))
+        .Sortable()
+        .Render();}
+</div>
+
+@{Html.Telerik().Window()
+        .Name("wCRUDConsultasAntenatales")
+        .Title("Acción")
+        .Visible(false)
+        .Content(() =>
+        {})
+       .Buttons(b => b.Close())
+       .Draggable(true)
+       .Scrollable(false)
+       .Modal(true)
+       .Width(700)
+       .Render();}
+

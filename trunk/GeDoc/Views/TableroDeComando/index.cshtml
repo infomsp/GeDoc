@@ -1,0 +1,923 @@
+﻿@using GeDoc.Models
+@*<link href="@Url.Content("~/Content/gauges.css")" rel="stylesheet" type="text/css" media="screen">*@
+<link rel="stylesheet" href="@(Url.Content("~/Content/jquery-ui.css"))">
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.common.core.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.drawing.yaxis.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.meter.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.line.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.common.dynamic.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.gauge.js")"></script>
+
+@*
+Script para el gráfico
+*@
+<link rel="stylesheet" href="@(Url.Content("~/Content/tab-tab.css"))" type="text/css">
+<link rel="stylesheet" href="@(Url.Content("~/Content/gauges.css"))" type="text/css">
+
+<script src="@Url.Content("~/Scripts/jquery.tab-tab.js")"></script>
+
+<script src="@Url.Content("~/Scripts/abanico.js")"></script>
+<script src="@Url.Content("~/Scripts/highcharts.js")"></script>
+<script src="@Url.Content("~/Scripts/gauges.js")"></script>
+
+<script src="@Url.Content("~/Scripts/newchart.js")"></script>
+<script src="@Url.Content("~/Scripts/microchart.js")"></script>
+
+<script src="@Url.Content("~/Scripts/index.js")"></script>
+
+@{
+    var Umbral = (catUmbralTiemposTurno)ViewData["Umbrales"];
+
+}
+
+<style>
+    .input {
+        width: 400px;
+        margin-left: 5px;
+    }
+</style>
+
+<script>
+
+    var _csId = "@((Session["UsuarioCentroDeSalud"] as GeDoc.sisUsuariosCentroDeSalud).csId)";
+    setSelectedIndex(document.getElementById("CentroDeSalud"), _csId);
+    var arrayturFecha = [];
+    var arrayTiempoDeAtencion = [];
+    var arrayTiempoDeEspera = [];
+
+    function setSelectedIndex(s, i) {
+        s.value = i;
+        return;
+    }
+
+    function AsignarFecha(Dias) {
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        var dateVar = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        var dsplit = dateVar.split("/");
+        var dHoy = new Date(dsplit[2], dsplit[1], dsplit[0]);
+
+        var dateAux = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        var dateI = dateAux.split("/");
+        var dIntervalo = new Date(dateI[2], dateI[1] - 1, dateI[0]);
+
+        dateVar = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        var dateVar7 = "@(DateTime.Now.AddDays(-7).Date.ToString("dd/MM/yyyy"))";
+        var dateVar30 = "@(DateTime.Now.AddDays(-30).Date.ToString("dd/MM/yyyy"))";
+        dsplit = dateVar.split("/");
+        var dInicial = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+        dsplit = dateVar7.split("/");
+        var dInicial7 = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+        dsplit = dateVar30.split("/");
+        var dInicial30 = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+        if (Dias == 7) {
+            dInicial = dInicial7;
+            dHoy = dIntervalo;
+            dpDesde.disable();
+            dpHasta.disable();
+        } else if (Dias == 30) {
+            dInicial = dInicial30;
+            dHoy = dIntervalo;
+            dpDesde.disable();
+            dpHasta.disable();
+        } else if (Dias == 0) {
+            dInicial = dIntervalo;
+            dHoy = dIntervalo;
+            dpDesde.disable();
+            dpHasta.disable();
+        } else if (Dias == -1) {
+            dInicial = dIntervalo;
+            dHoy = dIntervalo;
+            dpDesde.enable();
+            dpHasta.enable();
+        }
+
+        dpDesde.value(dInicial);
+        dpHasta.value(dHoy);
+    }
+
+    function dtFechaHasta_OnLoad() {
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        fHasta.min(fDesde.value());
+        fHasta.value(fDesde.value());
+    }
+
+    function dtFechaDesde_OnClose() {
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        fHasta.min(fDesde.value());
+        if (fDesde.value() > fHasta.value()) {
+            fHasta.value(fDesde.value());
+        }
+
+    }
+
+    function CargaEspecialidadesPorCS() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CargaEspecialidadesPorCS", "TableroDeComando")',
+            dataType: 'json',
+            data: {
+                csId: $("#CentroDeSalud").val()
+            },
+            success: function (data, textStatus, jqXHR) {
+                $("#Especialidad")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialidad").append('<option value="0">TODOS</option>');
+
+                $.each(data, function (key, value) {
+                    $("#Especialidad").append('<option value=' + value.Value + '>' + value.Text + '</option>');
+                })
+
+                $("#Especialidad").prop("disabled", false);
+            },
+            error: function () {
+                jAlert('Ha ocurrido un error!', "Atención");
+
+                $("#Especialidad")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialidad").append('<option value="0">TODOS</option>');
+
+                $("#Especialidad").prop("disabled", true);
+            }
+                });
+    }
+
+    function CargaEspecialistas(id) {
+        //AbrirWaiting();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CargaEspecialistas", "TableroDeComando")',
+            dataType: 'json',
+            data: {
+                espId: $("#Especialidad").val(),
+                csId: $("#CentroDeSalud").val()
+            },
+            success: function (data, textStatus, jqXHR) {
+                $("#Especialista")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialista").append('<option value="0">TODOS</option>');
+
+                console.log("Entra al EACH");
+                $.each(data, function (key, value) {
+                    $("#Especialista").append('<option value=' + value.Value + '>' + value.Text + '</option>');
+                })
+
+                console.log(data.count);
+                $("#Especialista").prop("disabled", false);
+                // CerrarWaiting();
+            },
+            error: function () {
+                jAlert('Ha ocurrido un error!', "Atención");
+
+                $("#Especialista")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialista").append('<option value="0">TODOS</option>');
+
+                $("#Especialista").prop("disabled", true);
+            }
+        });
+    }
+
+    function CargaEspecialidades(id) {
+
+    }
+
+    function onConsultarTablero() {
+        AbrirWaiting();
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        var cmbEspecialidad = $("#Especialidad");
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getListadoDeTrunosJM", "TableroDeComando")',
+            dataType: 'json',
+            data: {
+                _fDesde: dpDesde.inputValue,
+                _fHasta: dpHasta.inputValue,
+                _especialidades: $("#Especialidad").val(),
+                _medicos: $("#Especialista").val(),
+                _csId: $("#CentroDeSalud").val()
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                $("#spanTotal").text(respuesta.Data[0].Total);
+                if (respuesta.Data[0].Total == 0) {
+                    $("#spanTotalPorc").text("0");
+                }
+                else {
+                    $("#spanTotalPorc").text("100");
+                }
+                $("#spanAtendido").text(respuesta.Data[0].Atendidos);
+                $("#spanNoAtendidos").text(respuesta.Data[0].NoAtendidos);
+                $("#spanOtorgados").text(respuesta.Data[0].Otorgados);
+                $("#spanDisponibles").text(respuesta.Data[0].Disponibles);
+                $("#spanAtendidoPorc").text(respuesta.Data[0].AtendidosPorc);
+                $("#spanNoAtendidosPorc").text(respuesta.Data[0].NoAtendidosPorc);
+                $("#spanOtorgadosPorc").text(respuesta.Data[0].OtorgadosPorc);
+                $("#spanDisponiblesPorc").text(respuesta.Data[0].DisponiblesPorc);
+                buscar_detalle_graficas(dpDesde.inputValue, dpHasta.inputValue, $("#Especialidad").val(), $("#Especialista").val(), respuesta.Data[0].TiempoDeAtencion, respuesta.Data[0].TiempoDeEspera, $("#CentroDeSalud").val());
+                //create_Tiempos(respuesta.Data[0].TiempoDeAtencion, respuesta.Data[0].TiempoDeEspera);
+            },
+            error: function (error) {
+                CerrarWaiting();
+                alert(error);
+            }
+        });
+    }
+
+    function buscar_detalle_graficas(desde, hasta, especialidad, especialista, TiempoDeAtencion, TiempoDeEspera,csId) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getDatosTableroTurnosDetalle", "TableroDeComando")',
+            dataType: 'json',
+            data: {
+                _fDesde: desde,
+                _fHasta: hasta,
+                _especialidades: especialidad,
+                _medicos: especialista,
+                _csId: csId
+            },
+            success: function (respuesta) {
+                CerrarWaiting();
+                arrayturFecha = armarArray(respuesta, 0);
+                arrayTiempoDeAtencion = armarArray(respuesta, 1);
+                arrayTiempoDeEspera = armarArray(respuesta, 2);
+                create_Tiempos(TiempoDeAtencion, TiempoDeEspera, arrayturFecha, arrayTiempoDeAtencion, arrayTiempoDeEspera);
+            },
+            error: function (error) {
+                CerrarWaiting();
+                alert(error);
+            }
+        });
+    }
+
+    Date.prototype.formatDDMMYYYY = function () {
+        return this.getDate() +
+        "/" + this.getMonth() +
+        "/" + this.getFullYear();
+    }
+
+    function armarArray(lista, columna) {
+        debugger;
+        var newArray = [];
+        for (var i = 0; i < lista.Data.length; i++) {
+            var x = lista.Data[i];
+
+            if (columna == 0) {
+                var date = new Date(parseInt(x.turFecha.substring(6, 19)));
+                var mes = date.getMonth() + 1;
+                newArray.push(date.getDate() + '/' + mes + '/' + date.getFullYear());
+            } else if (columna == 1) {
+                newArray.push(x.TiempoDeAtencion);
+            } else if (columna == 2) {
+                newArray.push(x.TiempoDeEspera);
+            }
+        }
+        return newArray;
+    }
+
+    function create_Tiempos(TiempoDeAtencion, TiempoDeEspera, arrayturFecha, arrayTiempoDeAtencion, arrayTiempoDeEspera) {
+        debugger;
+        divTiempoDeEspera = {
+            id: "divTiempoDeEspera",
+            title: "Tiempo de Espera",
+            label: "Promedio",
+            type: 2,
+            value: TiempoDeEspera,
+            min: "@(Umbral.TEsperaMin)",
+            max: "@(Umbral.TEsperaMax)",
+            units: "'",
+            decPlaces: 0,
+            color: function () {
+                if (Math.abs(this.value) >= 70) return Gauges.colors.danger;
+                if (Math.abs(this.value) >= 30) return Gauges.colors.warning;
+            }
+        };
+        Gauges.add(divTiempoDeEspera);
+
+        Gauges.add({
+            id: "divTiempoDeAtencion",
+            title: "Tiempo de Atención",
+            label: "Promedio",
+            type: 2,
+            value: TiempoDeAtencion,
+            min: "@(Umbral.TAtencionMin)",
+            max: "@(Umbral.TAtencionMax)",
+            units: "'",
+            decPlaces: 0,
+            color: function () {
+                if (Math.abs(this.value) >= 20) return Gauges.colors.danger;
+                if (Math.abs(this.value) >= 10) return Gauges.colors.warning;
+            }
+        });
+
+        Gauges.init();
+        Gauges.animate(-20, 0.5);
+
+        //chart_Tiempos(document.getElementById("divTiempoDeEspera"), arrayturFecha, arrayTiempoDeAtencion, arrayTiempoDeEspera);
+        chart_Tiempos(document.getElementById("divTiempoDeEspera"));
+    }
+
+    function chart_Tiempos(elem) {
+
+        var id = elem.id;
+        var title = $(elem).children(".dial-title").text();
+
+        //Obtengo un array con los dias seleccionados
+        //var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        //var fHasta = $("#dtFechaHasta").data("tDatePicker");
+        //var dateArray = getDates(fDesde.value(), fHasta.value());
+        //debugger;
+        var UmbraMinimoTiempoEspera = parseFloat("@(Umbral.TEsperaMin)");
+        var UmbraMaximoTiempoEspera = parseFloat("@(Umbral.TEsperaMax)");
+        var UmbraMinimoTiempoAtencion = parseFloat("@(Umbral.TAtencionMin)");
+        var UmbraMaximoTiempoAtencion = parseFloat("@(Umbral.TAtencionMax)");
+
+        var realData = [0, 10, 15, 18, 32, 34, 50];
+        var UmbralInicial = [30, 30, 30, 30, 30, 30, 30];
+        var UmbralFinal = [70, 70, 70, 70, 70, 70, 70];
+        var Escantidad = false;
+
+        if (id === "divTiempoDeAtencion") {
+            UmbralInicial = getArraryUmbrales(UmbraMinimoTiempoAtencion, arrayturFecha.length);
+            realData = arrayTiempoDeAtencion;
+            UmbralFinal = getArraryUmbrales(UmbraMaximoTiempoAtencion, arrayturFecha.length);
+        }
+        else if (id === "divTiempoDeEspera") {
+            UmbralInicial = getArraryUmbrales(UmbraMinimoTiempoEspera, arrayturFecha.length);
+            realData = arrayTiempoDeEspera;
+            UmbralFinal = getArraryUmbrales(UmbraMaximoTiempoEspera, arrayturFecha.length);
+        }
+        else if (id === "divCantidad") {
+            UmbralInicial = [0, 20, 30, 35, 45, 50, 55];
+            realData = [0, 12, 18, 26, 34, 45, 52, 65];
+            Escantidad = true;
+        }
+        create_chart_Tiempos(title, UmbralInicial, realData, UmbralFinal, Escantidad, arrayturFecha);
+    }
+
+    function onDataBound_CS() {
+        debugger;
+        var cmbCS = $("#CentroDeSalud").val(_csId);
+    }
+</script>
+
+@*Filtros*@
+<div class="BordeRedondeado" style="padding: 5px; border-color: whitesmoke; background-color: white;">
+    <div class="row right" style="height: 200px;">
+        <div style="text-align: left;">
+            <div class="dial small" id="divFiltros" style="width: 700px !important; margin-bottom: 20px;">
+                <div class="dial-title">Filtros</div>
+                <table style="border: none; width: 700px;">
+                    <tr style="border-color: whitesmoke;" class="BordeRedondeado">
+                        <td style="border: none; vertical-align: middle;">
+                            <input type="radio" name="Tipo" id="TipoHoy" onclick="AsignarFecha(0);" checked>
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <label>Hoy</label>
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <input type="radio" name="Tipo" id="Tipo7" onclick="AsignarFecha(7);">
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <label>7 Días</label>
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <input type="radio" name="Tipo" id="Tipo30" onclick="AsignarFecha(30);">
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <label>30 Días</label>
+                        </td>
+                        <td style="border: none; vertical-align: middle;">
+                            <input type="radio" name="Tipo" id="TipoIntervalo" onclick="AsignarFecha(-1);">
+                        </td>
+                        <td style="border: none;">Fecha Desde:</td>
+                        <td style="border: none;">
+                            @{ Html.Telerik().DatePicker()
+                               .Name("dtFechaDesde")
+                               .Value(DateTime.Now)
+                               .ShowButton(true)
+                               .Enable(false)
+                               .OpenOnFocus(true)
+                               .TodayButton()
+                               .ClientEvents(events => events.OnClose("dtFechaDesde_OnClose"))
+                               .Render();
+                                //.HtmlAttributes(new { id = "dtFechaTurno"})
+                            }
+                        </td>
+                        <td style="border: none;">Fecha Hasta:</td>
+                        <td style="border: none;">
+                            @{ Html.Telerik().DatePicker()
+                               .Name("dtFechaHasta")
+                               .Value(DateTime.Now)
+                               .ShowButton(true)
+                               .Enable(false)
+                               .OpenOnFocus(true)
+                               .ClientEvents(events => events.OnLoad("dtFechaHasta_OnLoad"))
+                               .TodayButton()
+                               .Render(); }
+                        </td>
+                    </tr>
+                </table>
+                <table style="border: none; width: 700px;">
+                    <tr style="border-color: whitesmoke;" class="BordeRedondeado">
+                        <td style="border: none;">Centro de Salud:</td>
+                        <td style="border: none;">
+                            @Html.DropDownList("CentroDeSalud", ViewData["CentroDeSalud"] as SelectList, new { @onchange = "CargaEspecialidadesPorCS(this.value);", @DataBound = "onDataBound_CS", @class = "input" })
+                        </td>
+                    </tr>
+                    <tr style="border-color: whitesmoke;" class="BordeRedondeado">
+                        <td style="border: none;">Especialidad:</td>
+                        <td style="border: none;">
+                            @Html.DropDownList("Especialidad", ViewData["Especialidad"] as SelectList, new { @onchange = "CargaEspecialistas(this.value);", @class = "input" })
+                        </td>
+                    </tr>
+                    <tr style="border-color: whitesmoke;" class="BordeRedondeado">
+                        <td style="border: none;">Médico:</td>
+                        <td style="border: none;">
+                            @Html.DropDownList("Especialista", ViewData["Especialista"] as List<SelectListItem>, new { @class = "input", @onchange = "CargaEspecialidades(this.value);" })
+                        </td>
+                        <td id="btnConsultar" class="t-button" onclick="onConsultarTablero();" title="Consultar tablero en base a los filtros ingresados">
+                            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -63px -176px; vertical-align: middle;"/>
+                            <label style="cursor: pointer;">Consultar</label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="dial small" id="divTiempoDeEspera" onclick="chart_Tiempos(this);">
+                <div class="dial-title">Tiempo de Espera</div>
+                <canvas width="134" height="134"></canvas>
+                <div class="dial-label">Promedio</div>
+            </div>
+            <div class="dial small" id="divTiempoDeAtencion" onclick="chart_Tiempos(this);" style="margin-left: 20px; margin-right: 20px;">
+                <div class="dial-title">Tiempo de Atención</div>
+                <canvas width="134" height="134"></canvas>
+                <div class="dial-label">Promedio</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="BordeRedondeado" style="background-color: white; padding: 5px; border-color: whitesmoke;">
+    <div style="padding: 0px;">
+        <div class="row right">
+            <div class="dial small" id="divCantidad" style="width: 324px !important; margin-bottom: 0px;height: 265px;">
+                <div class="dial-title">Cantidad de Turnos</div>
+                <table id="tblCantidad" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td colspan="2" style="width: 150px;">
+                            <label></label>
+                        </td>
+                        <td colspan="2" style="background-color: whitesmoke; width: 70px; text-align: center;"><b><span style="font-weight: bold;">Cantidad</span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; width: 70px; text-align: center;"><b><span style="font-weight: bold;"></span>%</b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2">
+                            <label>Total:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanTotal" style="font-weight: bold;"></span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanTotalPorc" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2">
+                            <label>Atendidos:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanAtendido" style="font-weight: bold;"></span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanAtendidoPorc" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2">
+                            <label>No Atendidos:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanNoAtendidos" style="font-weight: bold;"></span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanNoAtendidosPorc" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2">
+                            <label>Otorgados:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanOtorgados" style="font-weight: bold;"></span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanOtorgadosPorc" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2">
+                            <label>Disponibles:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanDisponibles" style="font-weight: bold;"></span></b></td>
+                        <td colspan="2" style="background-color: whitesmoke; text-align: center;"><b><span id="spanDisponiblesPorc" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="dial small" id="divGrafica" style="width: 823px !important; margin-bottom: 0px;height: 265px;">
+                <div class="dial-title">Gráfica</div>
+                <div id="chart-LineaTiempo" style="width: 800px; height: 250px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+
+
+<script>
+    Date.prototype.formatDDMMYYYY = function () {
+        return this.getDate() +
+        "/" + this.getMonth() +
+        "/" + this.getFullYear();
+    }
+
+    Date.prototype.addDays = function (days) {
+        var dat = new Date(this.valueOf())
+        dat.setDate(dat.getDate() + days);
+        return dat;
+    }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = new Array();
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+            dateArray.push(currentDate.formatDDMMYYYY())
+            currentDate = currentDate.addDays(1);
+        }
+        return dateArray;
+    }
+
+    function getArraryUmbrales(umbral, cantidad) {
+        var array = [];
+        for (var i = 0; i < cantidad; i++) {
+            array.push(umbral);
+        }
+        return array;
+    }
+
+
+    function create_chart_Tiempos(title, planData, realData, UmbralFinal, Escantidad, arrayturFecha) {
+        //debugger;
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        if (Escantidad) {
+            chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'chart-LineaTiempo',
+                    height: 250
+                },
+                title: {
+                    text: title
+                },
+                yAxis: {
+                    title: { text: "Minutos" },
+                    min: 0
+                },
+                xAxis: {
+                    categories: arrayturFecha,
+                    tickPixelInterval: 5,
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%e/%b'
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            var s;
+                            if (this.point.name) { // the pie chart
+                                s = '' +
+                                    this.point.name + ': ' + this.y;
+                            } else {
+                                s = '' +
+                                    this.series.name + " " + this.x + ': ' + this.y + "'";
+                            }
+                            return s;
+                        }
+                    },
+                    series: [{
+                        type: 'spline',
+                        name: 'No Atendidos',
+                        color: 'darkgray',
+                        data: planData,
+                        dashStyle: 'shortdot',
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: Highcharts.getOptions().colors[3],
+                            fillColor: 'white'
+                        }
+                    }, {
+                        type: 'spline',
+                        name: 'Atendidos',
+                        color: 'darkGreen',
+                        data: realData,
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: Highcharts.getOptions().colors[3],
+                            fillColor: 'yellow'
+                        }
+                    }]
+                }
+            });
+        } else {
+            chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'chart-LineaTiempo',
+                    height: 250
+                },
+                title: {
+                    text: title
+                },
+                yAxis: {
+                    title: { text: "Minutos" },
+                    min: 0
+                },
+                xAxis: {
+                    categories: arrayturFecha,
+                    tickPixelInterval: 5,
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%e/%b'
+                    },
+                    labels: {
+                        rotation: 270,
+                        y: 40
+
+                    },
+                },
+                tooltip: {
+                    formatter: function () {
+                        var s;
+                        if (this.point.name) { // the pie chart
+                            s = '' +
+                                this.point.name + ': ' + this.y;
+                        } else {
+                            s = '' +
+                                this.series.name + " " + this.x + ': ' + this.y + "'";
+                        }
+                        return s;
+                    }
+                },
+                series: [{
+                    type: 'spline',
+                    name: 'Umbra Inicial',
+                    color: 'darkgray',
+                    data: planData,
+                    dashStyle: 'shortdot',
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: Highcharts.getOptions().colors[3],
+                        fillColor: 'white'
+                    }
+                }, {
+                    type: 'spline',
+                    name: 'Valores',
+                    color: 'darkGreen',
+                    data: realData,
+                    marker: {
+                        lineWidth: 2,
+                        lineColor: Highcharts.getOptions().colors[3],
+                        fillColor: 'yellow'
+                    }
+                },
+                {
+                    type: 'spline',
+                    name: 'Umbra Final',
+                    color: 'darkgray',
+                    data: UmbralFinal,
+                    dashStyle: 'shortdot',
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: Highcharts.getOptions().colors[3],
+                        fillColor: 'white'
+                    }
+                }]
+            });
+        }
+    }
+
+    $(document).ready(function () {
+
+        $("#perId_Lista").prop("disabled", true);
+    });
+</script>
+
+
+
+@*<script>
+    //$("#accTiempoDeEspera").accordion({
+    //    collapsible: true,
+    //    heightStyle: "content"
+    //});
+    $("#perId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaMedicos = $("#perId_Lista");
+    $ListaMedicos.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+    $("#espId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaEspecialidades = $("#espId_Lista");
+    $ListaEspecialidades.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+
+    var cvTiempoDeEspera;
+    var cvTiempoDeEsperaLinea;
+    var cvTiempoDeAtencion;
+
+    function onCrearTiempoDeEspera(valor) {
+        cvTiempoDeEspera = new RGraph.Meter({
+            id: 'cvsEspera',
+            min: 0,
+            max: 90,
+            value: 0,
+            options: {
+                unitsPost: "'",
+                redStart: 70,
+                redEnd: 90,
+                yellowStart: 30,
+                yellowEnd: 70,
+                greenStart: 0,
+                greenEnd: 30
+            }
+        }).grow();
+        setTimeout(function () {
+            cvTiempoDeEspera.value = valor;
+            cvTiempoDeEspera.grow();
+        }, 3500);
+
+        cvTiempoDeEsperaLinea = new RGraph.Line({
+            id: 'cvsEsperaLinea',
+            data: [
+                [15, 15, 15, 15, 15, 15, 15],
+                [20, 20, 20, 20, 20, 20, 20]
+            ],
+            options: {
+                gutterTop: 50,
+                labels: ['29/01', '01/02', '02/02', '03/02', '04/02', '05/02', '10/02'],
+                filled: true,
+                filledRange: true,
+                //                fillstyle: 'rgba(255, 204, 0, 0.2)',
+                fillstyle: '#D0AC41',
+                linewidth: 3,
+                //                colors: ['#FFCC00'],
+                colors: ['#A07D13'],
+                numxticks: 8,
+                //adjustable: true,
+                tickmarks: null,
+                ymax: 27,
+                ymin: 12,
+                backgroundGrid: true,
+                textSize: 8
+            }
+        }).draw();
+
+        var lineEspera = new RGraph.Line({
+            id: 'cvsEsperaLinea',
+            data: [17, 17, 18, 16, 20, 22, 22],
+            options: {
+                colors: ['#5986B3'], //5986B3
+                tickmarks: 'filledcircle',
+                ticksize: 5,
+                shadow: true,
+                gutterTop: 50,
+                ymax: 27,
+                ymin: 12,
+                backgroundGrid: false,
+                ylabels: false
+            }
+        }).unfoldFromCenter();
+
+    }
+
+    function onCrearTiempoDeAtencion(valor) {
+        cvTiempoDeAtencion = new RGraph.Meter({
+            id: 'cvsAtencion',
+            min: 0,
+            max: 30,
+            value: 0,
+            options: {
+                unitsPost: "'",
+                redStart: 20,
+                redEnd: 30,
+                yellowStart: 15,
+                yellowEnd: 20,
+                greenStart: 0,
+                greenEnd: 15
+            }
+        }).grow();
+        setTimeout(function () {
+            cvTiempoDeAtencion.value = valor;
+            cvTiempoDeAtencion.grow();
+        }, 3500);
+
+        var l1 = new RGraph.Line({
+            id: 'cvsAtencionLinea',
+            data: [
+                [15, 15, 15, 15, 15, 15, 15],
+                [20, 20, 20, 20, 20, 20, 20]
+            ],
+            options: {
+                gutterTop: 50,
+                labels: ['29/01', '01/02', '02/02', '03/02', '04/02', '05/02', '10/02'],
+                filled: true,
+                filledRange: true,
+                fillstyle: '#D0AC41',
+                linewidth: 3,
+                colors: ['#A07D13'],
+                numxticks: 8,
+                //adjustable: true,
+                tickmarks: null,
+                ymax: 27,
+                ymin: 12,
+                backgroundGrid: true,
+                textSize: 14
+            }
+        }).draw();
+
+        var lineAtencion = new RGraph.Line({
+            id: 'cvsAtencionLinea',
+            data: [17, 17, 18, 16, 20, 22, 22],
+            options: {
+                colors: ['#5986B3'],
+                tickmarks: 'filledcircle',
+                ticksize: 5,
+                shadow: true,
+                gutterTop: 50,
+                ymax: 27,
+                ymin: 12,
+                backgroundGrid: false,
+                ylabels: false
+            }
+        }).unfoldFromCenter();
+    }
+
+    function onCrearCantidad(valor) {
+        var grad;
+        var gauge = new RGraph.Gauge({
+            id: 'cvsCantidadLinea',
+            value: valor,
+            min: 0,
+            max: 90,
+            options: {
+                centerx: 120,
+                centery: 120,
+                radius: 110,
+                greenStart: 0,
+                greenEnd: 30,
+                yellowStart: 30,
+                yellowEnd: 70,
+                redStart: 70,
+                redEnd: 90,
+                backgroundGradient: false,
+                yellowColor: '#D0AC41',
+                redColor: '#DC3912',
+                greenColor: '#207A20',
+                textColor: 'transparent',
+                tickmarksBigColor: 'transparent',
+                tickmarksSmallColor: 'transparent',
+                shadow: false,
+                needleColors: (valor >= 30 && valor <= 70 ? ['#D0AC41'] : (valor < 30 ? ['#207A20'] : ['#DC3912'])), //Acá se debe poner el color que corresponde a valor
+                centerpinColor: (valor >= 30 && valor <= 70 ? ['#D0AC41'] : (valor < 30 ? ['#207A20'] : ['#DC3912'])), //Acá se debe poner el color que corresponde a valor
+                backgroundColor: '#F4F4F4',
+                borderOuter: 'rgba(0,0,0,0)',
+                borderInner: 'rgba(0,0,0,0)',
+                borderOutline: 'rgba(0,0,0,0)',
+                valueText: true,
+                valueTextColor: '#aaa',
+                textSize: 15,
+                unitsPost: "'",
+                adjustable: false
+            }
+        }).grow({ frames: 30 });
+    }
+</script>*@

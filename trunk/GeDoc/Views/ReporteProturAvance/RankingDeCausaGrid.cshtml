@@ -1,0 +1,220 @@
+﻿@* Ranking de cauas *@
+
+@using GeDoc
+
+<h3>@Html.Label("Ranking de causas")</h3>
+
+<script>
+
+    //al cargar telerik
+    function onLoadModal() {
+
+    }
+
+
+    function onCloseModal() {
+        $(".t-overlay").hide();
+
+    }
+
+    function onDataBindingGridRankingCausa(args) {
+
+        // AbrirWaiting();
+
+        args.data = $.extend(args.data, {
+            FechaDesde: fechaDesde,
+            FechaHasta: fechaHasta,
+            CentroDeSalud: centroDeSalud
+        });
+
+@*        $.ajax(
+            {
+                type: 'POST',
+                url: '@Url.Action("Grafico","ReporteProturAvance")',
+                dataType: 'json',
+                async:false,
+                data: { fechadesde: fechaDesde, fechahasta: fechaHasta, centro: centroDeSalud },
+                success: function (Data) { generateGraph(Data)}
+            });
+
+        function generateGraph(Data) {
+
+            var jsonData = jQuery.parseJSON(Data);
+
+            console.dir(jsonData);
+
+            if (Data != "") {
+                var data = JSON.parse(Data);
+
+                var groupedData = {};
+
+                for (var it = 0; it < data.length; it++) {
+                    var item = data[it];
+                    if (!groupedData[item.label])
+                        groupedData[item.label] = [];
+                    groupedData[item.label].push(item);
+                }
+
+                //console.log(groupedData);
+            }
+
+            var i = 0;
+
+            for (k in groupedData) {
+
+                $('#graphcontainer').append("<div id=\"chartContainer" + i + "\"></div>");
+
+                for (l in groupedData[k]) {
+
+                    renderGraph(groupedData[k][l],'chartContainer'+i);
+                }
+
+                i = i + 1;
+            }
+
+            function renderGraph(data,container) {
+
+                var chart = {
+                    "chart": {
+                        "caption": "test",
+                        "plotgradientcolor": "",
+                        "bgcolor": "FFFFFF",
+                        "showalternatehgridcolor": "0",
+                        "showplotborder": "0",
+                        "divlinecolor": "CCCCCC",
+                        "showvalues": "1",
+                        "showcanvasborder": "0",
+                        "canvasbordercolor": "CCCCCC",
+                        "canvasborderthickness": "1",
+                        "yaxismaxvalue": "30000",
+                        "captionpadding": "30",
+                        "linethickness": "3",
+                        "sshowanchors": "0",
+                        "yaxisvaluespadding": "15",
+                        "showlegend": "1",
+                        "use3dlighting": "0",
+                        "showshadow": "0",
+                        "legendshadow": "0",
+                        "legendborderalpha": "0",
+                        "showborder": "0",
+                        "palettecolors": "#EED17F,#97CBE7,#074868,#B0D67A,#2C560A,#DD9D82"
+                    },
+                    "data": [
+                        {
+                            'label': data.label,
+                            'value': data.cant
+                        }
+                        //{
+                        //    "label": "Online Ads",
+                        //    "value": "125000",
+                        //    "issliced": "1"
+                        //}
+                    ]
+                }
+
+                FusionCharts.ready(function () {
+                    var revenueChart = new FusionCharts({
+                        "type": "pie2d",
+                        "renderAt": container,
+                        "width": "500",
+                        "height": "300",
+                        "dataFormat": "json",
+                        "dataSource": {
+                            "chart": {
+                                "caption": "Ranking de causas",
+                                "xAxisName": "Month",
+                                "yAxisName": "Revenues (In USD)",
+                                "theme": "fint"
+                            },
+                            "data": chart.data
+                        }
+                    });
+
+                    revenueChart.render();
+                });
+            }
+
+            
+
+        }*@
+          
+        
+
+}
+</script>
+
+
+@{
+    
+     string _PathContent = Url.Content("~/Content");
+     Html.Telerik().Grid((IEnumerable<GeDoc.spRptProturRankingCausa>)ViewData["spRptProturRankingCausa"])
+         .Name("GridRankingCausa")
+         .DataKeys(keys =>
+         {
+             keys.Add(p => p.csId);
+         })
+         .Localizable("es-AR")
+         
+         .ToolBar(commands =>
+         {
+
+             commands.Custom().Ajax(true).Name("cmdAgregar").ButtonType(GridButtonType.ImageAndText)
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;" })
+                 .Text("Agregar")
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingCausa", "Agregar") });
+             commands.Custom().Ajax(true).Name("cmdEditar").ButtonType(GridButtonType.ImageAndText).Text("Modificar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingCausa", "Modificar") });
+             commands.Custom().Ajax(true).Name("cmdEliminar").ButtonType(GridButtonType.ImageAndText).Text("Desactivar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -15px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingCausa", "Eliminar") });
+             commands.Custom().Ajax(true).Name("cmdActivar").ButtonType(GridButtonType.ImageAndText).Text("Activar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -32px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingCausa", "Activar") });
+             commands.Custom().Ajax(true).Name("cmdHorarios").ButtonType(GridButtonType.ImageAndText).Text("Horarios")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingCausa", "Horarios") });
+         })
+         .DataBinding(dataBinding =>
+         {
+             dataBinding.Ajax()
+                 .Select("_SelectEditingRankingCausas", "ReporteProturAvance", new { FechaDesde = "16/05/2015",  FechaHasta = "16/05/2016", CentroDeSalud="0"});
+             
+
+
+         })
+         
+         .Columns(columns =>
+         {
+             columns.Bound(c => c.csId).Width("5%").Title("ID").Visible(false);
+             columns.Bound(c => c.centro_de_salud).Width("20%").Title("Centro de Salud").Visible(true);
+             columns.Bound(c => c.causa).Width("15%").Title("Causa").Visible(true);
+             columns.Bound(c => c.cantidad).Width("15%").Title("Cantidad").Visible(true);
+
+         })
+                 .Editable(editing => editing
+                         .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(false))
+                 .Pageable((paging) =>
+                            paging.Enabled(true)
+                                 .PageSize(((int)Session["FilasPorPagina"])))
+
+                .ClientEvents(events => events
+                    //.OnCommand("onCommandGrid")
+                    //.OnRowSelect("onRowSelectedEncuesta")
+                    .OnDataBinding("onDataBindingGridRankingCausa")
+                    //.OnEdit("onEditEncuesta")
+                    //.OnSave("onSave")
+                    //.OnDataBound("dataBound")
+                    )                            
+             .Footer(true)
+             .Filterable()
+             .Selectable()
+             .Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+             .Resizable(resizing => resizing.Columns(true))
+             .Sortable()       
+             .Render();
+             
+
+}
+
+<div id="graphcontainer"></div>

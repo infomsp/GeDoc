@@ -1,0 +1,173 @@
+﻿@* Rankin de derivación *@
+
+@using GeDoc
+
+@*<h3>@Html.Label("Ranking de Derivación")</h3>*@
+
+<script>
+
+    //al cargar telerik
+    function onLoadModal() {
+
+    }
+
+
+    function onCloseModal() {
+        $(".t-overlay").hide();
+
+    }
+
+    function onDataBindingGridRankingDerivacion(args) {
+
+        // AbrirWaiting();
+
+        args.data = $.extend(args.data, {
+            FechaDesde: fechaDesde,
+            FechaHasta: fechaHasta,
+            CentroDeSalud: centroDeSalud
+        });
+
+            $.ajax(
+            {
+                type: 'POST',
+                url: '@Url.Action("GraficoDerivados","ReporteProturAvance")',
+                dataType: 'json',
+                //async:false,
+                data: { fechadesde: fechaDesde, fechahasta: fechaHasta, centro: centroDeSalud },
+                success: function (Data) { generateGraphDerivados(Data) }
+            });
+
+        function generateGraphDerivados(Data) {
+
+            if (Data != "") {
+                var data = JSON.parse(Data);
+                console.log(data);
+
+                var pizzaSlice = [];
+
+                for (k in data) {
+                    pizzaSlice.push(data[k]);
+                }
+                
+                FusionCharts.ready(function () {
+                    var revenueChart = new FusionCharts({
+                        "type": "pie2d",
+                        "renderAt": "chartContainer",
+                        "width": "80%",
+                        "height": "80%",
+                        "dataFormat": "json",
+                        "dataSource": {
+                            "chart": {
+                                "caption": "Programados por Centro de salud",
+                                "bgcolor": "FFFFFF",
+                                "showvalues": "1",
+                                "showpercentvalues": "1",
+                                "showborder": "0",
+                                "showplotborder": "0",
+                                "showlegend": "1",
+                                "legendborder": "0",
+                                "legendposition": "bottom",
+                                "enablesmartlabels": "1",
+                                "use3dlighting": "0",
+                                "showshadow": "0",
+                                "legendbgcolor": "#CCCCCC",
+                                "legendbgalpha": "20",
+                                "legendborderalpha": "0",
+                                "legendshadow": "0",
+                                "legendnumcolumns": "3",
+                                "palettecolors": "#f8bd19,#e44a00,#008ee4,#33bdda,#6baa01,#583e78"
+                            },
+                            "data": pizzaSlice
+                        }
+                    });
+
+                    revenueChart.render();
+                })
+
+
+            } else {
+                //console.log('no data');
+            }
+        }
+        
+    }
+
+
+</script>
+
+
+@{
+    
+     string _PathContent = Url.Content("~/Content");
+     Html.Telerik().Grid((IEnumerable<GeDoc.spRptProturRankingDerivacion>)ViewData["spRptProturRankingDerivacion"])
+         .Name("GridRankingDerivacion")
+         .DataKeys(keys =>
+         {
+             keys.Add(p => p.csId);
+         })
+         .Localizable("es-AR")
+         
+         .ToolBar(commands =>
+         {
+
+             commands.Custom().Ajax(true).Name("cmdAgregar").ButtonType(GridButtonType.ImageAndText)
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;" })
+                 .Text("Agregar")
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacion", "Agregar") });
+             commands.Custom().Ajax(true).Name("cmdEditar").ButtonType(GridButtonType.ImageAndText).Text("Modificar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacion", "Modificar") });
+             commands.Custom().Ajax(true).Name("cmdEliminar").ButtonType(GridButtonType.ImageAndText).Text("Desactivar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -15px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacion", "Eliminar") });
+             commands.Custom().Ajax(true).Name("cmdActivar").ButtonType(GridButtonType.ImageAndText).Text("Activar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -32px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacion", "Activar") });
+             commands.Custom().Ajax(true).Name("cmdHorarios").ButtonType(GridButtonType.ImageAndText).Text("Horarios")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacion", "Horarios") });
+         })
+         .DataBinding(dataBinding =>
+         {
+             dataBinding.Ajax()
+                 .Select("_SelectEditingRankingDerivacion", "ReporteProturAvance", new { FechaDesde = "16/05/2015", FechaHasta = "16/05/2016", CentroDeSalud = "0" });
+             
+
+
+         })
+         
+         .Columns(columns =>
+         {
+             
+
+             columns.Bound(c => c.centro_de_salud).Width("80%").Title("Centro de Salud").Visible(true);
+             columns.Bound(c => c.Derivado).Width("20%").Title("Programado").Visible(true);
+
+         })
+                 .Editable(editing => editing
+                         .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(false))
+                 .Pageable((paging) =>
+                            paging.Enabled(true)
+                                 .PageSize(((int)Session["FilasPorPagina"])))
+
+                .ClientEvents(events => events
+                    //.OnCommand("onCommandGrid")
+                    //.OnRowSelect("onRowSelectedEncuesta")
+                    .OnDataBinding("onDataBindingGridRankingDerivacion")
+                    //.OnEdit("onEditEncuesta")
+                    //.OnSave("onSave")
+                    //.OnDataBound("dataBound")
+                    )                            
+             .Footer(true)
+             .Filterable()
+             .Selectable()
+             //.Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+             .Resizable(resizing => resizing.Columns(true))
+             .Sortable()  
+             .Render();
+             
+
+}
+
+<div id="chartContainer" style="text-align: center;"></div>
+

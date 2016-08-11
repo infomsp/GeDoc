@@ -1,0 +1,100 @@
+﻿
+<script>
+    function onDropDownDataBindingProfesiones(e) {
+        e.data = $.extend({}, e.data, { pId: $("#inputDNI_Credencial").val() });
+    }
+
+    function profesionalId_OnLoad(e) {
+        var combobox = $(this).data('tDropDownList');
+        combobox.reload();
+    }
+    function profesionalId_OnChange(e)
+    {
+        debugger;
+     
+        AbrirWaitingCRUD("waitingPrincipalCredencial");
+        var url = GetPathApp('registroProfesional/getCredencialProfesional');
+        $.get(url, { contenidoBusqueda: $("#inputDNI_Credencial").val(), profId: e.value }).done(function (data) {
+            $("#contentCredencial").html(data);
+            CerrarWaitingCRUD("waitingPrincipalCredencial");
+        });
+
+    }
+    
+</script>
+<div style="background:#fff;padding:10px;">
+        <div>
+         @* <div style="display: inline-block;">
+            <h1>Tipo Documento:</h1>
+          </div>
+          <div style="display: inline-block;">      
+              @{Html.Telerik().DropDownList().Name("cbxTipoDoc").DropDownHtmlAttributes(new { style = "width:Auto;" }).SelectedIndex(0)
+                    .HtmlAttributes(new { style = "width: 150px; vertical-align: middle;" })
+                    .BindTo((SelectList)ViewData["tipoIdTipoDocumento_Data"]).Render();}
+          </div>*@
+          <div style="display: inline-block;">
+            <h1>Número de documento: </h1>
+          </div>
+    
+        <div style="display: inline-block;">         
+             <input type="text" id="inputDNI_Credencial" value="" placeholder="Número de Documento" maxlength="8" style="width: 150px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" />                    
+        </div>
+
+          <button  id="btnBuscarCM" class="t-button t-button-icon" onclick="btnBuscarCredencial()" style="width: 100px;">
+            <span class="t-icon t-search"></span> Buscar
+         </button>
+
+
+          <div style="display: inline-block;">
+             <h1 style="margin-left: 5px;">Profesion:</h1>
+          </div>
+          <div style="display: inline-block;">
+                @Html.Telerik().DropDownList().HtmlAttributes(new { style = "top: 7px; width: 250px;" }).Name("profesionalId").SelectedIndex(0).ClientEvents(events => events.OnChange("profesionalId_OnChange").OnLoad("profesionalId_OnLoad").OnDataBinding("onDropDownDataBindingProfesiones")).DataBinding(binding => binding.Ajax().Select("_AjaxGetTitulosProfesional", "registroProfesional"))
+          </div>
+        </div>
+    
+  @{ 
+      Html.RenderPartial("WaitingCRUDModel","waitingPrincipalCredencial");
+   }    
+
+    <div id="contentCredencial" style="height: 600px;">
+    </div>
+
+</div>
+
+<div class="credencialBack">
+    <div>
+        <div>
+            <div id="qrcode"></div>
+        </div>          
+    </div>
+</div> 
+
+<script type="text/javascript" >
+
+    $(document).ready(function () {
+        $("#inputDNI_Credencial").focus();
+        var qrcode = new QRCode("qrcode");
+        qrcode.makeCode("QR-24137853-TRIPOLONE GUSTAVO NICOLAS-ADMINISTRATIVO-4578-QR");
+    });
+
+    function btnBuscarCredencial()
+    {
+        var combobox = $("#profesionalId").data('tDropDownList');
+        combobox.reload();
+
+        AbrirWaitingCRUD("waitingPrincipalCredencial");
+        var url = GetPathApp('registroProfesional/getCredencialProfesional');
+        $.get(url, { contenidoBusqueda: $("#inputDNI_Credencial").val(), profId: 0 }).done(function (data) {
+            $("#contentCredencial").html(data);
+            CerrarWaitingCRUD("waitingPrincipalCredencial");
+        });
+    }
+    $('#inputDNI_Credencial').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            btnBuscarCredencial();
+        }
+    });
+</script>

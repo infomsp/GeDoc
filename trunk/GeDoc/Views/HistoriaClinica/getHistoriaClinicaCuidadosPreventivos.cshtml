@@ -1,0 +1,418 @@
+﻿@model GeDoc.catHCAduPraPreventivaResulWS
+@{
+    ViewBag.Title = "setHistoriaClinicaExamenFisico";
+    ViewBag.eventoOnChange = "onChange";
+}
+
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script>
+    function onChangeaduCRFecha() {
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorCuidadosPreventivos").hide("slide");
+    }
+
+    function ValidarfrmHCCuidadosPreventivos() {
+        $("#divHCMensajeErrorCuidadosPreventivos").hide("slide");
+        debugger;
+        var dResultado = $('#aduPraPrevResultado').val();
+        switch ($("#aduPraPrevId_Lista").val()) {
+            case "1":
+                var dsplit = dResultado.split("/");
+                if (!$.isNumeric(dsplit[0])) {
+                    onMostarErrorGeneralHC("El valor de la Tensión Arterial es incorrecto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (!$.isNumeric(dsplit[1])) {
+                    onMostarErrorGeneralHC("El valor de la Tensión Arterial es incorrecto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (parseInt(dsplit[1]) >= parseInt(dsplit[0])) {
+                    onMostarErrorGeneralHC("El valor de la Tensión Arterial es incoherente.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dsplit[0] >= 300 || dsplit[1] >= 300) {
+                    onMostarErrorGeneralHC("El valor de la Tensión Arterial es exageradamente alto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dsplit[0] <= 30 || dsplit[1] <= 10) {
+                    onMostarErrorGeneralHC("El valor de la Tensión Arterial es exageradamente bajo.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                break;
+            case "2":
+                if (!$.isNumeric(dResultado)) {
+                    onMostarErrorGeneralHC("El valor del Peso debe ser un número.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dResultado >= 350) {
+                    onMostarErrorGeneralHC("El valor del Peso, es excesivamente Alto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                break;
+            case "3":
+                if (!$.isNumeric(dResultado)) {
+                    onMostarErrorGeneralHC("El valor de la Talla debe ser un número.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dResultado >= 2.5) {
+                    onMostarErrorGeneralHC("El valor de la Talla, es excesivamente Alto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                break;
+            case "5":
+                if (!$.isNumeric(dResultado)) {
+                    onMostarErrorGeneralHC("El valor de la Circunferencia de la cintura debe ser un número.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dResultado >= 250) {
+                    onMostarErrorGeneralHC("El valor de la Circunferencia de la cintura, es excesivamente Alto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                if (dResultado <= 20) {
+                    onMostarErrorGeneralHC("El valor de la Circunferencia de la cintura, es muy bajo.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                break;
+            case "14":
+            case "15":
+            case "16":
+            case "17":
+            case "18":
+                if (!$.isNumeric(dResultado)) {
+                    onMostarErrorGeneralHC("El valor ingresado debe ser un número.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+
+                if (dResultado >= 400) {
+                    onMostarErrorGeneralHC("El valor ingresado es excesivamente Alto.", "#aduPraPrevResultado", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                    return false;
+                }
+                break;
+            //case "6":
+            //case "7":
+            //case "8":
+            //case "12":
+            //case "19":
+            //case "26":
+            //case "27":
+            //case "28":
+            //case "29":
+            //case "30":
+            //    break;
+            //case "9":
+            //    break;
+            //case "10":
+            //    break;
+            //case "11":
+            //    break;
+        }
+
+        return true;
+    }
+
+    function onAsignaResultado() {
+        $("#aduPraPrevResultado").val($("#chkResultado")[0].checked ? "SI" : "NO");
+    }
+</script>
+
+@using (Html.BeginForm("setHistoriaClinicaCuidadosPreventivos", "HistoriaClinica", FormMethod.Post, new { id = "frmCuidadosPreventivos" }))
+{ 
+ @Html.HiddenFor(model => model.hcaduid)
+ @Html.HiddenFor(model => model.aduPraPrevResId)
+
+<table style="width: 100%; border: none;">
+    <tr style="border: none; height: 62px;">
+        <td colspan="1" style="border: none;">
+            <div id="btnGuardarCuidadosPreventivos" class="t-button" onclick="onAceptarCuidadosPreventivos();" title="Guardar cambios en Historial Familiar">
+                <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+                <label style="cursor: pointer; vertical-align: super;">Guardar cambios</label>
+            </div>
+        </td>
+        <td colspan="3" style="border: none;">
+            <div id="divHCMensajeErrorCuidadosPreventivos" class="BordeRedondeado alert-danger" style="text-align: center; display: none; width: 100%;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; text-align: center; width: 5%;" rowspan="2">
+                            <i class="fa fa-2x fa-warning"></i>
+                        </td>
+                        <td colspan="1" style="border: none;">
+                            <div style="font-weight: bold; text-align: center;">¡Atención!</div>
+                        </td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2" style="border: none;">
+                            <span id="spanMensajeCuidadosPreventivos">Mensaje</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<hr/>
+    <table style="border: none;">
+        @*<tr style="border: none;">
+            <td style="border: none;">Fecha</td>
+            <td style="border: none;">@Html.EditorFor(model => model.aduCRFecha, new { id = "aduCRFecha" })</td>
+        </tr>*@
+        <tr style="border: none;">
+            <td style="border: none;">Práctica:</td>
+            <td style="border: none;">
+                @Html.Partial("EditorTemplates/_ListaDesplegable", "aduPraPrevId_Lista")
+            </td>
+            <td style="border: none;">Resultado:</td>
+            <td id="tdResultadoMask" style="border: none;">@Html.TextBoxFor(model => model.aduPraPrevResultado, new {id = "aduPraPrevResultado"})</td>
+            <td id="tdResultadoMedida" style="border: none; display: none;"><span id="spanMedidaCP">mg/dl</span></td>
+            <td id="tdResultadoCheckBox" style="border: none; display: none;"><input type="checkbox" id="chkResultado" onchange="onAsignaResultado();" value="SI" class="my-checkbox"></td>
+            <td style="border: none;">
+                <div id="tdResultadoLista" style="">
+                    <select id="papLista" class="papLista" style="width: 200px;">
+                        <option value="ASC-">ASC-</option>
+                        <option value="ASC-H">ASC-H</option>
+                        <option value="ASC-US">ASC-US</option>
+                        <option value="H-SIL lesión escamosa intraepitelial de Alto Grado">H-SIL lesión escamosa intraepitelial de Alto Grado</option>
+                        <option value="CIN 2">CIN 2</option>
+                        <option value="CIN 3">CIN 3</option>
+                        <option value="LSIL lesión escamosa intraepitelial de Bajo Grado">LSIL lesión escamosa intraepitelial de Bajo Grado</option>
+                        <option value="CARCINOMA IN SITU">CARCINOMA IN SITU</option>
+                        <option value="CANCER CERVICO UTERINO">CANCER CERVICO UTERINO</option>
+                        <option value="NILM Negativo">NILM Negativo</option>
+                        <option value="No evaluable">No evaluable</option>
+                        <option value="SIL lesión escamosa intraepitelial de grado indeterminado">SIL lesión escamosa intraepitelial de grado indeterminado</option>
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div id="tdResultadoListaPM" style="">
+                    <select id="pmLista" class="pmLista" style="width: 200px;">
+                        <option value="Normal">Normal</option>
+                        <option value="Anormal (Tumoración)">Anormal (Tumoración)</option>
+                        <option value="Anormal (Retraccion del pezón)">Anormal (Retraccion del pezón)</option>
+                        <option value="Anormal (Lesión en piel)">Anormal (Lesión en piel)</option>
+                        <option value="Anormal (Otra)">Anormal (Otra)</option>
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div id="tdResultadoListaMamo" style="">
+                    <select id="mamoLista" class="mamoLista" style="width: 200px;">
+                        <option value="BIRADS 0">BIRADS 0</option>
+                        <option value="BIRADS 1">BIRADS 1</option>
+                        <option value="BIRADS 2">BIRADS 2</option>
+                        <option value="BIRADS 3">BIRADS 3</option>
+                        <option value="BIRADS 4">BIRADS 4</option>
+                        <option value="BIRADS 5">BIRADS 5</option>
+                        <option value="BIRADS 6">BIRADS 6</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+    </table>
+    @Html.HiddenFor(model => Model.aduPraPrevId, new {id = "aduPraPrevId"})
+}
+
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(".t-icon.t-icon-calendar").attr("title", "Abrir calendario");
+    $('input[class="my-checkbox"]').bootstrapSwitch();
+    $("#frmCuidadosPreventivos :input").bind("keydown", function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorCuidadosPreventivos").hide("slide");
+    });
+
+    $("#aduPraPrevId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        $("#aduPraPrevId").val($("#aduPraPrevId_Lista").val());
+        onCambiaTipoDeCampo($("#aduPraPrevId_Lista").val());
+    });
+    var $ListaPracticas = $("#aduPraPrevId_Lista");
+    if ($('#aduPraPrevId').val() != "" && $('#aduPraPrevId').val() > 0) {
+        $ListaPracticas.val($("#aduPraPrevId").val()).trigger("change");
+    } else {
+        $("#aduPraPrevId").val($("#aduPraPrevId_Lista").val());
+    }
+    $ListaPracticas.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+    $("#papLista").select2({
+        placeholder: "Seleccione un diagnóstico de la lista",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        $("#aduPraPrevResultado").val($("#papLista").val());
+    });
+    var $ListaPAPs = $("#papLista");
+    $ListaPAPs.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+    $("#tdResultadoLista").css("display", "none");
+
+    $("#pmLista").select2({
+        placeholder: "Seleccione un diagnóstico de la lista",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        $("#aduPraPrevResultado").val($("#pmLista").val());
+    });
+    var $ListaPM = $("#pmLista");
+    $ListaPM.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+    $("#tdResultadoListaPM").css("display", "none");
+
+    $("#mamoLista").select2({
+        placeholder: "Seleccione un diagnóstico de la lista",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        $("#aduPraPrevResultado").val($("#mamoLista").val());
+    });
+    var $ListaMamo = $("#mamoLista");
+    $ListaMamo.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+    $("#tdResultadoListaMamo").css("display", "none");
+
+    $("#aduPraPrevResultado").css("width", "70px");
+    $('#aduPraPrevResultado').mask("999/99");
+    $('#aduPraPrevResultado').attr("title", "Ingrese la tensión arterial Máxima/Mínima (Ejemplo: 120/80)");
+    SoloEnteros("aduPraPrevResultado");
+    $("#frmCuidadosPreventivos :input:visible:enabled:first").focus().select();
+
+    function onCambiaTipoDeCampo(codigoPractica) {
+        $("#aduPraPrevResultado").unbind('keypress');
+        $("#aduPraPrevResultado").unmask('999/99');
+        $('#aduPraPrevResultado').removeAttr("maxlength");
+        $('#aduPraPrevResultado').removeAttr("title");
+        $("#tdResultadoLista").css("display", "none");
+        $("#tdResultadoListaMamo").css("display", "none");
+        $("#tdResultadoListaPM").css("display", "none");
+        $("#tdResultadoMask").css("display", "none");
+        $("#tdResultadoCheckBox").css("display", "none");
+        $('#tdResultadoMedida').css("display", "none");
+
+        debugger;
+        switch (codigoPractica) {
+            case "1":
+                $('#tdResultadoMask').css("display", "inline-block");
+                $("#aduPraPrevResultado").css("width", "70px");
+                $('#aduPraPrevResultado').mask("999/99");
+                $('#aduPraPrevResultado').attr("title", "Ingrese la tensión arterial Máxima/Mínima (Ejemplo: 120/80)");
+                SoloEnteros("aduPraPrevResultado");
+                $("#aduPraPrevResultado").val("");
+                break;
+            case "2":
+            case "3":
+            case "5":
+            case "14":
+            case "15":
+            case "16":
+            case "17":
+            case "18":
+                $('#tdResultadoMedida').css("display", "inline-block");
+                $('#tdResultadoMask').css("display", "inline-block");
+                $("#aduPraPrevResultado").css("width", "70px");
+                $('#aduPraPrevResultado').attr("title", "Ingrese un valor decimal, sin coma y con punto como separador decimal (Ejemplo: 84.36)");
+                $('#aduPraPrevResultado').attr("maxlength", "6");
+                SoloNumerosConPunto("aduPraPrevResultado");
+                $("#aduPraPrevResultado").val("");
+                switch (codigoPractica) {
+                    case "2":
+                        $('#spanMedidaCP').text("kg.");
+                        break;
+                    case "3":
+                        $('#spanMedidaCP').text("mt.");
+                        break;
+                    case "5":
+                        $('#spanMedidaCP').text("cm.");
+                        break;
+                    case "14":
+                    case "15":
+                    case "16":
+                    case "17":
+                    case "18":
+                        $('#spanMedidaCP').text("mg/dl");
+                        break;
+                }
+
+                break;
+            case "6":
+            case "7":
+            case "8":
+            case "12":
+            case "19":
+            case "26":
+            case "27":
+            case "28":
+            case "29":
+            case "30":
+                $('#tdResultadoCheckBox').css("display", "inline-block");
+                $("#aduPraPrevResultado").val($("#chkResultado")[0].checked ? "SI" : "NO");
+                break;
+            case "9":
+                $('#tdResultadoLista').css("display", "inline-block");
+                $("#aduPraPrevResultado").val("ASC-");
+                break;
+            case "10":
+                $('#tdResultadoListaMamo').css("display", "inline-block");
+                $("#aduPraPrevResultado").val("BIRADS 0");
+                break;
+            case "11":
+                $('#tdResultadoListaPM').css("display", "inline-block");
+                $("#aduPraPrevResultado").val("Normal");
+                break;
+        }
+        $("#aduPraPrevResultado").focus().select();
+    }
+
+    function onAceptarCuidadosPreventivos() {
+        if (!ValidarfrmHCCuidadosPreventivos()) {
+            return;
+        }
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $('#frmCuidadosPreventivos').attr("action"),
+            data: $('#frmCuidadosPreventivos').serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                onMostarErrorGeneralHC("Error al intentar guardar información.", "#aduCRMedi", "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    onMostarErrorGeneralHC(respuesta.Mensaje, "#" + respuesta.Foco, "spanMensajeCuidadosPreventivos", "divHCMensajeErrorCuidadosPreventivos", null);
+                }
+                else {
+                    $("#gridHCListaCuidadosPreventivos").data("tGrid").ajaxRequest();
+                    //onCancelarCuidadosPreventivos();
+                }
+            }
+        });
+    }
+
+</script>

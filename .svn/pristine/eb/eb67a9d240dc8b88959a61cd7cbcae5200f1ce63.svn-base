@@ -1,0 +1,635 @@
+﻿
+<link href="@Url.Content("~/Scripts/jquery-ui.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Scripts/animate.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/fusioncharts.js")"></script>
+<script src="@Url.Content("~/Scripts/fusioncharts.charts.js")"></script>
+
+
+
+<div class="iconos" style="text-align: center;">
+    <div id="ReporteProturAvance" style="vertical-align: middle; padding: 10px; margin: 10px;">
+        <div>
+            <div style="margin-left:25%;">
+                <table style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none; text-align:center;" >
+                            <!-- este header sin texto se completa cuando existe un error y quiere ser informado al usuario-->
+
+                                <h3 style="color: white; background-color: red;" id="warning"></h3>
+
+
+                            <label>Desde: </label>
+                            <input type="text"  style="width:80px;cursor: pointer;" maxlength="10" size="10"  id="txt_fechadesde" requiered/><i class="fa fa-calendar"></i>
+                            
+                            <label>Hasta: </label>
+                            <input type="text"  style="width:80px;cursor: pointer;" maxlength="10" size="10" id="txt_fechahasta" requiered /><i class="fa fa-calendar"></i>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td >
+                            <label>Departamento: </label>
+                        </td>
+                         <td>
+                            @{
+                                @Html.DropDownList("Departamento", ViewData["Departamento"] as List<SelectListItem>, new { @onchange="RefreshCombo(this.value);"});
+                                
+                            }
+
+                            <label>Todos</label>
+                            <input type="checkbox" id="chk_todos" />
+                         </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            <label>Localidad: </label>
+                        </td>
+                        <td>
+                              @{
+                                @Html.DropDownList("Localidad", ViewData["Localidad"] as List<SelectListItem>);
+                              }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            <label>Centro de Salud: </label>
+                        </td>
+                        <td>
+                           @{
+
+                               @: <div id="Ctro_salud" style = "background-color:#fff;width:100%; height:150px;overflow-x: hidden; overflow-y : scroll;">
+                               var i=0;
+                               var nombre="";
+                               foreach (var item in ViewData["Centros"] as IEnumerable<SelectListItem>)
+                               {
+                                   i++;
+                                   nombre = "chk_";
+                                   nombre +=i;
+                                   @: <input type="checkbox" class="checkBtns" id="@nombre" value="@item.Value.ToString()">  @item.Text.ToString()  <br>
+                                   
+                               }
+                               <input type="hidden" id="total_chk" value="@i" />
+                               @: </div>
+                            }
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            <label>Especialidad:</label>
+                        </td>
+                        <td >
+                           @{
+                                @Html.DropDownList("Especialidad", ViewData["Especialidad"] as List<SelectListItem>);
+                            }
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                           <label>Seleccion tipo de reporte</label>
+                        </td>
+                        <td>
+                            <select id="TipoDeReporte">
+                                <option tipo="1">Total de encuestados</option>
+                               @* <option tipo="2">Ranking de causas</option>
+                                <option tipo="3">Ranking de programados</option>
+                                <option tipo="4">Ranking programados por depto</option>
+                                *@
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="border: none;">
+
+                            <br />
+                            <button id="btnBuscarAgente" class="t-button t-button-icon" style="text-align:center; width: 100px;">
+                                <span><i class="fa fa-search"></i><span style="font-family: sans-serif; margin-left: 5px;">Generar</span></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<style>
+
+    .ui-tooltip {
+       visibility: hidden; 
+    }
+
+</style>
+
+<script src="@Url.Content("~/Scripts/CRUDGrillas.js")"></script>
+
+
+
+<script>
+
+
+    //variables globales
+    var fechaDesde = '16/05/2015';
+    var fechaHasta = '16/05/2016';
+    var departamento = 0;
+    var localidad = 0;
+    var especialidad = 0;
+    var centroDeSalud = '0';
+    var total_chk;
+
+    //filtros iniciales
+    disableOptions({
+        'depto': false,
+        'loc': false,
+        'csalud': false,
+        'espec': true
+    });
+
+    //recibe json para habilitar o no filtros
+    function disableOptions(options) {
+
+        $('#chk_todos').attr('checked', false)
+
+        if (!options.depto) {
+            $('#Departamento').prop('disabled', true);
+            $("#Departamento").css("background-color", "lightgrey");
+            $('#Departamento option[value="0"]').attr("selected", "selected");
+
+        } else {
+            $("#Departamento").prop("disabled", false);
+            $("#Departamento").css("background-color", "white");
+         }
+        if (!options.loc) {
+            $("#Localidad").prop("disabled", true);
+            $("#Localidad").css("background-color", "lightgrey");
+            $("#Localidad").append("<option value='0'>Seleccione localidad</option>");
+            $('#Localidad option[value="0"]').attr("selected", "selected");
+        } else {
+            $("#Localidad").prop("disabled", false);
+            $("#Localidad").css("background-color", "white");
+         }
+        if (!options.csalud) {
+            $('.checkBtns').prop('disabled', true).prop('checked', true);
+        } else {
+            $('.checkBtns').prop('disabled', false).prop('checked', false);
+         }
+        if (!options.espec) {
+            $('#Especialidad').prop('disabled', true)
+        } else {
+            $('#Especialidad').prop('disabled', false)
+        }
+        if (!options.todos) {
+            $('#chk_todos').attr('disabled', true)
+        } else {
+            $('#chk_todos').attr('disabled', false)
+        }
+    }
+
+    $("#TipoDeReporte").change(function () {
+        var options;
+
+        switch ($("#TipoDeReporte option:selected").attr("tipo")) {
+
+            case '1':
+                options = {
+                    'depto': false,
+                    'loc': false,
+                    'csalud': false,
+                    'espec': true,
+                    'todos': false
+                }
+                break;
+            case '2':
+                options = {
+                    'depto': false,
+                    'loc': false,
+                    'csalud': true,
+                    'espec': false,
+                    'todos': false
+                }
+                break;
+            case '3':
+                options = {
+                    'depto': false,
+                    'loc': false,
+                    'csalud': true,
+                    'espec': false,
+                    'todos': false
+                }
+                break;
+            case '4':
+                options = {
+                    'depto': true,
+                    'loc': false,
+                    'csalud': false,
+                    'espec': false,
+                    'todos': true
+                }
+                break;
+
+        }
+
+        disableOptions(options);
+
+    });
+
+    //funcion del checkbox "todos"
+    $("#chk_todos").change(function () {
+
+        if ($('#chk_todos').is(':checked')) {
+            $('#Departamento').prop('disabled', true);
+            $("#Departamento").css("background-color", "lightgrey");
+            $('#Departamento option[value="0"]').attr("selected", "selected");
+
+        } else {
+            $("#Departamento").prop("disabled", false);
+            $("#Departamento").css("background-color", "white");
+        }
+    });
+ 
+    //Datepicker
+    $(function () {
+
+        $("#txt_fechadesde").datepicker({
+            dateFormat: 'dd/mm/yy',
+            maxDate: 0,
+            closeText: "Cerrar",
+            prevText: "&#x3C;Ant",
+            nextText: "Sig&#x3E;",
+            currentText: "Hoy",
+            monthNames: ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+            monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun",
+            "jul", "ago", "sep", "oct", "nov", "dic"],
+            dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
+            dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+            dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+            weekHeader: "Sm",
+            dateFormat: "dd/mm/yy",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ""
+        });
+        $("#txt_fechahasta").datepicker({
+            dateFormat: 'dd/mm/yy',
+            maxDate: 0,
+            closeText: "Cerrar",
+            prevText: "&#x3C;Ant",
+            nextText: "Sig&#x3E;",
+            currentText: "Hoy",
+            monthNames: ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+            monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun",
+            "jul", "ago", "sep", "oct", "nov", "dic"],
+            dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
+            dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+            dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+            weekHeader: "Sm",
+            dateFormat: "dd/mm/yy",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ""
+        });
+
+        var today = new Date();
+
+        $("#txt_fechadesde").datepicker("setDate", today);
+        $("#txt_fechahasta").datepicker("setDate", today)
+
+
+    });
+
+    $("#btnBuscarAgente").click(function () {
+
+        //seteo de fechas iniciales
+        var today = new Date();
+        var firstDatepicker = $("#txt_fechadesde").datepicker("getDate");
+        var lastDatepicker = $("#txt_fechahasta").datepicker("getDate");
+        //se elimina la hora para trabajar solo con la fecha
+        today.setHours(0, 0, 0, 0);
+        firstDatepicker.setHours(0, 0, 0, 0);
+        lastDatepicker.setHours(0, 0, 0, 0);
+
+        //si esta variable es true se permite abrir el modal, las verificaciones tratan de tirar esta condición
+        var abre = true;
+        var flag = false;
+
+        if(!flag) warningLabel("Debe elegir al menos un centro de salud", $("#Ctro_salud"));
+
+        //verifica que la fecha de inicio no sea mayor que la de fin
+        if (lastDatepicker < firstDatepicker) {
+            warningLabel("la fecha final no debe ser menor que la fecha de inicio", $("#txt_fechahasta"));
+            abre = false;
+        } else {
+
+            if (lastDatepicker > today) {
+                warningLabel("la fecha final no puede ser mayor al día de hoy",$("#txt_fechahasta"));
+                abre = false;
+            }
+        }
+
+        switch ($("#TipoDeReporte option:selected").attr("tipo")) {
+
+            case '1':
+                //if ($("#Especialidad").val() == 0) {
+                  //  warningLabel("Debe seleccionar una especialidad", $("#Especialidad"));
+                //  abre = false;
+                
+              //  }
+                abre = true;
+                break;
+            case '2':
+                //verificación que se haya seleccionado al menos un centro de salud
+                $(".checkBtns").each(function () {
+                    if ($(this).is(':checked')) flag = true;
+                    abre = flag;
+                });
+
+                break;
+            case '3':
+                //verificación que se haya seleccionado al menos un centro de salud
+                $(".checkBtns").each(function () {
+                    if ($(this).is(':checked')) flag = true;
+                    abre = flag;
+                });
+
+                break;
+            case '4':
+                //verifica que se haya elegido un departamento o checkeado el box de todos
+                if (($("#Departamento").val() == 0) && !($("#chk_todos").is(":checked"))) {
+                    warningLabel("Debe seleccionar un departamento",$("#Departamento"));
+                    abre = false;
+                }
+                break;
+        }
+
+        function warningLabel(message, focus) {
+
+            $("#warning").text(message).show().removeClass('animated shake');
+            $("#warning").text(message).show().addClass('animated shake');
+            focus.focus();
+        }
+       
+        var tipoDeReporte = $("#TipoDeReporte option:selected").attr("tipo");
+
+        if (abre) {
+            //switch para tipos de consulta
+            switch (tipoDeReporte) {
+                //REPORTE total de encuestados
+                case "1": {
+                    abrirModal('@Url.Action("_SelectEditing","ReporteProturAvance")','#ReporteTotalEncuestados');
+                    $('#Grid').data('tGrid').ajaxRequest();
+                    $("#warning").hide();
+
+                    //Refresco la grilla para actualizar datos en dataset
+                    //$('#Grid').data('tGrid').ajaxRequest();
+                }
+                    break;
+                    //REPORTE ranking de causas
+                case "2": {
+                    abrirModal('@Url.Action("_SelectEditingRankingCausas","ReporteProturAvance")', '#ReporteRankingDeCausas');
+                    $('#GridRankingCausa').data('tGrid').ajaxRequest();
+                    $("#warning").hide();
+                }
+                    break;
+                    //REPORTE ranking de derivación
+                case "3": {
+                    abrirModal('@Url.Action("_SelectEditing","ReporteProturAvance")', '#ReporteRankingDeDerivacion');
+                    $('#GridRankingDerivacion').data('tGrid').ajaxRequest();
+                    $("#warning").hide();
+                }
+                    break;
+                    //REPORTE ranking por departamento
+                case "4": {
+                    abrirModal('@Url.Action("_SelectEditingRankingDerivacionDpto","ReporteProturAvance")', '#ReporteRankingPorDepartamentos');
+                    $('#GridRankingDpto').data('tGrid').ajaxRequest();
+                    $("#warning").hide();
+                }
+                    break;
+            }
+        }
+    });
+    
+
+@*    function CargaGrafico(id)
+    {
+
+        fechaDesde = $("#txt_fechadesde").val();
+        fechaHasta = $("#txt_fechahasta").val();
+        departamento = $("#Departamento").val();
+        localidad = $("#Localidad").val();
+        especialidad = $("#Especialidad").val();
+        //centroDeSalud = '0';
+        total_chk = $("#total_chk").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Grafico","ReporteRankingCausaControler")',
+            dataType: 'json',
+            data: { fechadesde: fechaDesde, fechahasta: fechaHasta, $().val()},
+            success: function (data, textStatus, jqXHR) {
+
+                $("#Localidad")
+                .find('option')
+                .remove()
+                .end();
+
+                var result = JSON.parse(data);
+
+                $.each(result, function (key, value) {
+
+                    $("#Localidad").append('<option value=' + key + '>' + value + '</option>');
+                    CerrarWaiting();
+                });
+            },
+            error: function () {
+                alert('error');
+            }
+         });
+    }*@
+
+    function RefreshCombo(id) {
+        AbrirWaiting();
+
+        $.ajax({
+            type: 'POST', 
+            url: '@Url.Action("cargaLocalidad","ReporteProturAvance")',
+            dataType: 'json',
+            data: { id: $("#Departamento").val()},
+            success: function (data, textStatus, jqXHR) {
+
+                $("#Localidad")
+                .find('option')
+                .remove()
+                .end();
+
+                var result = JSON.parse(data);
+
+                $.each(result, function (key, value) {
+
+                    $("#Localidad").append('<option value=' + key + '>' + value + '</option>');
+                    CerrarWaiting();
+                });
+            },
+                error: function () {
+                    alert('error');
+                }
+         });
+    }
+
+    //Manejo de ventana de telerik
+
+    function abrirModal(id,selector) {
+
+        fechaDesde = $("#txt_fechadesde").val();
+        fechaHasta = $("#txt_fechahasta").val();
+        departamento = $("#Departamento").val();
+        localidad = $("#Localidad").val();
+        especialidad = $("#Especialidad").val();
+        centroDeSalud = '0';
+        total_chk = $("#total_chk").val();
+
+        centroDeSalud = addCSalud($(".checkBtns"));
+
+        function addCSalud(checkboxes) {
+
+                var result = '';
+
+                checkboxes.each(function () {
+
+                    if ($(this).is(":checked")) {
+                        result += $(this).val() + ',';
+                    }
+                });
+
+                result = result.substring(0, result.length - 1);
+
+                return result;
+        }
+
+        cargaDeReporte(id,selector);
+    }
+
+
+
+        //var container = $("#reportContainer");
+
+        //(string FechaDesde, string FechaHasta, int Localidad, int Departamento, int Especialidad, int CentroDeSalud)
+        function cargaDeReporte(id,selector) {
+            $.ajax({
+                type: 'POST',
+                url: id,
+                data: {
+                    "FechaDesde": fechaDesde,
+                    "FechaHasta": fechaHasta,
+                    "Localidad": localidad.toString(),
+                    "Departamento": departamento.toString(),
+                    "Especialidad": especialidad.toString(),
+                    "CentroDeSalud": centroDeSalud.toString()
+                }
+            });
+
+            //evento al cargarse el modal
+            var reporte = $(selector).data("tWindow");
+            reporte.center();
+            reporte.open();
+
+            //overlay
+            $(".t-overlay").show().css("display", "block");
+
+        }
+
+
+        function DisparaAlert() {
+            alert('hola');
+        }
+
+</script>
+
+<div id="reportContainer">
+
+
+@* Reporte total de encuestados *@
+@{
+
+      Html.Telerik().Window()
+        .Name("ReporteTotalEncuestados")
+        .Title("Reporte estadístico de Protur")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("ReporteProturAvanceGrid");
+        })
+        .Draggable(true)
+        .Resizable()
+        .Width(1024)
+        .Height(580)
+        .ClientEvents(events => events.OnLoad("onLoadModal").OnClose("onCloseModal"))
+        .Render();
+}
+
+@* Reporte ranking de causas *@
+
+@{
+
+      Html.Telerik().Window()
+        .Name("ReporteRankingDeCausas")
+        .Title("Ranking de causas")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("RankingDeCausaGrid");
+        })
+        .Draggable(true)
+        .Resizable()
+        .Width(1024)
+        .Height(580)
+        .ClientEvents(events => events.OnLoad("onLoadModal").OnClose("onCloseModal"))
+        .Render();
+}
+
+@* Reporte ranking de derivación *@
+
+@{
+
+      Html.Telerik().Window()
+        .Name("ReporteRankingDeDerivacion")
+        .Title("Ranking de pacientes programados por centro de salud")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("RankingDeDerivacion");
+        })
+        .Draggable(true)
+        .Resizable()
+        .Width(1024)
+        .Height(580)
+        .ClientEvents(events => events.OnLoad("onLoadModal").OnClose("onCloseModal"))
+        .Render();
+}
+
+@* Reporte ranking de derivación *@
+
+@{
+
+      Html.Telerik().Window()
+        .Name("ReporteRankingPorDepartamentos")
+        .Title("Ranking por departamento")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("RankingPorDepartamento");
+        })
+        .Draggable(true)
+        .Resizable()
+        .Width(1024)
+        .Height(640)
+        .ClientEvents(events => events.OnLoad("onLoadModal").OnClose("onCloseModal"))
+        .Render();
+}
+
+</div>

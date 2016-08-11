@@ -1,0 +1,1136 @@
+﻿@using GeDoc.Models
+@using GeDoc.Models.JuntaMedica.Modelo
+@using GeDoc.Controllers.JuntaMedica.Estadisticas
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.common.core.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.drawing.yaxis.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.meter.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.line.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.common.dynamic.js")"></script>
+<script src="@Url.Content("~/Scripts/RGraph/libraries/RGraph.gauge.js")"></script>
+
+<link rel="stylesheet" href="@(Url.Content("~/Content/jquery-ui.css"))">
+<link rel="stylesheet" href="@(Url.Content("~/Content/tab-tab.css"))" type="text/css">
+<link rel="stylesheet" href="@(Url.Content("~/Content/gauges.css"))" type="text/css">
+
+<script src="@Url.Content("~/Scripts/jquery.tab-tab.js")"></script>
+<script src="@Url.Content("~/Scripts/abanico.js")"></script>
+<script src="@Url.Content("~/Scripts/highcharts.js")"></script>
+<script src="@Url.Content("~/Scripts/gauges.js")"></script>
+<script src="@Url.Content("~/Scripts/newchart.js")"></script>
+<script src="@Url.Content("~/Scripts/microchart.js")"></script>
+<script src="@Url.Content("~/Scripts/index.js")"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>*@
+@*<script src="http://code.highcharts.com/highcharts.js"></script>*@
+@*<script src="http://code.highcharts.com/modules/exporting.js"></script>*@
+
+@{
+    var Umbral = (catUmbralTiemposTurno) ViewData["Umbrales"];
+
+}
+
+<style>
+
+    table td 
+    {
+      padding: 4px;
+      border: solid 1px #e8eef4;
+    }
+
+    .input {
+        width: 400px;
+        margin-left: 5px;
+    }
+
+    .t-input {
+        vertical-align: top;
+        width: 250px;
+    }
+
+    .center { 
+        text-align: left; 
+        vertical-align: central;
+        margin-top: 5px;
+    }
+
+</style>
+
+<script>
+
+    var arrayPromedioPorMedicoTiempoDeEspera = [];
+    var myVar = setInterval(myTimer, 1000);
+    var totalTiempo = 900; //En segundos
+    var diagId = "";
+
+    function myTimer() {
+        var d = new Date();
+        if (totalTiempo == 0) {
+            totalTiempo = 900;
+            CargarDatos();
+        } else {
+            totalTiempo -= 1;
+
+            minutes = parseInt(totalTiempo / 60, 10)
+            seconds = parseInt(totalTiempo % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            //document.getElementById("timer2").innerHTML = minutes + ":" + seconds;
+        }
+
+        if (document.getElementById("timer") != null) {
+            document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+        }
+    }
+
+    $(document).ready(function () {
+        CargarDatos();
+    });
+
+    $(document).unload(function () {
+        clearInterval(myVar);
+    });
+
+    function CargarDatos() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getDatosTableroDeComandoDCRM", "TableroComando")',
+            dataType: 'json',
+            data: { },
+            success: function (respuesta) {
+                AbrirWaiting();
+                CargarTop5();
+                CargarVelocimetroCantEnEspera();
+                cargar_ocioso();
+                obtener_valores_cantidad_atenciones_por_grafico('1');
+                //$("#gridTop5PatPorEsp").data("tGrid").ajaxRequest();
+                CerrarWaiting();
+            },
+            error: function (error) {
+                jAlert('Ha ocurrido un error!'+error, "Atención");
+                CerrarWaiting();
+            }
+        });
+    }
+
+
+    function onCommand_RefreshDatosTablero() {
+        totalTiempo = 900;
+        CargarDatos();
+    }
+
+    function OnChange_chkHabilitarRefresh(e) {
+        var txtChk = document.getElementById("textoCheckBox");
+        if (e.checked) {
+            txtChk.innerHTML = "Refresco de datos habilitado.";
+            myVar = setInterval(myTimer, 1000)
+        }
+        else {
+            txtChk.innerHTML = "Refresco de datos deshabilitado.";
+            clearInterval(myVar);
+        }
+    }
+
+    function CargarTop5() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getTop5", "TableroComando")',
+            dataType: 'json',
+            data: {},
+            success: function (respuesta) {
+                if (respuesta.Data.length > 0) {
+                    for (var i = 0; i < 5; i++) {
+                        $("#Nombre" + (i + 1)).text(respuesta.Data[i].Medico);
+                        $("#Especialidad" + (i + 1)).text(respuesta.Data[i].Especialidad);
+                        $("#Cantidad" + (i + 1)).text(respuesta.Data[i].TiempoDeEspera);
+                    }
+                }
+            },
+            error: function (error) {
+                jAlert('Ha ocurrido un error!' + error, "Atención");
+                CerrarWaiting();
+            }
+        });
+    }
+
+    function CargarVelocimetroCantEnEspera() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getCantidadEnEspera", "TableroComando")',
+            dataType: 'json',
+            data: {},
+            success: function (respuesta) {
+                //if (respuesta.Data.length > 0) {
+                //    create_Tiempos(respuesta.Data[0].Cantidad);
+                //}
+                //else {
+                create_Tiempos(respuesta.Cantidad);
+                //}
+            },
+            error: function (error) {
+                jAlert('Ha ocurrido un error!' + error, "Atención");
+                CerrarWaiting();
+            }
+        });
+    }
+
+    function cargar_ocioso() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getPromedioOciosoPorMedico", "TableroComando")',
+            dataType: 'json',
+            data: {},
+            success: function (respuesta) {
+                if (respuesta.Data.length > 0) {
+                    var arrayMedicos = armarArrayPromedioOcioso(respuesta, 0);
+                    var arrayPromedioOcioso = armarArrayPromedioOcioso(respuesta, 1);
+                    create_barras_ocioso(arrayMedicos, arrayPromedioOcioso);
+                }
+                //else {
+                //    create_Tiempos(0);
+                //}
+            },
+            error: function (error) {
+                jAlert('Ha ocurrido un error!' + error, "Atención");
+                CerrarWaiting();
+            }
+        });
+    }
+
+    function create_barras_cantidad_atenciones(ejeX, valores) {
+        if (document.getElementById("containerAtencionesPorMedico") != null) {
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'containerAtencionesPorMedico',
+                    type: 'column',
+                    height: 119
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ejeX,
+                    crosshair: true,
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    startOnTick: false,
+                    endOnTick: false,
+                    title: {
+                        text: 'Cantidad'
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.1,
+                        borderWidth: 0,
+                        pointWidth: 10
+                    }
+                },
+                series: [{
+                    name: 'Promedio',
+                    showInLegend: false,
+                    data: valores
+
+                }]
+            });
+        }
+    }
+
+    function create_barras_ocioso(medicos, tiempos) {
+        if (document.getElementById("containerChartOcioso") != null) {
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'containerChartOcioso',
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: medicos,
+                    crosshair: true,
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    startOnTick: false,
+                    endOnTick: false,
+                    title: {
+                        text: 'Minutos'
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.1,
+                        borderWidth: 0,
+                        pointWidth: 10
+                    }
+                },
+                series: [{
+                    name: 'Promedio',
+                    showInLegend: false,
+                    data: tiempos
+
+                }]
+            });
+        }
+    }
+
+    function armarArrayPromedioOcioso(lista, columna) {
+        var newArray = [];
+        for (var i = 0; i < lista.Data.length; i++) {
+            var x = lista.Data[i];
+
+            if (columna == 0) {
+                newArray.push(x.Medico);
+            } 
+            else {
+                newArray.push(x.TiempoPromedioOcioso);
+            }
+        }
+        return newArray;
+    }
+
+
+    function create_Tiempos(cantidad) {
+        if (document.getElementById("divTiempoDeEspera") != null) {
+            divTiempoDeEspera = {
+                id: "divTiempoDeEspera",
+                title: "Total Personas en Espera",
+                label: "Cantidad",
+                type: 2,
+                value: cantidad,
+                min: 0,
+                max: 40,
+                decPlaces: 0,
+                color: function () {
+                    if (Math.abs(this.value) >= 21) return Gauges.colors.danger;
+                    if (Math.abs(this.value) >= 11) return Gauges.colors.warning;
+                }
+            };
+            Gauges.add(divTiempoDeEspera);
+
+            Gauges.init();
+            Gauges.animate(-20, 0.5);
+        }
+    }
+
+    function cmbGrafico_onLoad() {
+        var comboboxGrafico = $('#cmbGrafico').data('tDropDownList');
+        var dataSource =
+            [
+                { Text: "Promedio Tiempo de Espera", Value: "1" },
+                { Text: "Promedio Tiempo de Atención", Value: "2" },
+                { Text: "Promedio Tiempo de Ocio", Value: "3" }
+            ];
+        comboboxGrafico.dataBind(dataSource);
+        comboboxGrafico.select(0);
+        
+        var combobox = $('#cmbMedico').data('tDropDownList');
+        combobox.select(1);
+    }
+
+    function cmbGrafico_OnChange() {
+        var valGrafico = $("#cmbGrafico").val();
+        var valMedico = $("#cmbMedico").val();
+        if (valGrafico != '' && valMedico != '') {
+            obtener_valores_pormedico_tiempodeespera(valMedico, valGrafico);
+        }
+    }
+
+    function cmbMedico_onChange() {
+        var valGrafico = $("#cmbGrafico").val();
+        var valMedico = $("#cmbMedico").val();
+        if (valGrafico != '' && valMedico != '') {
+            obtener_valores_pormedico_tiempodeespera(valMedico, valGrafico);
+        }
+    }
+
+    function getArraryUmbrales(umbral, cantidad) {
+        var array = [];
+        for (var i = 0; i < cantidad; i++) {
+            array.push(umbral);
+        }
+        return array;
+    }
+
+    function obtener_valores_pormedico_tiempodeespera(valMedico, valGrafico) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getPromedioTiempoDeEsperaPorMedico", "TableroComando")',
+            dataType: 'json',
+            data: {
+                usrMedico: valMedico,
+                grafico: valGrafico
+            },
+            success: function (respuesta) {
+                var arrayPromedioPorMedico = armarArray(respuesta, 1);
+                var arrayMaximoPorMedico = armarArray(respuesta, 2);
+                var arrayMinimoPorMedico = armarArray(respuesta, 3);
+                ArmarGraficoPorMedico(arrayPromedioPorMedico, arrayMaximoPorMedico, arrayMinimoPorMedico, valGrafico);
+            },
+            error: function (error) {
+                CerrarWaiting();
+                alert(error);
+            }
+        });
+    }
+
+    function armarArray(lista, columna) {
+        //Columnas: 1-Promedio; 2-Maximo; 3-Minimo
+        debugger;
+        var newArray = [];
+        var horaInicio = 7;
+        var horaFin = 18;
+        for (var i = 0; i < lista.Data.length; i++) {
+            var horaMedico = lista.Data[i].Hora;
+            if (columna == 1) {
+                var tiempo = lista.Data[i].TiempoPromedio;
+            }
+            else if (columna == 2) {
+                var tiempo = lista.Data[i].TiempoMaximo;
+            }
+            else {
+                var tiempo = lista.Data[i].TiempoMinimo;
+            }
+
+            //Tengo que completar la lista de horas, por ejemplo
+            //usuario                   hora    tiempoDeEspera
+            //CHIAVARINI MARCELO JUAN	9	36
+            //CHIAVARINI MARCELO JUAN	10	20
+            //CHIAVARINI MARCELO JUAN	11	39
+            //para las horas que faltan, a las que les debo poner 0
+            while (horaInicio <= horaFin) {
+                //Seguir aca
+                if (horaInicio != horaMedico) {
+                    newArray.push(0);
+                }
+                else {
+                    newArray.push(tiempo);
+                    horaInicio++;
+                    break;
+                }
+                horaInicio++;
+            }
+        }
+        while (horaInicio <= horaFin) { //si lo necesitase, completa las horas que no tiene valores
+            newArray.push(0);
+            horaInicio++;
+        }
+        return newArray;
+    }
+
+    function ArmarGraficoPorMedico(valores, maximo, minimo, umbral) {
+
+        var UmbralMinimoTiempoEspera = parseFloat("@(Umbral.TEsperaMin)");
+        var UmbralMaximoTiempoEspera = parseFloat("@(Umbral.TEsperaMax)");
+        var UmbralMinimoTiempoAtencion = parseFloat("@(Umbral.TAtencionMin)");
+        var UmbralMaximoTiempoAtencion = parseFloat("@(Umbral.TAtencionMax)");
+        var UmbralMinimoTiempoOcioso = parseFloat("0");
+        var UmbralMaximoTiempoOcioso = parseFloat("0");
+
+        if (umbral == '1') {
+            UmbralInicial = getArraryUmbrales(UmbralMinimoTiempoEspera, 12);
+            UmbralFinal = getArraryUmbrales(UmbralMaximoTiempoEspera, 12);
+        } else if (umbral == '2') {
+            UmbralInicial = getArraryUmbrales(UmbralMinimoTiempoAtencion, 12);
+            UmbralFinal = getArraryUmbrales(UmbralMaximoTiempoAtencion, 12);
+        } else {
+            UmbralInicial = getArraryUmbrales(UmbralMinimoTiempoOcioso, 12);
+            UmbralFinal = getArraryUmbrales(UmbralMaximoTiempoOcioso, 12);
+        }
+
+        if (valores == '') {
+            valores = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'];
+        }
+        if (document.getElementById("container") != null) {
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    type: "line",
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['07', '08', '09', '10', '11', '12',
+                        '13', '14', '15', '16', '17', '18'],
+                    title: {
+                        text: "Hora"
+                    }
+                },
+                yAxis: {
+                    minPadding: 0,
+                    maxPadding: 0,
+                    min: 0,
+                    minRange: 0.1,
+                    title: {
+                        text: "Minutos"
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        lineWidth: 1,
+                        softThreshold: false
+                    }
+                },
+
+                series: [{
+                    name: "Promedio",
+                    data: valores,
+                    showInLegend: false,
+                }, {
+                    name: "Mínimo",
+                    data: minimo,
+                    showInLegend: false,
+                }, {
+                    name: "Máximo",
+                    data: maximo,
+                    showInLegend: false,
+                }]
+            });
+        }
+    }
+
+    function cmbCantAtenciones_onLoad() {
+        var comboboxGrafico = $('#cmbCantAtenciones').data('tDropDownList');
+        var dataSource =
+            [
+                { Text: "Médico", Value: "1" },
+                { Text: "Especialidad", Value: "2" }
+            ];
+        comboboxGrafico.dataBind(dataSource);
+        comboboxGrafico.select(0);
+    }
+
+    function cmbCantAtenciones_OnChange() {
+        var valGrafico = $("#cmbCantAtenciones").val();
+        if (valGrafico != '') {
+            obtener_valores_cantidad_atenciones_por_grafico(valGrafico);
+        }
+    }
+
+    function obtener_valores_cantidad_atenciones_por_grafico(grafico) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getCantidadDeAtencionesPorTipoGrafico", "TableroComando")',
+            dataType: 'json',
+            data: {
+                grafico: grafico
+            },
+            success: function (respuesta) {
+                //Seguir aca, debo armar los array dependiendo del tipo de grafico asi lo armo y lo tiro al chart
+                if (respuesta.Data.length > 0) {
+                    if (grafico == '1') {
+                        var arrayEjeX = armarArrayCantidadDeAtenciones(respuesta, 0, 'medico');
+                    }
+                    else {
+                        var arrayEjeX = armarArrayCantidadDeAtenciones(respuesta, 0, 'especialidad');
+                    }
+                    var arrayValores = armarArrayCantidadDeAtenciones(respuesta, 1, '');
+                    create_barras_cantidad_atenciones(arrayEjeX, arrayValores);
+                }
+            },
+            error: function (error) {
+                CerrarWaiting();
+                alert(error);
+            }
+        });
+    }
+
+    function armarArrayCantidadDeAtenciones(lista, columna, descripcion) {
+        var newArray = [];
+        for (var i = 0; i < lista.Data.length; i++) {
+            var x = lista.Data[i];
+
+            if (columna == 0) {
+                if (descripcion == 'medico') {
+                    newArray.push(x.Medico);
+                }
+                else {
+                    newArray.push(x.Especialidad);
+                }
+            }
+            else {
+                newArray.push(x.Cantidad);
+            }
+        }
+        return newArray;
+    }
+
+    function dtFechaDesde_OnLoad() {
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+
+        var dateInicial = "@(DateTime.Now.AddDays(-180).Date.ToString("dd/MM/yyyy"))";
+        dsplit = dateInicial.split("/");
+        var dInicial = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+
+        dpDesde.value(dInicial);
+    }
+
+    function dtFechaDesde_OnClose() {
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        var fAux = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        dsplit = fAux.split("/");
+        var fActual = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+           
+        fAux = "@(DateTime.Now.AddDays(-365).Date.ToString("dd/MM/yyyy"))";
+        dsplit = fAux.split("/");
+        var fLimite = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+
+        if (fDesde.value() > fActual) {
+            fDesde.value(fActual);
+        }
+
+        if (fDesde.value() < fLimite) {
+            fDesde.value(fLimite);
+        }
+
+        if (fDesde.value() > fHasta.value()) {
+            fDesde.value(fHasta.value());
+        }
+    }
+
+    function dtFechaHasta_OnClose() {
+        debugger;
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        var fAux = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        dsplit = fAux.split("/");
+        var fActual = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+
+        if (fHasta.value() > fActual) {
+            fHasta.value(fActual);
+        }
+
+        if (fHasta.value() < fDesde.value()) {
+            fHasta.value(fDesde.value());
+        }
+    }
+
+    function OnDataBinding_gridTop5PatPorEsp(args) {
+        //var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        //var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        var espId = $("#cmbEspecialidad").val();
+        var desde = $('#dtFechaDesde').val();
+        var hasta = $('#dtFechaHasta').val();
+
+        args.data = $.extend(args.data, { _espId: espId, _fDesde: desde, _fHasta: hasta });
+    }
+
+    function onCommand_RefreshDatosRanking() {
+        var dpDesde = $('#dtFechaDesde').val();
+        var dpHasta = $('#dtFechaHasta').val();
+        var espId = $("#cmbEspecialidad").val();
+        //if (dpDesde > dpHasta) {
+        //    jAlert("Rango de fecha Incorrecto.", "Error...");
+        //    return;
+        //}
+        AbrirWaiting();
+        $("#gridTop5PatPorEsp").data("tGrid").ajaxRequest();
+    }
+
+    function OnComplete_gridTop5PatPorEsp() {
+        CerrarWaiting();
+    }
+
+    function OnRowSelected_gridTop5PatPorEsp(e) {
+        var row = e.row;
+        var grid = $(this).data("tGrid");
+        var dataItem = grid.dataItem(row);
+        diagId = dataItem.diagId;
+        CargarComboGraficoPatologias();
+    }
+
+    function CargarComboGraficoPatologias() {
+        var comboboxGrafico = $('#cmbGraficoPatologia').data('tDropDownList');
+        var dataSource =
+            [
+            ];
+        var dataSource =
+            [
+                { Text: "Temporal Mensual", Value: "1" },
+                { Text: "Agrupado por Departamentos", Value: "2" },
+            ];
+        comboboxGrafico.dataBind(dataSource);
+        comboboxGrafico.select(-1);
+    }
+
+    function cmbGraficoPatologia_onLoad() {
+        CargarComboGraficoPatologias();
+        inicializarGraficosPatologias();
+    }
+
+    function inicializarGraficosPatologias() {
+        $('#charPatologiasSeleccionadas').Highcharts().destroy();
+    }
+
+    function cmbGraficoPatologia_OnChange() {
+        var valGrafico = $("#cmbGraficoPatologia").val();
+        if (valGrafico != '') {
+            buscarDatosGraficoPatologias(valGrafico);
+            //armarGraficoDePatologias(valGrafico);
+        }
+    }
+
+    function buscarDatosGraficoPatologias(grafico) {
+        var espId = $("#cmbEspecialidad").val();
+        var desde = $('#dtFechaDesde').val();
+        var hasta = $('#dtFechaHasta').val();
+        var diagIdSele = diagId;
+        if (diagIdSele != "") {
+            if (grafico == "1") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("getPatologiasAcumuladasPorMes", "TableroComando")',
+                dataType: 'json',
+                data: {
+                    _espId: espId,
+                    _fDesde: desde,
+                    _fHasta: hasta,
+                    _diagId: diagIdSele
+                },
+                success: function (respuesta) {
+                    //Debo armar el primer array con los meses del grafico
+                    //Luego, debo armar dos array, uno con los periodos mensuales indicados por fechaDesde y fechaHasta, y otro con igual periodo pero del año anterior
+                    if (respuesta.Data.length > 0) {
+                        var arrayMeses = armarArrayPatologiasAcuPorMes_Meses(respuesta, desde, hasta);
+                        var array1 = armarArrayPatologiasAcuPorMes(1, respuesta, desde, hasta);
+                        var array2 = armarArrayPatologiasAcuPorMes(2, respuesta, desde, hasta);
+                        armarGraficoDePatologias(grafico, arrayMeses, array1, array2);
+                    }
+                },
+                error: function (error) {
+                    CerrarWaiting();
+                    alert(error);
+                }
+            });
+        }
+        else {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("getPatologiasPorDepartamento", "TableroComando")',
+                    dataType: 'json',
+                    data: {
+                        _espId: espId,
+                        _fDesde: desde,
+                        _fHasta: hasta,
+                        _diagId: diagIdSele
+                    },
+                    success: function (respuesta) {
+                        //Seguir aca, debo armar los array dependiendo del tipo de grafico asi lo armo y lo tiro al chart
+                        if (respuesta.Data.length > 0) {
+                            var array = armarArrayPatologiasPorDepartamento(respuesta);
+                            armarGraficoDePatologias(grafico, array);
+                        }
+                    },
+                    error: function (error) {
+                        CerrarWaiting();
+                        alert(error);
+                    }
+                });
+            }
+        }
+    }
+
+    function armarArrayPatologiasAcuPorMes_Meses(lista, desde, hasta) {
+        var newArray = [];
+        for (var i = 0; i < lista.Data.length; i++) {
+            var dsplit = lista.Data[i].Periodo.split("-");
+            var nuevoPeriodo = new Date(dsplit[0], dsplit[1] - 1, dsplit[2]);
+            dsplit = desde.split("/");
+            var _desde = new Date(dsplit[2], dsplit[1] - 1, '01');
+            dsplit = hasta.split("/");
+            var _hasta = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+            if (nuevoPeriodo >= _desde && nuevoPeriodo <= _hasta) {
+                newArray.push(lista.Data[i].Periodo);
+            }
+        }
+        return newArray;
+    }
+
+    function armarArrayPatologiasAcuPorMes(orden, lista, desde, hasta) {
+        var dsplit = desde.split("/");
+        var _desde = new Date(dsplit[2], dsplit[1] - 1, '01');
+        dsplit = hasta.split("/");
+        var _hasta = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+        var newArray = [];
+        if (orden == 1) {//Primer periodo
+            for (var i = 0; i < lista.Data.length; i++) {
+                var dsplit = lista.Data[i].Periodo.split("-");
+                var nuevoPeriodo = new Date(dsplit[0], dsplit[1] - 1, dsplit[2]);
+                if (nuevoPeriodo < _desde) {
+                    newArray.push(lista.Data[i].Cantidad);
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < lista.Data.length; i++) {
+                var dsplit = lista.Data[i].Periodo.split("-");
+                var nuevoPeriodo = new Date(dsplit[0], dsplit[1] - 1, dsplit[2]);
+                if (nuevoPeriodo >= _desde) {
+                    newArray.push(lista.Data[i].Cantidad);
+                }
+            }
+        }
+        return newArray;
+    }
+
+    function armarArrayPatologiasPorDepartamento(lista) {
+        var newArray = [];
+        for (var i = 0; i < lista.Data.length; i++) {
+            var newArrayI = [];
+            newArrayI[0] = lista.Data[i].DepNombre;
+            newArrayI[1] = lista.Data[i].Promedio;
+            newArray.push(newArrayI);
+        }
+        return newArray;
+    }
+
+    var charPatologiasSeleccionadas = "";
+
+    function armarGraficoDePatologias(grafico, array, array1, array2) {
+        debugger;
+        if (grafico == "1") {
+            charPatologiasSeleccionadas = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'containerPatologiasSeleccionadas',
+                    type: "line",
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: array,
+                    title: {
+                        text: "Período"
+                    }
+                },
+                yAxis: {
+                    minPadding: 0,
+                    maxPadding: 0,
+                    min: 0,
+                    minRange: 0.1,
+                    title: {
+                        text: "Total"
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        lineWidth: 1,
+                        softThreshold: false
+                    }
+                },
+
+                series: [{
+                    name: "Actual",
+                    data: array2,
+                    showInLegend: false,
+                }, {
+                    name: "Pasado",
+                    data: array1,
+                    showInLegend: false,
+                }]
+            });
+        }
+        else {
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'containerPatologiasSeleccionadas',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.point.name + '</b>: ' + this.y.toFixed(2) + ' %';
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Porcentaje',
+                    colorByPoint: true,
+                    data: array
+                    //data: [{
+                    //    name: 'Microsoft Internet Explorer',
+                    //    y: 56.33
+                    //}, {
+                    //    name: 'Chrome',
+                    //    y: 24.03,
+                    //    sliced: true,
+                    //    selected: true
+                    //}, {
+                    //    name: 'Firefox',
+                    //    y: 10.38
+                    //}, {
+                    //    name: 'Safari',
+                    //    y: 4.77
+                    //}, {
+                    //    name: 'Opera',
+                    //    y: 0.91
+                    //}, {
+                    //    name: 'Proprietary or Undetectable',
+                    //    y: 0.2
+                    //}]
+                }]
+            });
+        }
+    }
+
+</script>
+
+
+
+<div class="BordeRedondeado" style="background-color: white; border-color: whitesmoke;">
+    <div style="padding: 5px;">
+        <div class="row right">
+            <div class="dial small" id="divTiempoDeEspera">
+                <div class="dial-title">Total Personas en Espera</div><canvas width="134" height="100"></canvas>
+                <div class="dial-label">Cantidad</div>
+            </div>
+            <div class="dial small" id="divRanking" style="width: 400px !important; margin-bottom: 5px;">
+                <div class="dial-title">Ranking en Espera (en minutos)</div>
+                <table id="tblCantidad" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td colspan="3" style="background-color: whitesmoke; width: 200px; text-align: center;"><b><span style="font-weight: bold;">Nombre</span></b></td>
+                        <td colspan="3" style="background-color: whitesmoke; width: 130px; text-align: center;"><b><span style="font-weight: bold;">Especialidad</span></b></td>
+                        <td colspan="3" style="background-color: whitesmoke; width: 70px; text-align: center;"><b><span style="font-weight: bold;">Minutos</span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="3" style="text-align: center;"><b><span id="Nombre1" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Especialidad1" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Cantidad1" style="font-weight: normal;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="3" style="text-align: center;"><b><span id="Nombre2" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Especialidad2" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Cantidad2" style="font-weight: normal;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="3" style="text-align: center;"><b><span id="Nombre3" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Especialidad3" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Cantidad3" style="font-weight: normal;"></span></b></td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="3" style="text-align: center;"><b><span id="Nombre4" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Especialidad4" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Cantidad4" style="font-weight: normal;"></span></b></td>                        
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="3" style="text-align: center;"><b><span id="Nombre5" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Especialidad5" style="font-weight: normal;"></span></b></td>
+                        <td colspan="3" style="text-align: center;"><b><span id="Cantidad5" style="font-weight: normal;"></span></b></td>                        
+                    </tr>
+                </table>
+            </div>
+            <div class="dial small" id="divAgrupadosPorMedico" style="width: 675px !important; margin-bottom: 5px;">
+                <div class="dial-title">Agrupados por Médico</div>
+                <table id="tblAgrupadoPorMedico" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none;">Médico:</td>
+                        <td style="border: none;">
+                            @(Html.Telerik().DropDownList()
+                            .Name("cmbMedico")
+                            .SelectedIndex(0)
+                            .DataBinding(dataBinding => dataBinding
+                                    //Ajax binding
+                                    .Ajax()
+                                        //The action method which will return JSON
+                                        .Select("cargaComboEspecialistas", "TableroComando")
+                            )
+                            .HtmlAttributes(new {style = "text-align:left; width: 290px"})
+                            .HiddenInputHtmlAttributes(new {data_field = "UsuarioMedico"})
+                            .ClientEvents(events => events.OnChange("cmbMedico_onChange"))
+                            )
+                        </td>
+                        <td style="border: none;width: 100px;text-align: right;">Gráfico:</td>
+                        <td style="border: none;">
+                            @(Html.Telerik().DropDownList()
+                            .Name("cmbGrafico")
+                            .SelectedIndex(0)
+                            .HtmlAttributes(new {style = "text-align:left; width: 200px"})
+                            .ClientEvents(events => events.OnLoad("cmbGrafico_onLoad").OnChange("cmbGrafico_OnChange"))
+                                )
+                        </td>
+                    </tr>
+                </table>
+                <div id="container" style="width: 650px; height: 150px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="row right">
+            <div class="dial small" id="divPromedioOcioso" style="width: 616px !important; margin-bottom: 5px;">
+                <div class="dial-title">Promedio de Minutos Ociosos por Médico</div>
+                <div id="containerChartOcioso" style="min-width: 310px; height: 150px; margin: 0 auto; margin-top: 20px"></div>
+            </div>
+            <div class="dial small" id="divCantidadDeAtenciones" style="width: 675px !important; margin-bottom: 5px;">
+                <div class="dial-title">Cantidad de Atenciones</div>
+                <table id="tblCantidadDeAtenciones" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none;">Agrupado por:</td>
+                        <td style="border: none;">
+                            @(Html.Telerik().DropDownList()
+                            .Name("cmbCantAtenciones")
+                            .SelectedIndex(0)
+                            .HtmlAttributes(new {style = "text-align:left; width: 252px"})
+                            .ClientEvents(events => events.OnLoad("cmbCantAtenciones_onLoad").OnChange("cmbCantAtenciones_OnChange"))
+                                )
+                        </td>
+                    </tr>
+                </table>
+                <div id="containerAtencionesPorMedico" style="min-width: 310px; height: 150px; margin: 0 auto; margin-top: 20px"></div>
+            </div>
+        </div>
+        <div class="row right">
+            <div class="dial small" id="divejemplo" style="width: 1298px !important; margin-bottom: 5px;height: 34px">
+                <table id="tblLeyenda" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none;">Próxima actualización:</td>
+                        <td id="timer" class="center"></td>
+                        <td style="text-align: center;">
+                            <label class="t-button">
+                                <img class="t-icon t-refresh" onclick="onCommand_RefreshDatosTablero(this);" title="Recargar datos del tablero."/>
+                            </label>
+                        </td>
+                        <td style="text-align: center;">
+                            @Html.CheckBox("chkHabilitarRefresh", true, new { onchange = "OnChange_chkHabilitarRefresh(this)" })
+                        </td>
+                        <td id="textoCheckBox" style="border: none;">Refresco de datos habilitado.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row right" style="height: 340px;">
+            <div class="dial small" id="divConsultaPatologias" style="width: 616px !important; margin-bottom: 5px;height: 340px;">
+                <div class="dial-title">Consulta de Patologías frecuentes</div>
+                <table id="tblConsultaPatologias" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none;">Especialidad:</td>
+                        <td style="border: none;">
+                            @(Html.Telerik()
+                            .DropDownList()
+                            .Name("cmbEspecialidad")
+                            .SelectedIndex(0)
+                            .BindTo((List<SelectListItem>) ViewData["Especialidades"])
+                            .HtmlAttributes(new {style = "text-align:left;width: 190px;"})
+                            .HiddenInputHtmlAttributes(new {data_field = "espId"}))
+                        </td>
+                        <td style="border: none;">Desde:</td>
+                        <td style="border: none;">
+                            @{ Html.Telerik().DatePicker()
+                                   .Name("dtFechaDesde")
+                                   .Value(DateTime.Now)
+                                   .ShowButton(true)
+                                   .OpenOnFocus(true)
+                                   .HtmlAttributes(new { style = "width: 90px;" })
+                                   .TodayButton()
+                                   .ClientEvents(events => events.OnClose("dtFechaDesde_OnClose").OnLoad("dtFechaDesde_OnLoad"))
+                                   .Render();
+                                //.HtmlAttributes(new { id = "dtFechaTurno"})
+                            }
+                        </td>
+                        <td style="border: none;">Hasta:</td>
+                        <td style="border: none;">
+                            @{ Html.Telerik().DatePicker()
+                                   .Name("dtFechaHasta")
+                                   .Value(DateTime.Now)
+                                   .ShowButton(true)
+                                   .OpenOnFocus(true)
+                                   .HtmlAttributes(new { style = "width: 90px;" })
+                                   .ClientEvents(events => events.OnClose("dtFechaHasta_OnClose"))
+                                   .TodayButton()
+                                   .Render(); }
+                        </td>
+                        <td style="text-align: center;">
+                            <label class="t-button">
+                                <img class="t-icon t-refresh" onclick="onCommand_RefreshDatosRanking(this);" title="Recargar datos del Ranking."/>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+                @(Html.Telerik().Grid<getDatosTableroDeComandoDCRM_Top10_Result>()
+                      .Name("gridTop5PatPorEsp")
+                      .DataKeys(keys =>
+                      {
+                          keys.Add(p => p.diagId);
+                      })
+                      .Localizable("es-AR")
+                      .DataBinding(dataBinding =>
+                      {
+                          dataBinding.Ajax()
+                              .Select("cargaTop5PatologiasPorEspecialidad", "TableroComando");
+                      })
+                      .Columns(columns =>
+                      {
+                          columns.Bound(c => c.diagDescripcion).Width("300px").Title("Patología").Filterable(true).Visible(true);
+                          columns.Bound(c => c.Cantidad).Width("100px").Title("Cantidad").Visible(true).Filterable(true);
+                          columns.Bound(c => c.diagId).Width("300px").Title("Patología").Filterable(true).Visible(false);
+                          columns.Bound(c => c.Especialidad).Width("100px").Title("Cantidad").Visible(false).Filterable(true);
+                          columns.Bound(c => c.espId).Width("100px").Title("Cantidad").Visible(false).Filterable(true);
+                      })
+                      //.Editable(editing => editing
+                      //    .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+                      //.Pageable((paging) =>
+                      //    paging.Enabled(true)
+                      //        .PageSize(((int) Session["FilasPorPagina"])))
+                      //.Footer(true)
+                      .Filterable()
+                      .Selectable()
+                      .ClientEvents(events =>events.OnDataBinding("OnDataBinding_gridTop5PatPorEsp").OnComplete("OnComplete_gridTop5PatPorEsp").OnRowSelect("OnRowSelected_gridTop5PatPorEsp"))
+                      .Resizable(resizing => resizing.Columns(true))
+                      .Scrollable(scroll => scroll.Enabled(true).Height(((int) Session["AlturaGrilla"])))
+                      .Sortable()
+                      )
+            </div>
+            <div class="dial small" id="divGraficasPatologiasSeleccionadas" style="width: 675px !important; margin-bottom: 5px;height: 340px;">
+                <div class="dial-title">Gráficas por Patologías</div>
+                <table id="tblGraficasPatologiasSeleccionadas" style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none;">Tipo de Gráfico:</td>
+                        <td style="border: none;">
+                            @(Html.Telerik().DropDownList()
+                            .Name("cmbGraficoPatologia")
+                            .SelectedIndex(0)
+                            .HtmlAttributes(new {style = "text-align:left; width: 240px"})
+                            .ClientEvents(events => events.OnLoad("cmbGraficoPatologia_onLoad").OnChange("cmbGraficoPatologia_OnChange"))
+                                )
+                        </td>
+                    </tr>
+                </table>
+                <div id="containerPatologiasSeleccionadas" style="width: 650px; height: 280px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+</div>

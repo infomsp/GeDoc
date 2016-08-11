@@ -1,0 +1,104 @@
+@model GeDoc.catProveedorRubroWS
+
+@{
+    ViewData["StyleAutoComplete"] = "width: 368px;";
+}
+<script type="text/javascript">
+    function onAceptarcatProveedorRubro() {
+        if ($("#prAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatProveedorRubro').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatProveedorRubro');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatProveedorRubro").data("tGrid").ajaxRequest();
+                    $("#gridcatProveedor").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatProveedorRubro').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarcatProveedorRubro() {
+        var windowElement = $('#wCRUDcatProveedorRubro').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatProveedorRubro", "catProveedor", FormMethod.Post, new { id = "frmcatProveedorRubro" }))
+{
+    <div id="divGridPrincipalcatProveedorRubro" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="color: white;">
+            RUBRO
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 93%; height: 87%;">
+            <div>
+                @Html.EditorFor(model => Model.prRubro, "", "prRubro")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatProveedorRubro();" title="@(Model.prAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarOferta" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatProveedorRubro();" title="Cancelar" style="@(Model.prAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarOferta" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.prAccion, new { style = "width: 200px; display: none;", id = "prAccion" })
+        @Html.HiddenFor(model => Model.prprovId, new { style = "width: 200px; display: none;", id = "prprovId" })
+        @Html.HiddenFor(model => Model.prId, new { style = "width: 200px; display: none;", id = "prId" })
+        <input type="hidden" id="prRubroAuxiliar" value="@(Model.prRubro)" />
+    </div>
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatProveedorRubro").ready(function () {
+        //Aplicamos algunos estilos
+        $("#prAccion").attr("style", "display: none;");
+        $("#prprovId").attr("style", "display: none;");
+        $("#prId").attr("style", "display: none;");
+        $("#prRubro").val($("#prRubroAuxiliar").val());
+        
+        //Asignamos los valores de los campos\\
+        if ($("#prAccion").val() == "Consultar" || $("#prAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+        
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+    });
+
+</script>

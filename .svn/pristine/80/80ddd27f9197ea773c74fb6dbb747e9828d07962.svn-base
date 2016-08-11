@@ -1,0 +1,54 @@
+﻿<script type="text/javascript">
+    function cbxMotivoBloqueo_Changed(e) {
+        var selectedIndex = $("#cbxMotivoBloqueo").data("tComboBox").selectedIndex;
+        if( validSelection(selectedIndex)){
+            $("#mbt-okbutton").prop("disabled", false).removeClass("t-state-disabled");
+
+        }else{
+            $("#mbt-okbutton").prop("disabled", true).addClass("t-state-disabled");
+        }
+        
+    }
+
+    function validSelection(selectedIndex) {
+        return selectedIndex >= 0 ? true : false;
+    }
+
+    function mtb_accepted() {
+        var tmbId = $("#cbxMotivoBloqueo").data("tComboBox").value();
+        $.post("@Url.Content("~/catTurno/setMotivoBloqueoTurno")", { _turId: _DatosRegistroTurno.turId, _tmbId: tmbId }, function (d) {
+            $("#wMotivoBloqueo").data("tWindow").close();
+            if (d) {
+                $("#gridTurnos").data("tGrid").rebind();
+            } else {
+                jAlert("La operación no pudo completarse. Intente refrescar la pagina y vuelva a intentarlo.", "Error");
+            }          
+        });
+    }
+
+    function mtb_cancel() {
+        $("#wMotivoBloqueo").data("tWindow").close();
+    }
+</script>
+<span style="margin:8px;display:block;text-align: center;">Seleccione el <b>motivo</b> por el cual el turno va a ser bloqueado:</span>
+@(
+Html.Telerik().ComboBox()
+.Name("cbxMotivoBloqueo")
+.OpenOnFocus(true)
+.AutoFill(true)
+.Filterable(filtering =>
+{
+    filtering.FilterMode(AutoCompleteFilterMode.Contains);
+})
+.HighlightFirstMatch(true)
+.SelectedIndex(-1)
+.HtmlAttributes(new { style = "width: 300px; display: block; margin: auto;" })
+//.DropDownHtmlAttributes(new { style = "width:Auto;" })
+.BindTo((SelectList)ViewData["motivoBloqueo_Data"])
+.ClientEvents(e => e.OnChange("cbxMotivoBloqueo_Changed").OnClose("cbxMotivoBloqueo_Changed"))
+)
+
+<div style="margin:10px;text-align: center;">
+    <input id="mbt-okbutton" disabled="disabled" type="button" class="t-button t-state-disabled" value="Aceptar" onclick="mtb_accepted()"/>
+    <input type="button" class="t-button" value="Cancelar" onclick="mtb_cancel()"/>
+</div>

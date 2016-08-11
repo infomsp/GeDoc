@@ -1,0 +1,310 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+<script>
+    function formatoFecha(date, format) {
+        format = format || '{0:d}';
+        return $.telerik.formatString(format, date);
+    }
+
+    function onComplete_JuntaMedicaGestionCMEspecial(e) {
+        debugger;
+        if (e.name != "update" && e.name != "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function onActivate_wCRUDJuntaMedicaGestionCMEspecial() {
+        //AbrirWaitingCRUD();
+    }
+
+    function onLoad_wCRUDJuntaMedicaGestionCMEspecial() {
+        var wGestionCM = $(this).data("tWindow");
+        var wContenido = wGestionCM.content() + "<div id = 'divCRUDJuntaMedicaGestionCM_Content' ></div>";
+        wGestionCM.content(wContenido);
+    }
+
+    function onDataBinding_JuntaMedicaGestionCMEspecial(args) {
+        AbrirWaiting();
+        debugger;
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        var FechaDesde = $('#dtFechaDesde').val();//formatoFecha(dpDesde.value(), "{0:d}");
+        var FechaHasta = $('#dtFechaHasta').val();//formatoFecha(dpHasta.value(), "{0:d}");
+
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+
+            args.preventDefault();
+            args.stopPropagation();
+            return;
+        }
+
+        args.data = $.extend(args.data, { minId: $("#minId_Lista").val(), FechaDesde: FechaDesde, FechaHasta: FechaHasta, TipoFecha: $('#TipoFecha:checked').val() });
+    }
+
+    function onCommand_RefreshGestionCMEspecial() {
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+            return;
+        }
+
+        $("#gridGestionCMEspecial").data("tGrid").ajaxRequest();
+    }
+
+    function onExportar() {
+        var grid = $("#gridGestionCMEspecial").data('tGrid');
+        _OrderBy = (grid.orderBy || '~');
+        _FilterBy = (grid.filterBy || '~');
+        window.open(GetPathApp("JuntaMedica/ExportarEspecial") + "?Filtro=" + _FilterBy + "&Orden=" + _OrderBy);
+    }
+
+    function onEjecutaAccionGestionCMEspecial(pAccion, cmId) {
+        switch (pAccion) {
+        case "Agregar":
+            var wGestionCM = $("#wCRUDJuntaMedicaGestionCM").data("tWindow");
+            wGestionCM.center().open().title(pAccion + " Carta Médica");
+            var _Post = GetPathApp("DCRM/SolicitudDeCartaMedica");
+            $.ajax({
+                type: "POST",
+                url: _Post,
+                error: function () {
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                },
+                success: function (respuesta) {
+                    if (respuesta != null) {
+                        $("#divCRUDJuntaMedicaGestionCM_Content").html(respuesta);
+                    }
+                }
+            });
+            return;
+        }
+
+        var wGestionCM = $("#wCRUDJuntaMedicaGestionCM").data("tWindow");
+        wGestionCM.center().open().title(pAccion + " Carta Médica");
+        var _Post = GetPathApp("JuntaMedica/getDatosGestionCM");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { cmedId: cmId, pAccion: pAccion },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta != null) {
+                    $("#divCRUDJuntaMedicaGestionCM_Content").html(respuesta);
+                }
+            }
+        });
+    }
+
+    function onCommand_JuntaMedicaGestionCMEspecial(e) {
+        switch (e.name) {
+        case "cmdEliminar":
+            onEjecutaAccionGestionCMEspecial("Eliminar", e.dataItem["cmedId"]);
+
+            e.preventDefault();
+            e.stopPropagation();
+            break;
+        case "cmdConsultar":
+            if (e.dataItem["licFechaFinal"] == null) {
+                jAlert('La carta médica seleccionada no tiene aprobada la Licencia Médica', '¡Atención!');
+                return;
+            }
+
+            var _Parametros = new Array(new Array(e.dataItem["cmedId"] * -1, 'licenciaId'));
+            InvocarReporte('ComprobanteLicencia', _Parametros, true);
+
+            e.preventDefault();
+            e.stopPropagation();
+            break;
+        }
+    }
+
+</script>
+@(Html.Telerik().Grid<getListaCMGestion_Result>()
+      .Name("gridGestionCMEspecial")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.cmedId);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+<!-- Fin de Filtros -->
+              <div class="BordeRedondeado" style="border-color: #999;">
+                    <table style="border: none;">
+                        <tr style="border: none;">
+                            <td style="border: none;">Ministerio:</td>
+                            <td style="border: none;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "minId_Lista#NO#320px")
+                            </td>
+                            <td>
+                                <table style="border: none;">
+                                    <tr style="border: none;">
+                                        <td colspan="4" style="text-align: left;">
+                                            <div>
+                                                <input type="radio" name="TipoFecha" id="TipoFecha" value="FC" checked>Filtrar por Fecha de Solicitud
+                                            </div>
+                                            <div>
+                                                <input type="radio" name="TipoFecha" id="TipoFecha" value="FL">Filtrar por Fecha de Licencia
+                                            </div>
+                                            <div>
+                                                <input type="radio" name="TipoFecha" id="TipoFecha" value="FE">Filtrar por Fecha de Último Cambio
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: none;"><label>Desde:</label></td>
+                                        <td style="border: none;">
+                                            @(Html.Telerik().DatePicker()
+                                                  .Name("dtFechaDesde")
+                                                  .Value(DateTime.Now)
+                                                  .ShowButton(true)
+                                                  .OpenOnFocus(true)
+                                                  .TodayButton())
+                                        </td>
+                                        <td style="border: none;"><label>Hasta:</label></td>
+                                        <td style="border: none;">
+                                            @(Html.Telerik().DatePicker()
+                                                  .Name("dtFechaHasta")
+                                                  .Value(DateTime.Now)
+                                                  .ShowButton(true)
+                                                  .OpenOnFocus(true)
+                                                  .TodayButton())
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="text-align: center;">
+                                <label class="t-button">
+                                    <img class="t-icon t-refresh" onclick="onCommand_RefreshGestionCMEspecial(this);" title="Recargar lista de Cartas Médicas"/>
+                                </label>
+                                <label class="t-button">
+                                    <img class="t-icon t-add" onclick="onEjecutaAccionGestionCMEspecial('Agregar', -1);" title="Agregar Carta Médica"/>
+                                </label>
+                                <label class="t-button" title="Exportar listado a Excel" onclick="onExportar();">
+                                    <img class="t-icon" src="@Url.Content("~/Content/General/Vacio-Transparente.png")" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Excel.png') no-repeat 0px 0px; vertical-align: middle;"/>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+              </div>
+<!-- Fin de Filtros -->
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getListadoDeCartasGestionCMEspecial", "JuntaMedica", new { minId = 0, FechaDesde = DateTime.Now, FechaHasta = DateTime.Now });
+      })
+      .Columns(columns =>
+      {
+          columns.Command(commands =>
+          {
+              //commands.Custom("cmdEliminar")
+              //    .Ajax(true)
+              //    .ButtonType(GridButtonType.Image)
+              //    .SendDataKeys(false)
+              //    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -16px -337px;", title = "Eliminar carta médica" })
+              //    .HtmlAttributes(new {style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Eliminar")})
+              //    .SendState(false)
+              //    .DataRouteValues(route =>
+              //    {
+              //        route.Add(o => o.cmedId).RouteKey("cmedId");
+              //    });
+              commands.Custom("cmdConsultar")
+                  .Ajax(true)
+                  .ButtonType(GridButtonType.Image)
+                  .SendDataKeys(false)
+                  .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Acuse de Recibo de licencia médica" })
+                  //.HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Examinar") })
+                  .SendState(false)
+                  .DataRouteValues(route =>
+                  {
+                      route.Add(o => o.cmedId).RouteKey("cmedId");
+                  });
+          }).Width("80px").Title("Acciones");
+          columns.Bound(c => c.estEstado).Width("25px").Title("").Filterable(false).Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+              .ClientTemplate("<div title='<#= estEstado == \"AL\" || estEstado == \"AA\" || estEstado == \"AN\" ? EstadoCM : \"\" #>' style='width: 100%; text-align: left;'><img src='" + Url.Content("~/Content") + "/Estados/<#= estEstado == \"AL\" ? \"Verde-2.png\" : (estEstado == \"AA\" ? \"Naranja-2.png\" : (estEstado == \"AN\" ? \"Rojo(2).png\" : \"Gris-E.png\")) #>' height='10px' width='10px' style='margin-right: 5px; <#= estEstado == \"AL\" || estEstado == \"AA\" || estEstado == \"AN\" ? \"\" : \"display: none;\" #>' /></div>");
+          columns.Bound(c => c.cmedOrdenRecepcion).Width("50px").Title("Orden").Visible(false);
+          columns.Bound(c => c.cmedId).Width("100px").Title("Id").Visible(false);
+          columns.Bound(c => c.cmedNumero).Width("130px").Title("Número de CM").Visible(true);
+          columns.Bound(c => c.cmedFecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+          columns.Bound(c => c.agtApellidoNombre).Width("300px").Title("Agente").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= agtApellidoNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= agtApellidoNombre #> </label>");
+          columns.Bound(c => c.agtDNI).Width("90px").Title("DNI").Visible(true);
+          columns.Bound(c => c.licFechaInicial).Width("100px").Title("Licencia desde").Format("{0:dd/MM/yyyy}").Visible(true);
+          columns.Bound(c => c.licCantidad).Width("80px").Title("Días de Lic.").Visible(true).Filterable(false);
+          columns.Bound(c => c.Articulo).Width("150px").Title("Artículo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= Articulo #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Articulo #></label>");
+          columns.Bound(c => c.agtLugarTrabajo).Width("300px").Title("Lugar de Trabajo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= agtLugarTrabajo #>' style='cursor: pointer;' style='white-space: nowrap;'><#= agtLugarTrabajo #> </label>");
+          columns.Bound(c => c.Ministerios).Width("300px").Title("Ministerio").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= Ministerios #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Ministerios #> </label>");
+          columns.Bound(c => c.Reparticiones).Width("300px").Title("Reparticiones").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= Reparticiones #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Reparticiones #> </label>");
+          columns.Bound(c => c.EstadoCM).Width("150px").Title("Estado").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= EstadoCM #>' style='cursor: pointer;' style='white-space: nowrap;'><#= EstadoCM #> </label>");
+          columns.Bound(c => c.estFecha).Width("120px").Format("{0:dd/MM/yyyy}").Title("Cambio de Estado").Visible(true);
+          columns.Bound(c => c.estFecha).Width("70px").Format("{0:hh:mm}").Title("Hora").Visible(true).Filterable(false);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnComplete("onComplete_JuntaMedicaGestionCMEspecial").OnCommand("onCommand_JuntaMedicaGestionCMEspecial").OnDataBinding("onDataBinding_JuntaMedicaGestionCMEspecial"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(((int) Session["AlturaGrilla"])))
+      .Sortable()
+      )
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDJuntaMedicaGestionCM")
+      .Title("Carta Médica")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Width(1024)
+      .Height(410)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDJuntaMedicaGestionCMEspecial").OnLoad("onLoad_wCRUDJuntaMedicaGestionCMEspecial"))
+      .Render();
+}
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    $("#minId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaMinisterios = $("#minId_Lista");
+    $ListaMinisterios.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+</script>

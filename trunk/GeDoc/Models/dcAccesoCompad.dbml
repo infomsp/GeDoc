@@ -1,0 +1,1180 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="CONPAD" Class="dcAccesoCompadDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=10.64.65.200\MSPSSQLEXP2008;Initial Catalog=CONPAD;Persist Security Info=True;User ID=sa" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CONPADConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.aatbl_PadronIngresoConCOB" Member="aatbl_PadronIngresoConCOBs">
+    <Type Name="aatbl_PadronIngresoConCOB">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="piActivo" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="piMotivoBaja" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="piFechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="piFechaBaja" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.zzRemediar" Member="zzRemediars">
+    <Type Name="zzRemediar">
+      <Column Name="Id_Persona" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="NombreBeneficiario" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="NumeroDeDocumento" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="TipoDeDocumento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FechaDeNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Sexo" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Mejor_idCap" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aatbl_PadronIngresoSinCOB" Member="aatbl_PadronIngresoSinCOBs">
+    <Type Name="aatbl_PadronIngresoSinCOB">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="piActivo" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="piMotivoBaja" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="piFechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="piFechaBaja" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aatbl_PadronPersonasConCOB" Member="aatbl_PadronPersonasConCOBs">
+    <Type Name="aatbl_PadronPersonasConCOB">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aatbl_PadronPersonasSinCOB" Member="aatbl_PadronPersonasSinCOBs">
+    <Type Name="aatbl_PadronPersonasSinCOB">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aDupliMHO" Member="aDupliMHOs">
+    <Type Name="aDupliMHO">
+      <Column Name="tipnro" Type="System.String" DbType="VarChar(22)" CanBeNull="true" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cantidad" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aholddups_MHO" Member="aholddups_MHOs">
+    <Type Name="aholddups_MHO">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aholdkey_MHO" Member="aholdkey_MHOs">
+    <Type Name="aholdkey_MHO">
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="col3" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.atbl_PadronPersonasMHO" Member="atbl_PadronPersonasMHOs">
+    <Type Name="atbl_PadronPersonasMHO">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.atbl_PadronPersonasMHO_desechados" Member="atbl_PadronPersonasMHO_desechados">
+    <Type Name="atbl_PadronPersonasMHO_desechado">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.atbl_PadronPersonasREMEDIAR" Member="atbl_PadronPersonasREMEDIARs">
+    <Type Name="atbl_PadronPersonasREMEDIAR">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Bkp_PadronPersonasREMEDIAR" Member="Bkp_PadronPersonasREMEDIARs">
+    <Type Name="Bkp_PadronPersonasREMEDIAR">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Registro" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Bkp_PadronPersonasREMEDIAREliminados" Member="Bkp_PadronPersonasREMEDIAREliminados">
+    <Type Name="Bkp_PadronPersonasREMEDIAREliminado">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatCambioEstado" Member="CatCambioEstados">
+    <Type Name="CatCambioEstado">
+      <Column Name="caesId" Type="System.Int16" DbType="SmallInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="caesCodigo" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="caesDescripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="estEstado" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Association Name="CatCambioEstado_CatSucursal" Member="CatSucursals" ThisKey="caesId" OtherKey="caesId" Type="CatSucursal" />
+      <Association Name="CatCambioEstado_SisGrupo" Member="SisGrupos" ThisKey="caesId" OtherKey="caesId" Type="SisGrupo" />
+      <Association Name="CatCambioEstado_SisUsuario" Member="SisUsuarios" ThisKey="caesId" OtherKey="caesId" Type="SisUsuario" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatCiudad" Member="CatCiudads">
+    <Type Name="CatCiudad">
+      <Column Name="cddId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="cddNombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="prvId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="CatProvincia_CatCiudad" Member="CatProvincia" ThisKey="prvId" OtherKey="prvId" Type="CatProvincia" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatPais" Member="CatPais">
+    <Type Name="CatPai">
+      <Column Name="paisId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="paisNombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="CatPai_CatProvincia" Member="CatProvincias" ThisKey="paisId" OtherKey="paisId" Type="CatProvincia" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatProvincia" Member="CatProvincias">
+    <Type Name="CatProvincia">
+      <Column Name="prvId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="prvNombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="paisId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="CatProvincia_CatCiudad" Member="CatCiudads" ThisKey="prvId" OtherKey="prvId" Type="CatCiudad" />
+      <Association Name="CatPai_CatProvincia" Member="CatPai" ThisKey="paisId" OtherKey="paisId" Type="CatPai" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatSucursal" Member="CatSucursals">
+    <Type Name="CatSucursal">
+      <Column Name="sucId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="sucCodigo" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Column Name="sucNombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="estEstado" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="caesId" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="caesFecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="CatSucursal_SisUsuario" Member="SisUsuarios" ThisKey="sucId" OtherKey="sucId" Type="SisUsuario" />
+      <Association Name="CatCambioEstado_CatSucursal" Member="CatCambioEstado" ThisKey="caesId" OtherKey="caesId" Type="CatCambioEstado" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ConsultasMenu" Member="ConsultasMenus">
+    <Type Name="ConsultasMenu">
+      <Column Name="cmId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="usrId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="menuId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="cmAccion" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="cmFecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="SisMenu_ConsultasMenu" Member="SisMenu" ThisKey="menuId" OtherKey="menuId" Type="SisMenu" IsForeignKey="true" />
+      <Association Name="SisUsuario_ConsultasMenu" Member="SisUsuario" ThisKey="usrId" OtherKey="usrId" Type="SisUsuario" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PadronPersonasPATRICIA" Member="PadronPersonasPATRICIAs">
+    <Type Name="PadronPersonasPATRICIA">
+      <Column Name="ID_PERSONA" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CUIL" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="TIPODOC" Type="System.Decimal" DbType="Decimal(3,0)" CanBeNull="true" />
+      <Column Name="NRODOC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SEXO" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="NOMBRE" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="APELLIDO" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="FECHANACIM" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CALLE" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="NROCALLE" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="PISO" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DEPTO" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="BARRIO_LOC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="DEPARTAMENTO" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PROVINCIA" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="LOCINDEC" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="CP" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="TIPOTEL1" Type="System.Decimal" DbType="Decimal(3,0)" CanBeNull="true" />
+      <Column Name="TELEFONO1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="grado_confiab" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="FALLECIDO" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="obra_social" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="VALIDADOPOR" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="PUCO" Type="System.String" DbType="NChar(2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PadronPersonasWAL" Member="PadronPersonasWALs">
+    <Type Name="PadronPersonasWAL">
+      <Column Name="ID_PERSONA" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="APELLIDO" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="TIPODOC" Type="System.Decimal" DbType="Decimal(3,0) NOT NULL" CanBeNull="false" />
+      <Column Name="NRODOC" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="SEXO" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="FECHANACIM" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CALLE" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="NROCALLE" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PISO" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DEPTO" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="BARRIO_LOC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="DEPARTAMENTO" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CP" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="locindec" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="tipotel1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TELEFONO1" Type="System.String" DbType="NVarChar(21)" CanBeNull="true" />
+      <Column Name="grado_confiabilidad" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="obra_social" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="dado_por" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="PROVINCIA" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="PUCO" Type="System.String" DbType="NChar(2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sisArbolEntidad" Member="sisArbolEntidads">
+    <Type Name="sisArbolEntidad">
+      <Column Name="entId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="entTabla" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="entCampoDesc" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="entOrden" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="entRecursivo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="entCampoPk" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="entCampoFK" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="sisArbolEntidad_sisArbolGrupo" Member="sisArbolGrupos" ThisKey="entId" OtherKey="entId" Type="sisArbolGrupo" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sisArbolGrupo" Member="sisArbolGrupos">
+    <Type Name="sisArbolGrupo">
+      <Column Name="arbId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="entId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="gpoId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="tablaId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="sisArbolEntidad_sisArbolGrupo" Member="sisArbolEntidad" ThisKey="entId" OtherKey="entId" Type="sisArbolEntidad" IsForeignKey="true" />
+      <Association Name="SisGrupo_sisArbolGrupo" Member="SisGrupo" ThisKey="gpoId" OtherKey="gpoId" Type="SisGrupo" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisConfGeneral" Member="SisConfGenerals">
+    <Type Name="SisConfGeneral">
+      <Column Name="confId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="paisId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="prvId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PathReportes" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="SistemaNombre" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="SistemaVersion" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="errMailTo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="errMailPlantilla" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="errMailFrom" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="errMailAsunto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="errMailDirPort" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="confGrupoConPermisos" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="confPeriodoBasePadron" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisDiccionarioCampos" Member="SisDiccionarioCampos">
+    <Type Name="SisDiccionarioCampo">
+      <Column Name="dcamId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="dcamCampo" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="dcamDescripcion" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="dcamReferencia" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="dcamOrden" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dcamVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="dcamEscritura" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="dcamTab" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="dcamGrupo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="dcamFiltro" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="menuId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dcamClaveMenuReferencia" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="dcamClaveCampoReferencia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="regexId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="dcamIgnorarAlSerializar" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="SisMenu_SisDiccionarioCampo" Member="SisMenu" ThisKey="menuId" OtherKey="menuId" Type="SisMenu" IsForeignKey="true" />
+      <Association Name="SisRegularExpression_SisDiccionarioCampo" Member="SisRegularExpression" ThisKey="regexId" OtherKey="regexId" Type="SisRegularExpression" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sisExportaciones" Member="sisExportaciones">
+    <Type Name="sisExportacione">
+      <Column Name="exId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="exFecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="exEstado" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Association Name="sisExportacione_sisLogErrore" Member="sisLogErrores" ThisKey="exId" OtherKey="exId" Type="sisLogErrore" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisGpoPermiso" Member="SisGpoPermisos">
+    <Type Name="SisGpoPermiso">
+      <Column Name="gpoId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="lipId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="SisGrupo_SisGpoPermiso" Member="SisGrupo" ThisKey="gpoId" OtherKey="gpoId" Type="SisGrupo" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="SisListaPermiso_SisGpoPermiso" Member="SisListaPermiso" ThisKey="lipId" OtherKey="lipId" Type="SisListaPermiso" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisGrupo" Member="SisGrupos">
+    <Type Name="SisGrupo">
+      <Column Name="gpoId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="gpoClave" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="gpoDesc" Type="System.String" DbType="VarChar(60) NOT NULL" CanBeNull="false" />
+      <Column Name="estEstado" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="caesId" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="caesFecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="SisGrupo_sisArbolGrupo" Member="sisArbolGrupos" ThisKey="gpoId" OtherKey="gpoId" Type="sisArbolGrupo" />
+      <Association Name="SisGrupo_SisGpoPermiso" Member="SisGpoPermisos" ThisKey="gpoId" OtherKey="gpoId" Type="SisGpoPermiso" />
+      <Association Name="SisGrupo_SisGrupoReporte" Member="SisGrupoReportes" ThisKey="gpoId" OtherKey="gpoId" Type="SisGrupoReporte" />
+      <Association Name="SisGrupo_SisUsrGrupo" Member="SisUsrGrupos" ThisKey="gpoId" OtherKey="gpoId" Type="SisUsrGrupo" />
+      <Association Name="CatCambioEstado_SisGrupo" Member="CatCambioEstado" ThisKey="caesId" OtherKey="caesId" Type="CatCambioEstado" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisGrupoReporte" Member="SisGrupoReportes">
+    <Type Name="SisGrupoReporte">
+      <Column Name="repId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="gpoId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="SisGrupo_SisGrupoReporte" Member="SisGrupo" ThisKey="gpoId" OtherKey="gpoId" Type="SisGrupo" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="SisReporte_SisGrupoReporte" Member="SisReporte" ThisKey="repId" OtherKey="repId" Type="SisReporte" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisListaPermiso" Member="SisListaPermisos">
+    <Type Name="SisListaPermiso">
+      <Column Name="lipId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="opId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="menuId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="SisListaPermiso_SisGpoPermiso" Member="SisGpoPermisos" ThisKey="lipId" OtherKey="lipId" Type="SisGpoPermiso" />
+      <Association Name="SisMenu_SisListaPermiso" Member="SisMenu" ThisKey="menuId" OtherKey="menuId" Type="SisMenu" IsForeignKey="true" />
+      <Association Name="SisOperacione_SisListaPermiso" Member="SisOperacione" ThisKey="opId" OtherKey="opId" Type="SisOperacione" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sisLogErrores" Member="sisLogErrores">
+    <Type Name="sisLogErrore">
+      <Column Name="logId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="exId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="logMetodo" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="logDescripcionError" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="sisExportacione_sisLogErrore" Member="sisExportacione" ThisKey="exId" OtherKey="exId" Type="sisExportacione" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisLogUsuario" Member="SisLogUsuarios">
+    <Type Name="SisLogUsuario">
+      <Column Name="logId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="menuId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="opId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="usrId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="logFecha" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="logNombrePC" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="logIP" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="logObservaciones" Type="System.Xml.Linq.XElement" DbType="Xml" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="SisMenu_SisLogUsuario" Member="SisMenu" ThisKey="menuId" OtherKey="menuId" Type="SisMenu" IsForeignKey="true" />
+      <Association Name="SisOperacione_SisLogUsuario" Member="SisOperacione" ThisKey="opId" OtherKey="opId" Type="SisOperacione" IsForeignKey="true" />
+      <Association Name="SisUsuario_SisLogUsuario" Member="SisUsuario" ThisKey="usrId" OtherKey="usrId" Type="SisUsuario" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisMenu" Member="SisMenus">
+    <Type Name="SisMenu">
+      <Column Name="menuId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="menuClave" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="menuImagenes" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="menuTitulo" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="menuParametros" Type="System.String" DbType="NVarChar(400) NOT NULL" CanBeNull="false" />
+      <Column Name="menuClase" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="menuSPCRUDEdit" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="menuPath" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="menuOrderBy" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Association Name="SisMenu_ConsultasMenu" Member="ConsultasMenus" ThisKey="menuId" OtherKey="menuId" Type="ConsultasMenu" />
+      <Association Name="SisMenu_SisDiccionarioCampo" Member="SisDiccionarioCampos" ThisKey="menuId" OtherKey="menuId" Type="SisDiccionarioCampo" />
+      <Association Name="SisMenu_SisListaPermiso" Member="SisListaPermisos" ThisKey="menuId" OtherKey="menuId" Type="SisListaPermiso" />
+      <Association Name="SisMenu_SisLogUsuario" Member="SisLogUsuarios" ThisKey="menuId" OtherKey="menuId" Type="SisLogUsuario" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisOperaciones" Member="SisOperaciones">
+    <Type Name="SisOperacione">
+      <Column Name="opId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="opDesc" Type="System.String" DbType="VarChar(60) NOT NULL" CanBeNull="false" />
+      <Column Name="opImagen" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="opMetodo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="opOrden" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="SisOperacione_SisListaPermiso" Member="SisListaPermisos" ThisKey="opId" OtherKey="opId" Type="SisListaPermiso" />
+      <Association Name="SisOperacione_SisLogUsuario" Member="SisLogUsuarios" ThisKey="opId" OtherKey="opId" Type="SisLogUsuario" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisRegularExpression" Member="SisRegularExpressions">
+    <Type Name="SisRegularExpression">
+      <Column Name="regexId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="regexDetalle" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="regexExpression" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="regexEjemplo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="SisRegularExpression_SisDiccionarioCampo" Member="SisDiccionarioCampos" ThisKey="regexId" OtherKey="regexId" Type="SisDiccionarioCampo" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisReporteDetalle" Member="SisReporteDetalles">
+    <Type Name="SisReporteDetalle">
+      <Column Name="repdId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="repdCampo" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="repdLength" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="repdTipoValidacion" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="repdSqlLista" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="repdTipo" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="repdDetalle" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="repdValorDefecto" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="repId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="SisReporte_SisReporteDetalle" Member="SisReporte" ThisKey="repId" OtherKey="repId" Type="SisReporte" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisReportes" Member="SisReportes">
+    <Type Name="SisReporte">
+      <Column Name="repId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="repNombre" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="repDetalle" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="repSql" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="repHabilitado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="SisReporte_SisGrupoReporte" Member="SisGrupoReportes" ThisKey="repId" OtherKey="repId" Type="SisGrupoReporte" />
+      <Association Name="SisReporte_SisReporteDetalle" Member="SisReporteDetalles" ThisKey="repId" OtherKey="repId" Type="SisReporteDetalle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisTempImagenes" Member="SisTempImagenes">
+    <Type Name="SisTempImagene">
+      <Column Name="itmpGuid" Type="System.String" DbType="VarChar(512) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="itmpImagen" Type="System.Data.Linq.Binary" DbType="Image NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="itmpTimeStamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisTipo" Member="SisTipos">
+    <Type Name="SisTipo">
+      <Column Name="tipoId" Type="System.String" DbType="Char(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="tipoEntidad" Type="System.String" DbType="Char(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="tipoDescripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="tipoDescEntidad" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="tipoReferencia" Type="System.String" DbType="Char(5)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisUsrGrupo" Member="SisUsrGrupos">
+    <Type Name="SisUsrGrupo">
+      <Column Name="usrId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="gpoId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="SisGrupo_SisUsrGrupo" Member="SisGrupo" ThisKey="gpoId" OtherKey="gpoId" Type="SisGrupo" IsForeignKey="true" />
+      <Association Name="SisUsuario_SisUsrGrupo" Member="SisUsuario" ThisKey="usrId" OtherKey="usrId" Type="SisUsuario" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SisUsuario" Member="SisUsuarios">
+    <Type Name="SisUsuario">
+      <Column Name="usrId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="usrUsuario" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="usrPassword" Type="System.Data.Linq.Binary" DbType="VarBinary(46)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="usrFechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="usrNombre" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="usrApellido" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="usrTel" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="usrCelular" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="usrMail" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="usrSexo" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="estEstado" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="usrImagen" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="caesId" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="caesFecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="sucId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="SisUsuario_ConsultasMenu" Member="ConsultasMenus" ThisKey="usrId" OtherKey="usrId" Type="ConsultasMenu" />
+      <Association Name="SisUsuario_SisLogUsuario" Member="SisLogUsuarios" ThisKey="usrId" OtherKey="usrId" Type="SisLogUsuario" />
+      <Association Name="SisUsuario_SisUsrGrupo" Member="SisUsrGrupos" ThisKey="usrId" OtherKey="usrId" Type="SisUsrGrupo" />
+      <Association Name="CatCambioEstado_SisUsuario" Member="CatCambioEstado" ThisKey="caesId" OtherKey="caesId" Type="CatCambioEstado" IsForeignKey="true" />
+      <Association Name="CatSucursal_SisUsuario" Member="CatSucursal" ThisKey="sucId" OtherKey="sucId" Type="CatSucursal" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_BitacoraMail" Member="tbl_BitacoraMails">
+    <Type Name="tbl_BitacoraMail">
+      <Column Name="bmId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="bmDestinatarios" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="bmMensaje" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="bmfecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="bmRespuestaServidorSTMP" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_Localidades" Member="tbl_Localidades">
+    <Type Name="tbl_Localidade">
+      <Column Name="locId" Type="System.String" DbType="VarChar(15) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="locLocalidad" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locDepartamento" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locEntidad" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locProvincia" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="tbl_Localidade_tbl_PadronPersona" Member="tbl_PadronPersonas" ThisKey="locId" OtherKey="locId" Type="tbl_PadronPersona" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_Localidades1" Member="tbl_Localidades1s">
+    <Type Name="tbl_Localidades1">
+      <Column Name="locId" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="locLocalidad" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locDepartamento" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locEntidad" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="locProvincia" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_PadronIngreso" Member="tbl_PadronIngresos">
+    <Type Name="tbl_PadronIngreso">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="piActivo" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="piMotivoBaja" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="piFechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="piFechaBaja" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="piPeriodoBase" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="tbl_PadronPersona_tbl_PadronIngreso" Member="tbl_PadronPersona" ThisKey="ppId" OtherKey="ppId" Type="tbl_PadronPersona" IsForeignKey="true" />
+      <Association Name="tbl_Proveedore_tbl_PadronIngreso" Member="tbl_Proveedore" ThisKey="provId" OtherKey="provId" Type="tbl_Proveedore" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_PadronPersonas" Member="tbl_PadronPersonas">
+    <Type Name="tbl_PadronPersona">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="ppObraSocial" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="tbl_PadronPersona_tbl_PadronIngreso" Member="tbl_PadronIngresos" ThisKey="ppId" OtherKey="ppId" Type="tbl_PadronIngreso" />
+      <Association Name="tbl_Localidade_tbl_PadronPersona" Member="tbl_Localidade" ThisKey="locId" OtherKey="locId" Type="tbl_Localidade" IsForeignKey="true" />
+      <Association Name="tbl_Sexo_tbl_PadronPersona" Member="tbl_Sexo" ThisKey="ppSexoId" OtherKey="sexoId" Type="tbl_Sexo" IsForeignKey="true" />
+      <Association Name="tbl_TipoDoc_tbl_PadronPersona" Member="tbl_TipoDoc" ThisKey="tdocId" OtherKey="tdocId" Type="tbl_TipoDoc" IsForeignKey="true" />
+      <Association Name="tbl_TipoTelefono_tbl_PadronPersona" Member="tbl_TipoTelefono" ThisKey="ttelId1" OtherKey="ttelId" Type="tbl_TipoTelefono" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_Proveedores" Member="tbl_Proveedores">
+    <Type Name="tbl_Proveedore">
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="provDetalle" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="tbl_Proveedore_tbl_PadronIngreso" Member="tbl_PadronIngresos" ThisKey="provId" OtherKey="provId" Type="tbl_PadronIngreso" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_Provincias" Member="tbl_Provincias">
+    <Type Name="tbl_Provincia">
+      <Column Name="prvCodigo" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="prvDetalle" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_Sexo" Member="tbl_Sexos">
+    <Type Name="tbl_Sexo">
+      <Column Name="sexoId" Type="System.String" DbType="VarChar(1) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="sexoDescripcion" Type="System.String" DbType="VarChar(9)" CanBeNull="true" />
+      <Column Name="sexoId_SINTYS" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Association Name="tbl_Sexo_tbl_PadronPersona" Member="tbl_PadronPersonas" ThisKey="sexoId" OtherKey="ppSexoId" Type="tbl_PadronPersona" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_TipoDoc" Member="tbl_TipoDocs">
+    <Type Name="tbl_TipoDoc">
+      <Column Name="tdocId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="tdocDescripcion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="tdocId_SINTYS" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Association Name="tbl_TipoDoc_tbl_PadronPersona" Member="tbl_PadronPersonas" ThisKey="tdocId" OtherKey="tdocId" Type="tbl_PadronPersona" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_TipoTelefono" Member="tbl_TipoTelefonos">
+    <Type Name="tbl_TipoTelefono">
+      <Column Name="ttelId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ttelDescripcion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="tbl_TipoTelefono_tbl_PadronPersona" Member="tbl_PadronPersonas" ThisKey="ttelId" OtherKey="ttelId1" Type="tbl_PadronPersona" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOEstadoCivil" Member="wMHOEstadoCivils">
+    <Type Name="wMHOEstadoCivil">
+      <Column Name="EstadoCivilID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOLocalidad" Member="wMHOLocalidads">
+    <Type Name="wMHOLocalidad">
+      <Column Name="LocalidadID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ProvinciaID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PartidoID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="COD_LOC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="COD_PART" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="COD_LOC_ORIG" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AreaProgramaticaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="wMHOPartido_wMHOLocalidad" Member="wMHOPartido" ThisKey="PartidoID,ProvinciaID,PaisID" OtherKey="PartidoID,ProvinciaID,PaisID" Type="wMHOPartido" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOPaciente" Member="wMHOPacientes">
+    <Type Name="wMHOPaciente">
+      <Column Name="PacienteID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Apellido" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TipoDocumentoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NumeroDocumento" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ObraSocialID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NumeroAfiliado" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="TipoBeneficiarioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentescoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FechaNacimiento" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCivilID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Telefono" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="ProfesionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Domicilio" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Empresa" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmpresaCUIT" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmpresaDireccion" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="EmpresaUltimoReciboSueldo" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ObraSociaCarnetFechaEmision" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ObraSociaCarnetFechVencimto" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="HC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodigoPostal" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ProvinciaID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LocalidadID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PartidoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NivelEducacionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ProfesionalResponsableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NombrePadre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NombreMadre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NombreConyuge" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NacPaisID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NacProvinciaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NacPartidoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodigoHC" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TipoBloqueoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DomicilioValidado" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="GrupoColorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GrupoSanguineoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TelefonoLaboral" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TelefonoCelular" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TitularEmergencia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoEmergencia" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="EtniaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoPacienteID" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="SituacionLaboralID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BarrioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DomicilioResponsable" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ResponsableParentescoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PlanesID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Observaciones" Type="System.String" DbType="VarChar(4096)" CanBeNull="true" />
+      <Column Name="EmpresaIngresoMensual" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="SituacionPropiedadID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoConstruccionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoBanoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CantidadDormitorios" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PacienteCalificacionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoServicioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoParedID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoTechoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoPisoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_CODOBR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_CUITEMP" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_PEAPOR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DiagnosticoAspectoSocial" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TipoServicioLuzID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoServicioAguaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DiagnosticoReservado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="SexoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOPais" Member="wMHOPais">
+    <Type Name="wMHOPai">
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="wMHOPai_wMHOProvincia" Member="wMHOProvincias" ThisKey="PaisID" OtherKey="PaisID" Type="wMHOProvincia" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOPartido" Member="wMHOPartidos">
+    <Type Name="wMHOPartido">
+      <Column Name="PartidoID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ProvinciaID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CEP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="COD_PART" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="wMHOPartido_wMHOLocalidad" Member="wMHOLocalidads" ThisKey="PartidoID,ProvinciaID,PaisID" OtherKey="PartidoID,ProvinciaID,PaisID" Type="wMHOLocalidad" />
+      <Association Name="wMHOProvincia_wMHOPartido" Member="wMHOProvincia" ThisKey="ProvinciaID,PaisID" OtherKey="ProvinciaID,PaisID" Type="wMHOProvincia" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOProvincia" Member="wMHOProvincias">
+    <Type Name="wMHOProvincia">
+      <Column Name="ProvinciaID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="wMHOProvincia_wMHOPartido" Member="wMHOPartidos" ThisKey="ProvinciaID,PaisID" OtherKey="ProvinciaID,PaisID" Type="wMHOPartido" />
+      <Association Name="wMHOPai_wMHOProvincia" Member="wMHOPai" ThisKey="PaisID" OtherKey="PaisID" Type="wMHOPai" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOSexo" Member="wMHOSexos">
+    <Type Name="wMHOSexo">
+      <Column Name="SexoID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Codigo" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.wMHOTipoDocumento" Member="wMHOTipoDocumentos">
+    <Type Name="wMHOTipoDocumento">
+      <Column Name="TipoDocumentoID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Codigo" Type="System.String" DbType="VarChar(3)" CanBeNull="true" />
+      <Column Name="Sistema" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="OtrosNombres" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Longitud" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.zPUCO2_201111" Member="zPUCO2_201111s">
+    <Type Name="zPUCO2_201111">
+      <Column Name="TIP_DOC" Type="System.String" DbType="VarChar(3)" CanBeNull="true" />
+      <Column Name="NRO_DOC" Type="System.String" DbType="VarChar(12)" CanBeNull="true" />
+      <Column Name="REG_NOS" Type="System.String" DbType="VarChar(6)" CanBeNull="true" />
+      <Column Name="NO_SE" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="APE_NOM" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="CRLF" Type="System.String" DbType="VarChar(2)" CanBeNull="true" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.zRemediar" Member="zRemediars">
+    <Type Name="zRemediar">
+      <Column Name="Id_Persona" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="NombreBeneficiario" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="NumeroDeDocumento" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="TipoDeDocumento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FechaDeNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Sexo" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Mejor_idCap" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_NoExistenMHO" Member="ztbl_NoExistenMHOs">
+    <Type Name="ztbl_NoExistenMHO">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_NoExistenREMEDIAR" Member="ztbl_NoExistenREMEDIARs">
+    <Type Name="ztbl_NoExistenREMEDIAR">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_PadronIngreso" Member="ztbl_PadronIngresos">
+    <Type Name="ztbl_PadronIngreso">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="piActivo" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="piMotivoBaja" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="piFechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="piFechaBaja" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_PadronPersonas" Member="ztbl_PadronPersonas">
+    <Type Name="ztbl_PadronPersona">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_PadronPersonasMHO" Member="ztbl_PadronPersonasMHOs">
+    <Type Name="ztbl_PadronPersonasMHO">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_PadronPersonasREMEDIAR" Member="ztbl_PadronPersonasREMEDIARs">
+    <Type Name="ztbl_PadronPersonasREMEDIAR">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_Proveedores" Member="ztbl_Proveedores">
+    <Type Name="ztbl_Proveedore">
+      <Column Name="provId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="provDetalle" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_SiExistenMHO" Member="ztbl_SiExistenMHOs">
+    <Type Name="ztbl_SiExistenMHO">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ztbl_SiExistenREMEDIAR" Member="ztbl_SiExistenREMEDIARs">
+    <Type Name="ztbl_SiExistenREMEDIAR">
+      <Column Name="ppId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppNombre" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ppApellido" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="tdocId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppNroDoc" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppCUIL" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ppSexoId" Type="System.String" DbType="VarChar(1)" CanBeNull="true" />
+      <Column Name="ppFechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ppDomCalle" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="ppDomNroCalle" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomPiso" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomDepto" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppCP" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="locId" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ttelId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ttelId2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppTelefono2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppNivelValidacion" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.zwMHOPaciente" Member="zwMHOPacientes">
+    <Type Name="zwMHOPaciente">
+      <Column Name="PacienteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Apellido" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TipoDocumentoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NumeroDocumento" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ObraSocialID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NumeroAfiliado" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="TipoBeneficiarioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentescoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FechaNacimiento" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="EstadoCivilID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Telefono" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="ProfesionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Domicilio" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Empresa" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmpresaCUIT" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmpresaDireccion" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="EmpresaUltimoReciboSueldo" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ObraSociaCarnetFechaEmision" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ObraSociaCarnetFechVencimto" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="HC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodigoPostal" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ProvinciaID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LocalidadID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Aud_UsuarioAlta" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_UsuarioModi" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Aud_FechaAlta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Aud_FechaModi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PartidoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NivelEducacionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ProfesionalResponsableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NombrePadre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NombreMadre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NombreConyuge" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PaisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NacPaisID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NacProvinciaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NacPartidoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodigoHC" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TipoBloqueoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DomicilioValidado" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="GrupoColorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GrupoSanguineoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TelefonoLaboral" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TelefonoCelular" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TitularEmergencia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TelefonoEmergencia" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="EtniaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoPacienteID" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="SituacionLaboralID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BarrioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DomicilioResponsable" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ResponsableParentescoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PlanesID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Observaciones" Type="System.String" DbType="VarChar(4096)" CanBeNull="true" />
+      <Column Name="EmpresaIngresoMensual" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="SituacionPropiedadID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoConstruccionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoBanoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CantidadDormitorios" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PacienteCalificacionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoServicioID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoParedID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoTechoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoPisoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_CODOBR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_CUITEMP" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="DatoMigradoPadron_PEAPOR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DiagnosticoAspectoSocial" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TipoServicioLuzID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TipoServicioAguaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DiagnosticoReservado" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="SexoID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ppDepartamento" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ppDomBarrio_Loc" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

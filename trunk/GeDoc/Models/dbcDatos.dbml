@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="MSP-GeDoc-Desarrollo" Class="dbcDatosDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=200.0.236.210\MSPSQL2008R2;Initial Catalog=MSP-GeDoc-Desarrollo;Persist Security Info=True;User ID=sa;MultipleActiveResultSets=True;Application Name=EntityFramework" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="MSP_GeDoc_DesarrolloConnectionString" Provider="System.Data.SqlClient" />
+  <Function Name="dbo.fnValidarUsuario" Method="fnValidarUsuario" IsComposable="true">
+    <Parameter Name="Usuario" Parameter="usuario" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Pass" Parameter="pass" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Boolean" />
+  </Function>
+  <Function Name="dbo.fnPassword" Method="fnPassword" IsComposable="true">
+    <Parameter Name="Pass" Parameter="pass" Type="System.String" DbType="VarChar(255)" />
+    <Return Type="System.Data.Linq.Binary" />
+  </Function>
+  <Function Name="dbo.ProcRegistrarLogUsuario" Method="ProcRegistrarLogUsuario">
+    <Parameter Name="luDescripcion" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="usrId" Type="System.Int16" DbType="SmallInt" />
+    <Parameter Name="mnuId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="acId" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.fnNumerosALetras" Method="fnNumerosALetras" IsComposable="true">
+    <Parameter Name="numero" Type="System.Decimal" DbType="Decimal(18,2)" />
+    <Return Type="System.String" />
+  </Function>
+  <Function Name="dbo.ProcActualizaUsuario" Method="ProcActualizaUsuario">
+    <Parameter Name="usrId" Type="System.Int16" DbType="SmallInt" />
+    <Parameter Name="usrNombreDeUsuario" Type="System.String" DbType="VarChar(30)" />
+    <Parameter Name="usrApellidoyNombre" Type="System.String" DbType="VarChar(80)" />
+    <Parameter Name="usrPassword" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="estId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="usrEmail" Type="System.String" DbType="VarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.fnCronosAsistenciaDelDia" Method="fnCronosAsistenciaDelDia" IsComposable="true">
+    <Parameter Name="DNI" Parameter="dNI" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="perId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fnCronosAsistenciaDelDiaResult">
+      <Column Name="Codigo" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.fnCronosAsistenciaDeUnDiaEstado" Method="fnCronosAsistenciaDeUnDiaEstado" IsComposable="true">
+    <Parameter Name="DNI" Parameter="dNI" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="perId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Dia" Parameter="dia" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fnCronosAsistenciaDeUnDiaEstadoResult">
+      <Column Name="Codigo" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.fnCronosAsistenciaDelMes" Method="fnCronosAsistenciaDelMes" IsComposable="true">
+    <Parameter Name="perId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fnCronosAsistenciaDelMesResult">
+      <Column Name="Fecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Codigo" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="Estado" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Entrada" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Salida" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.fnCronosAsistenciaDeUnDia" Method="fnCronosAsistenciaDeUnDia" IsComposable="true">
+    <Parameter Name="DNI" Parameter="dNI" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="Dia" Parameter="dia" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fnCronosAsistenciaDeUnDiaResult">
+      <Column Name="Entrada" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Salida" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>

@@ -1,0 +1,79 @@
+﻿@model GeDoc.Models.RegistroProfesionales.regProDetalleTramite
+
+
+
+@using (Html.BeginForm("setProfesionalDetalleTramite", "registroProfesional", FormMethod.Post, new { id = "frmRP_MenuDetalle" }))
+{ 
+         
+    <div class="BordeRedondeado">
+     <div style="text-align: center;padding-bottom: 5px; font-size: 1.5em;">
+        <h1>Trámite: @Model.tramite.catRPTramites.traDescripcion</h1>
+          <h1>Profesional : @Model.profesionalNombre -  DNI:  @Model.tramite.rptDNI</h1>
+    </div>
+       
+    
+    <div style="overflow-y: scroll;height: 436px;">
+       @foreach (var item in Model.requerimientosDeTramite)
+       { 
+       <ul class="rgMenuItem">    
+           <li>
+           <div class="tramiteTitulo" style="font-weight:bold">
+               <input type="radio" id="radio@(item.gtId)" name="radio" class="radioTramite" value="@item.gtId" disabled/>
+               @item.gtDescripcion                
+           </div>           
+           <div class="BordeRedondeado" id="menuItem-@item.gtId">                 
+                <ul class="rgMenuItem">  
+                   @foreach (var det in item.detalle)
+                   {
+                       <li>                   
+                           @if(det.gtdValor==true)
+                           {<input type="checkbox" class="chItemTramite tramiteItem" value="@det.gtdValor" checked="checked" id="rpItem-@det.gtdId" disabled>@det.gtdDescripcion <b>(Presentado : @det.gtdFecha.ToShortDateString() ) </b></input>}
+                           else{<input type="checkbox" class="chItemTramite tramiteItem" value="@det.gtdValor" id="rpItem-@det.gtdId" disabled >@det.gtdDescripcion</input>}                      
+                       </li>
+                   }   
+               </ul> 
+           </div>                   
+           </li>                     
+       </ul>
+       } 
+    </div>
+           
+    
+    </div>
+    
+     <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarProfesionalDetalle();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+        </div>        
+     </div>
+}
+    
+
+<script>
+    
+    init();
+    function init(){     
+        $('input[type=radio]').each(function(){
+            //deshabilito todos
+            $('#menuItem-'+$(this)[0].value+ ' :input' ).attr('disabled', true);
+        });
+        $('input[type=checkbox]').each(function () {
+            debugger;
+            if ($(this)[0].checked == true) {
+                var idParent = $(this)[0].parentElement.parentElement.parentElement.id.split('-')[1]
+                debugger;
+                $('#radio' + idParent).attr('checked', true);
+                //$(this).removeAttr('disabled');
+            }
+        });
+    }
+    function onAceptarProfesionalDetalle() 
+    {                      
+        var windowElement = $("#wConsultaTramite").data("tWindow");
+        windowElement.close();
+    }
+ 
+
+</script>
+

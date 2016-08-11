@@ -1,0 +1,413 @@
+<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="es-AR" xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Ministerio de Salud Pública</title>
+    <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
+    <% string _Estilo = "webblue";
+       if (Session["Estilo"] != null)
+       {
+           _Estilo = Session["Estilo"].ToString();
+       }
+       _Estilo = "telerik." + _Estilo + ".css";
+    %>
+    <%: Html.Telerik().StyleSheetRegistrar().DefaultGroup(  group => group
+                                                            .Add("telerik.common.css")
+                                                            .Add(_Estilo)
+                                                            .Add("telerik.rtl.css")
+                                                            .Combined(true)
+                                                            .Compress(true)) %>
+
+    
+
+    <script src="<%=Url.Content("~/Scripts/jquery-1.9.1.js")%>" type="text/javascript"></script>
+    <script src="<%=Url.Content("~/Scripts/Reportes.js")%>" type="text/javascript"></script>
+    <script src="<%=Url.Content("~/Scripts/CRUDGrillas.js")%>" type="text/javascript"></script>
+    <link href="<%=Url.Content("~/Content/jquery.alerts.css")%>" rel="stylesheet" type="text/css" />
+    <script src="<%=Url.Content("~/Scripts/qrcode.min.js")%>" type="text/javascript"></script>
+    <link href="<%=Url.Content("~/Content/dropzone/basic.css")%>" rel="stylesheet" type="text/css" />
+    <link href="<%=Url.Content("~/Content/dropzone/dropzone.css")%>" rel="stylesheet" type="text/css" />
+    <link href="<%=Url.Content("~/Content/font-awesome.min.css")%>" rel="stylesheet" type="text/css">
+    <script src="<%=Url.Content("~/Scripts/qrcode.min.js")%>" type="text/javascript"></script>
+    <link href="<%=Url.Content("~/Content/bootstrap/css/gritter.css")%>" rel="stylesheet" type="text/css">
+
+        <script type="text/javascript" src="<%=Url.Content("~/Scripts/tinymce/tiny_mce.js")%>"></script>
+        <script type="text/javascript" src="<%=Url.Content("~/Scripts/tinymce/tiny_mce_src.js")%>"></script>
+
+       
+    <asp:ContentPlaceHolder runat="server" ID="HeadContent" />
+    <link rel="shortcut icon" href="<%=Url.Content("~/Content/General/favicon.ico")%>">
+    <% Html.RenderPartial("Header"); %>
+
+    <style type="text/css">
+
+    .modal_waiting {
+        display:    none;
+        position:   fixed;
+        z-index:    1000;
+        top:        0;
+        left:       0;
+        height:     100%;
+        width:      100%;
+        background: rgba( 0, 0, 0, .8 ) 
+                    url('<%=Url.Content("~/Content/General/ajax-loader.gif")%>') 
+                    50% 50% 
+                    no-repeat;
+    }
+
+    body.loading {
+        overflow: hidden;   
+    }
+
+    body.loading .modal_waiting {
+        display: block;
+    }
+   
+</style>
+
+</head>
+<body>
+    <div class="page">
+        <header>
+			<div id="title">
+                <table>
+                    <tr>
+                        <td style="border: none;">
+    				        <img id="Image1" src="<%=Url.Content("~/Content/General/LogoGobMSP.png")%>" height="50px" />
+                        </td>
+                        <td style="width:50%;border: none;">
+    				        <%--<h1>Ministerio de Salud Pública</h1>--%>
+    				        <table style="border: none; margin:-10px;">
+                                <tr style="border: none; margin:0px;">
+                                    <td style="border: none; margin:0px;">
+                                        <img src="<%=Url.Content("~/Content/General/LogoSistema.png")%>" width="25px" style="margin-top:-5px" />
+                                    </td>
+                                    <td style="border: none; margin:0px; color: #336699;">
+                                        <asp:Label ID="Label1" runat="server" style="margin-left: -5px; font-weight: 900;" >Gestión Administrativa</asp:Label>
+                                        <%
+                                            var h1Titulo = "<span id='uscs'>" + (Session["UsuarioCentroDeSalud"] == null ? "" : ((Session["UsuarioCentroDeSalud"] as GeDoc.sisUsuariosCentroDeSalud).ucsCentroDeSalud)) + "</span>";
+                                            h1Titulo += "<span id='uszs'>" + (Session["UsuarioCentroDeSalud"] != null && Session["ZonaSanitaria"] != null ? " - " : "") + (Session["ZonaSanitaria"] ?? "") + "</span>";
+
+                                            if (Session["UsuarioCentroDeSalud"] != null || Session["ZonaSanitaria"] != null)
+                                                h1Titulo = "(" + h1Titulo + ")";
+                                        %>
+                                        <label id="h1Titulo"><%= h1Titulo %></label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:100%;">
+                            <% Html.RenderPartial("LogOnUserControl"); %>
+                        </td>
+                    </tr>
+                </table>
+			</div>
+            <% if (Session["Usuario"] != null)
+               {
+                   Html.RenderPartial("MenuPrincipal");
+               }
+        //else
+        //{
+        //    Html.Action("LogOn", "Account");
+        //}
+                %>
+
+    <%
+        if (Session["Usuario"] != null)
+        {
+            //if (Session["UsuarioCentroDeSalud"] == null)
+            //{
+            var _UsuarioCS = from x in (Session["Usuario"] as GeDoc.Models.sisUsuario).sisUsuarioCentroDeSalud.ToList()
+                             select new GeDoc.sisUsuariosCentroDeSalud()
+                             {
+                                 ucsId = x.ucsId,
+                                 ucsCentroDeSalud = x.catCentroDeSalud.csNombre
+                             };
+            SelectList _CentrosDeSalud = new SelectList(_UsuarioCS, "ucsId", "ucsCentroDeSalud");
+            Html.Telerik().Window()
+                    .Name("wEligeCS")
+                    .Title("Autenticación...")
+                    .Content(() =>
+                    {
+                        %>
+                        <div style="margin-bottom: 10px;">
+                            <%if (_UsuarioCS.Count()!=0)
+	                            {
+		                             %><label>Seleccione el centro de salud en el que va a trabajar:</label><%
+	                            }
+                                else
+                                {
+                                  %><label>El usuario no tiene centro de salud asociado:</label><%
+                                }
+                            
+                                
+                                %>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                                <%= Html.Telerik().DropDownList()
+                                    .Name("cbxCentrosDeSalud")
+                                    .HtmlAttributes(new { style = "width:415px;" })
+                                    .DropDownHtmlAttributes(new { style = "width:415px;" })
+                                    .BindTo(_CentrosDeSalud)
+                                %>
+                        </div>
+                        <div style="width: 420px;" align="center">
+                            <input type="button" onclick="btnAceptarClick();" value="Aceptar" style="vertical-align: middle;" class="t-button" />
+                        </div>
+                    <%})
+                       .Buttons(b => b.Clear())
+                       .Draggable(true)
+                       .Modal(true)
+                       .Scrollable(false)
+                       .Width(420)
+                       .Height(100)
+                       .Visible(Session["UsuarioCentroDeSalud"] == null)
+                       .ClientEvents(events => events.OnLoad("onLoadCS"))
+                       .Render();
+
+            
+            //}
+        }
+    %>
+
+
+             
+
+        <%
+            if (Session["Usuario"] != null )
+            {
+                Html.Telerik().Window()
+                    .Name("winAvisoNovedades")
+                    .Title("Nuevo Aviso!!")
+                    .Draggable(true)
+                    .Modal(true)
+                    .Content(() =>
+                    {%>
+                            <div style="margin-bottom: 10px;">
+                                <label><strong id="aviTitulo"></strong></label>
+                            </div>
+
+
+                            <div style="margin-bottom: 20px;">
+                                    <label id="aviContenido"></label>
+                            </div>
+
+                            <div style="margin: 15px;">
+                                <input type="checkbox" id="chkNoMostrarAviso"/> No volver a mostrar este aviso.<br>
+                            </div>
+                            
+                            <div style="width: 420px;" align="center">
+                                <input type="hidden" id="aviId" />
+                                <input type="button" onclick="btnAceptarAvisoClick();" value="Aceptar" style="vertical-align: middle;" class="t-button" />
+                            </div>
+                        <%})
+                    .Width(450)
+                    .Height(150)
+                    .Visible(false)
+                    .Render();
+                //"<h1>WinAviso</h1>"
+            }            
+        %>
+		</header>
+        <section id="main">
+            <div class="t-button" id="divTituloCatalogos" style="width: 98.9%; text-align: center; font-size: x-large; font-weight: bold; display: none;">
+            </div>
+            <div id="divContenidoPrincipal" style="width: 100%; height: 520px; display: none;" tabindex="16" >
+            </div>
+			<asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+			<!--<footer id="footer">Búsqueda</footer>-->
+		</section>
+    </div>
+    <div id="piedepagina" class="BordeRedondeado">
+        <div id="foot">
+            <p>
+                <img src="<%=Url.Content("~/Content/General/Logo_GobiernoSL.png")%>" height="15px" width="15px" style="vertical-align: middle;" />
+                Ministerio de Salud Pública / División Informática - Desarrollo de Sistemas - Copyright © 2012 Todos los derechos reservados - Gobierno de la provincia de San Juan
+                <img src="<%=Url.Content("~/Content/General/Logo_GobiernoSL.png")%>" height="15px" width="15px" style="vertical-align: middle;" />
+            </p>
+        </div>
+    </div>
+    <% Html.RenderPartial("Reportes"); %>
+    <%: Html.Telerik().ScriptRegistrar().Globalization(true).DefaultGroup(group => group.Combined(true).Compress(true)) %>
+    <script src="<%=Url.Content("~/Scripts/jquery-ui.js")%>" type="text/javascript"></script>
+    <script src="<%=Url.Content("~/Scripts/jquery.alerts.js")%>" type="text/javascript"></script>
+    <script src="<%=Url.Content("~/Scripts/jquery.maskedinput.min.js")%>" type="text/javascript"></script>
+    <script src="<%=Url.Content("~/Scripts/Bootstrap/plugins/jquery-gritter/jquery.gritter.min.js")%>"></script>
+
+
+
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+    //llamar a la función fieldHighlight e indicar el nombre del nuestro formulario
+    $(document).ready(function () {
+        var _UserName = $('#UserName');
+        if (_UserName != null) {
+            $('#UserName').focus();
+        }
+
+        $('.text-box').focusin(function () {
+            $(this).addClass('focus');
+            this.select();
+        });
+        $('.text-box').focusout(function () {
+            $(this).removeClass('focus');
+        });
+        //Tooltip
+        onToolTip();
+        //Fin de Tooltip
+    });
+
+    window.setInterval(function () {
+        // Send an AJAX request every 5s to poll for changes and update the UI
+        // example with jquery:
+        var _Post = GetPathApp('Account/ValidaActualizacion');
+        $.post(_Post, function (result) {
+            // TODO: use the results returned from your controller action
+            // to update the UI
+            if (result) {
+                location.reload();
+                jQuery(document).empty();
+                var _Post = GetPathApp('Account/LogOff');
+                window.location.replace(_Post);
+            }
+        });
+    }, 15000);
+
+
+    function btnAceptarClick(e) {
+        var _CS = $("#cbxCentrosDeSalud").data("tDropDownList");
+
+        console.log(_CS);
+        debugger;
+        if(_CS.data == null || _CS.data.length==0)
+        {   
+            var _Post = GetPathApp('Account/LogOff');
+            window.location.replace(_Post);
+            return;
+        }
+        
+        var _Post = GetPathApp('Account/setCentroSaludUsuario');
+
+        $.post(_Post, { idUcs: _CS.value() }, function (data) {
+            if (data) {
+                var csWindow = $("#wEligeCS").data("tWindow");
+                if (csWindow != null) {
+                    if ($("#uszs").text() === "") {
+                        $("#uscs")[0].textContent = " (" + _CS.text() + ")";
+                    }
+                    else {
+                        $("#uscs")[0].textContent = _CS.text() + " - ";
+                    }
+
+                    csWindow.close();
+                    debugger;
+                    //alert(isDefined("RecargarPaginaPorCambioDeCentroDeSalud"));
+
+                    if (isDefined("RecargarPaginaPorCambioDeCentroDeSalud") && RecargarPaginaPorCambioDeCentroDeSalud == "Recargar") {
+                        location.reload();
+                    }
+                    else {
+                        CargarAvisosDeUsuario();
+                    }
+                    //if (RecargarPaginaPorCambioDeCentroDeSalud != null)
+                    //{
+                    //    location.reload();
+                    //}
+
+                    //CargarAvisosDeUsuario();
+
+                }
+            }
+        });
+    }
+    function onLoadCS(e) {
+        var csWindow = $("#wEligeCS").data("tWindow");
+        if (csWindow != null) {
+            csWindow.center();
+//            console.log(csWindow);
+        }
+    }
+
+
+    function CargarAvisosDeUsuario() {
+
+        debugger;
+
+        var _Post = GetPathApp('catAviso/getDatos');
+        
+        $.ajax({
+            type: 'POST',
+            url: _Post,
+            dataType: 'json',
+            data: { espId: $("#Especialidad").val() },
+            success: function (data, textStatus, jqXHR) {
+                //alert(data);
+                console.log(data);
+                if (data.count > 0) {
+                    var aviso = data.data;
+
+                    pathImg=GetPathApp('Content/General/Alertas/Atencion.png');
+                    MensajeEmergente(aviso.aviTitulo, aviso.aviContenido, pathImg, true)
+                    var csWindow = $("#winAvisoNovedades").data("tWindow");
+                    if (csWindow != null) {
+
+                        $("#aviTitulo").text(aviso.aviTitulo);
+                        $("#aviContenido").text(aviso.aviContenido);
+                        $("#aviId").val(aviso.aviId);
+
+                        csWindow.center();
+                        csWindow.open();                        
+                    }
+                }
+            },
+            error: function (error) {
+                //alert(error);
+                console.log(error);
+            }
+        });
+
+
+    }
+
+    //function isDefined(variable) {
+    //    return (typeof (window[variable]) == "undefined") ? false : true;
+    //}
+
+
+    function btnAceptarAvisoClick() {
+
+        var csWindow = $("#winAvisoNovedades").data("tWindow");
+        if (csWindow != null) {
+            csWindow.close();
+        }
+
+
+        var _Post = GetPathApp('catAviso/decrementaAviso');
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: _Post,
+            dataType: 'json',
+            data: {
+                aviId: $("#aviId").val(),
+                aviActivo: $("#chkNoMostrarAviso").is(':checked')?false:true
+            },
+            success: function (data, textStatus, jqXHR) {
+                //alert(data);
+                console.log(data);                
+            },
+            error: function (error) {
+                //alert(error);
+                console.log(error);
+            }
+        });
+
+    }
+</script>

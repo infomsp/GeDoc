@@ -1,0 +1,288 @@
+﻿@using GeDoc
+@using GeDoc.Models
+
+<style>
+    #pacNombre, #pacApellido {
+        width: 14em;
+    }
+
+</style>
+<script>
+    
+    function calcularCUIL(nro, s) {
+        if (isNaN(nro))
+            return 0;
+        var id = 0;
+        var mult = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+        var sum = 0;
+        var g = s === 0 ? "27" : s === 1 ? "20" : "30";
+        var nroString = nro.toString();
+        for (var i = nroString.length; i < 8; i++) {
+            nroString = "0" + nroString;
+        }
+        nroString = g + nroString;
+        for (var j = 0; j < nroString.length; j++) {
+            sum += parseInt(nroString[j]) * mult[j];
+        }
+        var res = sum % 11;
+        if (res === 0) {
+            return g + "-" + nro.toString() + "-" + "0";
+        } else if (res === 1) {
+            if (s === 0) {
+                return "23" + "-" + nro.toString() + "-" + "9";
+            } else {
+                return "23" + "-" + nro.toString() + "-" + "4";
+            }
+        } else {
+            return g + "-" + nro.toString() + "-" + (11 - res).toString();
+        }
+    }
+
+    function autoGenerarCUIL() {
+        if ($("#tipoIdSexo").val() === "186" || $("#pacNumeroDocumento").val().length > 8 || $("#pacNumeroDocumento").val().length < 6) {
+            $("#pacCUIL").val("");
+            return;
+        }           
+        var s = $("#tipoIdSexo").val() === "9" ? 0 : 1;
+        var nro = $("#pacNumeroDocumento").val();
+        $("#pacCUIL").val(calcularCUIL(nro, s));
+    }
+
+    function pacNumeroDocumento_OnLoad(e) {
+        var docVal = $(e.currentTarget).val() === "0" ? "" : $(e.currentTarget).val();
+        $(e.currentTarget).val(docVal)                       
+                          .siblings(".t-formatted-value")
+                          .text(docVal)
+                          .css({
+                                "width": "94%",
+                                "text-align": "center",
+                                "font-weight": "bold",
+                                "font-size": "1.3em"
+                          });;
+        $(e.currentTarget).focusout().siblings(".t-formatted-value").focusout();
+    }
+
+    function initPaciente() {
+        var ts = $("#PacienteDatos").data("tTabStrip");
+        ts.enable($(".t-item", ts.element)[0]);
+
+        $("#pacNumeroDocumento").unbind("keyup",buscarDNI).keyup(autoGenerarCUIL);
+    }
+
+    $("#pacNumeroDocumento").keyup(buscarDNI);
+
+    function buscarDNI(e) {
+        if (e.keyCode !== 13) return;
+        var dniValue = parseInt(e.currentTarget.value);
+        $.post("../catPaciente/ExistePaciente", { dni: dniValue }, function (d) {
+            if (d) {
+                var pacDupWin = $.telerik.window.create({
+                    title: "Atención - ¡El DNI ya existe!",
+                    html: "<img src='@Url.Content("~/Content/General/WaitingIndicator.gif")'/>",
+                    contentUrl: "../catPaciente/PacienteDuplicado?dni=" + dniValue,
+                    modal: true,
+                    resizable: false,
+                    draggable: true,
+                    scrollable: false,
+                    onLoad: function() {
+                        $(this).data("tWindow").center();
+                    },
+                    onRefresh: function() {
+                        $(this).data("tWindow").center();
+                    },
+                    onClose: function() {
+                        this.remove();
+                    }
+                });
+                window.pacDupWin = $(pacDupWin).data("tWindow");
+            } else {
+                buscarEnPadron(dniValue);
+            }
+        }).fail(function(e) {
+            jAlert("Ha ocurrido un error, vuelva a intentarlo más tarde\n\n\n Detalles del error:\n "+e.status+" - "+e.statusText, "Error");
+        });
+    }
+
+    function buscarEnPadron(dniValue) {
+        var tipoDniValue = $("#tipoIdTipoDocumento").val();
+        var url = "../catPaciente/ExisteDocumentoEnPadron";
+        var data = { dni: dniValue, tipoDni: tipoDniValue };
+        var success = function(d) {
+            if (d) {
+                var datosPadron = $.telerik.window.create({
+                    title: "Información - DNI encontrado en padron.",
+                    html: "<img src='@Url.Content("~/Content/General/WaitingIndicator.gif")'/>",
+                    contentUrl: "../catPaciente/DatosPadron?dni=" + dniValue + "&tipoDni=" + tipoDniValue,
+                    modal: true,
+                    resizable: false,
+                    draggable: true,
+                    scrollable: false,
+                    onLoad: function () {
+                        $(this).data("tWindow").center();
+                    },
+                    onRefresh: function () {
+                        $(this).data("tWindow").center();
+                    },
+                    onClose: function () {
+                        this.remove();
+                    }
+                });
+                window.datosPadronWin = $(datosPadron).data("tWindow");
+            } else {
+                enableFields();
+            }           
+        }
+        $.post(url, data, success);
+    }
+
+
+    function enableFields() {
+        var tInputType = ["tDropDownList", "tComboBox", "tTextBox","tDatePicker"];
+        for (var t in tInputType) {
+            if (tInputType.hasOwnProperty(t)) {
+                $("#pacGeneral * ").each(function () {
+                    var elementData = $(this).data(tInputType[t]);
+                    if (elementData)
+                        elementData.enable();
+                });
+            }
+        }
+        $("#pacGeneral [data-field][disabled]").removeAttr("disabled");
+        var tabStrip = $("#PacienteDatos").data("tTabStrip");
+        tabStrip.enable($(".t-item", tabStrip.element));
+        $("#pacApellido").focus();
+    }
+
+    function onChangeCombo(e) {
+        debugger;
+        var _obj = '#' + e.currentTarget.id;
+        var _comboBox = $(_obj).data('tComboBox');
+        var _comboBoxValue = $(_obj).data('tComboBox').value();
+        var _elemento = _comboBox.data[1];
+        if (!$.isNumeric(_comboBoxValue)) {
+            _comboBox.select(0);
+            //_comboBox.data[1].selected = true;
+        }
+    }
+
+</script>
+
+@{
+    catPaciente modelo = Model as catPaciente;
+    bool nuevoPaciente = modelo.pacId <= 0 && modelo.pacPadron == null ;
+}
+<div id="pacGeneral" class="pacDatos">
+    <input type="hidden" value="@modelo.pacId" data-field="pacId"/>
+    <table>
+        <tbody>     
+        <tr>
+            <td>Tipo y Nº de Documento</td>
+            <td>
+                @(Html.Telerik().DropDownList()
+                    .Name("tipoIdTipoDocumento")
+                    .SelectedIndex(0)
+                    .BindTo((SelectList) ViewData["select_tipoIdTipoDocumento"])
+                    .HtmlAttributes(new
+                    {
+                        style = "text-align:center"
+                    })
+                    .HiddenInputHtmlAttributes(new
+                    {
+                        data_field = "tipoIdTipoDocumento"
+                    }))
+                @(Html.Telerik().IntegerTextBox()
+                    .Name("pacNumeroDocumento")
+                        .HtmlAttributes(new
+                        {
+                            style = "margin-top: -13px;margin-left: 8px;"
+                        })
+                    .ClientEvents(e => e.OnLoad("pacNumeroDocumento_OnLoad"))
+                    .EmptyMessage("")
+                    .Spinners(false)
+                    .InputHtmlAttributes(new
+                    {
+                        placeholder = "Nº de Documento", 
+                        style = "width:8em;", 
+                        data_field = "pacNumeroDocumento"
+                    })
+                    .Value(modelo.pacNumeroDocumento))
+            </td>
+        </tr>
+        <tr>
+            <td>Apellido y Nombre</td>
+            <td>
+                <input data-field="pacApellido" type="text" id="pacApellido" placeholder="Apellido" value="@modelo.pacApellido" @(nuevoPaciente ? "disabled" : "")/>
+                <input data-field="pacNombre" type="text" id="pacNombre" placeholder="Nombre" value="@modelo.pacNombre" @(nuevoPaciente ? "disabled" : "")/>
+            </td>
+        </tr>
+        <tr>
+            <td>Nº de Historia Clínica</td>
+            <td>
+                <input type="text" id="nroHC" data-field="nroHC" value="@(modelo.nroHC ?? "")" @(nuevoPaciente ? "disabled" : "")/>
+            </td>
+        </tr>
+        <tr>
+            <td>Sexo</td>
+            <td>
+                @(Html.Telerik().DropDownList().Name("tipoIdSexo").SelectedIndex(2).Enable(!nuevoPaciente)
+                      .BindTo((SelectList) ViewData["select_tipoIdSexo"]).HtmlAttributes(new {style = "text-align:center"})
+                      .ClientEvents(e => e.OnChange("autoGenerarCUIL")).HiddenInputHtmlAttributes(new {data_field = "tipoIdSexo"}))
+            </td>
+        </tr>
+        <tr>
+            <td>CUIL</td>
+            <td>
+                <input data-field="pacCuil" type="text" id="pacCUIL" placeholder="XX-XXXXXXXX-X" value="@modelo.pacCUIL" @(nuevoPaciente ? "disabled" : "")/>
+            </td>
+        </tr>
+        <tr>
+            <td>Fecha de Nacimiento</td>
+            <td>
+                @(Html.Telerik().DatePicker().Name("pacFechaNacimiento").Enable(!nuevoPaciente)
+                      .InputHtmlAttributes(new {placeholder = "DD/MM/AAAA", data_field = "pacFechaNacimiento"}).Value(modelo.pacFechaNacimiento))
+            </td>
+        </tr>
+        <tr>
+            <td>Estado Civil</td>
+            <td>
+                @(Html.Telerik().DropDownList().Name("tipoIdEstadoCivil").Enable(!nuevoPaciente)
+                      .SelectedIndex(3).BindTo((SelectList) ViewData["select_tipoIdEstadoCivil"])
+                      .HtmlAttributes(new {style = "text-align:center"}).HiddenInputHtmlAttributes(new {data_field = "tipoIdEstadoCivil"}))
+            </td>
+        </tr>
+        <tr>
+            <td>Ocupación</td>
+            <td>
+                @(Html.Telerik().DropDownList().Name("tipoIdOcupacion").SelectedIndex(0).Enable(!nuevoPaciente)
+                      .BindTo((SelectList) ViewData["select_tipoIdOcupacion"])
+                      .HtmlAttributes(new {style = "text-align:center;width:70%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "tipoIdOcupacion"}))
+            </td>
+        </tr>
+        <tr>
+            <td>Nacionalidad</td>
+            <td>
+                @(Html.Telerik().ComboBox().Name("paisId").SelectedIndex(0).Enable(!nuevoPaciente)
+                      .BindTo((SelectList) ViewData["select_paisId"]).HtmlAttributes(new {style = "text-align:center;width:70%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "paisId"})
+                      .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"}).AutoFill(true).HighlightFirstMatch(true)
+                      .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                      .ClientEvents(e => e.OnChange("onChangeCombo")))
+            </td>
+        </tr>
+        <tr>
+            <td>Obra Social</td>
+            <td>
+                @(Html.Telerik().ComboBox().Name("osId").Enable(!nuevoPaciente)
+                      .SelectedIndex(0).BindTo((SelectList) ViewData["select_osId"])
+                      .HtmlAttributes(new {style = "text-align:center;width:100%"})
+                      .HiddenInputHtmlAttributes(new {data_field = "osId"})
+                      .InputHtmlAttributes(new {style = "text-overflow: ellipsis;"})
+                      .DropDownHtmlAttributes(new {style = "max-height:140px"})
+                      .AutoFill(true).HighlightFirstMatch(true).Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains))
+                      .ClientEvents(e => e.OnChange("onChangeCombo")))
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

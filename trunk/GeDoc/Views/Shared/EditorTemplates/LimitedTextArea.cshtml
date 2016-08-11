@@ -1,0 +1,49 @@
+﻿@model string
+@{
+    
+    // Obtenemos el valor de la anotación MaxLength del modelo...
+    int maxLength = 0;
+    var stringLengthAdapter = ViewContext.ViewData.ModelMetadata
+        .GetValidators(ViewContext.Controller.ControllerContext)
+        .OfType<StringLengthAttributeAdapter>()
+        .FirstOrDefault();
+        
+    if (stringLengthAdapter != null)
+    {
+        var parms = stringLengthAdapter.GetClientValidationRules()
+                    .First()
+                    .ValidationParameters;
+        if (parms.ContainsKey("max"))
+        {
+            maxLength = (int)parms["max"];
+        }
+    }
+
+    // Obtenemos ahora el id y name del <textarea> a editar...
+    var id = ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId("");
+    var name = ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName("");
+}
+@Html.TextAreaFor(model => model, new { cols=50, rows=5 })
+@if (maxLength > 0)
+{
+    <div class="textarea-chars" id="msg-textarea-@(id)">
+        Máximo @maxLength caracteres
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var limit = $('#@id').limit;
+            if (!limit) {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = "@Url.Content("~/scripts/jquery.limit.js")";
+                $("head").append(script);
+                limit = $('#@id').limit;
+            }
+            if (limit) {
+                $("#msg-textarea-@id")
+                    .html("Quedan <span id='left@(id)'></span> caracteres");
+                $('#@id').limit('@maxLength', '#left@(id)');
+            }
+        });
+    </script>
+}

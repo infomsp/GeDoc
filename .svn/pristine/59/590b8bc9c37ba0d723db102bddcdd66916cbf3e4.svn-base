@@ -1,0 +1,367 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+
+@{
+    Html.RenderPartial("WaitingCRUD", "AltaAnulacionCartaMedica");    
+}
+<script>
+    function onChangeFechaCMAA() {
+        $("#divError").hide();
+        $("#divAgenteInexistente").hide();
+    }
+</script>
+
+<div class="iconos BordeRedondeado" style="text-align: center; background: white; padding-top: 3px; padding-bottom: 3px; border-color: cornflowerblue;">
+    <div id="divCargaDeDocumentoAA" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center;">
+        <div>
+            <label>Número de Documento: </label>
+            <input type="text" placeholder="Ingrese el DNI" id="txtNumeroDocumentoCMAA" maxlength="8" style="width: 125px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+            <label>Fecha de Licencia: </label>
+            @{ Html.Telerik().DatePicker()
+                    .Name("dtFechaCMAA")
+                    .Value(DateTime.Now)
+                    .ShowButton(true)
+                    .OpenOnFocus(true)
+                    .TodayButton()
+                    .HtmlAttributes(new { style = "margin-top: 2px;" })
+                    .ClientEvents(eventos => eventos.OnChange("onChangeFechaCMAA"))
+                    .Render();
+            }
+            <button id="btnBuscarCMAA" class="t-button t-button-icon" onclick="onBuscarAgenteCRUDJM();" style="width: 100px;">
+                <span class="t-icon t-search"></span> Buscar
+            </button>
+        </div>
+    </div>
+    <div id="divAgenteInexistente" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención!</label>
+        <span>No se encontró ninguna Cartas Médica en condiciones de "dar de Alta o Anular" para el DNI y la Fecha Ingresada.</span>
+    </div>
+    <div id="divError" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        <p><span id="spanMensajeError">No se ha podido completar la operación, intente en unos minutos nuevamente.</span></p>
+    </div>
+    <div id="divErrorServidor" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        No se ha podido completar la operación, intente en unos minutos nuevamente.
+        <p>Si el problema persiste, comuniquese con el "Área de Sistemas del Nivel Central".</p>
+    </div>
+    <div id="divAgenteEncontrado" class="BordeRedondeado" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none; border-color: cornflowerblue;">
+        <p>Revise la información y haga clic en la opción deseada.</p>
+        <div style="margin-left: 21%; margin-bottom: 20px;">
+            <div class="BordeSombreado" style="width: 515px; padding: 15px; border-color: cornflowerblue;">
+                <table id="tblEspecialidades" style="border: none; text-align: left;">
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Agente:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke; width: 370px;"><b><span id="spanNombreAgente" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>N° de Carta Médica:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanNumeroCM" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Especialidad:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanEspecialidad" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Motivo:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanMotivoCM" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Inicio de Licencia:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanInicioLicencia" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Días de Licencia:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanDiasLicencia" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Artículo:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanArticulo" style="font-weight: bold;">CARLOS BUENO RICARDO</span></b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2"><label>Estado:</label></td>
+                        <td colspan="2" style="background-color: whitesmoke;"><b><span id="spanEstado" style="font-weight: bold;"></span></b></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <button class="t-button t-isert t-button-icon" onclick="onConfirmarCMAA('Alta');" style="width: 100px;" title="Dar el Alta Médica." >
+            <span class="t-icon t-insert"></span> Alta
+        </button>
+        <button class="t-button t-button-icon" onclick="onConfirmarCMAA('Anular');" style="width: 100px;" title="Anular Carta Médica.">
+            <span class="t-icon t-cancel"></span> Anular
+        </button>
+        <button class="t-button t-button-icon" onclick="onCancelarCMAA();" style="width: 100px;" title="Ingresar otro DNI y Fecha." >
+            <span>
+                    <img src="@(Url.Content("~/Content"))/General/Salir.png" height="17" style="vertical-align: middle;" />
+            </span> Cancelar
+        </button>
+    </div>
+
+    @{
+        if (Session["Usuario"] == null)
+        {
+            @Html.Telerik().ScriptRegistrar().Globalization(true).DefaultGroup(group => group.Combined(true).Compress(true))
+        }
+    }
+
+    <div id="divOverlayCM" class="es-overlay" style="z-index: 19014; display: none;"></div>
+    <div id="wPopUpMensajeCM" class="t-widget" style="z-index: 19019; display: none;">
+        <div class="t-window-titlebar t-header" style="height: 17px;">
+            <span class="t-window-title">Solicitud de Turno de Junta Médica</span>
+        </div>
+        <div class="t-window-content t-content" style="">
+            <div>
+                @*<label>Carta Médica N°: </label><b><span id="spanNroCM"></span></b>
+                <br/>*@
+                <p>Debe presentarse por la <b>Dirección de Control y Reconocimientos Médicos</b> el día <b><span id="spanFechaCM"></span></b> a las <b><span id="spanHoraCM"></span></b> hs.
+                </p>
+                <br/>
+                <p>IMPORTANTE: No olvide llevar todos los estudios y certificados médicos correspondientes.</p>
+                <br/>
+                @*<p>Usted debe avisar a su jefe y/o director, antes de las 2 primeras horas de iniciada su jornada laboral, caso contrario será nulo todo lo actuado.
+                </p>*@
+            </div>
+            <hr/>
+            <div style="text-align: center; width: 100%;">
+                <button class="t-button t-close t-button-icon" onclick="onCerrarMensajeCM();" style="width: 100px;">
+                    <span class="t-icon t-close"></span> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var DatosEncontrados;
+
+    AbrirWaitingCRUD("AltaAnulacionCartaMedica");
+
+    function AjustarAPantalla() {
+        if (isMobile()) {
+            zoomPantalla = '0.5';
+            $('.iconos').css({ 'zoom': zoomPantalla });
+        }
+    }
+    //Seleccionamos el primer campo
+    $("#divCargaDeDocumentoAA").ready(function () {
+        debugger;
+        CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+        AjustarAPantalla();
+    });
+
+    function onCancelarCMAA() {
+        $("#divAgenteEncontrado").hide();
+        $("#divAgenteInexistente").hide();
+        $("#divErrorServidor").hide();
+        $("#divError").hide();
+        $("#txtNumeroDocumentoCMAA").val("");
+        $("#btnBuscarCMAA").removeClass("t-state-disabled");
+        $("#txtNumeroDocumentoCMAA").removeAttr("disabled");
+        $("#txtNumeroDocumentoCMAA").focus().select();
+        dpFecha.enable();
+    }
+
+    function onBuscarAgenteCRUDJM() {
+        DatosEncontrados = null;
+        if ($("#txtNumeroDocumentoCMAA").val().trim() === "") {
+            $("#txtNumeroDocumentoCMAA").focus().select();
+            return;
+        }
+
+        if ($("#btnBuscarCMAA").is(".t-state-disabled")) {
+            return;
+        }
+        debugger;
+        //método que tome la fecha del cliente, por que si el cliente tiene mal la fecha de su PC, genera problemas
+        var dpFecha = $('#dtFechaCMAA').data('tDatePicker');
+        var dateVar = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        var dsplit = dateVar.split("/");
+        var dHoy = new Date(dsplit[2], dsplit[1], dsplit[0]);
+        //if (dHoy < dpFecha.value().toLocaleString("es-ar", { day: "2-digit", month: "2-digit", year: "numeric" })) {
+        if (dHoy < dpFecha.value()) {
+            jAlert("Fecha incorrecta, no puede tener una licencia Médica a futuro.", "¡Error!", function() {
+                $('#dtFechaCMAA').focus().select();
+            });
+            return;
+        }
+
+        AbrirWaitingCRUD("AltaAnulacionCartaMedica");
+        debugger;
+        var FechaLicencia = formatoFecha(dpFecha.value(), "{0:d}");
+        var UrlAccion = "@(Url.Content("~/DCRM/onBuscarAgenteCMAA"))";
+
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { nroDocumento: $("#txtNumeroDocumentoCMAA").val(), FechaLicencia: FechaLicencia },
+            error: function () {
+                CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+                $("#txtNumeroDocumentoCMAA").focus().select();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+                if (respuesta.Encontrado) {
+                    debugger;
+                    $("#divAgenteInexistente").hide();
+                    $("#divError").hide();
+                    $("#divErrorServidor").hide();
+                    var Agente = respuesta.Datos.agtApellidoyNombre;
+                    $("#divAgenteEncontrado").show();
+                    $("#btnBuscarCMAA").addClass("t-state-disabled");
+                    $("#txtNumeroDocumentoCMAA").attr("disabled", "disabled");
+                    $("#spanNombreAgente").text(Agente);
+                    $("#spanNumeroCM").text(respuesta.Datos.cmedNumero);
+                    $("#spanMotivoCM").text(respuesta.Datos.cmedMotivoSolicitud == "EA" ? "Enfermedad de Agente" : "Enfermedad de Familiar");
+                    $("#spanEspecialidad").text(respuesta.Datos.espNombre);
+                    $("#spanDiasLicencia").text(respuesta.Datos.licCantidad);
+                    $("#spanArticulo").text(respuesta.Datos.Articulo);
+                    $("#spanInicioLicencia").text(respuesta.Datos.FechaLicencia);
+                    $("#spanEstado").text(respuesta.Datos.EstadoCM);
+                    $(".t-button.t-insert.t-button-icon").focus().select();
+                    DatosEncontrados = respuesta.Datos;
+                    dpFecha.disable();
+                } else {
+                    $("#divAgenteInexistente").show();
+                    $("#txtNumeroDocumentoCMAA").val("");
+                    $("#txtNumeroDocumentoCMAA").focus().select();
+                }
+            }
+        });
+    }
+
+
+    function CentrarCRUDAA() {
+        var AnchoPantalla = $("#wCRUDTurnoJuntaMedica").width();
+        var AltoPantalla = $("#wCRUDTurnoJuntaMedica").height();
+        debugger;
+        if (isMobile()) {
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: 0,
+                top: 50
+            });
+        } else {
+            if ("@(Session["Usuario"] == null ? "AJUSTAR" : "NOAJUSTAR")" === "AJUSTAR" || isMobile()) {
+                AjustarAPantalla();
+            }
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: (AnchoPantalla - 702) / 2,
+                top: (AltoPantalla - $('#wPopUpMensajeCM').outerHeight()) / 2
+            });
+        }
+    }
+
+    $(window).resize(function() {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        //CentrarCRUDAA();
+    });
+
+    function formatoFecha(date, format) {
+        format = format || '{0:d}';
+        return $.telerik.formatString(format, date);
+    }
+
+    function onConfirmarCMAA(pAccion) {
+        $("#divAgenteInexistente").hide();
+        $("#divErrorServidor").hide();
+        $("#divError").hide();
+
+        if (pAccion === "Alta") {
+            if (DatosEncontrados.estEstado !== "AA" && DatosEncontrados.estEstado !== "NV") {
+                jAlert('Solo puede dar de Alta Cartas Médicas "Aprobadas Vigentes o Aprobadas Vigentes Cerradas"', "¡Error!", function() {
+                });
+                return;
+            }
+        }
+
+        jConfirm("¿Confirma " + (pAccion === "Alta" ? "dar el Alta Médica a" : "Anular") + " esta Licencia Médica?", (pAccion === "Alta" ? "Dando el Alta Médica" : "Anulando") + "...", function(r) {
+            if (r) {
+                AbrirWaitingCRUD("AltaAnulacionCartaMedica");
+                debugger;
+                var UrlAccion = "@(Url.Content("~/JuntaMedica/setCartaMedicaAA"))";
+                $.ajax({
+                    type: "POST",
+                    url: UrlAccion,
+                    data: { cmedId: DatosEncontrados.cmedId, pAccion: pAccion },
+                    error: function () {
+                        CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+                        onCancelarCMAA();
+                        $("#divErrorServidor").show();
+                    },
+                    success: function (respuesta) {
+                        CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+                        if (!respuesta.Error) {
+                            var grid = $("#gridGestionCM").data("tGrid");
+                            if (grid != null){
+                                grid.ajaxRequest();
+                            }
+
+                            //if (pAccion ==="Alta"){
+                                var _Parametros = new Array(new Array(DatosEncontrados.cmedId * -1, 'licenciaId'));
+                                InvocarReporte('ComprobanteLicencia', _Parametros, true);
+                            //}
+                            onCancelarCMAA();
+                        } else {
+                            CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+                            $("#spanMensajeError").text(respuesta.Mensaje);
+                            $("#divError").show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
+    function onAbrirMensajeCM(Datos) {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        CentrarCRUDAA();
+        //jConfirm("¿Confirma la Impresión de Notificaciones?", "Imprimir...", function (r) {
+        //    if (r) {
+        debugger;
+                var _Parametros = new Array(new Array(Datos.turId, 'turId'), new Array('A', 'Tipo'));
+                InvocarReporte('InformesJuntaMedicaUnificado', _Parametros, true);
+
+                $("#spanNroCM").text(Datos.cmedNumero);
+                $("#spanFechaCM").text(Datos.FechaTexto);
+                $("#spanHoraCM").text(Datos.Hora);
+                $("#divOverlayCM").show();
+                $("#wPopUpMensajeCM").show();
+                $(".t-button.t-close.t-button-icon").focus().select();
+       //     }
+       // });
+    }
+    function onCerrarMensajeCM() {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        $("#divOverlayCM").hide();
+        $("#wPopUpMensajeCM").hide();
+        onCancelarCMAA();
+    }
+
+    $("#txtNumeroDocumentoCMAA").keydown(function (e) {
+        $("#divErrorServidor").hide();
+        if (e.which === 13) {
+            $('#dtFechaCMAA').focus().select();
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $("#dtFechaCMAA").keydown(function (e) {
+        $("#divErrorServidor").hide();
+        if (e.which === 13) {
+            onBuscarAgenteCRUDJM();
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    CentrarCRUDAA();
+    $("#txtNumeroDocumentoCMAA").focus().select();
+    CerrarWaitingCRUD("AltaAnulacionCartaMedica");
+
+</script>

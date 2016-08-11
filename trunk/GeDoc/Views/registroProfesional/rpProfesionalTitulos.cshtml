@@ -1,0 +1,127 @@
+﻿
+<script type="text/javascript">
+    function onCommandEdit_profesionalTitulo(e) {
+        //_WindowCRUD = $("#gridprofesionalTituloPopUp").data("tWindow");
+        //onCommandEdit(e);
+    }
+    function onDataBinding_profesionalTitulo(e) {
+        //debugger;
+        //e.data = $.extend(e.data, { pId: 1 });
+    }
+    
+    function onCommand_profesionalTitulo(e) {
+        switch (e.name) {
+            case "cmdModificar_profesionalTitulo":
+                onAccion_profesionalTitulo("Modificar", e.dataItem['ptitId']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdEliminar_profesionalTitulo":
+                onAccion_profesionalTitulo("Eliminar", e.dataItem['ptitId']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;           
+        }
+    }
+    
+    function onAccion_profesionalTitulo(pAccion, ptitId) {
+        switch (pAccion) {
+            case "Agregar":
+                break;
+            case "Modificar":
+                break;
+            case "Eliminar":
+                break;
+            case "Consultar":
+                break;
+        }
+
+        var wCliniMedica = $("#wCRUDprofesionalTitulo").data("tWindow");
+        $('#wCRUDprofesionalTitulo').css({ 'height': 280, 'width': 900});
+        $('#wCRUDprofesionalTitulo').find('div.t-window-content').css({ 'height': 279, 'width': 889 });
+        wCliniMedica.content('<img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" width="22px" alt="" /><strong> Cargando...</strong>');
+        wCliniMedica.ajaxRequest(GetPathApp("registroProfesional/getProfesionalTitulo") + "?pAccion=" + pAccion + "&ptitId=" + ptitId);
+        wCliniMedica.center().title(pAccion).open();
+    }
+
+</script>
+@model GeDoc.catProfesionalWS
+
+@{
+    ViewData["vd_ProfesionalTitulos"] = new List<GeDoc.Models.RegistroProfesionales.catProfesionalTitulosWS>();
+ }
+<div>
+    @{
+        Html.Telerik().Grid((List<GeDoc.Models.RegistroProfesionales.catProfesionalTitulosWS>)ViewData["vd_ProfesionalTitulos"])
+        .Name("gridprofesionalTitulo")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.ptitId);
+        })
+        .Localizable("es-AR")
+       .ToolBar(commands =>
+        {
+            commands.Template(
+                    @<text>
+                            @if(Model.modoLectura==false)
+                            {
+                                <div title="Agregar" class="t-button" onclick="onAccion_profesionalTitulo('Agregar', -1)" style="padding: 0px; width: 70px; min-width: 26px; min-height: 24px;">
+                                    <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="15" width="15" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -47px -319px; vertical-align: middle;" />
+                                    <label style="cursor: pointer;">Agregar</label>                            
+                                </div>
+                            }
+                     </text>                    
+                );
+        })
+         .DataBinding(dataBinding =>
+         {
+             dataBinding.Ajax().Select("_profesionalTitulos", "registroProfesional", new { pId = @Model.pId, accesos = 0 });
+         })
+        .Columns(columns =>
+        {
+            columns.Command(commands =>
+            {
+                commands.Custom("cmdModificar_profesionalTitulo")
+                    .Ajax(true)
+                    .ButtonType(GridButtonType.Image)
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                    .HtmlAttributes(new { title = "Editar" });
+                commands.Custom("cmdEliminar_profesionalTitulo")
+                    .Ajax(true)
+                    .ButtonType(GridButtonType.Image)
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -16px -336px;" })
+                    .HtmlAttributes(new { title = "Eliminar" });
+            }).Width("70px").Title("Acciones").Hidden(@Model.modoLectura);
+            columns.Bound(c => c.ptitId).Hidden();
+            columns.Bound(c => c.ptitTitulo).Width("200px").Title("Titulo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.ptitProfesion).Width("200px").Title("Profesion").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+            columns.Bound(c => c.ptitOrganismoEmisor).Width("200px").Title("Organismo Emisor").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });                
+        })        
+        .Footer(true)
+        .ClientEvents(clientEvents => clientEvents.OnDataBinding("onDataBinding_profesionalTitulo").OnCommand("onCommand_profesionalTitulo"))
+        .Filterable()
+        .Selectable()
+        .Resizable(resizing => resizing.Columns(true))
+        .Scrollable(scroll => scroll.Enabled(true).Height(562))
+        .Sortable()
+        .Render();
+    }
+</div>
+
+   
+      .
+@{Html.Telerik().Window()
+        .Name("wCRUDprofesionalTitulo")
+        .Title("Acción")
+        .Visible(false)
+        .Content(() =>
+        {})
+       .Buttons(b => b.Close())
+       .Draggable(true)
+       .Scrollable(false)
+       .Modal(true)
+       .Width(900)
+       .Render();}
+
+
+

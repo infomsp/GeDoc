@@ -1,0 +1,136 @@
+﻿@model GeDoc.Models.RegistroProfesionales.catOrganismoEmisorWS
+
+<script>
+     function paisLoading_OnLoad(e) {
+        var combobox = $(this).data('tDropDownList');
+        combobox.reload();
+    }
+
+</script>
+
+<div id="waitingCRUD_OrgEmisor" class="es-overlay" style="display: none;text-align: center;">
+    <div style="margin-top: 5%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>
+
+@using (Html.BeginForm("setOrganismoEmisor", "registroProfesional", FormMethod.Post, new { id = "frmCRUD_OrganismoEmisor" }))
+{
+          <div   class="BordeRedondeado" style="border-color: Silver; padding: 3px 3px 3px 3px; display: inline-block;">                              
+                <div class="rowTitulo">
+                    <label>Organismo Emisor:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.oEmisorNombre, new { style = "width: 600px;" })
+                    </div>
+                     <label>Código SISA</label>
+                    <div class="rowItem">
+                        @Html.TextBoxFor(model => Model.oeSISA, new { style = "width: 70px;" })
+                    </div>
+                </div>
+                <div class="rowTitulo">
+                    <label style="margin-left: 5px;">Pais:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().ClientEvents(events => events.OnLoad("paisLoading_OnLoad")).Name("paisOEmisor").SelectedIndex(0).CascadeTo("provOrgEmisorId").DataBinding(binding => binding.Ajax().Select("_AjaxGetPais", "registroProfesional"))
+                    </div>
+                    <label>Provincia:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("provOrgEmisorId").SelectedIndex(0).CascadeTo("depOrgEmisorId").DataBinding(binding => binding.Ajax().Select("_AjaxGetProvinciasOrgEmisor", "registroProfesional"))
+                    </div>
+                    <label>Departamento:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("depOrgEmisorId").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetDepartamentosOrgEmisor", "registroProfesional"))
+                    </div>
+                </div>
+        </div>
+
+         <div style="text-align: center; margin-top: 15px;">
+            <div id="btnAceptar" class="t-button"  onclick="aceptarOrgEmisorAccion()" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button"  onclick="cancelarOrgEmisorAccion()" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>   
+}
+<script>
+     
+  
+
+    function aceptarOrgEmisorAccion()
+    {
+        if ($("#oEmisorNombre").val().length == 0) {
+            jAlert("Debe ingresar un nombre.", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#oeSISA").val().length == 0)
+        {
+            jAlert("Debe ingresar un código SISA", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+        
+        $("#waitingCRUD_OrgEmisor").show();
+        var $form = $('#frmCRUD_OrganismoEmisor');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });                    
+                } else
+                {
+                    debugger;
+                    $("#oeNombre").val(respuesta.oeNombre);
+                    var windowElement = $('#wCRUD_OrganismoEmisor').data('tWindow');
+                    windowElement.close();
+                }
+                $("#waitingCRUD_OrgEmisor").hide();
+            }
+        });
+    }
+
+    function cancelarOrgEmisorAccion() {
+        var window = $("#wCRUD_OrganismoEmisor").data("tWindow");
+        window.close();
+    }
+
+    //Seleccionamos el primer campo
+    $("#frmCRUD_OrganismoEmisor").ready(function () {
+        $("#oEmisorNombre").focus();
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+  
+ 
+</script>
+
+<style>    
+    #oEmisorNombre {
+        width:371px !important;
+    }
+</style>

@@ -1,0 +1,25 @@
+﻿@model GeDoc.Models.RegistroProfesionales.rpProfesionalConsulta
+<!-- TAB  -->
+@{ Html.Telerik().TabStrip()
+        .Name("tabRegistroProfesional")
+        .HtmlAttributes(new { style = "height: 98%; padding: 0px; background: transparent; border: 0px; margin-left: -4px;" })
+        .Items(tabstrip =>
+        {
+            tabstrip.Add()
+                .Text("General")
+                .ContentHtmlAttributes(new { style = "height: 480px; padding: 8px;" })
+                .Content(() =>
+                {
+                    Html.RenderPartial("rpProfesionalDatosCompleto", @Model.profesional);
+                ;});
+            tabstrip.Add()
+            .Text("Tramites")
+            .ContentHtmlAttributes(new { style = "height: 480px; padding: 8px;" })
+            .Content(() =>
+            {
+                Html.RenderPartial("rpTramites",@Model.profesional);
+            });
+        })
+    .SelectedIndex(0)
+    .Render();
+ ;}

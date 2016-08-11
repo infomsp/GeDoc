@@ -1,0 +1,9 @@
+------ Build started: Project: GeDoc_Reportes, Configuration: Debug ------
+Building 'rptComprasCuadroComparativo.rdl' for SQL Server 2008 Reporting Services.
+Build complete -- 0 errors, 0 warnings
+------ Deploy started: Project: GeDoc_Reportes, Configuration: Debug ------
+Deploying to http://msp-srv-dba08/ReportServer_MSPMSQL2008R2
+Deploying report '/GeDoc_Reportes/rptComprasCuadroComparativo'.
+Deploy complete -- 0 errors, 0 warnings
+========== Build: 1 succeeded or up-to-date, 0 failed, 0 skipped ==========
+========== Deploy: 1 succeeded, 0 failed, 0 skipped ==========

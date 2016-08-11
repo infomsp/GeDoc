@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="CONPAD">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=MSPS2008\MSPSSQLEXP2008;Initial Catalog=CONPAD</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>5a7396bc-4ff3-47b9-9400-d795a34901f4</DataSourceID>
+</RptDataSource>

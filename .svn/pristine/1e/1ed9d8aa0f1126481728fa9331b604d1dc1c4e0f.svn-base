@@ -1,0 +1,274 @@
+﻿@using GeDoc
+@using GeDoc.Models
+
+<style>
+    #paciente-contenido > .active {
+        display: block;
+    }
+    #pacGeneral, #pacDomicilio, #pacOtros {
+        width: 49.667em;
+        /*height: 26.084em;*/
+    }
+    .pacDatos > table {
+        margin: auto;
+        width: 100%;
+        border: 0;
+    }
+    .pacDatos > table td {
+        border: 0
+    }
+
+    .pacDatos tr:nth-child(even) {
+        background-color: #e8eef4;
+    }
+
+    .pacDatos tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    .pacDatos tr:nth-child(even) > td:nth-child(2) {
+        border-left: 1px solid white;
+    }
+
+    .pacDatos tr:nth-child(odd) > td:nth-child(2) {
+        border-left: 1px solid #e8eef4;
+    }
+
+    .pacDatos td:nth-child(1) {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    #paciente-datos > #button-holder {
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    #pacMessage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 40px;
+        visibility: hidden;
+        text-shadow: 10px 10px 20px grey;
+        text-align: center;
+    }
+
+</style>
+@{
+    catPaciente modelo = Model as catPaciente;
+}
+<script>
+
+    function validarCamposRequeridos() {
+        var field = "";
+        if ($("#pacNumeroDocumento").val().length < 7) {
+            field = "pacNumeroDocumento";
+        }else if ($("#pacFechaNacimiento").data("tDatePicker").value() === null) {
+            field = "pacFechaNacimiento";
+        }else if ($("#pacCalle").val() === "") {
+            field = "pacCalle";
+        } else if ($("#paisId").val() === "" || $("#paisId").val() === null) {
+            field = "paisId";
+        } else if ($("#osId").val() === "" || $("#osId").val() === null) {
+            field = "osId";
+        } else if ($("#locId").val() === "" || $("#locId").val() === null) {
+            field = "locId";
+        } else if ($("#barId").val() === "" || $("#barId").val() === null) {
+            field = "barId";
+        } else if ($("#csId").val() === "" || $("#csId").val() === null) {
+            field = "csId";
+        }
+
+
+        if (field === "") {
+            checkTelephone();
+        } else {
+            highlightRequiredField(field);
+        }           
+    }
+
+    function checkTelephone() {
+        var telCheck = $("#pacTelefonoCasa").val() + $("#pacTelefonoTrabajo").val() + $("#pacTelefonoCelular").val();
+        if (telCheck.length === 0) {
+            jConfirm("¿Está seguro que desea finalizar sin ingresar un telefono de contacto?", "Atención", function(r) {
+                if (r) {
+                    pacGuardarDatos(true);
+                } else {
+                    highlightRequiredField("pacTelefonoCasa");
+                }
+            });
+        } else {
+            pacGuardarDatos(true);
+        }
+    }
+
+    function highlightRequiredField(field) {
+        debugger;
+        var targetField = $("#" + field);
+        if (targetField !== undefined) {
+            if (targetField.css("display") === "none") {
+                targetField = $("#" + field + "-input");
+                if (targetField === undefined)
+                    return;
+            }
+            var tabNumber = targetField.parents(".t-content").attr("id");
+            tabNumber = tabNumber.substr(tabNumber.length - 1);
+            functionOrdinariaParaCambiarPestañaPorqueLaQueHicieronLosForrosDeTelerikNoAnda(tabNumber);
+            var type = $(targetField).attr('type');
+            var auxType = targetField.parent().parent();
+            debugger;
+            if (type == "text")
+            {
+                ////if (auxType.attr('class') == 't-widget t-combobox t-header') {
+                ////    targetField.parent().parent().css({ "border": "red solid 1px", "background-color": "lightyellow" }).focus().blur(function () {
+                ////        targetField.parent().parent().css({ "border": "", "background-color": "" });
+                ////    })
+                ////}
+                ////else {
+                    targetField.css({ "border": "red solid 1px", "background-color": "lightyellow" }).focus().blur(function () {
+                        targetField.css({ "border": "", "background-color": "" });
+                    })
+                ////};
+                //targetField.css({ "border-color": "red", "background-color": "lightyellow" }).focus().blur(function () {
+                //    targetField.css({ "border-color": "", "background-color": "" });
+                //});
+            }
+        }
+    }
+
+    function functionOrdinariaParaCambiarPestañaPorqueLaQueHicieronLosForrosDeTelerikNoAnda(tabNumber) {
+        console.log("Clicking tab: " + tabNumber);
+        $("#PacienteDatos .t-tabstrip-items li:nth-child(" + tabNumber + ")").click();
+    }
+
+    function pacGuardarDatos(validated) {
+        debugger;
+        if (!validated) {
+            validarCamposRequeridos();
+            return;
+        }
+
+        var pacObj = {};
+        $("[data-field]").each(function () {
+            var val;
+            var key = $(this).data("field");
+            if ($(this).attr("type") === "checkbox") {
+                val = $(this).is(":checked");
+            } else {
+                val = $(this).val();
+            }
+            pacObj[key] = val;
+        });
+        //$("#btnGuardar").attr("disabled", true);
+        document.getElementById("btnGuardar").disabled = true;
+        AbrirWaiting();
+        $.post("@Url.Content("~/catPaciente/GuardarPaciente")", pacObj, function () {
+            CerrarWaiting();
+            if (!window["fichaPaciente"]) return;
+            var msg = window.fichaPaciente.contentUrl.indexOf("pacId=") !== -1 ? "Cambios Guardados" : "Paciente Creado";
+            showMessage(msg, 1000, pacCerrarFicha);
+        });
+    }
+
+    function pacCerrarFicha() {
+        if (window.fichaPaciente) {
+            window.fichaPaciente.close();
+            delete window.fichaPaciente;
+        }           
+    }
+    
+    function showMessage(text, totalTime,callback) {
+        $("#pacMessage").text(text);
+        var eW = $("#pacMessage").width();
+        var eH = $("#pacMessage").height();
+        var cW = $("#paciente-datos").width();
+        var cH = $("#paciente-datos").height();
+
+        var eTop = cH / 2 - eH / 2;
+        var eLeft = cW / 2 - eW / 2;
+
+        $("#pacMessage").css({
+            display: "none",
+            visibility: "visible",
+            top: eTop,
+            left: eLeft,
+            zIndex: 9999999,
+            "max-width": (cW - 50) + "px",
+            "max-height": (cH - 50) + "px"
+        });
+
+        $("#pacMessage").fadeIn(totalTime / 2, function () {
+            $(this).fadeOut(totalTime / 2, function () {
+                $(this).css({ display: "block", visibility: "hidden", top: 0, left: 0 });
+                if (typeof callback === "function")
+                    callback();
+            });
+        });
+    }
+
+    @if (modelo.pacId > 0)
+    {
+        @:fichaPaciente.title("Ficha de Paciente - @modelo.pacApellido @modelo.pacNombre")
+    }
+    else
+    {
+        @:fichaPaciente.title("Nuevo Paciente");
+    }
+
+</script>
+<div>
+   @* <nav>
+        <a href="#paciente-datos">Datos</a>
+        <a href="#paciente-historial">Historial Ambulatorio</a>
+        <a href="#paciente-evolucion">Evolución</a>
+        <a href="#paciente-dolencias">Dolencias</a>
+        <a href="#paciente-redes">Redes</a>
+    </nav>*@
+    <div id="paciente-contenido">
+        <div id="paciente-datos" class="active">
+            @{
+                Html.Telerik().TabStrip()
+                    .Name("PacienteDatos")
+                    .Items(item =>
+                    {
+                        item.Add().Text("General").Selected(true)
+                            .Content(() =>
+                            {
+                                Html.RenderPartial("PacienteGeneral", modelo);
+                            }).ContentHtmlAttributes(new { style = "padding:0" });
+                        item.Add().Text("Domicilio").Enabled(modelo.pacId > 0 || modelo.pacPadron != null)
+                            .Content(() =>
+                            {
+                                Html.RenderPartial("PacienteDomicilio", modelo);
+                            }).ContentHtmlAttributes(new { style = "padding:0" });
+                        item.Add().Text("Otros").Enabled(modelo.pacId > 0 || modelo.pacPadron != null)
+                            .Content(() =>
+                            {
+                                Html.RenderPartial("PacienteOtros", modelo);
+                            }).ContentHtmlAttributes(new {style="padding:0"});
+                    }).Effects(e => e.Expand().OpenDuration(AnimationDuration.Normal).CloseDuration(AnimationDuration.Normal))
+                    .Render();
+            }
+            <div id="button-holder">
+                <input id="btnGuardar" type="button" value="Guardar" onclick="pacGuardarDatos()"/>
+                <input id="btnCancelar" type="button" value="Cancelar" onclick="pacCerrarFicha()"/>
+            </div>
+            <div id="pacMessage"></div>
+        </div>
+       @* <div id="paciente-historial">
+
+        </div>
+        <div id="paciente-evolucion">
+
+        </div>
+        <div id="paciente-dolencias">
+
+        </div>
+        <div id="paciente-redes">
+            
+        </div>*@
+    </div>
+
+
+</div>

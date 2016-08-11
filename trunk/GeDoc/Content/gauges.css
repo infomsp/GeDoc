@@ -1,0 +1,80 @@
+/*
+(C) 1999-2015 LMT
+*/
+/* 
+    Created on : Dec 18, 2015, 10:22:55 PM
+    Author     : ltato
+*/
+
+.dial {
+    margin: 0px;
+    width: 200px;
+    display: inline-block;
+    background-color: #FFF;
+    vertical-align: top;
+    border: 1px solid #CECECE;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+.dial.small {
+    text-align: center;
+    width: 210px;
+	height: 200px;
+}
+
+.dial-title {
+    text-align: center;
+    font-family: Arial;
+    /* margin-top: 0; */
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 6px;
+    background-color: #F3F3F3;
+    color: #808080;
+    max-height: 1.2em;
+    overflow: hidden;
+    border-bottom: 1px solid #CECECE;
+}
+.small .dial-title  {
+    font-size: 14px;
+}
+
+.dial-label {
+    /* clear: both; */
+    text-align: center;
+    font-family: Arial;
+    /*margin-top: -20%;*/
+    padding-bottom: 5%;
+    font-weight: 600;
+    font-size: 0.8em;
+    /*padding-left: 30%;
+    padding-right: 30%;*/
+    /* max-height: 32%; */
+    /* padding-bottom: 6%; */
+    color: gray;
+    /* position: relative; */
+    /* left: 0; */
+    /* bottom: 2.9em; */
+}
+.small .dial-label  {
+    font-size: 11px;
+}
+
+.fondo-dial {
+    background-color: #666867;
+    width:100px;
+    height:100px;
+}
+.texto-dial {
+    color: #FF9F4A;
+    padding:30px;
+    font-size: 24px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+canvas {
+    /* border: 1px solid #F00; */
+}

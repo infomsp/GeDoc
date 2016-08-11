@@ -1,0 +1,61 @@
+           
+<div style="background:#fff">    
+<div id="headerBusqueda" style="padding: 10px;">
+    <label>Número de Documento: </label>
+    @*onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"*@
+    <input type="text" placeholder="Ingrese el Número de Documento de Profesional" id="inputSearch" maxlength="8" style="width: 305px;"  />
+    <button  id="btnBuscarCM" class="t-button t-button-icon" onclick="btnBuscar();" style="width: 100px;">
+        <span class="t-icon t-search"></span> Buscar
+     </button>
+  @{ 
+      Html.RenderPartial("WaitingCRUDModel","waitingPrincipal");
+   }    
+</div>
+
+    <div id="content" style="height: 760px;">
+    </div>
+</div>
+
+<script type="text/javascript" >
+
+    $(document).ready(function () {
+        debugger;
+        $("#inputSearch").focus();
+    });
+
+
+    function btnBuscar()
+    {
+            AbrirWaitingCRUD("waitingPrincipal");
+            var url = GetPathApp('registroProfesional/getProfesionalConsulta');
+            $.get(url, { contenidoBusqueda: $("#inputSearch").val() }).done(function (data) {
+
+                if ($('#wBusquedaProfesionales').length > 0) {
+                    $("#wBusquedaProfesionales").remove();
+                }
+
+                $("#content").html(data);
+              
+                if ($('#parentDiv').length > 0) {
+                    debugger;
+                    $("#parentDiv :input").attr("disabled", true);
+                    $("#divSecundario :input").attr("disabled", true);
+                    $('#paisId').attr("disabled", true);
+                    $('#provId').attr("disabled", true);
+                    $('#depId').attr("disabled", true);
+                    $('#btnAceptar').hide();
+                    $('#btnCancelar').hide();
+                    $("#inputDNI").focus();
+                    $("#inputDNI").select();
+                }
+                CerrarWaitingCRUD("waitingPrincipal");
+            });
+    }
+    $('#inputSearch').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            btnBuscar();
+        }
+    });
+</script>

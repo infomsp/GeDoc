@@ -1,0 +1,106 @@
+﻿<script>
+
+    
+    $("#btnAceptar").click(function () {
+        alert("Handler for .click() called.");
+    });
+
+    function onLoad_wConsultaTramite() {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'div_wConsultaTramite_content' ></div>";
+        wRecibir.content(wContenido);
+    }
+
+    function OnDataBinding_tramite(e) {
+        e.data = $.extend(e.data, { dni: @Model.pNumDocumento });
+    }
+
+    function onCommand_tramite(e) {
+
+        debugger;
+        //$("#div_wConsultaTramite_content").html("");
+        //var wRecibir = $("#wConsultaTramite").data("tWindow");
+        //wRecibir.center().open();
+        AbrirWaitingCRUD("waitingPrincipal");
+
+        var _Post = GetPathApp("registroProfesional/retiraMatricula");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { p_rptId: e.dataItem.Id },
+            error: function () {
+                CerrarWaitingCRUD("waitingPrincipal");
+
+                jAlert("Error al cargar la información", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                debugger;
+                if (respuesta != null && respuesta.Error == false) {                  
+                    var grid = $("#tramites").data("tGrid");
+                    grid.ajaxRequest();
+                    jAlert("Operación Exitosa", "Información", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                } else
+                {
+                    jAlert("Error al cargar la información", "Error...", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                }
+                CerrarWaitingCRUD("waitingPrincipal");
+            }
+        });
+    e.preventDefault();
+    e.stopPropagation();
+    }
+
+</script>
+
+ @model GeDoc.catProfesionalWS
+
+@{ViewData["tramites"] = new List<GeDoc.Models.RegistroProfesionales.rpConsultaTramite>();}
+
+@{Html.Telerik().Grid((List<GeDoc.Models.RegistroProfesionales.rpConsultaTramite>)ViewData["tramites"]).Name("tramites").Pageable(pager => pager.PageSize(2)).DataKeys(keys =>
+        {
+            keys.Add(p => p.Id);
+        }).DataBinding(dataBinding =>
+{
+    dataBinding.Ajax()
+        .Select("_consultaTramites", "registroProfesional");
+})
+        .Columns(columns =>
+          {              
+              columns.Command(commands =>
+             {
+                 commands.Custom("consultaItem")
+                     .Ajax(true)
+                     .ButtonType(GridButtonType.Image)
+                     .ImageHtmlAttributes(new { style = "background: url('/GeDoc/Content/2013.2.611/telerik/sprite.png') no-repeat -64px -177px" })
+                     .HtmlAttributes(new { title = "Retirar Tramite" }).DataRouteValues(route => route.Add(o => o.Id).RouteKey("orderID"));
+             }).Width("10px").Title("Acciones");
+              columns.Add(o => o.nombreTramite).Title("Tramite").Width(400);
+              columns.Add(o => o.Estado).Title("Estado").Width(50);
+              columns.Add(o => o.fechaInicio).Title("Fecha Inicio").Format("{0:dd/MM/yyyy  HH:mm:ss}").Width(50);
+              columns.Add(o => o.fechaActualizacion).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Fecha Actualización").Width(50);
+          }).ClientEvents(clientEvents => clientEvents.OnCommand("onCommand_tramite").OnDataBinding("OnDataBinding_tramite")).Render();}
+
+@{
+    Html.Telerik().Window()
+      .Name("wConsultaTramite")
+      .Title("Consulta de Tramite")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "waitingConsultaTramite");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+        .Width(1000)
+      .Height(600)
+      .ClientEvents(eventos => eventos.OnLoad("onLoad_wConsultaTramite"))
+      .Render();
+}

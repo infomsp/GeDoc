@@ -1,0 +1,78 @@
+@using GeDoc
+
+@model ResultadosTurnoJMWS
+
+<script type="text/javascript">
+    function onAceptarwCRUDTurnoJuntaMedicaResultados() {
+        if ($("#Resultados").val() === "") {
+            jAlert("Debe escribir el resultado de la Junta Médica.", "¡Atención!", function () {
+                $('#Resultados').focus().select();
+            });
+            return;
+        }
+        debugger;
+        var _Post = GetPathApp("JuntaMedica/setResultadoJM");
+        AbrirWaitingCRUD("CRUDJuntaMedicaResultados");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { turId: idTurno, Resultados: $("#Resultados").val() },
+            error: function () {
+                CerrarWaitingCRUD("CRUDJuntaMedicaResultados");
+                jAlert("Error guardar los resultados de la junta médica.", "Error...", function () {
+                    $('#Resultados').focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("CRUDJuntaMedicaResultados");
+                if (!respuesta.Error) {
+                    var grid = $("#gridTurnosJuntaMedica").data("tGrid");
+                    grid.ajaxRequest();
+                    onCancelarwCRUDTurnoJuntaMedicaResultados();
+                } else {
+                    jAlert(respuesta.Mensaje, "¡Error!", function () {
+                        $('#Resultados').focus().select();
+                    });
+                }
+            }
+        });
+    }
+
+    function onCancelarwCRUDTurnoJuntaMedicaResultados() {
+        var windowElement = $("#wCRUDTurnoJuntaMedicaResultados").data("tWindow");
+        windowElement.close();
+        $('#Resultados').val("");
+    }
+</script>
+
+<div id="divGridPrincipalCRUDTurnoJMResultados" tabindex="1" style="overflow: hidden; outline: none;" >
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+        Resultado de Junta Médica
+    </div>
+    <div style="padding-bottom: 15px;">
+        <div>
+            @Html.TextAreaFor(model => Model.Resultados, new {@class = "text-box multi-line", id = "Resultados", style = "width: 98%; height: 200px;"})
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarwCRUDTurnoJuntaMedicaResultados();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarwCRUDTurnoJuntaMedicaResultados();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    AbrirWaitingCRUD("CRUDJuntaMedicaResultados");
+    $("#divGridPrincipalCRUDTurnoJMResultados").ready(function () {
+        CerrarWaitingCRUD("CRUDJuntaMedicaResultados");
+        $('#Resultados').focus().select();
+    });
+
+</script>

@@ -1,0 +1,141 @@
+/* the norm */
+/* line 2, ../../sass/vendors/_jquery.gritter.scss */
+#gritter-notice-wrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 301px;
+  z-index: 99999;
+}
+
+/* line 9, ../../sass/vendors/_jquery.gritter.scss */
+#gritter-notice-wrapper.top-left {
+  left: 20px;
+  right: auto;
+}
+
+/* line 13, ../../sass/vendors/_jquery.gritter.scss */
+#gritter-notice-wrapper.bottom-right {
+  top: auto;
+  left: auto;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* line 19, ../../sass/vendors/_jquery.gritter.scss */
+#gritter-notice-wrapper.bottom-left {
+  top: auto;
+  right: auto;
+  bottom: 20px;
+  left: 20px;
+}
+
+/* line 25, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-item-wrapper {
+  position: relative;
+  margin: 0 0 10px 0;
+  background: url("../img/ie-spacer.gif");
+  /* ie7/8 fix */
+}
+
+/* line 30, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-top {
+  background: url(../img/gritter.png) no-repeat left -30px;
+  height: 10px;
+}
+
+/* line 34, ../../sass/vendors/_jquery.gritter.scss */
+.hover .gritter-top {
+  background-position: right -30px;
+}
+
+/* line 37, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-bottom {
+  background: url(../img/gritter.png) no-repeat left bottom;
+  height: 8px;
+  margin: 0;
+}
+
+/* line 42, ../../sass/vendors/_jquery.gritter.scss */
+.hover .gritter-bottom {
+  background-position: bottom right;
+}
+
+/* line 45, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-item {
+  display: block;
+  background: url(../img/gritter.png) no-repeat left -40px;
+  color: #eee;
+  padding: 2px 11px 8px 11px;
+  font-size: 11px;
+  font-family: verdana;
+}
+
+/* line 53, ../../sass/vendors/_jquery.gritter.scss */
+.hover .gritter-item {
+  background-position: right -40px;
+}
+
+/* line 56, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-item p {
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+/* line 61, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-close {
+  display: none;
+  position: absolute;
+  top: 5px;
+  left: 3px;
+  background: url(../img/gritter.png) no-repeat left top;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  text-indent: -9999em;
+}
+
+/* line 72, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-title {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0 0 7px 0;
+  display: block;
+  text-shadow: 1px 1px 0 #000;
+  /* Not supported by IE :( */
+}
+
+/* line 79, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-image {
+  width: 48px;
+  height: 48px;
+  float: left;
+}
+
+/* line 84, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-with-image,
+.gritter-without-image {
+  padding: 0;
+}
+
+/* line 88, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-with-image {
+  width: 220px;
+  float: right;
+}
+
+/* for the light (white) version of the gritter notice */
+/* line 93, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-light .gritter-item,
+.gritter-light .gritter-bottom,
+.gritter-light .gritter-top,
+.gritter-light .gritter-close {
+  background-image: url(../img/gritter-light.png);
+  color: #222;
+}
+
+/* line 100, ../../sass/vendors/_jquery.gritter.scss */
+.gritter-light .gritter-title {
+  text-shadow: none;
+}

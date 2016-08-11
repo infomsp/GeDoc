@@ -1,0 +1,110 @@
+﻿@* Rankin por departamento *@
+
+@using GeDoc
+
+<h3>@Html.Label("Ranking por Departamento")</h3>
+
+<script>
+
+    //al cargar telerik
+    function onLoadModal() {
+
+    }
+
+
+    function onCloseModal() {
+        $(".t-overlay").hide();
+
+    }
+
+    function onDataBindingGridRankingDpto(args) {
+
+        // AbrirWaiting();
+
+        args.data = $.extend(args.data, {
+            FechaDesde: fechaDesde,
+            FechaHasta: fechaHasta,
+            Departamento: departamento
+        });
+
+        }
+
+
+</script>
+
+
+@{
+    
+     string _PathContent = Url.Content("~/Content");
+     Html.Telerik().Grid((IEnumerable<GeDoc.spRptProturRankingDerivacionDpto>)ViewData["spRptProturRankingDerivacionDpto"])
+         .Name("GridRankingDpto")
+         .DataKeys(keys =>
+         {
+             keys.Add(p => p.csId);
+         })
+         .Localizable("es-AR")
+         
+         .ToolBar(commands =>
+         {
+
+             commands.Custom().Ajax(true).Name("cmdAgregar").ButtonType(GridButtonType.ImageAndText)
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;" })
+                 .Text("Agregar")
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacionDpto", "Agregar") });
+             commands.Custom().Ajax(true).Name("cmdEditar").ButtonType(GridButtonType.ImageAndText).Text("Modificar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacionDpto", "Modificar") });
+             commands.Custom().Ajax(true).Name("cmdEliminar").ButtonType(GridButtonType.ImageAndText).Text("Desactivar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -15px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacionDpto", "Eliminar") });
+             commands.Custom().Ajax(true).Name("cmdActivar").ButtonType(GridButtonType.ImageAndText).Text("Activar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -32px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacionDpto", "Activar") });
+             commands.Custom().Ajax(true).Name("cmdHorarios").ButtonType(GridButtonType.ImageAndText).Text("Horarios")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturRankingDerivacionDpto", "Horarios") });
+         })
+         .DataBinding(dataBinding =>
+         {
+             dataBinding.Ajax()
+                 .Select("_SelectEditingRankingDerivacionDpto", "ReporteProturAvance", new { FechaDesde = "16/05/2015", FechaHasta = "16/05/2016", Departamento = "0" });
+             
+
+
+         })
+         
+         .Columns(columns =>
+         {
+             columns.Bound(c => c.csId).Width("5%").Title("ID").Visible(false);
+             columns.Bound(c => c.dpto).Width("20%").Title("Departamento").Visible(true);
+             columns.Bound(c => c.csNombre).Width("15%").Title("Centro de Salud").Visible(true);
+             columns.Bound(c => c.Derivado).Width("15%").Title("Derivado").Visible(true);
+
+         })
+                 .Editable(editing => editing
+                         .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(false))
+                 .Pageable((paging) =>
+                            paging.Enabled(true)
+                                 .PageSize(((int)Session["FilasPorPagina"])))
+
+                .ClientEvents(events => events
+                    //.OnCommand("onCommandGrid")
+                    //.OnRowSelect("onRowSelectedEncuesta")
+                    .OnDataBinding("onDataBindingGridRankingDpto")
+                    //.OnEdit("onEditEncuesta")
+                    //.OnSave("onSave")
+                    //.OnDataBound("dataBound")
+                    )                            
+             .Footer(true)
+             .Filterable()
+             .Selectable()
+             .Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+             .Resizable(resizing => resizing.Columns(true))
+             .Sortable()       
+             .Render();
+             
+
+}
+
+
+

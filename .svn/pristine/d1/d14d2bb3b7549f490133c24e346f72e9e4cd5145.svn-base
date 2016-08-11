@@ -1,0 +1,116 @@
+@using GeDoc
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script type="text/javascript">
+    function formatoFecha(date, format) {
+        format = format || '{0:d}';
+        return $.telerik.formatString(format, date);
+    }
+
+    function onAceptarwListadoXMedico() {
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        var FechaDesde = formatoFecha(dpDesde.value(), "{0:d}");
+        var FechaHasta = formatoFecha(dpHasta.value(), "{0:d}");
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+            return;
+        }
+
+        var _Parametros = new Array(new Array($('#Tipo:checked').val(), 'Tipo'), new Array(FechaDesde, 'Desde'), new Array(FechaHasta, 'Hasta'), new Array($("#medId_Lista").val(), 'Medico'));
+        InvocarReporte('ListadoDeJuntasMedicasPorMedico', _Parametros, true);
+    }
+
+    function onCancelarwListadoXMedico() {
+        var windowElement = $("#wListadoXMedico").data("tWindow");
+        windowElement.close();
+    }
+</script>
+
+<div id="divGridPrincipalListadoXMedico" tabindex="1" style="overflow: hidden; outline: none; margin-bottom: 20px;" >
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+        Filtros
+    </div>
+    <div class="BordeRedondeado" style="padding: 15px; margin-bottom: 15px; border-color: whitesmoke;">
+        <div style="text-align: left;">
+            <input type="radio" name="Tipo" id="Tipo" value="FT" checked>Filtrar por Fecha de Turno
+            <input type="radio" name="Tipo" id="Tipo" value="FE">Filtrar por Fecha de Emisión del turno
+        </div>
+        <div class="medId" style="text-align: left; margin-bottom: 15px; margin-top: 15px;">
+            <table style="border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">Médico:</td>
+                    <td style="border: none;">
+                        @Html.Partial("EditorTemplates/_ListaDesplegable", "medId_Lista#NO#360px")
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align: left;">
+            <table style="border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">Fecha Desde:</td>
+                    <td style="border: none;">
+                        @{ Html.Telerik().DatePicker()
+                               .Name("dtFechaDesde")
+                               .Value(DateTime.Now)
+                               .ShowButton(true)
+                               .OpenOnFocus(true)
+                               .TodayButton()
+                               .Render();
+                            //.HtmlAttributes(new { id = "dtFechaTurno"})
+                        }
+                    </td>
+                    <td style="border: none;">Fecha Hasta:</td>
+                    <td style="border: none;">
+                        @{ Html.Telerik().DatePicker()
+                               .Name("dtFechaHasta")
+                               .Value(DateTime.Now)
+                               .ShowButton(true)
+                               .OpenOnFocus(true)
+                               .TodayButton()
+                               .Render();
+                            //.HtmlAttributes(new { id = "dtFechaTurno"})
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarwListadoXMedico();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarwListadoXMedico();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalListadoXMedico").ready(function () {
+    });
+
+    $("#medId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaMedicos = $("#medId_Lista");
+    $ListaMedicos.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+</script>

@@ -1,0 +1,360 @@
+﻿@model GeDoc.Models.RegistroProfesionales.catProfesionalTitulosWS
+           
+<style>
+
+    .rowTitulo {
+        display:block;
+    }
+    #profNombre {
+        width: 400px !important;
+    }
+    #ptitTitulo {
+        width: 325px !important;
+    }
+    #oeNombre {
+        width: 640px !important;
+    }
+      
+</style>
+
+<script>
+
+    function onLoad_wCRUD_Profesion()
+    {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'divwCRUD_Profesion_Content' ></div>";
+        wRecibir.content(wContenido);
+    }
+    function onLoad_wCRUD_OrganismoEmisor() {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'divwCRUD_OrganismoEmisor_Content' ></div>";
+        wRecibir.content(wContenido);
+    }
+
+</script>
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUD_Profesion")
+      .Title("Agregar Profesión")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "waitingCRUD_Profesion");          
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Width(500)
+      .Height(145)
+      .ClientEvents(eventos => eventos.OnLoad("onLoad_wCRUD_Profesion"))
+      .Render();
+}
+@{
+    Html.Telerik().Window()
+      .Name("wCRUD_OrganismoEmisor")
+      .Title("Agregar Organismo Emisor")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "waitingCRUD_OrganismoEmisor");          
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Width(720)
+      .Height(140)
+      .ClientEvents(eventos => eventos.OnLoad("onLoad_wCRUD_OrganismoEmisor"))
+      .Render();
+}
+
+<div id="waitingCRUD_Titulo" class="es-overlay" style="display: none; margin-top: -10px;text-align: center;">
+    <div style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>
+
+@using (Html.BeginForm("setProfesionalTitulo", "registroProfesional", FormMethod.Post, new { id = "frmCRUDTitulo" }))
+{
+          <div   class="BordeRedondeado" style="border-color: Silver; padding: 3px 3px 3px 3px; display: inline-block;">                
+              @Html.EditorFor(model => Model.pAccion, new { style = "width: 200px; display: none;", id = "pAccion" })
+              @Html.HiddenFor(model=>model.ptitId)
+              <div class="rowTitulo">
+                    <div class="rowItem">
+                        <label>Titulo:</label>
+                        @Html.EditorFor(model => Model.ptitTitulo)
+                    </div>                   
+                  <div class="rowItem">
+                        <label>Profesion:</label>
+                        @Html.EditorFor(model => Model.profNombre, new { style = "width: 385px;" })
+                    </div>
+                </div>
+
+                <div class="rowTitulo">
+                    <label>Organismo Emisor:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.oeNombre)
+                    </div>
+                    <div class="rowItem">
+                       <div id="btnAgregarOrganizacion" class="t-button"  onclick="agregarOrgEmisor()" title="Nueva organización">                            
+                            <label style="cursor: pointer;">Nueva Org.</label>
+                        </div>                                    
+                    </div>
+                </div>
+                <div class="rowTitulo">
+                    <label style="margin-left: 5px;">Pais:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().ClientEvents(events => events.OnLoad("paisId_OnLoad")).Name("paisTituloId").SelectedIndex(0).CascadeTo("provTituloId").DataBinding(binding => binding.Ajax().Select("_AjaxGetPais", "registroProfesional"))
+                    </div>
+                    <label>Provincia:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("provTituloId").SelectedIndex(0).CascadeTo("depTituloId").DataBinding(binding => binding.Ajax().Select("_AjaxGetProvinciasTitulo", "registroProfesional"))
+                    </div>
+                    <label>Departamento:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("depTituloId").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetDepartamentosTitulo", "registroProfesional"))
+                    </div>                    
+                </div>
+                <div class="rowTitulo">
+                    <div class="rowItem">
+                        <label>Fecha Diploma</label>
+                        @Html.EditorFor(model => Model.ptitFechaDiploma)
+                    </div>
+                    
+                    <label>Observación Diploma</label>
+                    <div class="rowItem">
+                        @Html.TextBoxFor(model => Model.ptitObservacionDiploma, new { style = "width: 510px;" })
+                    </div>
+                </div>                
+                <div class="rowTitulo">
+                    <label>Matricula Nro:</label>
+                    <div class="rowItem">
+                        @Html.TextBoxFor(model => Model.ptitMarticulaNro, new { style = "width: 50px;" })
+                    </div>
+                    <div class="rowItem">
+                        <label>Folio:</label>
+                    @Html.TextBoxFor(model => Model.ptitMatriculaFolio, new { style = "width: 50px;" })
+                    </div>
+                    <div class="rowItem">
+                        <label>Libro:</label>
+                        @Html.TextBoxFor(model => Model.ptitMatriculaLibro, new { style = "width: 50px;" })
+                    </div>
+                                        
+                    <div class="rowItem">
+                        <label>Fecha Inscripción:</label>
+                        @Html.EditorFor(model => Model.ptitMatriculaFechaInscr)
+                    </div>                   
+                </div>
+
+                <div class="rowTitulo">                   
+                     <label>Observación Matricula</label>
+                    <div class="rowItem">
+                        @Html.TextBoxFor(model => Model.ptitMatriculaObservacion, new { style = "width: 715px;" })
+                    </div>
+                </div>
+        </div>
+
+         <div style="text-align: center; margin-top: 15px;">
+            <div id="btnAceptar" class="t-button"  onclick="aceptarAccion()" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button"  onclick="cancelarAccion()" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+    
+    
+
+    
+}
+<script>
+
+    $(document).ready(function () {
+        $("#pAccion").attr("style", "display: none;");
+        $("#profNombre").val("@Model.profNombre");
+        $("#ptitTitulo").val("@Model.ptitTitulo");
+        $("#oeNombre").val("@Model.oeNombre");
+        $("#ptitMatriculaFechaInscr").val("@Model.ptitMatriculaFechaInscr.ToString("dd/MM/yyyy")");
+        $("#ptitFechaDiploma").val("@Model.ptitMatriculaFechaInscr.ToString("dd/MM/yyyy")");
+    });
+    //Asignamos los valores de los campos\\
+    if ($("#pAccion").val() == "Consultar" || $("#pAccion").val() == "Eliminar") {
+        $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+    }
+    function paisTituloId_OnLoad(e) {        
+        var combobox = $(this).data('tDropDownList');
+        combobox.reload();
+    }
+    
+    function ptitTitulo_onLoadAutoCompleteCRUD(e) { }
+    function profNombre_onLoadAutoCompleteCRUD(e) {}
+    function ptitTitulo_onChangeAutoCompleteCRUD() { }
+    function oeNombre_onLoadAutoCompleteCRUD() { }
+    function oeNombre_onChangeAutoCompleteCRUD() { }
+
+    function profNombre_OnChange(e) {
+        debugger;
+        AbrirWaitingCRUD("waitingPrincipal");
+        var url = GetPathApp('registroProfesional/existeProfesion');
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            cache: false,
+            url: url,
+            data: { pProfesion: e.value } ,
+            success: function (response, textStatus, jqXHR) {
+                if (response.existe == false && response.success == true)
+                {
+                    AbrirWaitingCRUD("CRUDProfesion_cargando");
+                    var wRecibir = $("#wCRUD_Profesion").data("tWindow");
+                    wRecibir.center().open();
+                    wRecibir.content('<img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" width="22px" alt="" /><strong> Cargando...</strong>');
+                    wRecibir.ajaxRequest(GetPathApp("registroProfesional/CRUDProfesion"));
+                    wRecibir.center().open();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error - ' + errorThrown);
+            }
+        });
+    }
+
+    function oeNombre_OnChange(e) {
+       @* AbrirWaitingCRUD("waitingPrincipal");
+        var url = GetPathApp('registroProfesional/existeOrganismoEmisor');
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            cache: false,
+            url: url,
+            data: { pTexto: e.value },
+            success: function (response, textStatus, jqXHR) {
+                if (response.existe == false && response.success == true) {
+                    AbrirWaitingCRUD("CRUDProfesion_cargando");
+                    var wRecibir = $("#wCRUD_OrganismoEmisor").data("tWindow");
+                    wRecibir.center().open();
+                    wRecibir.content('<img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" width="22px" alt="" /><strong> Cargando...</strong>');
+                    wRecibir.ajaxRequest(GetPathApp("registroProfesional/CRUDOrganismoEmisor"));
+                    wRecibir.center().open();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error - ' + errorThrown);
+            }
+        });*@
+    }
+
+    
+
+    function aceptarAccion()
+    {     
+        if ($("#pAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatProveedor').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        if ($("#profNombre").val().length == 0) {
+            jAlert("Seleccione una Profesion", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#ptitTitulo").val().length == 0) {
+            jAlert("Debe ingresar un titulo", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#oeNombre").val().length == 0) {
+            jAlert("Debe seleccionar un Organismo Emisor", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#ptitFechaDiploma").val().length == 0)
+        {
+            jAlert("Ingrese un valor para Fecha Diploma", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+        if ($("#ptitMatriculaFechaInscr").val().length == 0)
+        {
+            jAlert("Ingrese un valor para Fecha Inscripción Matricula", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        $("#waitingCRUD_Titulo").show();
+        var $form = $('#frmCRUDTitulo');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                    $("#waitingCRUD_Titulo").hide();
+                } else
+                {
+                    var grid = $("#gridprofesionalTitulo").data("tGrid");
+                    grid.ajaxRequest();
+                    $("#waitingCRUD_Titulo").hide();
+                    var windowElement = $('#wCRUDprofesionalTitulo').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    //Seleccionamos el primer campo
+    $("#frmCRUDTitulo").ready(function () {
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+  
+    function cancelarAccion() {
+        var window = $("#wCRUDprofesionalTitulo").data("tWindow");
+        window.close();
+    }
+
+
+    function agregarOrgEmisor() {
+        var wRecibir = $("#wCRUD_OrganismoEmisor").data("tWindow");
+        wRecibir.center().open();
+        wRecibir.content('<img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" width="22px" alt="" /><strong> Cargando...</strong>');
+        wRecibir.ajaxRequest(GetPathApp("registroProfesional/CRUDOrganismoEmisor"));
+        wRecibir.center().open();
+    }
+
+
+
+</script>

@@ -1,0 +1,107 @@
+@using GeDoc
+@model GeDoc.catHCVademecumWS
+
+<script type="text/javascript">
+    function onAceptarcatHCVademecum() {
+        if ($("#vadAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatHCVademecum').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatHCVademecum');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    MensajeEmergente("¡Error!", respuesta.Mensaje, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                    $("#" + respuesta.Foco).addClass("ES-ErrorValidacion");
+                    onMostrarMensaje(respuesta.Mensaje);
+                    $("#" + respuesta.Foco).focus().select();
+                } else {
+                    $("#gridcatHCVademecum").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatHCVademecum').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarcatHCVademecum() {
+        var windowElement = $('#wCRUDcatHCVademecum').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatHCVademecum", "HistoriaClinica", FormMethod.Post, new { id = "frmcatHCVademecum" }))
+{
+    <div id="divGridPrincipalcatHCVademecum" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="color: white;">
+           Medicamento
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 93%; height: 87%;">
+            <div>
+                <label style="vertical-align: text-bottom;">Código:</label>
+                @Html.TextBoxFor(model => Model.vadCodigo, new {id = "vadCodigo", @class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Código", style = "text-align: left; width: 100px;" })
+            </div>
+            <div style="margin-top: 20px;">
+                <label style="vertical-align: text-bottom;">Descripción:</label>
+                @Html.TextBoxFor(model => Model.vadDescripcion, new {id = "vadDescripcion", MensajeDeError = "Descripción", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 360px;"})
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatHCVademecum();" title="@(Model.vadAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatHCVademecum();" title="Cancelar" style="@(Model.vadAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.vadAccion, new { style = "width: 200px; display: none;", id = "vadAccion" })
+        @Html.HiddenFor(model => Model.vadId, new { style = "width: 200px; display: none;", id = "vadId" })
+    </div>
+}
+
+<div>
+    @{ Html.RenderPartial("Mensaje", new ParametrosMensaje() {Nombre = "msg_ProblemasCronicos", TipoMensaje = "error", MostrarEmergente = false, Titulo = "¡Atención!", Mensaje = "Mensaje.", Visible = false}); }
+</div>
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatHCVademecum").ready(function () {
+        //Aplicamos algunos estilos
+        $("#vadAccion").attr("style", "display: none;");
+        $("#vadId").attr("style", "display: none;");
+        $("#vadDescripcion").attr("style", "width: 364px;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#vadAccion").val() == "Consultar" || $("#vadAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeClass("ES-ErrorValidacion");
+            onOcultarMensaje();
+        });
+    });
+
+</script>

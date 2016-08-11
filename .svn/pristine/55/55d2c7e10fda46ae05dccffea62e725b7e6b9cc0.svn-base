@@ -1,0 +1,701 @@
+﻿<script type="text/javascript">
+    //Inicializamos objeto de datos de videos\\
+    //Este objeto guardará algunos datos sobre la cámara
+    function InicializaDatosCamara() {
+        window.datosVideo = {
+            "StreamVideo": null,
+            "url": null
+        };
+        //Nos aseguramos que estén definidas
+        //algunas funciones básicas
+        window.URL = window.URL || window.webkitURL;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia ||
+            function () {
+                alert("Su navegador no soporta navigator.getUserMedia().");
+                return;
+            };
+    }
+
+    function FrenarVideo() {
+        if (window.datosVideo != null) {
+            if (datosVideo.StreamVideo) {
+                datosVideo.StreamVideo.stop();
+                window.URL.revokeObjectURL(datosVideo.url);
+            }
+        }
+    }
+
+</script>
+
+<style>
+    #tabRegistroProfesional-1 {
+        height:auto;
+    }
+    #divContenidoPrincipal {
+            height: 765px !important;
+    }
+</style>
+<div id="waitingCRUD_ProfesionalDatos" class="es-overlay" style="display: none; margin-top: -10px;text-align: center;">
+    <div style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>
+@model GeDoc.catProfesionalWS
+@using (Html.BeginForm("setProfesional", "registroProfesional", FormMethod.Post, new { id = "frmProfesional" }))
+{    
+  
+    <div id="parentDiv">
+        @(Html.Telerik().TabStrip()
+          .Name("tabstrip")
+          .Items(tabstrip =>
+          {
+              tabstrip.Add().Text("Datos Personales")
+                  .Selected(true)
+                  .Content(@<text>
+        <div class="mainDiv BordeRedondeado" style="display: inline-block">
+            <div id="divPrincipalrp" style="border-color: Silver; padding: 3px 3px 3px 3px; width: 52%; display: inline-block;">
+                @Html.HiddenFor(Model => Model.pFotoPerfilCanvas)
+                @Html.HiddenFor(Model => Model.pId)
+
+                <div class="row">
+                    <div class="rowItem">
+                        <label>Nombre:</label>
+                        @Html.TextBoxFor(model => Model.pNombre, new { style = "width: 202px;" })
+                    </div>
+                    <div class="rowItem">
+                        <label>Apellido:</label>
+                        @Html.TextBoxFor(model => Model.pApellido, new { style = "width: 202px;" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label>Tipo Documento:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdDocumento)
+                    </div>
+                    <div class="rowItem">
+                        <label>Documento:</label>
+                        @Html.TextBoxFor(model => Model.pNumDocumento, new { @readonly = "readonly", style = "width: 170px;" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="rowItem">
+                        <label>CUIL:</label>
+                        @Html.EditorFor(model => Model.pCuil)
+                    </div>
+                    <label style="margin-left: 80px;">Sexo:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdSexo, new { style = "width: 115px; position:relative;" })
+                    </div>
+                </div>
+                <div class="row">
+                    <label>Nacionalidad:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.paisIdNacionalidad)
+                    </div>
+                    <div class="rowItem" style="margin-left: -10px;">
+                        <label>Fecha Nacimiento:</label>
+                        @Html.EditorFor(model => Model.pFechaNacimiento)
+                        <label>Edad:</label>
+                        <input id="lblEdad" style="width: 20px;" readonly />
+                    </div>
+                    <div class="rowItem">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label>Tipo Telefono 1:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdTelefono1)
+                    </div>
+                    <div class="rowItem">
+                        <label>Número:</label>
+                        @Html.EditorFor(model => Model.pTelefono1)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label>Tipo Telefono 2:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdTelefono2)
+                    </div>
+                    <div class="rowItem">
+                        <label>Número:</label>
+                        @Html.EditorFor(model => Model.pTelefono2)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label>Tipo Telefono 3:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdTelefono3)
+                    </div>
+                    <div class="rowItem">
+                        <label>Número:</label>
+                        @Html.EditorFor(model => Model.pTelefono3)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label>Tipo Telefono 4:</label>
+                    <div class="rowItem">
+                        @Html.EditorFor(model => Model.tipoIdTelefono4)
+                    </div>
+                    <div class="rowItem">
+                        <label>Número:</label>
+                        @Html.EditorFor(model => Model.pTelefono4)
+                    </div>
+                </div>
+
+            </div>
+            <div class="divFotoPerfil" style="display: inline-block; position: absolute;">
+                <div class="BordeRedondeado" style="width: 480px; padding: 10px; margin: 5px; height: 236px; border-color: burlywood;">
+                    <div style="margin-top: 15px;">
+                        <table style="border: none;">
+                            <tr style="border: none;">
+                                <td style="text-align: center; padding-bottom: 10px; border: none;">
+                                    <canvas id="foto" class="BordeRedondeado imgFoto" style="height: 165px; width: 220px;"></canvas>
+                                </td>
+                                <td id="tdCamara" style="border: none;">
+                                    <video id="camara" class="BordeRedondeado imgFoto" autoplay poster="@Url.Content("~/Content/General/camara.jpg")" style="width: 220px;height: 165px;  margin-left: 15px; margin-top: -10px;"></video>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="botonera" style="text-align: center">
+                            <i id="botonFoto" style="cursor: pointer; margin-right: 15px; text-align: center;">
+                                <img src="@Url.Content("~/Content/General/camara.jpg")" alt="Cancelar" height="25" width="30" title="Tomar foto"/>
+                            </i>
+                            <input id="fileUploadFotos" type="file" style="display: none;" size="1" />
+                        </div>
+                    </div>
+                </div>
+                <audio id="audioFoto">
+                    <source src="@Url.Content("~/Content/Audio/camara.mp3")" type="audio/mpeg">
+                    Su browser no soporta audio.
+                </audio>
+
+                <div class="row">
+                    <div class="rowItem">
+                        <label>Fallecido:</label>
+                        @Html.EditorFor(model => Model.pFallecido)
+                    </div>
+                    <div class="rowItem">
+                        <label>Fecha de Fallecimiento:</label>
+                        @Html.EditorFor(model => Model.pFechaFallecimiento)
+                    </div>
+                </div>
+            </div>
+
+
+              <div id="divLugarNacimiento" class="BordeRedondeado" style="border-color: Silver; padding: 10px 0px 10px 0px; width: 98%; margin: 10px 0px 10px 10px;">
+                <div class="row" style="width: 100%;">
+                    <label style="margin-left: 5px; font-weight: bold;">Lugar de Nacimiento</label>
+                </div>
+                 <div class="row">
+                        <label style="margin-left: 5px;">Pais:</label>
+                        <div class="rowItem">
+                            @Html.Telerik().DropDownList().ClientEvents(events => events.OnLoad("paisIdNacimiento_OnLoad")).Name("paisIdNacimiento").SelectedIndex(0).CascadeTo("provIdNacimiento").DataBinding(binding => binding.Ajax().Select("_AjaxGetPais", "registroProfesional"))
+                        </div>
+                        <label>Provincia:</label>
+                        <div class="rowItem">
+                            @Html.Telerik().DropDownList().Name("provIdNacimiento").SelectedIndex(0).CascadeTo("depIdNacimiento").DataBinding(binding => binding.Ajax().Select("_AjaxGetProvinciasNacimiento", "registroProfesional"))
+                        </div>
+                        <label>Departamento:</label>
+                        <div class="rowItem">
+                            @Html.Telerik().DropDownList().Name("depIdNacimiento").CascadeTo("locIdNacimiento").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetDepartamentosNacimiento", "registroProfesional"))
+                        </div>
+                     <label>Localidad:</label>
+                        <div class="rowItem">
+                            @Html.Telerik().DropDownList().Name("locIdNacimiento").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetLocalidadesNacimiento", "registroProfesional"))
+                        </div>
+                    </div>
+                  </div>            
+
+              <div id="divEmail" class="BordeRedondeado" style="border-color: Silver; padding: 10px 0px 10px 0px; width: 98%; margin: 10px 0px 10px 10px;">
+                <div class="row" style="width: 100%;">
+                    <label style="margin-left: 5px; font-weight: bold;">Correo Electronico</label>
+                </div>
+                <div class="row">                   
+                   <label style="margin-left: 5px;">Correo electronico 1: </label>
+                   @Html.TextBoxFor(model => Model.pEmail, new { style = "width: 375px;" })
+                </div>
+                <div class="row">
+                   <label>Correo electronico 2 : </label>
+                   @Html.TextBoxFor(model => Model.pEmail, new { style = "width: 385px;" })
+                </div>
+            </div>
+
+            <div id="divSecundario" class="BordeRedondeado" style="border-color: Silver; padding: 10px 0px 10px 0px; width: 98%; margin: 10px 0px 10px 10px;">
+                <div class="row" style="width: 100%;">
+                    <label style="margin-left: 5px; font-weight: bold;">Domicilio</label>
+                </div>
+                <div class="row">
+                    <div class="rowItem">
+                        <label>Calle:</label>
+                        @Html.TextBoxFor(model => Model.pCalle, new { style = "width: 230px;" })
+                    </div>
+                    <div class="rowItem">
+                        <label>Número:</label>
+                        @Html.TextBoxFor(model => Model.pNroCalle, new { style = "width: 60px;" })
+                    </div>
+                    <div class="rowItem">
+                        <label>Barrio:</label>
+                        @Html.TextBoxFor(model => Model.pBarrio, new { style = "width: 230px;" })
+                    </div>
+
+                    <div class="rowItem">
+                        <label>Piso:</label>
+                        @Html.TextBoxFor(model => Model.pPiso, new { style = "width: 60px;" })
+                    </div>
+
+                    <div class="rowItem">
+                        <label>Núm Departamento:</label>
+                        @Html.TextBoxFor(model => Model.pNroDpto, new { style = "width: 60px;" })
+                    </div>
+
+                </div>
+                <div class="row">
+                    <label style="margin-left: 5px;">Pais:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().ClientEvents(events => events.OnLoad("paisId_OnLoad")).Name("paisId").SelectedIndex(0).CascadeTo("provId").DataBinding(binding => binding.Ajax().Select("_AjaxGetPais", "registroProfesional"))
+                    </div>
+                    <label>Provincia:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("provId").SelectedIndex(0).CascadeTo("depId").DataBinding(binding => binding.Ajax().Select("_AjaxGetProvincias", "registroProfesional"))
+                    </div>
+                    <label>Departamento:</label>
+                    <div class="rowItem">
+                        @Html.Telerik().DropDownList().Name("depId").CascadeTo("locId").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetDepartamentos", "registroProfesional"))
+                    </div>
+                    <label>Localidad:</label>
+                        <div class="rowItem">
+                            @Html.Telerik().DropDownList().Name("locId").SelectedIndex(0).DataBinding(binding => binding.Ajax().Select("_AjaxGetLocalidades", "registroProfesional"))
+                        </div>
+                </div>
+            </div>
+            <div id="divObservaciones" class="BordeRedondeado" style="border-color: Silver; padding: 10px 0px 10px 0px; width: 98%; margin: 10px 0px 10px 10px;">
+                <div class="row" style="width: 100%;">
+                    <label style="margin-left: 5px; font-weight: bold;">Observaciones</label>
+                    @Html.TextBoxFor(model => Model.pObservaciones, new { style = "width: 760px;" })
+
+                     <div class="rowItem">
+                        <label>Firma Digital:</label>
+                        @Html.EditorFor(model => Model.pTieneFirmaDigital)
+                    </div>
+
+                </div>
+           </div>
+
+        </div>
+        </text>);
+            
+             tabstrip.Add().Text("Titulos")
+                  .Selected(false)
+                  .LoadContentFrom("rpProfesionalTitulos", "registroProfesional", new { pId = @Model.pId, modoLectura = @Model.modoLectura });
+          })
+    )
+
+
+        <div style="text-align: center; margin-top: 15px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarProfesionalDetalleCompleto();" title="Confirmar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarProfesionalDetalleCompleto();" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+
+
+    </div>
+}
+
+
+
+<style>
+    .t-combobox .t-input {
+        padding: 0px 3px !important;
+    }
+
+    .rowItem {
+        display: inline-block;
+        padding: 5px;
+        vertical-align: middle;
+    }
+
+    .row {
+        margin: 4px 0px 0px 0px;
+        display: inline-block;
+    }
+
+    #divDatos input {
+        margin-top: 0px;
+        padding: 3px;
+        border: 1px solid #C0C0C0;
+        font-size: 12px;
+        font-weight: bold;
+        background-color: #EAFFFF;
+        visibility: visible;
+        border-radius: 5px !important;
+        -moz-border-radius: 5px !important;
+        -webkit-border-radius: 5px !important;
+        height: 15px;
+        position: absolute;
+        margin-top: -4px;
+    }
+
+    #divDatos label {
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    #imgFoto {
+        border-color: #999999;
+        background-color: aliceblue;
+        width: 230px;
+        height: 200px;
+        margin-left: 5px;
+        margin-top: 50px;
+    }
+</style>
+
+<script>
+
+    function onLoadComboBox_tipoIdTelefono1() {
+        var combobox = $('#tipoIdTelefono1').data('tComboBox');
+        var selectItem = function (dataItem) {
+            return dataItem.Value == "@(Model.tipoIdTelefono1 == null ? 0 : Model.tipoIdTelefono1)";
+        };
+        combobox.select(selectItem);
+        }
+        function onLoadComboBox_tipoIdTelefono2() {
+            var combobox = $('#tipoIdTelefono2').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdTelefono2 == null ? 0 : Model.tipoIdTelefono2)";
+        };
+        combobox.select(selectItem);
+        }
+
+        function onLoadComboBox_tipoIdTelefono3() {
+            var combobox = $('#tipoIdTelefono3').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdTelefono3 == null ? 0 : Model.tipoIdTelefono3)";
+        };
+        combobox.select(selectItem);
+        }
+        function onLoadComboBox_tipoIdTelefono4() {
+            var combobox = $('#tipoIdTelefono4').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdTelefono4 == null ? 0 : Model.tipoIdTelefono4)";
+        };
+        combobox.select(selectItem);
+        }
+
+        function onLoadComboBox_tipoIdSexo() {
+            var combobox = $('#tipoIdSexo').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdSexo == null ? 0 : Model.tipoIdSexo)";
+        };
+        combobox.select(selectItem);
+        }
+
+        function onLoadComboBox_tipoIdDocumento() {
+            var combobox = $('#tipoIdDocumento').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdDocumento == null ? 0 : Model.tipoIdDocumento)";
+        };
+        combobox.select(selectItem);
+        }
+        function onLoadComboBox_paisIdNacionalidad() {
+            var combobox = $('#paisIdNacionalidad').data('tComboBox');
+            var selectItem = function (dataItem) {
+                return dataItem.Value == "@(Model.tipoIdDocumento == null ? 0 : Model.tipoIdDocumento)";
+        };
+        combobox.select(selectItem);
+        }
+
+        function paisId_OnLoad(e) {
+            var combobox = $(this).data('tDropDownList');
+            combobox.reload();
+        }
+        function paisIdNacimiento_OnLoad(e) {
+            var combobox = $(this).data('tDropDownList');
+            combobox.reload();
+        }
+
+
+
+        $("#frmProfesional").ready(function () {
+            $('#pFechaNacimiento').val('@(Model.pFechaNacimiento.ToString("dd/MM/yyyy"))');
+        var img = new Image();
+        //indico la URL de la imagen
+        var d = new Date();
+        img.src = "@Url.Content(@Model.pFotoPerfil)?" + d.getTime();
+        //defino el evento onload del objeto imagen
+        img.onload = function () {
+            //incluyo la imagen en el canvas
+            var Foto = jQuery("#foto");
+            var context = Foto[0].getContext("2d");
+            context.drawImage(img, 0, 0, 300, 150);
+        };
+        var dateNow = new Date();
+        var fNacimiento = new Date($('#pFechaNacimiento')[0].value);
+        var mayorEdad = dateNow.getFullYear() - fNacimiento.getFullYear()        
+        if (mayorEdad.toString() == "NaN")
+            mayorEdad = 0;
+        $('#lblEdad')[0].value = mayorEdad;
+        $('#pCuil').mask("99-99999999-9");
+        $('#pNombre').focus();
+
+    });
+
+    $("#pFechaNacimiento").focusout(function () {        
+        var dateNow = new Date();
+        var fNacimiento = new Date($('#pFechaNacimiento')[0].value);
+        var mayorEdad = dateNow.getFullYear() - fNacimiento.getFullYear()
+        $('#lblEdad')[0].value = mayorEdad;
+    });
+
+    function validar() {
+        var result = true;
+        var mensaje = "";
+        var campofoco = "";
+
+        if ($("#pNombre")[0].value.length <= 0) {
+            result = false;
+            mensaje = "El campo Nombre es requerido. \n";
+            campofoco = "#pNombre";
+        }
+
+        if ($("#pApellido")[0].value.length <= 0) {
+            result = false;
+            mensaje += "El campo Apellido es requerido. \n";
+            if (campofoco.length <= 0)
+                campofoco = "#pApellido";
+        }
+
+        if ($("#pCuil")[0].value.length <= 0) {
+            result = false;
+            mensaje += "El campo CUIL es requerido.  \n";
+            if (campofoco.length <= 0)
+                campofoco = "#pCuil";
+        }
+
+        //if (validaCuit($("#pCuil")[0].value) != true) {
+        //    result = false;
+        //    mensaje += "El campo CUIL no es válido.  \n";
+        //    if (campofoco.length <= 0)
+        //        campofoco = "#pCuil";
+        //}
+
+        if ($("#pTelefono1")[0].value.length <= 0) {
+            result = false;
+            mensaje += "El campo Telefono 1 es requerido.  \n";
+            if (campofoco.length <= 0)
+                campofoco = "#pTelefono1";
+        }
+
+        if ($("#pCalle")[0].value.length <= 0) {
+            result = false;
+            mensaje += "El campo Calle es requerido.  \n";
+            if (campofoco.length <= 0)
+                campofoco = "#pCalle";
+        }
+
+        if ($('#lblEdad')[0].value <= 21) {
+            result = false;
+            mensaje += "El profesional debe ser mayor de 22 años.  \n";
+            if (campofoco.length <= 0)
+                campofoco = "#pFechaNacimiento";
+        }
+
+        if (mensaje.length > 0) {
+            jAlert(mensaje, "Alerta", function () {
+                $(campofoco).focus().select();
+            });
+        }
+
+        return result;
+    }
+
+    var checked = [];
+    function onAceptarProfesionalDetalleCompleto() {
+        
+        if (validar()) {
+            var oFoto = jQuery("#foto");
+            var $form = $('#frmProfesional');
+            if (cambioFoto == true) {
+                var blob = oFoto[0].toDataURL("image/png").replace("data:image/png;base64,", "");
+                $('#pFotoPerfilCanvas')[0].value = blob;
+            }
+            debugger;
+            $("#waitingCRUD_ProfesionalDatos").show();
+            $.ajax({
+                type: "POST",
+                url: $form.attr("action"),
+                dataType: "json",
+                traditional: true,
+                data: $form.serialize(),
+                error: function () {
+                    CerrarWaitingCRUD("rpCargaDatos");
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                },
+                success: function (respuesta) {
+                    $("#waitingCRUD_ProfesionalDatos").hide();
+                    if (respuesta.Error) {
+                        var FocusControl = respuesta.Foco;
+                        jAlert(respuesta.Mensaje, "Error...", function () {
+                            $("#" + FocusControl)[0].focus().select();
+                        });
+                    } else {
+                        onCancelarProfesionalDetalleCompleto();
+                        jAlert("El registro fue actualizado correctamente.", "Operación Exitosa...", function () {
+                            $("#" + FocusControl)[0].focus().select();
+                        });
+                    }
+                }
+            });
+        }
+    }
+    
+    function onCancelarProfesionalDetalleCompleto() {
+        var windowElement = $("#wDetalleItemsTramite").data("tWindow");
+        windowElement.close();
+    }
+
+    //Inicalizamos la cámara\\
+    InicializaDatosCamara();
+
+    $('#foto').click(function () {
+        $('#fileUploadFotos').click();
+    });
+
+    $(document).ready(function (e) {
+        //Pedimos al navegador que nos da acceso a 
+        //algún dispositivo de video (la webcam)
+        navigator.getUserMedia({
+            "audio": false,
+            "video": true
+        }, function (streamVideo) {
+            datosVideo.StreamVideo = streamVideo;
+            datosVideo.url = window.URL.createObjectURL(streamVideo);
+            jQuery("#camara").attr("src", datosVideo.url);
+
+            var img = new Image();
+            //indico la URL de la imagen
+            var d = new Date();
+            img.src = "@Url.Content("~/Content/Archivos/" + ViewBag.Foto)?" + d.getTime();
+            //defino el evento onload del objeto imagen
+            img.onload = function () {
+                //incluyo la imagen en el canvas
+                var Foto = jQuery("#foto");
+                var context = Foto[0].getContext("2d");
+                context.drawImage(img, 0, 0, 300, 165);
+            }
+        }, function () {
+            alert("No fue posible obtener acceso a la cámara.");
+        });
+
+    });
+    var cambioFoto = false;
+    jQuery("#botonFoto").on("click", function (e) {
+        debugger;
+        cambioFoto = true;
+        var oCamara, oFoto, oContexto, w, h;
+
+        $("#audioFoto").trigger("play");
+
+        oCamara = jQuery("#camara");
+        oFoto = jQuery("#foto");
+        w = oCamara.width();
+        h = oCamara.height();
+        oFoto.attr({
+            "width": w,
+            "height": h
+        });
+        oContexto = oFoto[0].getContext("2d");
+        oContexto.drawImage(oCamara[0], 0, 0, w, h);
+    });
+
+    $("#fileUploadFotos").on("change", function () {
+        debugger;
+        cambioFoto = true;
+        //Get count of selected files
+        var countFiles = $(this)[0].files.length;
+
+        var imgPath = $(this)[0].value;
+        var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+        var image_holder = $("#foto");
+
+        if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof (FileReader) != "undefined") {
+
+                //loop for each file selected for uploaded.
+                for (var i = 0; i < countFiles; i++) {
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = new Image();
+                        //indico la URL de la imagen
+                        var d = new Date();
+                        img.src = e.target.result;
+                        //defino el evento onload del objeto imagen
+                        img.onload = function () {
+                            //incluyo la imagen en el canvas
+                            //var Foto = jQuery("#foto");
+                            var context = image_holder[0].getContext("2d");
+                            context.drawImage(img, 0, 0, 300, 165);
+                        }
+                    }
+
+                    //image_holder.show();
+                    reader.readAsDataURL($(this)[0].files[i]);
+                }
+
+            } else {
+                jAlert("El browser de su máquina, no acepta tratamiento de imagenes", "Error");
+            }
+        } else {
+            jAlert("Solo puede seleccionar archivos de Imagenes", "Error");
+        }
+    });
+
+    function validaCuit(cuit) {
+        var valid = false;
+        if (cuit != undefined) {
+
+            if (typeof (cuit) == 'undefined')
+                return true;
+            cuit = cuit.toString().replace(/[-_]/g, "");
+            if (cuit == '')
+                return true; //No estamos validando si el campo esta vacio, eso queda para el "required"
+            if (cuit.length != 11)
+                valid = false;
+            else {
+                var mult = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+                var total = 0;
+                for (var i = 0; i < mult.length; i++) {
+                    total += parseInt(cuit[i]) * mult[i];
+                }
+                var mod = total % 11;
+                var digito = mod == 0 ? 0 : mod == 1 ? 9 : 11 - mod;
+            }
+            valid = digito == parseInt(cuit[10]);
+        };
+        return valid;
+    }
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+</script>

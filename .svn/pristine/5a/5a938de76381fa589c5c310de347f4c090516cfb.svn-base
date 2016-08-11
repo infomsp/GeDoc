@@ -1,0 +1,73 @@
+﻿@model string
+
+@{
+    var UnValor = 1;
+}
+
+<style>
+    #MapaUbicacion {
+    height: 300px;
+    width: 500px;
+    margin: 5px;
+    padding: 0;
+    }
+</style>
+<div id="MapaUbicacion"></div>
+<script>
+    var MapaUbicacion;
+
+    function initMap() {
+        debugger;
+        if (MapaUbicacionActual == null) {
+            MapaUbicacionActual = new { Latitud: -31.5367192, Longitud: -68.5360686, SetearUbicacionActual: false }
+        }
+        MapaUbicacion = new google.maps.Map(document.getElementById('MapaUbicacion'), {
+            center: { lat: MapaUbicacionActual.Latitud, lng: MapaUbicacionActual.Longitud },
+            zoom: 17
+        });
+        if (MapaUbicacionActual.SetearUbicacionActual) {
+            var infoWindow = new google.maps.InfoWindow({ map: MapaUbicacion });
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Ubicación encontrada.');
+                    MapaUbicacion.setCenter(pos);
+                }, function() {
+                    handleLocationError(true, infoWindow, MapaUbicacion.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, MapaUbicacion.getCenter());
+            }
+        }
+
+        MapaUbicacion.addListener('center_changed', function () {
+            // 3 seconds after the center of the map has changed, pan back to the
+            // marker.
+            window.setTimeout(function () {
+                //alert();
+                debugger;
+                var Ubica = MapaUbicacion.getCenter();
+                MapaUbicacionActual.Latitud = Ubica.lat();
+                MapaUbicacionActual.Longitud = Ubica.lng();
+                if (ObtieneUbicacionActualDelMapa != null) {
+                    ObtieneUbicacionActualDelMapa(Ubica.lat(), Ubica.lng());
+                }
+            }, 3000);
+        });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEREmUiC-CUTMpQGUP6D2a1BnMNQLSqjE&callback=initMap" async defer></script>

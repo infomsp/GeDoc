@@ -1,0 +1,104 @@
+@model GeDoc.catCentroDeSaludSalaConsultorioWS
+
+@{
+    ViewData["StyleAutoComplete"] = "width: 368px;";
+}
+<script type="text/javascript">
+    function onAceptarcatCentroDeSaludSalaConsultorio() {
+        if ($("#csscAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatCentroDeSaludSalaConsultorio').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatCentroDeSaludSalaConsultorio');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatCentroDeSaludSalaConsultorio").data("tGrid").ajaxRequest();
+                    $("#Grid").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatCentroDeSaludSalaConsultorio').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarcatCentroDeSaludSalaConsultorio() {
+        var windowElement = $('#wCRUDcatCentroDeSaludSalaConsultorio').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatCentroDeSaludSalaConsultorio", "catCentroDeSaludSala", FormMethod.Post, new { id = "frmcatCentroDeSaludSalaConsultorio" }))
+{
+    <div id="divGridPrincipalcatCentroDeSaludSalaConsultorio" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="color: white;">
+           Descripción
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 93%; height: 87%;">
+            <div>
+                @Html.TextBoxFor(model => Model.csscNombre, "csscNombre")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatCentroDeSaludSalaConsultorio();" title="@(Model.csscAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarOferta" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatCentroDeSaludSalaConsultorio();" title="Cancelar" style="@(Model.csscAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarOferta" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.csscAccion, new { style = "width: 200px; display: none;", id = "csscAccion" })
+        @Html.HiddenFor(model => Model.csscIdSala, new { style = "width: 200px; display: none;", id = "csscIdSala" })
+        @Html.HiddenFor(model => Model.csscId, new { style = "width: 200px; display: none;", id = "csscId" })
+        <input type="hidden" id="csscNombreAuxiliar" value="@(Model.csscNombre)" />
+    </div>
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatCentroDeSaludSalaConsultorio").ready(function () {
+        //Aplicamos algunos estilos
+        $("#csscAccion").attr("style", "display: none;");
+        $("#csscId").attr("style", "display: none;");
+        $("#csscNombre").val($("#csscNombreAuxiliar").val());
+        $("#csscNombre").attr("style", "width: 364px;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#csscAccion").val() == "Consultar" || $("#csscAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+    });
+
+</script>

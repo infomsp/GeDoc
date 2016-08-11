@@ -1,0 +1,170 @@
+<script>
+    function onComplete_wHCListaPerinatales(e) {
+        debugger;
+        if (e.name != "update" && e.name != "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function onActivate_wCRUDwHCListaPerinatales() {
+        AbrirWaitingCRUD();
+    }
+
+    function onLoad_wCRUDwHCListaPerinatales() {
+        var wHCListaPerinatales = $(this).data("tWindow");
+        var wContenido = wHCListaPerinatales.content() + "<div id = 'divCRUDwHCListaPerinatales_Content'  ></div>";
+        wHCListaPerinatales.content(wContenido);
+    }
+
+    function onDataBinding_wHCListaPerinatales(args) {
+        AbrirWaiting();
+        args.data = $.extend(args.data, { pacId: _pacId });
+    }
+
+    function onEjecutaAccionHCListaPerinatales(pAccion, hcId) {
+        if (pAccion === "Agregar") {
+            var wHCListaPerinatales = $("#wCRUDwHCListaPerinatales").data("tWindow");
+            if (wHCListaPerinatales.isMaximized){
+                wHCListaPerinatales.open().title(pAccion + " Historia Clínica Perinatal");
+            } else {
+                wHCListaPerinatales.maximize().open().title(pAccion + " Historia Clínica Perinatal");
+            }
+
+            var _Post = GetPathApp("HistoriaClinica/getHistoriaClinicaPerinatal");
+            $.ajax({
+                type: "POST",
+                url: _Post,
+                data: { hcperid: hcId, pAccion: pAccion, pacId: _pacId },
+                error: function () {
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                    });
+                },
+                success: function (respuesta) {
+                    if (respuesta != null) {
+                        $("#divCRUDwHCListaPerinatales_Content").html(respuesta);
+                        CerrarWaitingCRUD();
+                    }
+                }
+            });
+            return;
+        }
+
+        var wHCListaPerinatales = $("#wCRUDwHCListaPerinatales").data("tWindow");
+        wHCListaPerinatales.center().open().title(pAccion + " Carta Médica");
+        var _Post = GetPathApp("JuntaMedica/getDatosHCListaPerinatales");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { cmedId: cmId, pAccion: pAccion },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta != null) {
+                    $("#divCRUDwHCListaPerinatales_Content").html(respuesta);
+                }
+            }
+        });
+    }
+
+    function onCommand_wHCListaPerinatales(e) {
+        switch (e.name) {
+            case "cmdEliminar":
+                onEjecutaAccionHCListaPerinatales("Eliminar", e.dataItem["cmedId"]);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdConsultar":
+                if (e.dataItem["licFechaFinal"] == null) {
+                    jAlert('La carta médica seleccionada no tiene aprobada la Licencia Médica', '¡Atención!');
+                    return;
+                }
+
+                var _Parametros = new Array(new Array(e.dataItem["cmedId"] * -1, 'licenciaId'));
+                InvocarReporte('ComprobanteLicencia', _Parametros, true);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+    }
+
+</script>
+@(Html.Telerik().Grid<GeDoc.catHCPerinatalWS>()
+      .Name("gridHCListaPerinatales")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.hcperid);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+              <div style="margin-top: 5px; margin-left: 10px; margin-bottom: 5px;">
+                  <label class="t-button">
+                      <img class="t-icon t-add" onclick="onEjecutaAccionHCListaPerinatales('Agregar', -1);" title="Agregar Historia Clínica Perinatal"/>
+                  </label>
+              </div>
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getHCListaPerinatales", "HistoriaClinica", new { pacId = -1 });
+      })
+      .Columns(columns =>
+      {
+          columns.Command(commands =>
+          {
+              commands.Custom("cmdConsultar")
+                  .Ajax(true)
+                  .ButtonType(GridButtonType.Image)
+                  .SendDataKeys(false)
+                  .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Acuse de Recibo de licencia médica" })
+                  //.HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("HistoriaClinica", "Examinar") })
+                  .SendState(false)
+                  .DataRouteValues(route =>
+                  {
+                      route.Add(o => o.hcperid).RouteKey("hcperid");
+                  });
+          }).Width("80px").Title("Acciones");
+          columns.Bound(c => c.hcperid).Width("100px").Title("Id").Visible(false);
+          columns.Bound(c => c.activa).Width("35px").Title("").Visible(true);
+          columns.Bound(c => c.Fecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnComplete("onComplete_wHCListaPerinatales").OnCommand("onCommand_wHCListaPerinatales").OnDataBinding("onDataBinding_wHCListaPerinatales"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(250))
+      .Sortable()
+      )
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDwHCListaPerinatales")
+      .Title("Historia Clínica Perinatal")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+
+      .Scrollable(true)      
+      .Modal(true)
+      .ContentHtmlAttributes(new { style="overflow: scroll;" })
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDwHCListaPerinatales").OnLoad("onLoad_wCRUDwHCListaPerinatales"))
+      .Render();
+}

@@ -1,0 +1,231 @@
+@model GeDoc.proCompraSeguimientoWS
+
+@{ Html.RenderPartial("WaitingCRUD"); }
+
+<script type="text/javascript">
+    function onComboBoxLoadCRUD_tipoIdTipoNotificacion() {
+        var combobox = $('#tipoIdTipoNotificacion').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.tipoIdTipoNotificacion == null ? 0 : Model.tipoIdTipoNotificacion)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.segAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onComboBoxLoadCRUD_provId() {
+        var combobox = $('#provId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.provId == null ? 0 : Model.provId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.segAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onLoadComboBox_pcId() {
+        var combobox = $('#pcId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.pcId == null ? 0 : Model.pcId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.segAccion)" == "Agregar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onChangeComboBoxCRUD_provId() {
+        var _comboBox = $(this).data("tComboBox");
+        if (_comboBox != null && "@(Model.segAccion)" == "Agregar") {
+            var Contactos = $("#pcId").data("tComboBox");
+            AbrirWaiting();
+            var _Post = GetPathApp('proCompra/BindingContactos');
+            $.post(_Post, { provId: _comboBox.value() }, function (data) {
+                CerrarWaiting();
+                if (data != null) {
+                    Contactos.dataBind(data.data);
+                    if (data.total < 1) {
+                        Contactos.select(0);
+                        Contactos.disable();
+                        $("#segRespuesta").focus();
+                    }
+                    else {
+                        Contactos.enable();
+                        Contactos.select();
+                        $("#pcId-input").focus();
+                    }
+                }
+            });
+        }
+    }
+
+    function onChangeComboBoxCRUD_tipoIdTipoNotificacion() {
+        var _comboBox = $(this).data("tComboBox");
+        if (_comboBox != null && "@(Model.segAccion)" == "Agregar" && _comboBox.text() == "Envio de E-mail") {
+            var _WindowEnvioCE = $("#wEnvioCorreoElectronico").data("tWindow");
+            $('#wEnvioCorreoElectronico').css({ 'height': 510, 'width': 1012 });
+            $('#wEnvioCorreoElectronico').find('div.t-window-content').css({ 'height': 480, 'width': 1000 });
+            _WindowEnvioCE.content('<img src="@(Url.Content("~/Content/General/WaitingIndicator.gif"))" width="22px" alt="" /><strong> Cargando...</strong>');
+
+            var windowElement = $('#wCRUDSeguimientoCompras').data('tWindow');
+            windowElement.close();
+            ////////////////////////////////////////
+            var _Post = GetPathApp("proCompra/getEnvioCorreo");
+            $.ajax({
+                url: _Post,
+                type: 'POST',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    CerrarWaiting();
+                    jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                    });
+                    $('#popup_container').focus();
+                    $('#popup_ok').focus();
+                },
+                success: function (data) {
+                    CerrarWaiting();
+                    var _WindowEnvioCE = $("#wEnvioCorreoElectronico").data("tWindow");
+                    _WindowEnvioCE.content(data);
+                }
+            });
+            ////////////////////////////////////////
+            _WindowEnvioCE.center().open();
+        }
+    }
+
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalproCompraSeguimiento").ready(function () {
+        //Aplicamos algunos estilos
+        $('.t-widget.t-combobox.t-header').attr("style", "vertical-align: middle; width: 310px;");
+        $("#segAccion").attr("style", "display: none;");
+        $("#segcomId").attr("style", "display: none;");
+        $("#segId").attr("style", "display: none;");
+        $('#segRespuesta').attr("style", "width: 510px;");
+        $('#segObservaciones').attr("style", "width: 510px;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#segAccion").val() == "Consultar" || $("#segAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+
+    });
+
+    function onAceptarSeguimientoCompra() {
+        if ($("#segAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDSeguimientoCompras').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmproCompraSeguimiento');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridSeguimiento").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDSeguimientoCompras').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarSeguimientoCompra() {
+        var windowElement = $('#wCRUDSeguimientoCompras').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setSeguimiento", "proCompra", FormMethod.Post, new { id = "frmproCompraSeguimiento" }))
+{
+    <div id="divGridPrincipalproCompraSeguimiento" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="">
+            Información del Contacto
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Tipo de Notificación:</label>
+                @Html.EditorFor(model => Model.tipoIdTipoNotificacion, "", "tipoIdTipoNotificacion")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Proveedor:</label>
+                @Html.EditorFor(model => Model.provId, "", "provId")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Contacto:</label>
+                @Html.EditorFor(model => Model.pcId, "", "pcId")
+            </div>
+        </div>
+        <div class="BordeRedondeadoTab t-state-selected" style="">
+            Respuesta
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div style="height: 90px;">
+                @Html.EditorFor(model => Model.segRespuesta, "", "segRespuesta")
+            </div>
+        </div>
+        <div class="BordeRedondeadoTab t-state-selected" style="">
+            Observaciones
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div style="height: 90px;">
+                @Html.EditorFor(model => Model.segObservaciones, "", "segObservaciones")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarSeguimientoCompra();" title="@(Model.segAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarSeguimientoCompra();" title="Cancelar" style="@(Model.segAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.EditorFor(model => Model.segAccion, new { style = "width: 200px; display: none;", id = "segAccion" })
+        @Html.EditorFor(model => Model.segcomId, new { style = "width: 200px; display: none;", id = "segcomId" })
+        @Html.EditorFor(model => Model.segId, new { style = "width: 200px; display: none;", id = "segId" })
+    </div>
+}

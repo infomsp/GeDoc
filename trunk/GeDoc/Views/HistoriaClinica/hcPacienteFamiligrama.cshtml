@@ -1,0 +1,117 @@
+@using GeDoc
+@using GeDoc.Models
+@model GeDoc.catHCAdultoWS
+
+<style>
+    .inline-block {
+        display: inline-block;
+        padding: 3px;
+    }
+    .block {
+        padding: 3px;
+        display: block;
+    }
+    .inline-block-sn {
+        display: inline-block;
+    }
+    .block-sn {
+        display: block;
+    }
+    .textCenter {
+        text-align: center;
+    }
+    .padding0 {
+        padding: 0px !important;
+    }
+    .padding2px {
+        padding: 2px !important;
+    }
+</style>
+
+@Html.HiddenFor(model => Model.Familigrama, new {id = "Familigrama"})
+
+<script type="text/javascript">
+    function onActivate_wHCFamiligrama() {
+        $('#wPaint').wPaint('menuOrientation', $('#wPaint').wPaint('menuOrientation') === 'vertical' ? 'horizontal' : 'vertical');
+        $('#wPaint').wPaint('menuOrientation', $('#wPaint').wPaint('menuOrientation') === 'vertical' ? 'horizontal' : 'vertical');
+        $(".wPaint-menu-icon.wPaint-menu-icon-name-loadBg.wPaint-menu-icon-group.wPaint-menu-icon-group-loadImg.wPaint-menu-icon-select.active").css("display", "none");
+        $(".wPaint-menu-icon.wPaint-menu-icon-name-loadBg.wPaint-menu-icon-group.wPaint-menu-icon-group-loadImg.wPaint-menu-icon-select.active").css("display", "none");
+
+        $("wPaint-menu.ui-draggable.wPaint-menu-alignment-horizontal").css("width", "549px");
+
+        $('#wPaint').wPaint('clear');
+        //Cargamos la imgen\\
+        if ($("#Familigrama").val() !== "") {
+            var img = new Image();
+            //indico la URL de la imagen
+            var d = new Date();
+            img.src = "@(Url.Content("~/Content/Fotos/Familigramas/"))" + $("#Familigrama").val() + "?" + d.getTime();
+            $('#wPaint').wPaint('image', img.src);
+        }
+
+        var _WindowHC = $(this).data("tWindow");
+        _WindowHC.center();
+    }
+</script>
+@{
+    Model.Fecha = Model.Fecha == null ? DateTime.Now : Model.Fecha;
+}
+<div>
+    <div id="divPrincipalFamiligrama" tabindex="1" style="height: auto;width: 100%;">
+        <table style="width: 100%; border: hidden;">
+            <tr style="border: none;">
+                <td colspan="4" style="border: none;">
+                    <hr/>
+                    <div>
+                        @{
+                            if (Model.FechaFamiligrama == null)
+                            {
+                                Model.FechaFamiligrama = DateTime.Now;
+                            }
+                        }
+
+                        @Html.TextBoxFor(model => model.FechaFamiligrama, new {@class = "desactivar", id = "FechaFamiligrama", style = "width: 68px;"})
+                        <div class="t-button" onclick="onEditarFamiligrama();" title="Editar familigrama" style="cursor: pointer;">
+                            <label>Editar familigrama</label>
+                        </div>
+                    </div>
+                    <div id="divPaint" class="BordeRedondeado" style="margin-top: 10px; height: 430px; border-color: gray;">
+                        <img src="@(Model.Familigrama == "" || Model.Familigrama == null ? "" : Url.Content("~/Content/Fotos/Familigramas/") + Model.Familigrama)" id="wPaint-img" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@Html.HiddenFor(model => model.hcaduid, new { @class = "desactivar", id = "hcaduid" })
+
+@{
+    Html.Telerik().Window()
+      .Name("wHCFamiligrama")
+      .Title("Edición del Familigrama")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("FamiligramaAdultos");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wHCFamiligrama"))
+      .Height(420)
+      .Width(900)
+      .Render();
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divPrincipalFamiligrama").ready(function () {
+    });
+
+    function onEditarFamiligrama() {
+        var _WindowHC = $("#wHCFamiligrama").data("tWindow");
+        _WindowHC.open();
+    }
+</script>

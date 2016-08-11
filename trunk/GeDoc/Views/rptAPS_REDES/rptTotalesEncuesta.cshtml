@@ -1,0 +1,437 @@
+﻿@{
+    ViewBag.Title = "rptTotalesEncuesta";
+}
+
+<link href="@Url.Content("~/Scripts/jqgrid/jquery-ui.css")" rel="Stylesheet" />
+<link href="@Url.Content("~/Scripts/jqgrid/ui.jqgrid.css")" rel="Stylesheet" />
+
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqgrid/jquery.jqGrid.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqgrid/jquery-ui.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqgrid/grid.locale-es.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/fusioncharts.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fusioncharts.charts.js")"></script>
+
+
+<style>
+    .ui-th-column-header {
+        text-align: center;
+    }
+</style>
+
+<script>
+    jQuery(document).ready(function () {
+
+        $(window).bind('resize', function () {
+            var pageWidth = $("#divContenidoPrincipal").width();
+            $("#rpt").setGridWidth(pageWidth);
+        }).trigger('resize');
+
+
+
+
+
+        var pageWidth = $("#divContenidoPrincipal").width();
+        jQuery("#rpt").jqGrid({
+            //postData: { plaId: RowID },
+            datatype: 'json',
+            mtype: 'POST',
+            url: '@Url.Action("getRptTotalesEncuesta", "rptAPS_REDES")',
+            colNames: [
+                 "ZONA",
+                 "DEPARTAMENTO",
+                 "CENTRO DE SALUD",
+
+                 "VIVIENDAS",
+                 "MASCULINO",
+                 "FEMENINO",
+                 "TOTAL",
+
+                 "VIVIENDAS",
+                 "MASCULINO",
+                 "FEMENINO",
+                 "TOTAL",
+
+                 "ALTO",
+                 "MODERADO",
+                 "BAJO",
+                 "SIN_DATO",
+                 "NO_APLICA",
+
+                 "DBT",
+                 "HTA",
+                 "SOBREPESO",
+                 "TBC",
+                 "CELIAQUIA",
+                 "CANCER",
+                 "TABAQUISMO",
+                 "ITS",
+                 "EPOC/ASMA",
+                 "COLESTEROL",
+                 "ECV/ACV/Infarto",
+
+                 "MASCULINO ALTO",
+                 "MASCULINO MODERADO",
+                 "MASCULINO BAJO",
+                 "MASCULINO SIN DATO",
+                 "MASCULINO NO_APLICA",
+
+                 "FEMENINO ALTO",
+                 "FEMENINO MODERADO",
+                 "FEMENINO BAJO",
+                 "FEMENINO SIN_DATO",
+                 "FEMENINO NO APLICA",
+            ],
+            colModel: [
+                { name: 'ZONA', index: 'ZONA', width: 195, title: false },//,title: false
+                { name: 'DEPARTAMENTO', index: 'DEPARTAMENTO', width: 100, title: false },
+                { name: 'CENTRO_DE_SALUD', index: 'CENTRO_DE_SALUD', width: 200, title: false },
+
+                { name: 'VIVIENDAS', index: 'VIVIENDAS', width: 85, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'MASCULINO', index: 'MASCULINO', width: 95, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'FEMENINO', index: 'FEMENINO', width: 85, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'TOTAL', index: 'TOTAL', width: 60, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+
+                { name: 'ENC_VIVIENDAS', index: 'ENC_VIVIENDAS', width: 85, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'ENC_MASCULINO', index: 'ENC_MASCULINO', width: 95, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'ENC_FEMENINO', index: 'ENC_FEMENINO', width: 85, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'ENC_TOTAL', index: 'ENC_TOTAL', width: 60, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+
+                { name: 'ALTO', index: 'ALTO', width: 55, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'MODERADO', index: 'MODERADO', width: 95, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'BAJO', index: 'BAJO', width: 55, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'SIN_DATO', index: 'SIN_DATO', width: 95, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'NO_APLICA', index: 'NO_APLICA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+
+                { name: 'DBT', index: 'DBT', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'HTA', index: 'HTA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'SOBREPESO', index: 'SOBREPESO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'TBC', index: 'TBC', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'CELIAQUIA', index: 'CELIAQUIA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'CANCER', index: 'CANCER', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'TABAQUISMO', index: 'TABAQUISMO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'ITS', index: 'ITS', title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'EPOC_ASMA', index: 'EPOC_ASMA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'COLESTEROL', index: 'COLESTEROL', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'ECV__ACV_Infarto', index: 'ECV__ACV_Infarto', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+
+                { name: 'M_ALTO', index: 'M_ALTO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'M_MODERADO', index: 'M_MODERADO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'M_BAJO', index: 'M_BAJO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'M_SIN_DATO', index: 'M_SIN_DATO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'M_NO_APLICA', index: 'M_NO_APLICA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+
+                { name: 'F_ALTO', index: 'F_ALTO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'F_MODERADO', index: 'F_MODERADO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'F_BAJO', index: 'F_BAJO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'F_SIN_DATO', index: 'F_SIN_DATO', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+                { name: 'F_NO_APLICA', index: 'F_NO_APLICA', width: 100, title: false, align: 'center', formatter: 'int', summaryTpl: "<b>{0}</b>", summaryType: "sum" },
+            ],
+            //pager: jQuery('#rptPager'),
+            //height: '480px',
+            height:'100%',
+            rowNum: 500,
+            scroll: false,
+            rownumbers : false,
+            //rowList: [20, 40, 100],
+            page: 1,
+            viewrecords: true,
+            loadonce: true,
+            gridview: true,
+            emptyrecords: "Sin registros",
+            loadtext: "Cargando...",
+            caption: 'Reporte APS-REDES',
+            shrinkToFit: false,
+
+            //Agrupamiento
+            grouping: true,
+            groupingView: {
+                groupField: ['ZONA', 'DEPARTAMENTO'],
+                groupColumnShow: [true, true],
+                groupText: ['<b>{0}</b>', '<b>DEPARTAMENTO: {0}</b>'],
+                groupOrder: ["asc", "asc"],
+                groupSummary: [true, true],
+                groupSummaryPos: ['header', 'header'],
+                groupCollapse: true,
+            },
+
+            'loadComplete': loadComplete,
+            //onSelectRow: onClickRow
+        });
+
+        function loadComplete(data) {
+
+            console.log(data);
+            debugger;            
+            jQuery("#rpt").setGridWidth($("#divContenidoPrincipal").width());
+
+            setGraficos(data.graficos.Data);
+        };
+
+        //function onClickRow(id) {
+        //    //debugger;
+        //    //jQuery("#rpt").getGridParam().data[id-1];
+        //}
+
+
+        jQuery("#rpt").jqGrid('setGroupHeaders', {
+            useColSpanStyle: true,
+            groupHeaders: [
+              { startColumnName: 'VIVIENDAS', numberOfColumns: 4, titleText: 'DATOS DEL CENSO' },
+              { startColumnName: 'ENC_VIVIENDAS', numberOfColumns: 4, titleText: 'DATOS ENCUESTA' },
+              { startColumnName: 'ALTO', numberOfColumns: 5, titleText: 'REDES - RIESGO' },
+              { startColumnName: 'DBT', numberOfColumns: 11, titleText: 'APS - DOLENCIA' },
+              { startColumnName: 'M_ALTO', numberOfColumns: 5, titleText: 'REDES - RIESGO - HOMBRES' },
+              { startColumnName: 'F_ALTO', numberOfColumns: 5, titleText: 'REDES - RIESGO - MUJERES' },
+            ]
+        });
+        $("#rpt").parents('div.ui-jqgrid-bdiv').css("max-height", "500px");
+
+
+
+
+        //***********************************
+        //      Funciones para Graficos     *
+        //***********************************
+        function setGraficos(grfData) {
+
+            console.log(grfData);
+            debugger;
+
+
+            //Chart Viviendas
+            var viviendasChart = new FusionCharts({
+                "type": "pie3d",
+                "renderAt": "chartViviendas",
+                "width": "500",
+                "height": "300",
+                "dataFormat": "json",
+                "dataSource": {
+                    "chart": {
+                        "caption": "Viviendas",
+                        //"subCaption": "Last year",
+                        "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+                        "bgColor": "#ffffff",
+                        "showBorder": "0",
+                        "use3DLighting": "0",
+                        "showShadow": "0",
+                        "enableSmartLabels": "0",
+                        "startingAngle": "0",
+                        "showPercentValues": "1",
+                        "showPercentInTooltip": "0",
+                        "decimals": "1",
+                        "captionFontSize": "14",
+                        "subcaptionFontSize": "14",
+                        "subcaptionFontBold": "0",
+                        "toolTipColor": "#ffffff",
+                        "toolTipBorderThickness": "0",
+                        "toolTipBgColor": "#000000",
+                        "toolTipBgAlpha": "80",
+                        "toolTipBorderRadius": "2",
+                        "toolTipPadding": "5",
+                        "showHoverEffect": "1",
+                        "showLegend": "1",
+                        "legendBgColor": "#ffffff",
+                        "legendBorderAlpha": "0",
+                        "legendShadow": "0",
+                        "legendItemFontSize": "10",
+                        "legendItemFontColor": "#666666",
+                        "useDataPlotColorForLabels": "1"
+                    },
+                    "data": grfData.chartViviendas,
+                }
+            }).render();
+            //FIN Chart Viviendas
+
+
+
+
+            //Chart Dolencias
+            var dolenciasChart = new FusionCharts({
+                "type": "pie3d",
+                "renderAt": "chartDolencias",
+                "width": "500",
+                "height": "300",
+                "dataFormat": "json",
+                "dataSource": {
+                    "chart": {
+                        "caption": "Dolencias",
+                        //"subCaption": "Last year",
+                        "paletteColors": "#ff0000,#009900,#ff0066,#0000ff,#0099ff,#00ffaa,#ff00ff,#ff8000,#b300b3,#cccc00,#00b3b3",
+                        "bgColor": "#ffffff",
+                        "showBorder": "0",
+                        "use3DLighting": "0",
+                        "showShadow": "0",
+                        "enableSmartLabels": "0",
+                        "startingAngle": "0",
+                        "showPercentValues": "1",
+                        "showPercentInTooltip": "0",
+                        "decimals": "1",
+                        "captionFontSize": "14",
+                        "subcaptionFontSize": "14",
+                        "subcaptionFontBold": "0",
+                        "toolTipColor": "#ffffff",
+                        "toolTipBorderThickness": "0",
+                        "toolTipBgColor": "#000000",
+                        "toolTipBgAlpha": "80",
+                        "toolTipBorderRadius": "2",
+                        "toolTipPadding": "5",
+                        "showHoverEffect": "1",
+                        "showLegend": "1",
+                        "legendBgColor": "#ffffff",
+                        "legendBorderAlpha": "0",
+                        "legendShadow": "0",
+                        "legendItemFontSize": "10",
+                        "legendItemFontColor": "#666666",
+                        "useDataPlotColorForLabels": "1"
+                    },
+                    "data": grfData.chartDolencias,
+                }
+            }).render();
+            //FIN Chart Dolencias
+
+            //Chart Nivel de Riesgo
+            var nivelDeRiesgoChart = new FusionCharts({
+                "type": "pie3d",
+                "renderAt": "chartNivelDeRiesgo",
+                "width": "500",
+                "height": "300",
+                "dataFormat": "json",
+                "dataSource": {
+                    "chart": {
+                        "caption": "Nivel de Riesgo",
+                        //"subCaption": "Last year",
+                        "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+                        "bgColor": "#ffffff",
+                        "showBorder": "0",
+                        "use3DLighting": "0",
+                        "showShadow": "0",
+                        "enableSmartLabels": "0",
+                        "startingAngle": "0",
+                        "showPercentValues": "1",
+                        "showPercentInTooltip": "0",
+                        "decimals": "1",
+                        "captionFontSize": "14",
+                        "subcaptionFontSize": "14",
+                        "subcaptionFontBold": "0",
+                        "toolTipColor": "#ffffff",
+                        "toolTipBorderThickness": "0",
+                        "toolTipBgColor": "#000000",
+                        "toolTipBgAlpha": "80",
+                        "toolTipBorderRadius": "2",
+                        "toolTipPadding": "5",
+                        "showHoverEffect": "1",
+                        "showLegend": "1",
+                        "legendBgColor": "#ffffff",
+                        "legendBorderAlpha": "0",
+                        "legendShadow": "0",
+                        "legendItemFontSize": "10",
+                        "legendItemFontColor": "#666666",
+                        "useDataPlotColorForLabels": "1"
+                    },
+                    "data": grfData.chartNivelDeRiesgo,
+                }
+            }).render();
+            //FIN Chart Nivel de Riesgo
+
+            // Chart Nivel de Riesgo (Alto)
+            var riesgoAltoChart = new FusionCharts({
+                "type": "pie3d",
+                "renderAt": "chartRiesgoAlto",
+                "width": "500",
+                "height": "300",
+                "dataFormat": "json",
+                "dataSource": {
+                    "chart": {
+                        "caption": "Riesgo Alto",
+                        //"subCaption": "Last year",
+                        "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+                        "bgColor": "#ffffff",
+                        "showBorder": "0",
+                        "use3DLighting": "0",
+                        "showShadow": "0",
+                        "enableSmartLabels": "0",
+                        "startingAngle": "0",
+                        "showPercentValues": "1",
+                        "showPercentInTooltip": "0",
+                        "decimals": "1",
+                        "captionFontSize": "14",
+                        "subcaptionFontSize": "14",
+                        "subcaptionFontBold": "0",
+                        "toolTipColor": "#ffffff",
+                        "toolTipBorderThickness": "0",
+                        "toolTipBgColor": "#000000",
+                        "toolTipBgAlpha": "80",
+                        "toolTipBorderRadius": "2",
+                        "toolTipPadding": "5",
+                        "showHoverEffect": "1",
+                        "showLegend": "1",
+                        "legendBgColor": "#ffffff",
+                        "legendBorderAlpha": "0",
+                        "legendShadow": "0",
+                        "legendItemFontSize": "10",
+                        "legendItemFontColor": "#666666",
+                        "useDataPlotColorForLabels": "1"
+                    },
+                    "data": [
+                        {
+                            "label": "Hombres",
+                            "value": "55"
+                        },
+                        {
+                            "label": "Mujeres",
+                            "value": "45"
+                        },
+                    ]
+                }
+            }).render();
+            //FIN Chart Nivel de Riesgo (Alto)
+
+
+        }//Fin setGraficos()
+
+        
+
+
+        
+
+
+    });
+</script>
+
+
+<h1>PLANILLA</h1>
+<div id="contentGrid">
+    <table id="rpt"></table>
+    <div id="rptPager"></div>
+</div>
+
+
+<h1>GRAFICOS</h1>
+<div id="contentCharts">
+
+    @*Grafico Viviendas*@
+    <div id="chartViviendas"></div>
+
+
+    @*Grafico Dolencias*@
+    <div id="chartDolencias"></div>
+
+
+    @*Grafico Nivel de Riesgo*@
+    <div id="chartNivelDeRiesgo"></div>
+
+    @*Grafico Nivel de Riesgo (Alto)*@
+    <div id="chartRiesgoAlto"></div>
+
+
+
+
+</div>
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+﻿@using GeDoc
+@model IEnumerable<GeDoc.Models.catEncuestaAPSRecibo>
+
+<script type="text/javascript">
+
+    function nuevoRecibo() {
+
+        $.post("@Url.Content(@"~/catEncuestaAPSReciboDetalle/Index")", function(d) {
+            $("#WRecibo>.t-window-content.t-content").html(d);
+            $("#WRecibo").data("tWindow").center().open();
+            setTimeout(function() {
+                $("#WRecibo>.t-window-content.t-content").css("height", "auto");
+            }, 500);
+
+        });
+    }
+
+    function ReciboGrid_OnDelete(e) {
+        console.log(e);
+        e.preventDefault();
+        if (confirm("¿Está seguro que desea anular el recibo " + ZeroFill(e.dataItem.encReciboId.toString(), 5) + "?")) {
+            $("#Grid").data("tGrid").deleteRow(e.dataItem);
+        }
+    }
+
+    function ReciboGrid_OnCommand(e) {
+        e.preventDefault();
+        switch (e.name) {
+        case "Detalles":
+            $.post("@Url.Content(@"~/catEncuestaAPSReciboDetalle/Index")",{_item: JSON.stringify(e.dataItem)},function(d) {
+                $("#WRecibo>.t-window-content.t-content").html(d);
+                $("#WRecibo").data("tWindow").center().open();
+            });
+        default:
+        }
+    }
+
+    function ZeroFill(str, max) {
+        str = str.toString();
+        return str.length < max ? ZeroFill("0" + str, max) : str;
+    }
+
+</script>
+
+@{
+
+    Html.Telerik().Grid<catEncuestaAPSRecibos>()
+        .Name("Grid")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.encReciboId);
+        })
+        .Localizable("es-AR")
+        .ToolBar(commands =>
+        {
+            commands.Custom().ButtonType(GridButtonType.Text).Text("Crear nuevo...").Url("javascript:nuevoRecibo()");
+        })
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_SelectEditing", "catEncuestaAPSRecibo")
+                .Insert("_InsertEditing", "catEncuestaAPSRecibo")
+                .Update("_SaveEditing", "catEncuestaAPSRecibo")
+                .Delete("_DeleteEditing", "catEncuestaAPSRecibo");
+        })
+        .Columns(columns =>
+        {
+            columns.Command(commands =>
+            {
+                commands.Custom("Detalles")
+                .Ajax(true)
+                .ButtonType(GridButtonType.Image)
+                .SendState(false)
+                .ImageHtmlAttributes(new
+                {
+                    src = Url.Content(@"~/Content/2012.1.214/Simple/sprite.png"),
+                    style = "background-position: -64px -177px;"
+                });
+                commands.Delete().ButtonType(GridButtonType.Image);
+                
+            }).Width(22).Title("Acciones");
+            columns.Bound(c => c.encReciboAnulado).Width(18).Title("Estado").Visible(true)
+                .ClientTemplate("<img width='18px' src='<#= encReciboAnulado ? '../Content/Estados/Rojo.png' : '../Content/Estados/Verde.png' #>' title='<#= encReciboAnulado ? 'Anulado' : 'Válido' #>'/>")
+                .HtmlAttributes(new {style="text-align:center"});
+            columns.Bound(c => c.encReciboId).Width(25).Title("Nº de Recibo").Visible(true).Format("{0:00000}");
+            columns.Bound(c => c.encReciboObservacion).Width(80).Title("Observación").Visible(true);
+            columns.Bound(c => c.cszNombre).Width(80).Title("Zona").Visible(true);
+            columns.Bound(c => c.encReciboFecha).Width(80).Title("Fecha").Visible(true);
+        })
+        .Editable(editing => editing
+            .Mode(GridEditMode.PopUp))
+        .Pageable(p => p.Enabled(true).PageSize(14))
+        .Footer(true)
+        .Filterable()
+        .ClientEvents(e => e.OnCommand("ReciboGrid_OnCommand").OnDelete("ReciboGrid_OnDelete"))
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(((int) Session["AlturaGrilla"])))
+        .Sortable(s => s.OrderBy(r => r.Add("encReciboId").Descending())).Render();
+}
+@{
+    Html.Telerik().Window()
+        .Name("WRecibo")
+        .Modal(true)
+        .Title("Nuevo Recibo")
+        .Visible(false)
+        .Draggable(true)
+        .Width(800)
+        .ContentHtmlAttributes(new{style="overflow:visible;height:auto!important"})
+        .Render();
+}

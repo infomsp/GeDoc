@@ -1,0 +1,95 @@
+﻿@using GeDoc
+@using GeDoc.Models
+@using System.Json
+<style>
+    #duplicados-content header {
+        width: 700px;
+        text-align: center;
+        margin: 5px;
+        margin-bottom: 15px !important;
+    }
+
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    #pacientes-duplicados-buttons>.t-button:first-child {
+        margin-right: 20px;
+    }
+
+    #pacientes-duplicados-buttons {
+        margin-top: 15px!important;
+        margin: 5px;
+        text-align: center;
+    }
+</style>
+<script>
+    debugger;
+    window.pacDupWin.data = @Html.Raw(Json.Encode(ViewBag.duplicados));
+
+    function editarPaciente() {
+        if (document.selection !== undefined) {
+            document.selection.empty();
+        } else {
+            window.getSelection().removeAllRanges();
+        }
+
+        if (typeof window.fichaPaciente !== "undefined") {
+            var selectedIndex = $("#PacientesDuplicados").data("tGrid").selectedIndex;
+            var pacId =  window.pacDupWin.data[selectedIndex].pacId;
+            window.fichaPaciente.contentUrl = "@Url.Content("~/catPaciente/Paciente")" + "?pacId="+pacId;
+            window.fichaPaciente.refresh();
+            closeAndDeleteWindow();
+        }
+    }
+
+    function closeAndDeleteWindow() {
+        window.pacDupWin.close();
+        delete window.pacDupWin;
+    }
+
+    function nuevoPaciente() {
+        closeAndDeleteWindow();
+    }
+
+    function PacienteDuplicados_OnRowSelect(e) {
+        var grid = $(e.currentTarget).data("tGrid");
+        grid.selectedRow = grid.dataItem(e.row);
+        grid.selectedIndex = $(e.currentTarget).find("tr").index($(e.currentTarget).find(".t-state-selected")) - 1;
+    }
+</script>
+<div id="duplicados-content">
+    <header>
+        <span>
+            El DNI <b>@ViewBag.dni</b> ya existe en la base de datos, a continuación se muestran los pacientes con dicho DNI,
+            puede seleccionar uno y hacer click en el botón "<b>Editar Paciente Selecionado</b>" para editarlo, o hacer click en el botón 
+            "<b>Nuevo Paciente</b>" para continuar agregando un paciente nuevo con este DNI. 
+        </span>
+    </header>
+    <div>
+        @(Html.Telerik().Grid((IQueryable<catPacienteMin>) ViewBag.duplicados)
+              .Name("PacientesDuplicados")
+              .DataKeys(d => d.Add(a => a.pacId))
+              .TableHtmlAttributes(new {@class = "unselectable"})
+              .Columns(c =>
+              {
+                  c.Bound(b => b.pacId).Visible(false);
+                  c.Bound(b => b.pacApellidoYNombre).Title("Apellido y Nombre").HtmlAttributes(new {ondblclick = "editarPaciente()"});
+                  c.Bound(b => b.pacFechaNacimiento).Title("Fecha de Nacimiento").Format("{0:dd/MM/yyyy}").HtmlAttributes(new {ondblclick = "editarPaciente()"});
+                  c.Bound(b => b.nroHC).Title("Nº de HC").HtmlAttributes(new {ondblclick = "editarPaciente()"});
+              })
+              .Selectable()
+              .Footer(false)
+              .ClientEvents(e => e.OnRowSelect("PacienteDuplicados_OnRowSelect"))
+              )
+    </div>
+    <div id="pacientes-duplicados-buttons">
+        <input class="t-button" type="button" value="Editar Paciente Selecionado" onclick="editarPaciente()"/>
+        <input class="t-button" type="button" value="Nuevo Paciente" onclick="nuevoPaciente()"/>
+    </div> 
+</div>

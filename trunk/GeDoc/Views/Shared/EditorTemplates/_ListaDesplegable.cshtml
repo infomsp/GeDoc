@@ -1,0 +1,71 @@
+﻿@using GeDoc
+@model string
+
+@{
+    string[] pParametros = Model.Split('#');
+    string pNombreDeCampo = "";
+    bool TienePlaceHolder = false;
+    string psPlaceHolder = "";
+    string pNombreDeCampoLista = "";
+    string pTamanio = "200px";
+    if (pParametros.Length == 1)
+    {
+        pNombreDeCampo = Model.Replace("_Lista", "");
+        pNombreDeCampoLista = Model;
+    }
+    else
+    {
+        pNombreDeCampo = pParametros[0].Replace("_Lista", "");
+        psPlaceHolder = pParametros[1];
+        TienePlaceHolder = pParametros[1] != "NO";
+        pNombreDeCampoLista = pParametros[0];
+        if (pParametros.Count() > 1)
+        {
+            pTamanio = pParametros[2];
+        }
+    }
+}
+
+<style>
+.ES-PlaceHolder
+{
+    color: white;
+    font-size: 0px;
+    display: none;
+    height: 0px;
+}    
+</style>
+
+<div id="listaDesplegable_@(pNombreDeCampoLista)">
+    <select id="@pNombreDeCampoLista" class="@pNombreDeCampo" style="width: @(pTamanio);">
+        @if (TienePlaceHolder)
+        {
+            <option value="" class="ES-PlaceHolder" selected>@psPlaceHolder</option>
+        }
+        @{
+            if (ViewData[pNombreDeCampoLista + "_Data"] != null)
+            {
+                foreach (var item in (List<ListaDesplegableWS>) ViewData[pNombreDeCampoLista + "_Data"])
+                {
+                    <option value="@item.idLista">@item.Texto</option>
+                }
+            }
+        }
+    </select>
+</div>
+<script>
+    $("#@pNombreDeCampoLista").ready(function (e) {
+        if ("@(((List<ListaDesplegableWS>) ViewData[pNombreDeCampoLista + "_Data"]).Count)" == "0") {
+            $("#@pNombreDeCampoLista").prop("disabled", true);
+        }
+
+        var $ListaDesplegable = $("#@pNombreDeCampoLista");
+        $ListaDesplegable.on("select2:open", function (e) {
+            $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+            $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+            $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+        });
+        $(".select2.select2-container.select2-container--classic.select2-container--below.select2-container--focus").css("width", "@(pTamanio)");
+    });
+
+</script>

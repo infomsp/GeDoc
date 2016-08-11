@@ -1,0 +1,239 @@
+@model List<GeDoc.proCompraOfertaDetalleWS>
+
+<script type="text/javascript">
+    var _RowIndexProductosOferta = -1;
+    var _DatosRegistroProductosOferta;
+    var _FilasVisiblesOferta = 9;
+    var _ColumnasVisiblesOferta = 3;
+    var _CProductosOferta = 0;
+    var _FilaAnteriorOferta;
+    var _WindowCRUD;
+    var _AccionActual = $("#Accion").val();
+    
+    function TeclaPulsadaOfertas(e) {
+        _FilaAnteriorOferta = _RowIndexProductosOferta;
+        debugger;
+        switch (e.which) {
+            case 13: // Enter
+                if (_AccionActual == "Agregar" || _AccionActual == "Modificar") {
+                    var grid = $("#gridComprasOfertasDetalle").data("tGrid");
+                    var tr = $("#gridComprasOfertasDetalle tbody tr:eq(" + (_RowIndexProductosOferta + 1).toString() + ")");
+                    grid.editRow(tr);
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case 40: // Flecha Abajo
+                _RowIndexProductosOferta++;
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case 38: // Flecha Arriba
+                _RowIndexProductosOferta--;
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case 39: // Flecha Derecha
+                _CProductosOferta++;
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case 37: // Flecha Izquierda
+                _CProductosOferta--;
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+
+        switch (e.which) {
+            case 13: // Enter
+            case 37: // Flecha Izquierda
+            case 38: // Flecha Arriba
+            case 39: // Flecha Derecha
+            case 40: // Flecha Abajo
+            //case 45: // Insert
+            //case 46: // Delete
+                if (_RowIndexProductosOferta >= $("#gridComprasOfertasDetalle").data('tGrid').pageSize || _RowIndexProductosOferta >= ($("#gridComprasOfertasDetalle").data('tGrid').total)) {
+                    _RowIndexProductosOferta = 0;
+                }
+                if (_RowIndexProductosOferta < 0) {
+                    if (($("#gridComprasOfertasDetalle").data('tGrid').total - 1) > ($("#gridComprasOfertasDetalle").data('tGrid').pageSize - 1)) {
+                        _RowIndexProductosOferta = $("#gridComprasOfertasDetalle").data('tGrid').pageSize - 1;
+                    } else {
+                        _RowIndexProductosOferta = $("#gridComprasOfertasDetalle").data('tGrid').total - 1;
+                    }
+                }
+                if (_FilaAnteriorOferta != _RowIndexProductosOferta) {
+                    onRowSelectRecordKeyUp(_FilaAnteriorOferta, false, "gridComprasOfertasDetalle", _DatosRegistroProductosOferta);
+                    _DatosRegistroProductosOferta = onRowSelectRecordKeyUp(_RowIndexProductosOferta, true, "gridComprasOfertasDetalle", _DatosRegistroProductosOferta);
+                }
+                if (_CProductosOferta > $("#gridComprasOfertasDetalle").data('tGrid').columns.length - 1) {
+                    _CProductosOferta = 0;
+                }
+                if (_CProductosOferta < 0) {
+                    _CProductosOferta = $("#gridComprasOfertasDetalle").data('tGrid').columns.length - 1;
+                }
+
+                onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, 'gridComprasOfertasDetalle', _FilasVisiblesOferta, _ColumnasVisiblesOferta, false);
+                break;
+        }
+    }
+    $("#divGridPrincipalProductosOfertas").keydown(function (e) {
+        TeclaPulsadaOfertas(e);
+    });
+
+    function onRowSelectedProductosOferta(e) {
+        var row = e.row;
+        var grid = $(this).data("tGrid");
+        var dataItem = grid.dataItem(row);
+        if (_CProductosOferta == null) {
+            _CProductosOferta = 0;
+        }
+        _RowIndexProductosOferta = e.row.rowIndex;
+        _DatosRegistroProductosOferta = dataItem;
+        
+        onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, 'gridComprasOfertasDetalle', _FilasVisiblesOferta, _ColumnasVisiblesOferta, false);
+    }
+
+    function SetFocusGrilla() {
+        debugger;
+        _RowIndexProductosOferta = _RowIndexProductosOferta < 0 || _RowIndexProductosOferta == null ? 0 : _RowIndexProductosOferta;
+        _CProductosOferta = _CProductosOferta < 0 || _CProductosOferta == null ? 0 : _CProductosOferta;
+        onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, 'gridComprasOfertasDetalle', _FilasVisiblesOferta, _ColumnasVisiblesOferta, false);
+
+        $("#gridComprasOfertasDetalle").attr('tabindex', 0).focus();
+    }
+
+    function onDataBoundOferta(e) {
+        SetFocusGrilla();
+    }
+
+    function onCommandProductosOferta(e) {
+        if (("cmdEditarProductos, cmdEliminarProductos, cmdActivarProductos").indexOf(e.name) >= 0) {
+            if (_RowIndexProductosOferta < 0) {
+                jAlert('Debe seleccionar un Registro.', 'Error...', function (e) {
+                    if (e) {
+                        SetFocusGrilla();
+                    }
+                });
+                return;
+            }
+        }
+        var _WindowEst;
+        switch (e.name) {
+            case "cmdEditarProductos":
+                var grid = $("#gridComprasOfertasDetalle").data("tGrid");
+                var tr = $("#gridComprasOfertasDetalle tbody tr:eq(" + (_RowIndexProductosOferta + 1).toString() + ")");
+                grid.editRow(tr);
+                break;
+            case "cancel":
+                SetFocusGrilla();
+                break;
+        }
+    }
+
+    function onEditProductosOferta(e) {
+        _WindowCRUD = $("#gridComprasOfertasDetallePopUp").data("tWindow");
+        _WindowCRUD.center();
+
+        $("#codPrecioUnitario")[0].focus();
+        
+        $("#gridComprasOfertasDetallePopUp").find(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+    }
+    function onRowDataBoundProductosOferta(e) {
+        if (_RowIndexProductosOferta > -1) {
+            var grid = $("#gridComprasOfertasDetalle").data("tGrid");
+            var tr = $("#gridComprasOfertasDetalle tbody tr:eq(" + (_RowIndexProductosOferta + 1).toString() + ")");
+            tr.attr("class", 't-state-selected');
+            _DatosRegistroProductosOferta = grid.dataItem(tr);
+        }
+
+        //Asignamos Eventos
+        $(this).find(".t-grid-content").find('tbody').find('td').click(function (e) {
+            _CProductosOferta = e.currentTarget.cellIndex;
+            _RowIndexProductosOferta = e.currentTarget.parentElement.rowIndex;
+            $('#gridComprasOfertasDetalle').find('.t-state-selected').removeClass("t-state-selected");
+
+            _DatosRegistroProductosOferta = onRowSelectRecordKeyUp(_CProductosOferta, true, "gridComprasOfertasDetalle", _DatosRegistroProductosOferta);
+
+            onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, 'gridComprasOfertasDetalle', _FilasVisiblesOferta, _ColumnasVisiblesOferta);
+        });
+    }
+
+    function onDataBindingProductosOferta(e) {
+        var grid = $('#Grid').data('tGrid');
+        if (grid != null) {
+            e.data = $.extend(e.data, { idCompra: _DatosRegistro_proCompra.comId });
+        }
+    }
+
+    function onSaveProductosOferta(e) {
+        var values = e.values;
+        values.comId = _DatosRegistro_proCompra.comId;
+    }
+    function onCompleteProductosOferta(e) {
+        if (e.name != "update" && e.name != "insert") {
+            CerrarWaiting();
+        }
+    }
+</script>
+
+<div id="divGridPrincipalProductosOfertas" tabindex="1" style="overflow: hidden; outline:none;" >
+@{
+    Html.Telerik().Grid<GeDoc.proCompraOfertaDetalleWS>()
+        .Name("gridComprasOfertasDetalle")
+        .Localizable("es-AR")
+        .DataKeys(keys =>
+            {
+                keys.Add(p => p.codId);
+            })
+        .DataBinding(dataBinding =>
+            {
+                dataBinding.Ajax()
+                            .Select("__SelectEditingProductosOferta", "proCompra", new { idCompraOferta = 0 })
+                            .Update("_SaveEditingProductosOferta", "proCompra");
+            })
+        .Columns(columns =>
+            {
+                columns.Bound(c => c.DetalleOriginal.comdDetalle).Width("250px").Title("Detalle").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                       .ClientTemplate("<label title='<#= DetalleOriginal.comdDetalle #>' style='cursor: pointer;' ><#= DetalleOriginal.comdDetalle #></label>")
+                       .FooterHtmlAttributes(new { style = "text-align: right;" })
+                       .ClientFooterTemplate("TOTALES: ");
+                columns.Bound(c => c.codCantidad).FooterTemplate(f => f.Sum).Format("{0:0}").Width("70px").Title("Cantidad").Visible(true).HtmlAttributes(new {style = "text-align: right;"})
+                       .Aggregate(aggreages => aggreages.Sum())
+                       .FooterHtmlAttributes(new {style = "text-align: right;"})
+                       .ClientFooterTemplate("<#= $.telerik.formatString('{0:0}', Sum) #>");
+                columns.Bound(c => c.codPrecioUnitario).FooterTemplate(f => f.Sum).Format("{0:0.00}").Width("110px").Title("Precio Unitario").Visible(true).HtmlAttributes(new {style = "text-align: right;"})
+                       .Aggregate(aggreages => aggreages.Sum())
+                       .FooterHtmlAttributes(new {style = "text-align: right;"})
+                       .ClientFooterTemplate("<#= $.telerik.formatString('{0:0.00}', Sum) #>");
+                columns.Bound(c => c.comoSubTotal).FooterTemplate(f => f.Sum).Format("{0:0.00}").Width("110px").Title("SubTotal").Visible(true).HtmlAttributes(new { style = "text-align: right;" })
+                       .Aggregate(aggreages => aggreages.Sum())
+                       .FooterHtmlAttributes(new { style = "text-align: right;" })
+                       .ClientFooterTemplate("<#= $.telerik.formatString('{0:0.00}', Sum) #>");
+                columns.Bound(c => c.codDetalle).Width("250px").Title("Marca / Tipo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                       .ClientTemplate("<label title='<#= codDetalle #>' style='cursor: pointer;' ><#= codDetalle #></label>");
+                columns.Bound(c => c.codObservaciones).Width("250px").Title("Observaciones").Visible(true)
+                       .ClientTemplate("<label title='<#= codObservaciones #>' style='cursor: pointer;' ><#= codObservaciones #></label>");
+            })
+        .Editable(editing => editing.Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(false))
+        .Pageable((paging) =>
+                  paging.Enabled(true)
+                        .PageSize(200))
+        .Footer(true)
+        .ClientEvents(clientEvents => clientEvents.OnDataBinding("onDataBindingProductosOferta").OnRowSelected("onRowSelectedProductosOferta").OnEdit("onEditProductosOferta").OnSave("onSaveProductosOferta").OnComplete("onCompleteProductosOferta").OnCommand("onCommandProductosOferta").OnRowDataBound("onRowDataBoundProductosOferta").OnError("onErrorCRUD").OnDataBound("onDataBoundOferta"))
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(245))
+        .Sortable()
+        .Resizable(resizing => resizing.Columns(true))
+        //.BindTo(Model)
+        .Render();
+}
+</div>

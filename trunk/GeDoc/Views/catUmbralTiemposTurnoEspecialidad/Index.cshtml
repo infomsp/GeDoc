@@ -1,0 +1,352 @@
+﻿@model GeDoc.Models.catUmbralTiemposTurnoEspecialidad
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="@Url.Content("~/Content/jquery.timepicker.css")">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.ui.datepicker-es.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.timepicker.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script>
+
+    var _csId = "@((Session["UsuarioCentroDeSalud"] as GeDoc.sisUsuariosCentroDeSalud).csId)";
+    setSelectedIndex(document.getElementById("CentroDeSalud"), _csId);
+
+    function setSelectedIndex(s, i) {
+        s.value = i;
+        CargaEspecialidadesPorCS();
+        return;
+    }
+
+    $(document).ready(function () {
+    });
+
+    function getDatosUmbralesPorCSyESP() {
+        debugger;
+        var csId = $("#CentroDeSalud").val();
+        var espId = $("#Especialidad").val();
+        var especialidad = $("#Especialidad option:selected").text()
+        if (espId != null) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("getDatosUmbralesPorCSyESP", "catUmbralTiemposTurnoEspecialidad")',
+            dataType: 'json',
+            data: {
+                _csId: csId,
+                _espId: espId
+            },
+            success: function (respuesta) {
+                
+                if (respuesta.Data.length > 0) {
+                    $("#TeMin").val(respuesta.Data[0].TEsperaMin);
+                    $("#TeMax").val(respuesta.Data[0].TEsperaMax);
+                    $("#TaMin").val(respuesta.Data[0].TAtencionMin);
+                    $("#TaMax").val(respuesta.Data[0].TAtencionMax);
+                } else {
+                    jAlert('La especialidad: ' + especialidad + ' no tiene definido los tiempos de umbrales de atención y espera.', 'Atención!');
+                    $("#TeMin").val(0);
+                    $("#TeMax").val(0);
+                    $("#TaMin").val(0);
+                    $("#TaMax").val(0);
+                }
+                debugger;
+                if (espId == 0) {
+                    document.getElementById("lblMensaje").style.display = "inline";
+                }
+                else {
+                    document.getElementById("lblMensaje").style.display = "none";
+                }
+            },
+            error: function () {
+                jAlert('Ha ocurrido un error!', "Atención");
+            }
+            });
+        }
+    }
+
+    function CargaEspecialidadesPorCS() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CargaEspecialidadesPorCS", "catUmbralTiemposTurnoEspecialidad")',
+            dataType: 'json',
+            data: {
+                csId: $("#CentroDeSalud").val()
+            },
+            success: function (data, textStatus, jqXHR) {
+                $("#Especialidad")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialidad").append('<option value="0">TODOS</option>');
+
+                $.each(data, function (key, value) {
+                    $("#Especialidad").append('<option value=' + value.Value + '>' + value.Text + '</option>');
+                })
+
+                $("#Especialidad").prop("disabled", false);
+
+                getDatosUmbralesPorCSyESP();
+            },
+            error: function () {
+                jAlert('Ha ocurrido un error!', "Atención");
+
+                $("#Especialidad")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialidad").append('<option value="0">TODOS</option>');
+
+                $("#Especialidad").prop("disabled", true);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        getDatosUmbralesPorCSyESP();
+    });
+
+    $("#btnAceptar").click(function () {
+        if (validarTiempoEspera() && validarTiempoAtencion()) {
+            var csId = $("#CentroDeSalud").val();
+            var espId = $("#Especialidad").val();
+            var teMin = $("#TeMin").val();
+            var teMax = $("#TeMax").val();
+            var taMin = $("#TaMin").val();
+            var taMax = $("#TaMax").val();
+            AbrirWaiting();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("setDatosUmbralesPorCSyESP", "catUmbralTiemposTurnoEspecialidad")',
+                dataType: 'json',
+                data: {
+                    _csId: csId,
+                    _espId: espId,
+                    _teMin: teMin,
+                    _teMax: teMax,
+                    _taMin: taMin,
+                    _taMax: taMax
+                },
+                success: function (data, textStatus, jqXHR) {
+                    jAlert(data.msg, "Atencion", function () {
+                    });
+                    CerrarWaiting();
+                },
+                error: function () {
+                    jAlert('Ha ocurrido un error!', "Atencion");
+                    CerrarWaiting();
+                }
+            });
+        }
+    });
+
+    function validarTiempoEspera() {
+        debugger;
+        var teMin = $("#TeMin").val();
+        var teMax = $("#TeMax").val();
+        if (parseInt(teMin) >= parseInt(teMax)) {
+            jAlert("El valor de 'Tiempo de Espera Mínimo' debe ser menor a 'Tiempo de Espera Máximo'.", "Atención");
+            $("#TeMin").focus();
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+
+    function validarTiempoAtencion() {
+        debugger;
+        var taMin = $("#TaMin").val();
+        var taMax = $("#TaMax").val();
+        if (parseInt(taMin) >= parseInt(taMax)) {
+            jAlert("El valor de 'Tiempo de Atención Mínimo' debe ser menor a 'Tiempo de Atención Máximo'.", "Atención");
+            $("#TaMin").focus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+</script>
+<style>
+    .container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /*margin:auto;*/
+        /*border:solid red 2px ;*/
+    }
+
+    tr td {
+        border: none;
+    }
+
+    table {
+        /*border:solid black 2px ;*/
+        border: none;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    label {
+        text-align: right;
+        width: 200px;
+    }
+
+    .input {
+        width: 300px;
+    }
+</style>
+
+
+<div class="container">
+    <table>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Selección</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <label>Centro de Salud:</label>
+                            </td>
+                            <td>
+                                @{
+                                    @Html.DropDownList("CentroDeSalud", ViewData["CentroDeSalud"] as SelectList, new { @onchange = "CargaEspecialidadesPorCS(this.value);", @DataBound = "onDataBound_CS", @class = "input" })        
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Especialidad:</label>
+                            </td>
+                            <td>
+                                @{
+                                    @Html.DropDownList("Especialidad", ViewData["Especialidad"] as SelectList, new { @onchange = "getDatosUmbralesPorCSyESP();", @class = "input" })        
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label id="lblMensaje" style="display:none;font-size:11px;font-weight:bold;color:red">Los cambios que se realicen aplicarán a todas las Especialidades<br/>del Centro de Salud seleccionado.</label>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Umbrales(en minutos)</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <label>Tiempo de Espera Mínimo:</label>
+                            </td>
+                            <td id="cont-TeMin">
+                                <input id="TeMin" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Tiempo de Espera Máximo:</label>
+                            </td>
+                            <td id="cont-TeMax">
+                                <input id="TeMax" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Tiempo de Atención Mínimo:</label>
+                            </td>
+                            <td id="cont-TaMin">
+                                <input id="TaMin" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Tiempo de Atención Máximo:</label>
+                            </td>
+                            <td id="cont-TaMax">
+                                <input id="TaMax" type="number" min="0" value="0" />
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <input type="button" id="btnAceptar" value="Aceptar" class="t-button" style="margin-left: 63%;margin-top: 0;" />
+</div>
+
+
+
+
+
+
+@*@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>catUmbralTiemposTurnoEspecialidad</legend>
+
+        @Html.HiddenFor(model => model.utteId)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.csId, "catCentroDeSalud")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("csId", String.Empty)
+            @Html.ValidationMessageFor(model => model.csId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.espId, "catEspecialidad")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("espId", String.Empty)
+            @Html.ValidationMessageFor(model => model.espId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TEsperaMin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TEsperaMin)
+            @Html.ValidationMessageFor(model => model.TEsperaMin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TEsperaMax)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TEsperaMax)
+            @Html.ValidationMessageFor(model => model.TEsperaMax)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TAtencionMin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TAtencionMin)
+            @Html.ValidationMessageFor(model => model.TAtencionMin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TAtencionMax)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TAtencionMax)
+            @Html.ValidationMessageFor(model => model.TAtencionMax)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@

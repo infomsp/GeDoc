@@ -1,0 +1,146 @@
+﻿@model GeDoc.catHCPerCalendarioWS
+
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+<style>
+    .FondoSeleccionado {
+        background: 16px 20px no-repeat url('../Content/General/CRUD/Ok.png') rgba(1, 6, 4, 0) !important;
+        background-size: 46px !important;
+    }
+    .FondoSeleccionado:hover {
+        background: 16px 20px no-repeat url('../Content/General/CRUD/Ok.png') rgba(1, 6, 4, 0.15) !important;
+        background-size: 46px !important;
+    }
+    .FondoNoSeleccionado {
+        position: absolute;
+        background-color: rgba(1, 6, 4, 0.35);
+        height: 101px;
+        width: 78px;
+        top: 44px;
+    }
+    .FondoNoSeleccionado:hover {
+        /*background-color: rgba(1, 6, 4, 0);*/
+        /*background-image: url('../Content/Alerts/important.gif');*/
+        background: 16px 20px no-repeat url('../Content/General/CRUD/Ok.png') rgba(1, 6, 4, 0.15);
+        background-size: 46px;
+    }
+</style>
+@{
+    var _TipoCM = "FondoNoSeleccionado";
+    var _TipoCE = "FondoNoSeleccionado";
+    var _TipoVD = "FondoNoSeleccionado";
+    var TipoTexto = "CONTROL MÉDICO";
+    switch (Model.perCATipo)
+    {
+        case "CM":
+            _TipoCM = "FondoSeleccionado";
+            TipoTexto = "CONTROL MÉDICO";
+            break;
+        case "SP":
+        case "CE":
+            _TipoCE = "FondoSeleccionado";
+            TipoTexto = "CONTROL DE ENFERMERÍA";
+            break;
+        case "VD":
+            _TipoVD = "FondoSeleccionado";
+            TipoTexto = "VICITA DOMICILIARÍA";
+            break;
+    }
+}
+
+<script>
+    function onAsignaControl(Tipo) {
+        debugger;
+        $("#TipoCM").attr("class", "FondoNoSeleccionado");
+        $("#TipoCE").attr("class", "FondoNoSeleccionado");
+        $("#TipoVD").attr("class", "FondoNoSeleccionado");
+        switch (Tipo) {
+        case "CM":
+            $("#TipoCM").addClass("FondoSeleccionado");
+            $("#lblTipoSeleccionado").text("CONTROL MÉDICO");
+            break;
+        case "SP":
+        case "CE":
+            $("#TipoCE").addClass("FondoSeleccionado");
+            $("#lblTipoSeleccionado").text("CONTROL DE ENFERMERÍA");
+            break;
+        case "VD":
+            $("#TipoVD").addClass("FondoSeleccionado");
+            $("#lblTipoSeleccionado").text("VISITA DOMICILIARIA");
+            break;
+        }
+        TipoDeAtencion.Tipo = Tipo;
+    }
+</script>
+<div style="height: 210px;">
+    <div>
+        <table style="border: none;">
+            <thead>
+            <tr style="height: 25px; border: none;">
+                <td class="BordeGrilla" style="text-align: center; width: 79px; border: none;">
+                    <div class="t-button">
+                        <div title="Confirmar">
+                            <img src="@Url.Content("~/Content/General/CRUD/Doctor.png")" alt="Aceptar" height="58" width="58"/>
+                        </div>
+                        <div title="Confirmar">
+                            <label style="cursor: pointer;">Control Médico</label>
+                        </div>
+                    </div>
+                    <div id="TipoCM" class="FondoNoSeleccionado @_TipoCM" onclick="onAsignaControl('CM')"></div>
+                </td>
+                <td class="BordeGrilla" style="text-align: center; width: 79px; border: none;">
+                    <div class="t-button" onclick="onAsignaControl('CE')">
+                        <div>
+                            <img src="@Url.Content("~/Content/General/CRUD/Enfermera.png")" alt="Aceptar" height="58" width="58"/>
+                        </div>
+                        <div>
+                            <label style="cursor: pointer;">Control de Enfermería</label>
+                        </div>
+                    </div>
+                    <div id="TipoCE" class="FondoNoSeleccionado @_TipoCE" onclick="onAsignaControl('CE')"></div>
+                </td>
+                <td class="BordeGrilla" style="text-align: center; width: 79px; border: none;">
+                    <div class="t-button" onclick="onAsignaControl('VD')">
+                        <div style="height: 63px;">
+                            <img src="@Url.Content("~/Content/General/CRUD/Ambulancia.png")" alt="Aceptar" height="38" width="58" style="margin-top: 15px;"/>
+                        </div>
+                        <div>
+                            <label style="cursor: pointer;">Visita Domiciliaria</label>
+                        </div>
+                    </div>
+                    <div id="TipoVD" class="FondoNoSeleccionado @_TipoVD" onclick="onAsignaControl('VD')"></div>
+                </td>
+            </tr>
+            <tr style="height: 25px; border: none;">
+                <td class="BordeGrilla" style="text-align: center; width: 79px; border: none;" colspan="3">
+                    <div class="BordeRedondeado" style="cursor: auto; border-color: gray; height: 30px; vertical-align: middle;">
+                        <label id="lblTipoSeleccionado" style="vertical-align: -webkit-baseline-middle; font-family: cursive; font-size: large;">@TipoTexto</label>
+                    </div>
+                </td>
+            </tr>
+            </thead>
+        </table>
+        <table style="height: 25px; border: none;">
+            <tr style="height: 25px; border: none;">
+                <td class="BordeGrilla" style="border: none;">
+                    <label style="vertical-align: -webkit-baseline-middle; font-family: cursive; font-size: large;">Cumplido:</label>
+                </td>
+                <td class="BordeGrilla" style="border: none;">
+                    <input type="checkbox" id="chkCumplida" @(Model.perCACumplida.Value ? "checked" : "") class="my-checkbox" >
+                </td>
+            </tr>
+        </table>
+        <hr/>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+<script>
+    $('input[class="my-checkbox"]').bootstrapSwitch();
+    $('input[class="my-checkbox"]').on('switchChange.bootstrapSwitch', function (event, state) {
+        debugger;
+        TipoDeAtencion.Cumplida = $("#chkCumplida").is(':checked');
+    });
+    $(".bootstrap-switch-handle-off.bootstrap-switch-default").css("color", "white");
+    $(".bootstrap-switch-handle-off.bootstrap-switch-default").css("background", "#AB0B0B");
+
+</script>

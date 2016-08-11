@@ -1,0 +1,19 @@
+﻿<script type="text/javascript">
+    function AbrirWaitingCRUD() {
+        $('#divProcesando').css('display', 'block');
+        if (document.body.clientHeight >= 800) {
+            $('#divProcesando').css('height', document.body.clientHeight);
+        }
+        $('#divProcesandoImagen').css('margin-top', "30%");
+    }
+    function CerrarWaitingCRUD() {
+        $('#divProcesando').css('display', 'none');
+    }
+</script>
+
+<div id="divProcesando" class="es-overlay" style="display: none; text-align: center;">
+    <div id="divProcesandoImagen" style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>

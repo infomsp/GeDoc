@@ -1,0 +1,114 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+
+@{
+    Html.RenderPartial("WaitingCRUD");
+}
+
+<div class="iconos" style="text-align: center;">
+    <div id="divCargaDeDocumento" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center;">
+        <div>
+            <div class="input-group">
+                <label>Número de Documento: </label>
+                <input type="text" placeholder="Ingrese el DNI" id="txtNumeroDocumentoAgente" maxlength="8" style="width: 125px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+                <button id="btnBuscarAgente" class="t-button t-button-icon" onclick="onBuscarAgente();" style="width: 100px;">
+                    <span><i class="fa fa-search"></i><span style="font-family: sans-serif; margin-left: 5px;">Buscar</span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="divAgenteMensaje" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <i style="position: fixed; left: 50px;" class="fa fa-4x fa-warning"></i>
+        <label style="font-weight: bold;">¡Atención! </label>
+        El Número de Documento que ha ingresado no Existe!
+        <p>Debe dirigirse a la "Dirección de Control y Reconocimientos Médicos" y Solicitar el Alta de su Carta Médica.</p>
+    </div>
+    <div id="divAgenteCRUD" class="BordeRedondeado" style="background-color: rgba(154, 209, 236, 0.28); vertical-align: middle; padding: 10px; margin: 10px; text-align: left; display: none; color: #0E4561; border-color: #0E4561;">
+    </div>
+</div>
+
+<script type="text/javascript">
+    var IdAgente = -1;
+    //Seleccionamos el primer campo
+
+    function onBuscarAgente() {
+        if ($("#txtNumeroDocumentoAgente").val().trim() === "") {
+            $("#txtNumeroDocumentoAgente").focus().select();
+            return;
+        }
+
+        if ($("#btnBuscarAgente").is(".t-state-disabled")) {
+            return;
+        }
+
+        AbrirWaitingCRUD();
+        debugger;
+        IdAgente = -1;
+        var UrlAccion = "@(Session["Usuario"] == null ? Url.Content("onBuscarAgente") : Url.Content("~/DCRM/onBuscarAgente"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { nroDocumento: $("#txtNumeroDocumentoAgente").val() },
+            error: function () {
+                CerrarWaitingCRUD();
+                $("#txtNumeroDocumentoAgente").focus().select();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                //if (respuesta.Encontrado) {
+                    debugger;
+                    $("#divAgenteMensaje").hide();
+                    var Agente = respuesta.Datos.agtApellidoyNombre;
+                    $("#divAgenteCRUD").show();
+                    $("#btnBuscarAgente").addClass("t-state-disabled");
+                    $("#txtNumeroDocumentoAgente").attr("disabled", "disabled");
+                    $("#spanNombreAgente").text(Agente);
+                    $(".t-button.t-insert.t-button-icon").focus().select();
+                    IdAgente = respuesta.Datos.agtId;
+                    //if (IdAgente > 0) {
+                        onCargarDatosAgente();
+                    //}
+                //} else {
+                //    $("#divAgenteMensaje").show();
+                //    $("#txtNumeroDocumentoAgente").val("");
+                //    $("#txtNumeroDocumentoAgente").focus().select();
+                //}
+            }
+        });
+    }
+
+    function onCargarDatosAgente() {
+        AbrirWaitingCRUD();
+        debugger;
+        var UrlAccion = "@(Session["Usuario"] == null ? Url.Content("InformacionDeAgenteCRUD") : Url.Content("~/DCRM/InformacionDeAgenteCRUD"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { agtId: IdAgente, DNI: $("#txtNumeroDocumentoAgente").val() },
+            error: function () {
+                CerrarWaitingCRUD();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta != null) {
+                    $("#divAgenteCRUD").html(respuesta);
+                } 
+            }
+        });
+    }
+
+$("#txtNumeroDocumentoAgente").keydown(function (e) {
+    $("#divAgenteMensaje").hide();
+    if (e.which === 13) {
+        onBuscarAgente();
+
+        e.preventDefault();
+        e.stopPropagation();
+    }
+});
+
+function onCargaMenuFinalizada() {
+    CerrarWaitingCRUD();
+    $("#txtNumeroDocumentoAgente").focus().select();
+    //MensajeEmergente("¡Atención!", "Es obligatorio cargar los datos del padre o tutor por que es MENOR.", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+}
+</script>

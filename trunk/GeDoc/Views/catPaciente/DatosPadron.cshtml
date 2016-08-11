@@ -1,0 +1,93 @@
+﻿@using GeDoc
+@using GeDoc.Models
+<style>
+    #duplicados-content header {
+        width: 700px;
+        text-align: center;
+        margin: 5px;
+        margin-bottom: 15px !important;
+    }
+
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    #pacientes-duplicados-buttons>.t-button:first-child {
+        margin-right: 20px;
+    }
+
+    #pacientes-duplicados-buttons {
+        margin-top: 15px!important;
+        margin: 5px;
+        text-align: center;
+    }
+</style>
+<script>
+    window.datosPadronWin.data = @Html.Raw(Json.Encode(ViewBag.datosPadron));
+
+    function copiarDatos() {
+        if (document.selection !== undefined) {
+            document.selection.empty();
+        } else {
+            window.getSelection().removeAllRanges();
+        }
+
+        if (typeof window.fichaPaciente !== "undefined") {
+            var selectedIndex = $("#DatosPadron").data("tGrid").selectedIndex;
+            var pacDatosPadron =  window.datosPadronWin.data[selectedIndex];
+
+            window.fichaPaciente.contentUrl = "@Url.Content("~/catPaciente/Paciente")" + "?pacPadron=" + pacDatosPadron.pacPadron;
+            window.fichaPaciente.refresh();
+            enableFields();
+
+            window.datosPadronWin.closeAndDeleteWindow();
+        }
+    }
+
+    window.datosPadronWin.closeAndDeleteWindow = function() {
+        window.datosPadronWin.close();
+        delete window.datosPadronWin;
+    }
+
+    window.datosPadronWin.nuevoPaciente = function() {
+        window.datosPadronWin.closeAndDeleteWindow();
+    }
+
+    function DatosPadron_OnRowSelect(e) {
+        var grid = $(e.currentTarget).data("tGrid");
+        grid.selectedRow = grid.dataItem(e.row);
+        grid.selectedIndex = $(e.currentTarget).find("tr").index($(e.currentTarget).find(".t-state-selected")) - 1;
+    }
+</script>
+<div id="duplicados-content">
+    <header>
+        <span>
+            El DNI <b>@ViewBag.dni</b> fue encontrado en el <b>padrón</b>, a continuación se muestran los datos de las personas relacionadas al DNI ingresado.
+            Puede seleccionar una para utilizar esos datos en la creación del nuevo paciente, o continuar agregando un paciente en blanco.
+        </span>
+    </header>
+    <div>
+        @(Html.Telerik().Grid((List<catPacienteMin>) ViewBag.datosPadron)
+              .Name("DatosPadron")
+              .DataKeys(d => d.Add(a => a.pacId))
+              .TableHtmlAttributes(new {@class = "unselectable"})
+              .Columns(c =>
+              {
+                  c.Bound(b => b.pacApellidoYNombre).Title("Apellido y Nombre").HtmlAttributes(new { ondblclick = "copiarDatos()" }).Visible(true);
+                  c.Bound(b => b.pacFechaNacimiento).Title("Fecha de Nacimiento").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { ondblclick = "copiarDatos()" });
+              })
+              .Selectable()
+              .Footer(false)
+              .ClientEvents(e => e.OnRowSelect("DatosPadron_OnRowSelect"))
+              )
+    </div>
+    <div id="pacientes-duplicados-buttons">
+        <input class="t-button" type="button" value="Editar Paciente Selecionado" onclick="copiarDatos()"/>
+        <input class="t-button" type="button" value="Nuevo Paciente" onclick="nuevoPaciente()"/>
+    </div> 
+</div>

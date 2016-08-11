@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>dropzone</id>
+    <version>4.2.0</version>
+    <title>DropzoneJS</title>
+    <authors>Matias Meno</authors>
+    <owners>Matias Meno</owners>
+    <projectUrl>http://www.dropzonejs.com/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/sirkirby/dropzone-nuget/master/pkg-logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews. Issues? Please post them here https://github.com/sirkirby/dropzone-nuget/issues</description>
+    <releaseNotes>- latest source release.
+
+https://github.com/enyo/dropzone/releases</releaseNotes>
+    <tags>dropzone file image upload dragndrop</tags>
+    <references />
+  </metadata>
+</package>

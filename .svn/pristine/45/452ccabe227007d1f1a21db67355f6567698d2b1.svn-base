@@ -1,0 +1,167 @@
+﻿@using GeDoc
+
+
+<script type="text/javascript" src="@{ Url.Content("~/Scripts/CRUDGrillas.js"); }"></script>
+<script type="text/javascript">
+    var _PathContent = "@(Url.Content("~/Content"))";
+    var pacAccion = $("#pacAccion").val();
+    var _RowIndexEnfermedadesEncuestados = -1;
+    var _DatosRegistroEnfermedadesEncuestados;
+    var _encEnfId;
+    var _EnfEnc = 0;
+    if (pacAccion === "Modificar") {
+
+
+        document.getElementById('grillaPacEnf').style.visibility = "visible";
+    }
+
+
+    function RefrescarGridEnfermedades() {
+
+        var estGrid = $("#gridPacienteEnfermdedad2").data("tGrid");
+        estGrid.ajaxRequest();
+    }
+
+    function onRowSelectedTiposEnfermedades2(e) {
+
+        var row = e.row;
+        var grid = $("#gridTiposEnfermedades2").data("tGrid");
+        var dataItem = grid.dataItem(row);
+        _RowIndex = e.row.rowIndex;
+        _DatosRegistro = dataItem;
+        //  _diagId = _DatosRegistro['CIE10TipoDiagnostico1ID'];
+        _enfId = _DatosRegistro['enfId'];
+    }
+
+    function onCommandEnfermedadesEncuestados(e) {
+        console.log(e);
+        var _gridEnfermedad2 = $("#gridPacienteEnfermdedad2").data("tGrid");
+        if (e.name == "cmdAgregarEnfermedad") {
+            // RefrescarGridDiagnostico();
+            //_WtiposEnfermedades.center().open();           
+            _gridEnfermedad2.addRow();
+
+        }
+        if (e.name == "insert") {
+            SetFocusGrilla();
+            // e.preventDefault();
+            // e.stopPropagation();
+            $("#encPerId").val(_encPerId);
+            _encPerId = $("#encPerId").val();
+            _gridEnfermedad2.ajaxRequest();
+        }
+
+        //if (e.name == "delete") {
+
+        //    SetFocusGrilla();
+        //    e.preventDefault();
+        //    e.stopPropagation();
+
+        //    _gridEnfermedad2.ajaxRequest();
+        //}
+    }
+   
+    function SetFocusGrilla() {
+        
+        _RowIndexEnfermedadesEncuestados = _RowIndexEnfermedadesEncuestados < 0 || _RowIndexEnfermedadesEncuestados == null ? 0 : _RowIndexEnfermedadesEncuestados;
+        _EnfEnc = _EnfEnc < 0 || _EnfEnc == null ? 0 : _EnfEnc;
+        //onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, 'gridComprasOfertasDetalle', _FilasVisiblesOferta, _ColumnasVisiblesOferta, false);        
+        $("#gridPacienteEnfermdedad2").attr('tabindex', 0).focus();
+
+    }
+    function onRowSelectedEnfermedadesEncuestados(e) {
+        
+        SetFocusGrilla();
+        var row = e.row;
+        var grid = $("#gridPacienteEnfermdedad2").data("tGrid");
+        var dataItem = grid.dataItem(row);       
+      
+        _RowIndexEnfermedadesEncuestados = e.row.rowIndex;
+        _DatosRegistroEnfermedadesEncuestados = dataItem;
+    }
+    function onRowDataBoundEnfermedadesEncuestados(e) {
+        if (_RowIndexEnfermedadesEncuestados > -1) {
+            var grid = $("#gridPacienteEnfermdedad2").data("tGrid");
+            var tr = $("#gridPacienteEnfermdedad2 tbody tr:eq(" + (_RowIndexEnfermedadesEncuestados + 1).toString() + ")");
+            tr.attr("class", 't-state-selected');
+            _DatosRegistroEnfermedadesEncuestados = grid.dataItem(tr);
+        }
+        //Asignamos Eventos
+        $(this).find(".t-grid-content").find('tbody').find('td').click(function (e) {
+            _EnfEnc = e.currentTarget.cellIndex;
+            _RowIndexEnfermedadesEncuestados = e.currentTarget.parentElement.rowIndex;
+            $('#gridPacienteEnfermdedad2').find('.t-state-selected').removeClass("t-state-selected");
+            _DatosRegistroProductosOferta = onRowSelectRecordKeyUp(_EnfEnc, true, "gridPacienteEnfermdedad2", _DatosRegistroEnfermedadesEncuestados);
+          //  onCellSelectKeyUp(_RowIndexProductosOferta, _EnfEnc, 'gridPacienteEnfermdedad2', _FilasVisiblesOferta, _ColumnasVisiblesOferta);
+        });
+
+    }
+    function onDataBoundEnfermedadesEncuestados(e) {
+          SetFocusGrilla();
+    }
+
+    function gridPacienteEnfermdedad2_OnEdit(e) {
+        if (e.mode === "edit") {
+            $("#enfId").data("tDropDownList").disable();
+        }
+
+        if (e.mode === "insert") {
+            $.post("@Url.Content("~/catEncuestaAPS/ReloadIllnessCombo")", { pencPerId: @ViewData["encPerId"] }, function(d) {
+                $("#enfId").data("tDropDownList").dataBind(d);
+                $("#enfId").data("tDropDownList").select(0);
+            });
+        }
+    }
+
+</script>
+<div id ="grillaPacEnf">
+<!-- Enfermedades de encuestados -->
+@{      Html.Telerik().Grid<enlEncuestaAPSPersonasEnfermedades>()
+        .Name("gridPacienteEnfermdedad2")                                   
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.encEnfId);
+        })
+        .ToolBar(commands =>
+        {
+            commands.Insert().ButtonType(GridButtonType.ImageAndText);
+        })
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_SelectEditingenlEncuestasAPSPersonasEnf", "catEncuestaAPS", new { _encPerId = ViewData["encPerId"] })
+                .Insert("_InsertEditingenlEncuestasAPSPersonasEnf", "catEncuestaAPS", new { _encPerId = ViewData["encPerId"] })
+                .Update("_SaveenlEncuestasAPSPersonasEnf","catEncuestaAPS")
+                .Delete("_DeleteenlEncuestasAPSPersonasEnf", "catEncuestaAPS");
+        })
+        .Localizable("es-AR")
+        .Columns(columns =>
+        {
+            columns.Command(commands =>
+            {
+                commands.Delete().ButtonType(GridButtonType.Image).HtmlAttributes(new { style = "display: visible"});
+                commands.Edit().ButtonType(GridButtonType.Image);
+            }).Width("60px").Title("Acciones");
+            
+            columns.Bound(c => c.enfDescripcion).Width("180px").Title("Enfermedad").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+            .ClientTemplate("<label title='<#= enfDescripcion #>' style='cursor: pointer;' id='txtenfDescripcion' ><#= enfDescripcion #></label>");
+            
+            columns.Bound(c => c.encEnfDescripcionComentario).Width("180px").Title("Descripcion").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+            .ClientTemplate("<label title='<#= encEnfDescripcionComentario #>' style='cursor: pointer;' id='txtencEnfDescripcionComentario_Nombre' ><#= encEnfDescripcionComentario #></label>");
+            
+            columns.Bound(c => c.encPerId).Width("180px").Title("encPerId").Visible(false).HtmlAttributes(new { style = "white-space: nowrap;" });
+        }  )
+        .Editable(editing => editing.Enabled(true).Mode(GridEditMode.PopUp))
+        .Pageable((paging) => paging.Enabled(true).PageSize(((int)Session["FilasPorPagina"])))
+        .ClientEvents(e => e.OnEdit("gridPacienteEnfermdedad2_OnEdit"))
+        .Footer(true)                                                           
+        .Filterable()
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(210))
+        .Sortable()
+        .Render();
+}
+ </div>        
+
+
+  

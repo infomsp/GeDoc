@@ -1,0 +1,94 @@
+@{
+    Html.RenderPartial("WaitingCRUDModel", "wtVisualizadorDeTurnos");
+    if (ViewBag.EsCentroDeAtencion == null)
+    {
+        ViewBag.EsCentroDeAtencion = false;
+    }
+}
+
+<script type="text/javascript">
+    var TelevisorSeleccionado = { csstId: 0, csstNombre: "" };
+    var SalaSeleccionada = { cssId: 0, cssNombre: "" };
+
+    function onActivate_wSeleccionaTelevisor() {
+        TelevisorSeleccionado.csstId = 0;
+        TelevisorSeleccionado.csstNombre = "";
+        SalaSeleccionada.cssId = 0;
+        SalaSeleccionada.cssNombre = "";
+        $(".t-overlay").css("display", "block");
+        $("#divProcesandowtVisualizadorDeTurnos").css("display", "none");
+    }
+
+    function onLoad_wSeleccionaTelevisor() {
+        var wSelViewTurnos = $("#wSeleccionaTelevisor").data("tWindow");
+        wSelViewTurnos.center().open();
+    }
+
+    function onActivate_wVisualizadorDeTurnosLlamado() {
+        $(".t-overlay").css("display", "block");
+        $("#divProcesandowtVisualizadorDeTurnos").css("display", "none");
+        $("#audioNotificacion").trigger("play");
+    }
+
+    function onLoad_wVisualizadorDeTurnosLlamado() {
+
+    }
+
+    function onClose_wVisualizadorDeTurnosLlamado() {
+        clearInterval(refreshPaciente);
+    }
+
+</script>
+
+
+<!-- Selecciona televisor -->
+@{
+    Html.Telerik().Window()
+        .Name("wSeleccionaTelevisor")
+        .Title("Seleccione Televisor...")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("SeleccionaTelevisor");
+        })
+        .Buttons(b => b.Clear())
+        .Draggable(true)
+        .Scrollable(false)
+        .Modal(true)
+        .Width(424)
+        .Height(140)
+        .ClientEvents(eventos => eventos.OnActivate("onActivate_wSeleccionaTelevisor").OnLoad("onLoad_wSeleccionaTelevisor"))
+        .Render();
+}
+
+<!-- Llamado de Pacientes -->
+@{
+    var Titulo = "Llamado de " + (ViewBag.EsCentroDeAtencion ? ViewBag.CentroDeAtencionEntidad : "pacientes") + "...";
+    Html.Telerik().Window()
+        .Name("wVisualizadorDeTurnosLlamado")
+        .Title("Llamado...")
+        .Visible(false)
+        .Content(() =>
+        {
+            Html.RenderPartial("VisualizadorDeTurnosPacientes");
+        })
+        .Buttons(b => b.Close())
+        .Draggable(true)
+        .Scrollable(false)
+        .Modal(true)
+        .ClientEvents(eventos => eventos.OnActivate("onActivate_wVisualizadorDeTurnosLlamado").OnLoad("onLoad_wVisualizadorDeTurnosLlamado").OnClose("onClose_wVisualizadorDeTurnosLlamado"))
+        .Render();
+}
+
+<div style="text-align: center;">
+    <div class="t-button" onclick="AbrirLlamadoDePacientes();" title="Abrir llamado de @(ViewBag.EsCentroDeAtencion ? ViewBag.CentroDeAtencionEntidad : "Pacientes")">
+        <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+        <label style="cursor: pointer;">Abrir llamado de @(ViewBag.EsCentroDeAtencion ? ViewBag.CentroDeAtencionEntidad : "Pacientes")</label>
+    </div>
+</div>
+
+
+<script>
+    CerrarWaiting();
+    CerrarWaitingCRUD("wtVisualizadorDeTurnos");
+</script>

@@ -1,0 +1,158 @@
+﻿@using GeDoc.Models.JuntaMedica.Modelo
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+<script>
+
+    function onComplete_ListadoDeAtencion(e) {
+        if (e.name != "update" && e.name != "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function onDataBinding_ListadoDeAtencion(args) {
+        AbrirWaiting();
+        
+        var dpDesde = $('#dtFechaDesde').data('tDatePicker');
+        var dpHasta = $('#dtFechaHasta').data('tDatePicker');
+        var FechaDesde = $('#dtFechaDesde').val();//formatoFecha(dpDesde.value(), "{0:d}");
+        var FechaHasta = $('#dtFechaHasta').val();//formatoFecha(dpHasta.value(), "{0:d}");
+
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+
+            args.preventDefault();
+            args.stopPropagation();
+            return;
+        }
+
+        args.data = $.extend(args.data, { FechaDesde: FechaDesde, FechaHasta: FechaHasta });
+        //CerrarWaiting();
+    }
+
+    function onCommand_RefreshListadoDeAtencion() {
+        var dpDesde = $('#dtFechaDesde').val();
+        var dpHasta = $('#dtFechaHasta').val();
+        if (dpDesde.value() > dpHasta.value()) {
+            jAlert("Rango de fecha Incorrecto.", "Error...");
+            return;
+        }
+
+        $("#gridListadoDeAtencion").data("tGrid").ajaxRequest();
+    }
+
+    function dtFechaDesde_OnClose() {
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        fHasta.min(fDesde.value());
+        if (fHasta.value() < fDesde.value()) {
+            fHasta.value(fDesde.value());
+        }
+        //fHasta.value(fDesde.value());
+    }
+
+    function dtFechaHasta_OnLoad() {
+        var fDesde = $("#dtFechaDesde").data("tDatePicker");
+        var fHasta = $("#dtFechaHasta").data("tDatePicker");
+
+        fHasta.min(fDesde.value());
+        fHasta.value(fDesde.value());
+    }
+
+    function onExportar() {
+        var grid = $("#gridListadoDeAtencion").data('tGrid');
+        _OrderBy = (grid.orderBy || '~');
+        _FilterBy = (grid.filterBy || '~');
+        window.open(GetPathApp("ListadoDeAtencion/ExportarEspecial") + "?Filtro=" + _FilterBy + "&Orden=" + _OrderBy);
+    }
+
+</script>
+
+
+@(Html.Telerik().Grid<getEstadisticaDCRM_Result>()
+      .Name("gridListadoDeAtencion")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.Medico);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+<!-- Fin de Filtros -->
+              <div class="BordeRedondeado" style="border-color: #999;">
+                    <table style="border: none;">
+                        <tr style="border: none;">
+                            <td>
+                                <table style="border: none;">
+                                    <tr>
+                                        <td style="border: none;width: 4%"><label>Desde:</label></td>
+                                        <td style="border: none;margin-left:0px;width: 10%;">
+                                            @(Html.Telerik().DatePicker()
+                                                  .Name("dtFechaDesde")
+                                                  .Value(DateTime.Now)
+                                                  .ShowButton(true)
+                                                  .OpenOnFocus(true)
+                                                  .ClientEvents(events => events.OnClose("dtFechaDesde_OnClose"))
+                                                  .TodayButton())
+                                        </td>
+                                        <td style="border: none;width: 4%"><label>Hasta:</label></td>
+                                        <td style="border: none;margin-left:0px">
+                                            @(Html.Telerik().DatePicker()
+                                                  .Name("dtFechaHasta")
+                                                  .Value(DateTime.Now)
+                                                  .ShowButton(true)
+                                                  .OpenOnFocus(true)
+                                                  .ClientEvents(events=>events.OnLoad("dtFechaHasta_OnLoad"))
+                                                  .TodayButton())
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="text-align: center;">
+                                <label class="t-button">
+                                    <img class="t-icon t-refresh" onclick="onCommand_RefreshListadoDeAtencion(this);" title="Actualizar Listado de Atención"/>
+                                </label>
+                                <label class="t-button" title="Exportar listado a Excel" onclick="onExportar();">
+                                    <img class="t-icon" src="@Url.Content("~/Content/General/Vacio-Transparente.png")" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Excel.png') no-repeat 0px 0px; vertical-align: middle;"/>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+              </div>
+<!-- Fin de Filtros -->
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getListadoDeListadoDeAtencion", "ListadoDeAtencion", new { FechaDesde = DateTime.Now, FechaHasta = DateTime.Now });
+      })
+      .Columns(columns =>
+      {
+          columns.Bound(c => c.Medico).Width("150px").Title("Medico").Filterable(true).Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" });
+          columns.Bound(c => c.EspecialidadMedico).Width("140px").Title("Especialidad Médico").Visible(true).Filterable(true);
+          columns.Bound(c => c.EspecialidadCM).Width("160px").Title("Especialidad Carta Médica").Visible(true).Filterable(true);
+          columns.Bound(c => c.Fecha).Width("80px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true).Filterable(true);
+          columns.Bound(c => c.MinimoTiempoDeEspera).Width("135px").Title("Mín. Tiempo de Espera").Visible(true).Filterable(true);
+          columns.Bound(c => c.PromedioTiempoDeEspera).Width("140px").Title("Prom. Tiempo de Espera").Visible(true).Filterable(true);
+          columns.Bound(c => c.MaximoTiempoDeEspera).Width("130px").Title("Máx. Tiempo de Espera").Visible(true).Filterable(true);
+          columns.Bound(c => c.MinimoTiempoDeAtencion).Width("110px").Title("Mín. Tiempo de At.").Visible(true).Filterable(true);
+          columns.Bound(c => c.PromedioTiempoDeAtencion).Width("120px").Title("Prom. Tiempo de At.").Visible(true).Filterable(true);
+          columns.Bound(c => c.MaximoTiempoDeAtencion).Width("110px").Title("Máx. Tiempo de At.").Visible(true).Filterable(true);
+          columns.Bound(c => c.MinimoTiempoOcioso).Width("115px").Title("Mín. Tiempo Ocioso").Visible(true).Filterable(true);
+          columns.Bound(c => c.PromedioTiempoOcioso).Width("130px").Title("Prom. Tiempo Ocioso").Visible(true).Filterable(true);
+          columns.Bound(c => c.MaximoTiempoOcioso).Width("125px").Title("Máx. Tiempo Ocioso").Visible(true).Filterable(true);
+          columns.Bound(c => c.CantidadDeAtenciones).Width("85px").Title("Cantidad").Visible(true).Filterable(true);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnDataBinding("onDataBinding_ListadoDeAtencion").OnComplete("onComplete_ListadoDeAtencion"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(((int) Session["AlturaGrilla"])))
+      .Sortable()
+      )

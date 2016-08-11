@@ -1,0 +1,129 @@
+﻿@model GeDoc.Models.RegistroProfesionales.catProfesionWS
+          
+<div id="waitingCRUD_Profesion" class="es-overlay" style="display:  none;      margin-top: -150px; text-align: center;">
+    <div style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>
+@using (Html.BeginForm("setProfesion", "registroProfesional", FormMethod.Post, new { id = "frmCRUD_Profesion" }))
+{
+      <div   class="BordeRedondeado" style="border-color: Silver; padding: 3px 3px 3px 3px; display: inline-block;">
+           <div class="rowTitulo">
+                    <div class="rowCrudProfesion">
+                        <label>Nombre:</label>
+                        @Html.EditorFor(model => Model.profesionNombre, new { style = "width: 380px;" })
+                    </div>                   
+                  <div class="rowCrudProfesion">
+                        <label style="margin-right: 18px;">Código SISA:</label>
+                        @Html.EditorFor(model => Model.profSISA, new { style = "width: 385px;" })
+                    </div>
+                 <div class="rowCrudProfesion">
+                        <label>Formación:</label>
+                        @Html.EditorFor(model => Model.tfId, new { style = "width: 385px;" })
+                    </div>
+
+                </div>
+      </div>
+    
+      <div style="text-align: center; margin-top: 15px;">
+            <div id="btnAceptar_CRUDProfesion" class="t-button"  onclick="onClickAceptar_CRUD_Formacion()" title="Aceptar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar_CRUDProfesion" class="t-button"  onclick="onClickCancelar_CRUD_Formacion()" title="Cancelar">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+            </div>
+       </div>
+}
+
+<script>
+
+    $("#profesionNombre").val($("#profNombre").val());
+    $("#profesionNombre").focus();
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+    function onClickAceptar_CRUD_Formacion()
+    {
+        debugger;
+        if ($("#profesionNombre").val().length == 0) {
+            jAlert("Debe ingresar un nombre.", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        if ($("#profSISA").val().length == 0) {
+            jAlert("Debe ingresar un código SISA", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+        if ($("#tfId").val().length == 0) {
+            jAlert("Debe seleccionar una Formación", "Error...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+        $('#waitingCRUD_Profesion').show();        
+        var $form = $('#frmCRUD_Profesion');
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    $('#waitingCRUD_Profesion').hide();
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $('#waitingCRUD_Profesion').hide();
+                    $("#profNombre").val(respuesta.profNombre);
+                    var windowElement = $('#wCRUD_Profesion').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+
+    function onClickCancelar_CRUD_Formacion() {
+
+        var wRecibir = $("#wCRUD_Profesion").data("tWindow");
+        wRecibir.close();
+
+    }
+
+</script>
+
+<style>
+    .rowCrudProfesion {
+        margin: 4px 0px 5px 0px;
+        display: inline-block;
+    }
+    #profesionNombre{
+        width: 406px;
+    }
+      #profSISA {
+        width: 116px !important;
+    }
+</style>

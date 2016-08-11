@@ -1,0 +1,224 @@
+﻿@model GeDoc.catHCPerCalendarioWS
+
+<style>
+    .BordeGrilla {
+        border: solid #b3bead 1px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .FondoNormalGrilla {
+        width: 100%;
+        height: 28px;
+        position: relative;
+    }
+
+    .efectoSombreado:hover {
+        opacity: .8;
+    }
+
+    .efectoSombreadoVacio:hover {
+        opacity: .8;
+        background-color: rgba(203, 216, 7, 0.68);
+    }
+
+    .FondoVerde {
+        background-color: rgb(182, 245, 182);
+        font-weight: 900;
+        color: #357535;
+    }
+
+    .FondoInactivo {
+        background-color: gray;
+        color: gray;
+        background: -moz-repeating-linear-gradient(45deg, #333, #C0C6C7 30px, #333 30px, #828282 72px);
+        background: -webkit-repeating-linear-gradient(45deg, #333, #C0C6C7 30px, #333 30px, #828282 72px);
+        background-size: 100px 100px;
+    }
+
+    .FondoRojo {
+        background-color: rgb(249, 131, 131);
+        color: #A02626;
+        font-weight: 900;
+    }
+</style>
+<div style="height: 400px; z-index: 10; background-color: white; position: relative; left: 10px; top: 20px;">
+    <div>
+        <table>
+            <thead>
+            <tr style="height: 25px;">
+                <th class="BordeGrilla" style="text-align: center; width: 80px;">Mes/Día</th>
+                @for (int Dia = 1; Dia <= 31; Dia++)
+                {
+                    <th class="BordeGrilla" style="text-align: center; width: 25px;">@Dia</th>
+                }
+            </tr>
+            </thead>
+            <tbody class="t-grid-content">
+            @foreach (var Item in Model.gridListaDeDatos)
+            {
+                <tr style="height: 25px;">
+                    <th class="BordeGrilla" style="text-align: left !important;">@Item.Mes</th>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid1, '@Item.Mes', 1,'@Item.perCAFecha1', '@Item.perCATipo1', '@Item.perCACumplida1')" class="BordeGrilla @(Item.perCATipo1 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida1.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo1 == "SP" ? "" : Item.perCATipo1)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid2, '@Item.Mes', 2,'@Item.perCAFecha2', '@Item.perCATipo2', '@Item.perCACumplida2')" class="BordeGrilla @(Item.perCATipo2 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida2.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo2 == "SP" ? "" : Item.perCATipo2)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid3, '@Item.Mes', 3,'@Item.perCAFecha3', '@Item.perCATipo3', '@Item.perCACumplida3')" class="BordeGrilla @(Item.perCATipo3 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida3.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo3 == "SP" ? "" : Item.perCATipo3)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid4, '@Item.Mes', 4,'@Item.perCAFecha4', '@Item.perCATipo4', '@Item.perCACumplida4')" class="BordeGrilla @(Item.perCATipo4 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida4.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo4 == "SP" ? "" : Item.perCATipo4)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid5, '@Item.Mes', 5,'@Item.perCAFecha5', '@Item.perCATipo5', '@Item.perCACumplida5')" class="BordeGrilla @(Item.perCATipo5 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida5.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo5 == "SP" ? "" : Item.perCATipo5)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid6, '@Item.Mes', 6,'@Item.perCAFecha6', '@Item.perCATipo6', '@Item.perCACumplida6')" class="BordeGrilla @(Item.perCATipo6 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida6.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo6 == "SP" ? "" : Item.perCATipo6)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid7, '@Item.Mes', 7,'@Item.perCAFecha7', '@Item.perCATipo7', '@Item.perCACumplida7')" class="BordeGrilla @(Item.perCATipo7 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida7.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo7 == "SP" ? "" : Item.perCATipo7)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid8, '@Item.Mes', 8,'@Item.perCAFecha8', '@Item.perCATipo8', '@Item.perCACumplida8')" class="BordeGrilla @(Item.perCATipo8 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida8.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo8 == "SP" ? "" : Item.perCATipo8)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid9, '@Item.Mes', 9,'@Item.perCAFecha9', '@Item.perCATipo9', '@Item.perCACumplida9')" class="BordeGrilla @(Item.perCATipo9 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida9.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo9 == "SP" ? "" : Item.perCATipo9)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid10, '@Item.Mes', 10,'@Item.perCAFecha10', '@Item.perCATipo10', '@Item.perCACumplida10')" class="BordeGrilla @(Item.perCATipo10 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida10.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo10 == "SP" ? "" : Item.perCATipo10)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid11, '@Item.Mes', 11,'@Item.perCAFecha11', '@Item.perCATipo11', '@Item.perCACumplida11')" class="BordeGrilla @(Item.perCATipo11 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida11.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo11 == "SP" ? "" : Item.perCATipo11)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid12, '@Item.Mes', 12,'@Item.perCAFecha12', '@Item.perCATipo12', '@Item.perCACumplida12')" class="BordeGrilla @(Item.perCATipo12 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida12.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo12 == "SP" ? "" : Item.perCATipo12)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid13, '@Item.Mes', 13,'@Item.perCAFecha13', '@Item.perCATipo13', '@Item.perCACumplida13')" class="BordeGrilla @(Item.perCATipo13 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida13.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo13 == "SP" ? "" : Item.perCATipo13)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid14, '@Item.Mes', 14,'@Item.perCAFecha14', '@Item.perCATipo14', '@Item.perCACumplida14')" class="BordeGrilla @(Item.perCATipo14 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida14.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo14 == "SP" ? "" : Item.perCATipo14)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid15, '@Item.Mes', 15,'@Item.perCAFecha15', '@Item.perCATipo15', '@Item.perCACumplida15')" class="BordeGrilla @(Item.perCATipo15 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida15.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo15 == "SP" ? "" : Item.perCATipo15)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid16, '@Item.Mes', 16,'@Item.perCAFecha16', '@Item.perCATipo16', '@Item.perCACumplida16')" class="BordeGrilla @(Item.perCATipo16 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida16.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo16 == "SP" ? "" : Item.perCATipo16)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid17, '@Item.Mes', 17,'@Item.perCAFecha17', '@Item.perCATipo17', '@Item.perCACumplida17')" class="BordeGrilla @(Item.perCATipo17 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida17.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo17 == "SP" ? "" : Item.perCATipo17)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid18, '@Item.Mes', 18,'@Item.perCAFecha18', '@Item.perCATipo18', '@Item.perCACumplida18')" class="BordeGrilla @(Item.perCATipo18 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida18.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo18 == "SP" ? "" : Item.perCATipo18)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid19, '@Item.Mes', 19,'@Item.perCAFecha19', '@Item.perCATipo19', '@Item.perCACumplida19')" class="BordeGrilla @(Item.perCATipo19 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida19.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo19 == "SP" ? "" : Item.perCATipo19)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid20, '@Item.Mes', 20,'@Item.perCAFecha20', '@Item.perCATipo20', '@Item.perCACumplida20')" class="BordeGrilla @(Item.perCATipo20 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida20.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo20 == "SP" ? "" : Item.perCATipo20)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid21, '@Item.Mes', 21,'@Item.perCAFecha21', '@Item.perCATipo21', '@Item.perCACumplida21')" class="BordeGrilla @(Item.perCATipo21 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida21.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo21 == "SP" ? "" : Item.perCATipo21)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid22, '@Item.Mes', 22,'@Item.perCAFecha22', '@Item.perCATipo22', '@Item.perCACumplida22')" class="BordeGrilla @(Item.perCATipo22 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida22.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo22 == "SP" ? "" : Item.perCATipo22)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid23, '@Item.Mes', 23,'@Item.perCAFecha23', '@Item.perCATipo23', '@Item.perCACumplida23')" class="BordeGrilla @(Item.perCATipo23 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida23.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo23 == "SP" ? "" : Item.perCATipo23)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid24, '@Item.Mes', 24,'@Item.perCAFecha24', '@Item.perCATipo24', '@Item.perCACumplida24')" class="BordeGrilla @(Item.perCATipo24 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida24.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo24 == "SP" ? "" : Item.perCATipo24)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid25, '@Item.Mes', 25,'@Item.perCAFecha25', '@Item.perCATipo25', '@Item.perCACumplida25')" class="BordeGrilla @(Item.perCATipo25 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida25.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo25 == "SP" ? "" : Item.perCATipo25)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid26, '@Item.Mes', 26,'@Item.perCAFecha26', '@Item.perCATipo26', '@Item.perCACumplida26')" class="BordeGrilla @(Item.perCATipo26 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida26.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo26 == "SP" ? "" : Item.perCATipo26)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid27, '@Item.Mes', 27,'@Item.perCAFecha27', '@Item.perCATipo27', '@Item.perCACumplida27')" class="BordeGrilla @(Item.perCATipo27 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida27.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo27 == "SP" ? "" : Item.perCATipo27)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid28, '@Item.Mes', 28,'@Item.perCAFecha28', '@Item.perCATipo28', '@Item.perCACumplida28')" class="BordeGrilla @(Item.perCATipo28 == "SP" ? "efectoSombreadoVacio" : (!Item.perCACumplida28.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado"))">
+                        <div>@(Item.perCATipo28 == "SP" ? "" : Item.perCATipo28)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid29, '@Item.Mes', 29,'@Item.perCAFecha29', '@(Item.perCACumplida29 == null ? "XX" : Item.perCATipo29)', '@(Item.perCACumplida29 == null ? false : Item.perCACumplida29.Value)')" class="BordeGrilla @(Item.perCATipo29 == "SP" ? "efectoSombreadoVacio" : (Item.perCATipo29 == null ? "efectoSombreadoVacio FondoInactivo" : (!Item.perCACumplida29.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado")))">
+                        <div>@(Item.perCATipo29 == "SP" ? "" : Item.perCATipo29)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid30, '@Item.Mes', 30,'@Item.perCAFecha30', '@(Item.perCACumplida30 == null ? "XX" : Item.perCATipo30)', '@(Item.perCACumplida30 == null ? false : Item.perCACumplida30.Value)')" class="BordeGrilla @(Item.perCATipo30 == "SP" ? "efectoSombreadoVacio" : (Item.perCATipo30 == null ? "efectoSombreadoVacio FondoInactivo" : (!Item.perCACumplida30.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado")))">
+                        <div>@(Item.perCATipo30 == "SP" ? "" : Item.perCATipo30)</div>
+                    </td>
+                    <td onclick="onAbrirCRUDCalendario(@Item.perCAid31, '@Item.Mes', 31,'@Item.perCAFecha31', '@(Item.perCACumplida31 == null ? "XX" : Item.perCATipo31)', '@(Item.perCACumplida31 == null ? false : Item.perCACumplida31.Value)')" class="BordeGrilla @(Item.perCATipo31 == "SP" ? "efectoSombreadoVacio" : (Item.perCATipo31 == null ? "efectoSombreadoVacio FondoInactivo" : (!Item.perCACumplida31.Value ? "FondoRojo efectoSombreado" : "FondoVerde efectoSombreado")))">
+                        <div>@(Item.perCATipo31 == "SP" ? "" : Item.perCATipo31)</div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var TipoDeAtencion = { Tipo: "", Id: 0, Mes: "", Dia: 1, Fecha: "", Cumplida: false };
+    function onAbrirCRUDCalendario(Id, Mes, Dia, Fecha, Tipo, Cumplida) {
+        if (Tipo === "XX") {
+            return;
+        }
+        debugger;
+        TipoDeAtencion = { Tipo: Tipo, Id: Id, Mes: Mes, Dia: Dia, Fecha: Fecha, Cumplida: Cumplida == "True" };
+        AbrirWaitingCRUD("wtCalendario");
+        var _Post = "@Url.Content("~/HistoriaClinica/getCalendarioCRUD")";
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { Mes: Mes, Dia: Dia, idHC: Id },
+            error: function () {
+                CerrarWaitingCRUD("wtCalendario");
+                jAlert("Error al guardar datos.", "Error...", function () {
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("wtCalendario");
+                jConfirm("", "Fecha: " + Fecha.substring(0, 10), function (Resultado) {
+                    if (Resultado) {
+                        onGuardarProgramacion();
+                    }
+                });
+                $("#popup_content").css("background", "white");
+                //$("#popup_content").css("background-image", "");
+                $("#popup_message").css("padding-left", "0px");
+                $("#popup_message").html(respuesta);
+            }
+        });
+    }
+
+    function onGuardarProgramacion() {
+        AbrirWaitingCRUD("wtCalendario");
+        debugger;
+        var _Post = "@Url.Content("~/HistoriaClinica/setCalendarioCRUD")";
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { Mes: TipoDeAtencion.Mes, Dia: TipoDeAtencion.Dia, Cumplida: TipoDeAtencion.Cumplida, Tipo: TipoDeAtencion.Tipo },
+            error: function () {
+                CerrarWaitingCRUD("wtCalendario");
+                jAlert("Error al guardar datos.", "Error...", function () {
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("wtCalendario");
+                if(respuesta.IsValid){
+                    $("#tabstrip-3").html(respuesta.Vista);
+                    var tabStrip = $("#tabstrip").data("tTabStrip");
+                    tabStrip.reload($(".t-item", tabStrip.element)[2]);
+                } else {
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                    });
+                }
+            }
+        });
+    }
+
+    $("#tabstrip-3").css("height", "450px");
+</script>

@@ -1,0 +1,101 @@
+﻿
+@model GeDoc.Models.RegistroProfesionales.rpProfesionalConsulta
+<div style="margin-left: 1%;margin-top: 5%;">
+
+    <table class="borderTable">
+        <tr>
+            <td>
+                <div class="credencial">
+                    <div>
+                        <div >
+                             <img class="foto" id="foto" src="" />
+                        </div>
+                        <div class="datosProfesional">
+                            <div>
+                                <label>Nombre: @Model.profesional.pNombre @Model.profesional.pApellido</label>
+                            </div>
+                            <div>
+                                <label>DNI: @Model.profesional.pNumDocumento </label>
+                            </div>
+                            <div>
+                                <label>Profesion: @Model.titulo.profNombre</label>
+                            </div>  
+                            <div>
+                                <label>Matricula: @Model.titulo.ptitMarticulaNro</label>
+                            </div>  
+                        </div>
+                    </div>
+                </div> 
+            </td>
+            <td>
+               <div class="credencialBack">
+                    <div>
+                        <div>
+                            <div id="qrcode"></div>                 
+                        </div>          
+                    </div>
+                </div> 
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var img = jQuery("#foto");
+        var d = new Date();    
+        $('#foto').attr('src',"@Url.Content(@Model.profesional.pFotoPerfil)?" + d.getTime());
+        var qrcode = new QRCode("qrcode");
+        qrcode.makeCode(@Model.titulo.ptitMarticulaNro);
+    }); 
+</script>
+
+<style>
+
+    .rowCredencial {
+
+    }
+    #qrcode {
+            margin-top: 7%;
+    margin-left: 25%;
+    }
+    .datosProfesional
+    {
+            top: -200px;
+            left:50%;
+         position: relative;
+    }
+    .datosProfesional div{
+        font-size: 20px;
+        margin: 10px;
+    }
+
+    .foto {
+        width: 220px;
+        height: 165px;
+        margin: 35px;
+    }
+    .credencial {
+        border :solid #9C9C9C 1px;
+        height:327px;
+            border-radius: 20px;
+        width:560px;
+        margin: 15px;
+        display: inline-block;
+    }
+
+     .credencialBack {
+        border :solid #9C9C9C 1px;
+        height:327px;
+        border-radius: 20px;
+        width:560px;
+        margin-top: -30px;
+    }
+    .borderTable td {
+        border :0px !important;
+    }
+      .borderTable {
+        border :0px !important;
+    }
+</style>

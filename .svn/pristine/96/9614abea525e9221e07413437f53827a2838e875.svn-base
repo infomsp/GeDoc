@@ -1,0 +1,232 @@
+﻿@model GeDoc.Models.RegistroProfesionales.regProDetalleTramite
+
+
+<script>
+
+    function onLoad_wrpPersonaDatosCompleto  () {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'div_wrpPersonaDatosCompleto_content' ></div>";
+        wRecibir.content(wContenido);
+    }
+
+    function onActivate_wrpPersonaDatosCompleto () {
+        AbrirWaitingCRUD("waitingRegistroProfesional");
+    }
+</script>
+
+@using (Html.BeginForm("setProfesionalDetalleTramite", "registroProfesional", FormMethod.Post, new { id = "frmRP_MenuDetalle" }))
+{ 
+         
+    <div class="BordeRedondeado">
+     <div style="text-align: center;padding-bottom: 5px; font-size: 1.5em;">
+        <h1>Trámite: @Model.tramite.catRPTramites.traDescripcion</h1>
+          <h1>DNI:  @Model.tramite.rptDNI</h1>
+    </div>
+       
+    
+    <div style="overflow-y: scroll;height: 436px;">
+       @foreach (var item in Model.requerimientosDeTramite)
+       { 
+       <ul class="rgMenuItem">    
+           <li>
+           <div class="tramiteTitulo" style="font-weight:bold">
+               <input type="radio" id="radio@(item.gtId)" name="radio" class="radioTramite" value="@item.gtId" />
+               @item.gtDescripcion                
+           </div>           
+           <div class="BordeRedondeado" id="menuItem-@item.gtId">                 
+                <ul class="rgMenuItem">  
+                   @foreach (var det in item.detalle)
+                   {
+                       <li>                   
+                           @if(det.gtdValor==true)
+                           {<input type="checkbox" class="chItemTramite tramiteItem" value="@det.gtdValor" checked="checked" id="rpItem-@det.gtdId">@det.gtdDescripcion <b>(Presentado : @det.gtdFecha.ToShortDateString() ) </b></input>}
+                           else{<input type="checkbox" class="chItemTramite tramiteItem" value="@det.gtdValor" id="rpItem-@det.gtdId">@det.gtdDescripcion</input>}                      
+                       </li>
+                   }   
+               </ul> 
+           </div>                   
+           </li>                     
+       </ul>
+       } 
+    </div>
+           
+    
+    </div>
+    
+     <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarProfesionalDetalle();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label id="lblAceptarRecepcion" style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarProfesionalDetalle();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label id="lblCancelarRecepcion" style="cursor: pointer;">Cancelar</label>
+        </div>
+     </div>
+}
+    
+
+
+@{
+    Html.Telerik().Window()
+      .Name("wrpPersonaDatosCompleto")
+      .Title("Registro de Profesional - Carga de datos")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel","rpCargaDatos");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Width(1124)
+      .Height(540)
+      .ClientEvents(eventos => eventos.OnLoad("onLoad_wrpPersonaDatosCompleto").OnActivate("onActivate_wrpPersonaDatosCompleto"))
+      .Render();
+}
+
+
+<script>
+
+    $('input[type=radio]').change(function() {
+        $("input[type='radio']").each(function()
+        {
+            $('#menuItem-'+$(this)[0].value+ ' :input' ).attr('disabled', true);
+            $('#menuItem-'+$(this)[0].value+ ' :input' ).attr('checked',false);
+        });
+        $('#menuItem-'+this.value+' :input' ).removeAttr('disabled');
+
+         
+
+    });
+    
+    init();
+    function init(){     
+        $('input[type=radio]').each(function(){
+            //deshabilito todos
+            $('#menuItem-'+$(this)[0].value+ ' :input' ).attr('disabled', true);              
+        });
+        $('input[type=checkbox]').each(function(){
+            if($(this)[0].checked==true)
+            {                
+                var idParent=$(this)[0].parentElement.parentElement.parentElement.id.split('-')[1]
+                $('#radio'+idParent).attr('checked', 'checked');                
+                $('#menuItem-'+idParent + ' ul li input').removeAttr('disabled');
+            }
+        });
+        checkItemSeleccionados();
+        
+        if(checked.length == 0){
+            $('#menuItem-'+$('input[type=radio]:first')[0].value+ ' :input' ).removeAttr('disabled');
+          $('input[type=radio]:first').attr('checked', true);
+        }
+
+    }
+
+    function validaItems(){
+    
+        var result=false;
+        var idRadioSeleccionado = $("input[type='radio']::checked").attr("value");
+        var checkTotales = $('#menuItem-'+ idRadioSeleccionado + ' ul li input').length //cantidad de checkbox en el radio
+        var checkSeleccionados = $('#menuItem-'+ idRadioSeleccionado + ' ul li input::checked').length  //cantidad de checkbox seleccionado en el radio
+        if(checkTotales == checkSeleccionados)        
+           result=true;
+
+        return result;
+    }
+
+    var checked = [];
+    function onAceptarProfesionalDetalle() 
+    {
+
+        if(validaItems()==false)
+        {
+            jAlert("Debe seleccionar todos los items del tramite seleccionado", "Alerta...", function () {
+                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+            });
+            return;
+        }
+
+       AbrirWaitingCRUD("waitingDetalleItemsTramite");
+       checkItemSeleccionados();              
+       var $form = $('#frmRP_MenuDetalle');        
+       $('#divProcesando').show();
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            dataType: "json",
+            traditional: true,
+            data: 
+            {
+                items: checked,
+                rptId :  @Model.tramite.rptId
+            },
+            error: function () {
+                CerrarWaitingCRUD("waitingDetalleItemsTramite");
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            before: function ()
+            {
+                AbrirWaitingCRUD("waitingDetalleItemsTramite");
+            },
+            success: function (respuesta) 
+            {
+                if (respuesta.Error) {
+                    CerrarWaitingCRUD("waitingDetalleItemsTramite");
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else 
+                {                   
+                    var _Post = GetPathApp("registroProfesional/getProfesionalDetalleCompleto");
+                    $.ajax({
+                        type: "POST",
+                        url: _Post,
+                        data: { dni: @Model.tramite.rptDNI },
+                        before: function ()
+                        {
+                            AbrirWaitingCRUD("waitingDetalleItemsTramite");
+                        },
+                        error: function() {
+                            onCancelarProfesionalDetalle();
+                            CerrarWaitingCRUD("waitingDetalleItemsTramite");
+                            jAlert("Error al cargar la información", "Error...", function() {
+                                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                            });
+                        },
+                        success: function (respuesta) {    
+                            AbrirWaitingCRUD("waitingDetalleItemsTramite");
+                            onCancelarProfesionalDetalle();
+                            var wRecibir = $("#wrpPersonaDatosCompleto").data("tWindow");
+                            wRecibir.center().open();                            
+                            if (respuesta != null) {
+                                $("#div_wrpPersonaDatosCompleto_content").html(respuesta);
+                            }
+                            CerrarWaitingCRUD("waitingDetalleItemsTramite");
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+
+    function onCancelarProfesionalDetalle() {
+        var windowElement = $("#wDetalleItemsTramite").data("tWindow");
+        windowElement.close();
+    }
+    //selecciono los items checked
+    function checkItemSeleccionados() { 
+        var $checks = $('input[type=checkbox]');
+        checked = $checks.filter(':checked').map(function () 
+        {
+            return this.id;
+        }).get();
+    }
+
+</script>
+

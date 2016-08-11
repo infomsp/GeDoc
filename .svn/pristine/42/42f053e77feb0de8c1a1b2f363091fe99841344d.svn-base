@@ -1,0 +1,132 @@
+﻿@using GeDoc
+@using GeDoc.Models
+<style>
+    .pacTelefonoCodPa {
+        width: 2em;
+    }
+
+    .pacTelefonoCodLoc {
+        width: 2.3em;
+    }
+
+    #pacMail {
+        width: 97%;
+    }
+</style>
+<script>
+    $(".pacNumericBox").keypress(function(e) {
+        if (isNaN(String.fromCharCode(e.charCode))) {
+            e.preventDefault();
+             return;
+        }
+        console.log(String.fromCharCode(e.charCode));
+    });
+</script>
+
+@{
+    catPaciente modelo = Model as catPaciente;
+}
+<div id="pacOtros" class="pacDatos">
+    <table>
+        <tbody>
+        <tr>
+            <td>Etnia</td>
+            <td>
+               @(Html.Telerik().ComboBox().Name("etnId")
+                    .SelectedIndex(0)
+                    .BindTo((SelectList) ViewData["select_etnId"])
+                    .HtmlAttributes(new
+                    {
+                        style="text-align:center;width:100%"
+                    })
+                    .InputHtmlAttributes(new
+                    {
+                        style = "text-overflow: ellipsis;",
+                    })
+                    .HiddenInputHtmlAttributes(new
+                    {
+                        data_field="etnId"
+                    })
+                    .DropDownHtmlAttributes(new
+                    {
+                        style="max-height:140px"
+                    })
+                    .AutoFill(true)
+                    .HighlightFirstMatch(true)
+                    .Filterable(f => f.FilterMode(AutoCompleteFilterMode.Contains)))
+            </td>
+        </tr>
+        <tr>
+            <td>Dona Organos</td>
+            <td>
+                <input data-field="pacDonaOrganos" type="checkbox" id="pacDonaOrganos" @(modelo.pacDonaOrganos ?? false ? "checked" : "")/>
+            </td>
+        </tr>
+        <tr>
+            <td>Grupo Sanguineo</td>
+            <td>
+                @(Html.Telerik().DropDownList().Name("tipoIdGrupoSanguineo")
+                .SelectedIndex(0)
+                .BindTo((SelectList) ViewData["select_tipoIdGrupoSanguineo"])
+                .HtmlAttributes(new
+                {
+                    style = "width: 8em;"
+                })
+                .HiddenInputHtmlAttributes(new
+                {
+                    data_field = "tipoIdGrupoSanguineo"
+                }))
+            </td>
+        </tr>
+        <tr>
+            <td>Transfusiones de Sangre</td>
+            <td>
+                <input data-field="pacTransfusionesDeSangre" type="checkbox" id="pacTransfusionesDeSangre" @(modelo.pacTransfusionesDeSangre.HasValue && modelo.pacTransfusionesDeSangre.Value == 1 ? "checked" : "")/>
+            </td>
+        </tr>
+        <tr>
+            <td>Ultima transfusión</td>
+            <td>
+                @(Html.Telerik().DatePicker().Name("pacTransfusionesDeSangreUltima")
+                .InputHtmlAttributes(new
+                {
+                    placeholder = "DD/MM/AAAA",
+                    data_field = "pacTransfusionesDeSangreUltima"
+                })
+                .HtmlAttributes(new
+                {
+                    style="width: 10.3em"
+                })
+                .Format("dd/MM/yyyy")
+                .Max(DateTime.Now)
+                .Value(modelo.pacTransfusionesDeSangreUltima))
+            </td>
+        </tr>
+        <tr>
+            <td>Telefono Casa</td>
+            <td>
+                <input data-field="pacTelefonoCasa" type="tel" id="pacTelefonoCasa" class="pacNumericBox" placeholder="Nº de Telefono de Casa" value="@modelo.pacTelefonoCasa"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Telefono Trabajo</td>
+            <td>
+                <input data-field="pacTelefonoTrabajo" type="tel" id="pacTelefonoTrabajo" class="pacNumericBox" placeholder="Nº de Telefono de Trabajo" value="@modelo.pacTelefonoTrabajo"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Celular</td>
+            <td>
+                <input data-field="pacTelefonoCelular" type="tel" id="pacTelefonoCelular" class="pacNumericBox" placeholder="Nº de Celular" value="@modelo.pacTelefonoCelular"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Correo Electrónico</td>
+            <td>
+                <input data-field ="pacMail" type="tel" id="pacMail" placeholder="direccion@@servidor.com" value="@modelo.pacMail"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

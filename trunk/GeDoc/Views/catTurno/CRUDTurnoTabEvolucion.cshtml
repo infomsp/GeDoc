@@ -1,0 +1,583 @@
+﻿@using GeDoc
+@using GeDoc.Models
+@{
+    catMinisterio modelo = Model as catMinisterio;
+    
+      bool EsMedico = ((Session["Usuario"] as sisUsuario).perId != null || (Session["Usuario"] as sisUsuario).conId != null);
+      int MedicoLogueado = 0;
+      if ((Session["Usuario"] as sisUsuario).perId != null)
+      {
+          MedicoLogueado = (int) (Session["Usuario"] as sisUsuario).perId;
+      }
+      else
+      {
+          if ((Session["Usuario"] as sisUsuario).conId != null)
+          {
+              MedicoLogueado = (int) (Session["Usuario"] as sisUsuario).conId*-1;
+          }
+      }
+
+  
+    
+}
+<style>
+    #tabTurno-4 {
+        padding: 0px;
+        perspective: 800px;
+        position: relative;
+        height: 300px;
+    }
+
+     #Evolucion {
+         width: 100%;
+         height: 100%;
+         position: absolute;
+         transform-style: preserve-3d;
+         transition: transform 1s;
+     }
+
+    #evoGridContainer * {
+        backface-visibility: hidden;
+    }
+
+    #Evolucion>div {
+        margin: 0;
+        display: block;
+        position: absolute;
+        backface-visibility: hidden;
+        width: 100%;
+        height: 100%;
+        transition: transform 1s;
+        overflow: hidden;
+    }
+
+    #evoAddNew {
+        transform: rotateY( 180deg );
+    }
+
+    #evoAddNew, #evoViewDetail {
+        padding: 4px;
+    }
+
+    .btn-volver {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 30px;
+    }
+
+    #evoViewDetail {
+        transform: rotateX( 180deg );
+    }
+
+    #evoAddNew textarea,#evoViewDetail textarea {
+        resize: none;
+    }
+
+    .evoTableContainer {
+        display: inline-block;
+    }
+
+    .evoTableContainer>table {
+        margin: auto;
+        width: 900px;
+        table-layout: fixed;
+    }
+
+    .evoTableContainer>table tr:last-child {
+        text-align: center;
+    }
+
+    textarea.evoLastEntry:focus, textarea.evoDetail:focus{
+        -webkit-box-shadow: none;
+        border: 1px solid rgba(0,0,0, 0.2);
+    }
+
+    #evoNewButtonContainer {
+        /*display: inline-block;
+        max-width: 80px;
+        margin-left: 25px;
+        vertical-align: top;
+        text-align: center;*/
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        max-width: 80px;
+        text-align: center;
+    }
+
+    #evoNewButtonContainer>input {
+        width: 62px;
+    }
+
+    #evoNewButtonContainer :first-child {
+        margin-bottom: 10px;
+    }
+
+    .evoNewMessage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 40px;
+        visibility: hidden;
+        text-shadow: 10px 10px 20px grey;
+        text-align: center;
+    }
+
+    #evoViewDetail div {
+        display: inline-block;
+        vertical-align: top;
+        height: 97%;
+    }
+
+    #evoViewDetail>div:not(#evoViewDataContainer) {
+        width: 9%;
+    }
+
+    #evoViewDataContainer {
+        width: 80%;
+    }
+
+    #evoViewDataContainer>div {
+        width: 49%;
+    }
+
+    #evoViewDataContainer table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    #evoViewDataContainer textarea {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #evoViewButtonContainer input {
+        width: 80%;
+        margin: auto;
+        margin-bottom: 5px;
+    }
+
+    #evoViewButtonContainer>div {
+        text-align: center;
+        height: 79%;
+    }
+
+    #evoViewButtonContainer>div:last-child {
+        height: 19%;
+    }
+
+    #GridEvolucion td, #evoViewDataContainer td {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .evd-tdiagprac {
+        position: absolute;
+        width: 47.7%!important;
+        left: 10px;
+        margin-top: 5px;
+        height: 48%;
+    }
+
+    .evd-tdiagprac td {
+        white-space: normal!important;
+        font-size: 9px;
+        overflow-y: scroll!important;
+    }
+
+    .evd-tdiagprac ul {
+        margin-left: -25px;
+        margin-top: 0;
+        max-height: 110px;
+        margin-bottom: 0;
+    }
+</style>
+
+<script>
+    var MedicoLogueado =  @MedicoLogueado
+    String.prototype.replaceAll = function (n, r) {
+        var string = this.concat();
+        while (string.indexOf(n) !== -1) {
+            string = string.replace(n, r);
+        }
+        return string;
+    }
+    function GridEvolucion_OnLoad(e) {
+        $("#GridEvolucion").delegate("tbody>tr", "dblclick", function () {
+            var grid = $(e.currentTarget).data("tGrid");
+            if (document.selection !== undefined) {
+                document.selection.empty();
+            } else {
+                window.getSelection().removeAllRanges();
+            }           
+            loadDetails(grid.selectedIndex || 0);
+            $("#evoGridContainer").css("transform", "rotateX(180deg)");
+            $("#evoViewDetail").css("transform", "rotateX(360deg)");
+        });
+    }
+    function GridEvolucion_OnRowSelected(e) {
+        var grid = $(e.currentTarget).data("tGrid");
+        grid.selectedRow = grid.dataItem(e.row);
+        grid.selectedIndex = $(e.currentTarget).find("tr").index($(e.currentTarget).find(".t-state-selected")) - 1;
+    }
+
+    function GridEvolucion_OnCommand(e) {
+        if (e.name && window[e.name])
+            window[e.name](e);
+    }
+    function GridEvolucion_OnComplete(e) {
+        //Bind last entry to AddNewEntry section
+        if (e.response.data.length > 0) {
+            var lastEntry = e.response.data[0];
+            $(".evoLastEntry").each(function () {
+                var fieldValue = lastEntry[$(this).data("field")];
+                if(typeof fieldValue === "object")
+                    fieldValue = lastEntry[$(this).data("field")].toLocaleDateString("en-GB") + " " + lastEntry[$(this).data("field")].toLocaleTimeString("en-GB");
+                $(this).text(fieldValue);
+            });
+        }      
+    }
+    function GridEvolucion_OnDataBound(e) {
+        //Set TITLE attribute to cells that have overflown, so they have the tooltip
+        $("#GridEvolucion td").each(function () {
+            if (hasOverflown($(this))) {
+                $(this).attr("title", $(this).text());
+            }
+        });
+    }
+    function evoCmdAgregar(e) {        
+        $("#evoGridContainer").css("transform", "rotateY(180deg)");
+        $("#evoAddNew").css("transform", "rotateY(360deg)");
+    }
+
+    function evoCmdVer(e) {
+        $("#evoGridContainer").css("transform", "rotateX(180deg)");
+        $("#evoViewDetail").css("transform", "rotateX(360deg)");
+        loadDetails($("#GridEvolucion").data("tGrid").selectedIndex || 0);
+    }
+
+    function loadDetails(index) {     
+        var data = $("#GridEvolucion").data("tGrid").data[index];
+        if (data == undefined)
+            return;
+
+        $("#evoViewDetail").data("currentIndex", index);
+
+        $(".evoDetail").each(function () {
+            var displayData = data[$(this).data("field")];
+            $(this).empty();
+            if (displayData instanceof Array) {
+                for (var i in displayData) {
+                    $(this).append($("<li>", { text: displayData[i] }));
+                }
+            } else {
+                if (typeof displayData === "object") {
+                    displayData = parseDisplayDate(displayData);
+                }
+
+                $(this).text(displayData);
+            }           
+        });
+
+        $("#evoViewDataContainer td").each(function () {
+            if (hasOverflown($(this)) && $(this).parents(".evd-tdiagprac").length === 0) {
+                $(this).attr("title", $(this).text());
+            }
+        });
+    }
+    $("#evoAddNew>.btn-volver").click(function() {
+        $("#evoGridContainer").css("transform", "rotateY(0)");
+        $("#evoAddNew").css("transform", "rotateY(180deg)");
+    });
+    $("#evoViewDetail .btn-volver").click(function () {
+        $("#evoGridContainer").css("transform", "rotateY(0)");
+        $("#evoViewDetail").css("transform", "rotateX(180deg)");
+    });
+    $("#evoNewDate").data("evoFecha", new Date(Date.parse("@DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") ")));
+
+    $("#evoNewDate").data("intervalId",evoNewDateInterval());
+
+    function evoNewDateInterval() {
+        if ($("#evoNewDate").data("intervalId")) {
+            return $("#evoNewDate").data("intervalId");
+        }
+        return setInterval(function() {
+            if ($("#evoNewDate").data("evoFecha")) {               
+                var serverDate = $("#evoNewDate").data("evoFecha");
+                serverDate = new Date(serverDate.setSeconds(serverDate.getSeconds() + 1));
+                $("#evoNewDate").data("evoFecha", serverDate);
+                $("#evoNewDate").text(parseDisplayDate(serverDate));
+            }
+        }, 1000);
+    }
+
+    function parseDisplayDate(date) {
+        return date.toLocaleDateString("en-GB") + " " + date.toLocaleTimeString("en-GB");
+    }
+
+    $("#evoNewSaveButton").click(function () {
+        if ($("textarea.evoNewEntry").val() === "") {
+            jAlert("La nueva entrada esta vacía.", "Atención",function() {
+                $("textarea.evoNewEntry").focus();
+            });
+            return;
+        }
+        var postData = {};
+        $(".evoNewEntry").each(function() {
+            postData[$(this).data("field")] = $(this).data($(this).data("field"));
+        });
+        postData["pacId"] = $("#GridEvolucion").attr("pacId");
+        postData["espId"] = $("#cbxEspecialidad").data("tComboBox").value();
+        postData["proId"] = MedicoLogueado;
+        if ("_DatosRegistroTurno" in window && _DatosRegistroTurno["turId"] !== undefined) {
+            postData["turId"] = window._DatosRegistroTurno["turId"];
+        }    
+        $.post("@Url.Content("~/catEvolucion/AddNewEntry")", postData,function() {
+            showMessage("Entrada guardada.",1500);
+            clearNewEntryField();
+        });       
+    });
+
+    function clearNewEntryField() {
+        $("textarea.evoNewEntry").val("");
+        $("#GridEvolucion").data("tGrid").rebind();
+    }
+
+    $("textarea.evoNewEntry").change(function() {
+        $(this).data($(this).data("field"), $(this).val());
+    });
+
+    function showMessage(text,totalTime) {
+        $(".evoNewMessage").text(text);
+        var eW = $(".evoNewMessage").width();
+        var eH = $(".evoNewMessage").height();      
+        var cW = $("#evoAddNew").width();
+        var cH = $("#evoAddNew").height();
+
+        var eTop = cH / 2 - eH / 2;
+        var eLeft = cW / 2 - eW / 2;
+
+        $(".evoNewMessage").css({
+            display: "none",
+            visibility: "visible",
+            top: eTop,
+            left: eLeft,
+            "max-width": (cW - 50) + "px",
+            "max-height": (cH - 50) + "px"
+        });
+
+        $(".evoNewMessage").fadeIn(totalTime / 2, function() {
+            $(this).fadeOut(totalTime / 2, function() {
+                $(this).css({ display: "block", visibility: "hidden",top:0, left:0 });
+            });
+        });
+    }
+
+    $("#evoNewClearButton").click(function() {
+        clearNewEntryField();
+    });
+
+    $("#evoViewButtonContainer [value='Siguiente >']").click(function() {
+        if ($("#evoViewDetail").data("currentIndex") !== 0) {
+            loadDetails($("#evoViewDetail").data("currentIndex") - 1);
+        }
+    });
+    $("#evoViewButtonContainer [value='Ultimo >>']").click(function () {
+        if ($("#evoViewDetail").data("currentIndex") !== 0) {
+            loadDetails(0);
+        }
+    });
+    $("#evoViewButtonContainer [value='< Anterior']").click(function () {
+        if ($("#evoViewDetail").data("currentIndex") < $("#GridEvolucion").data("tGrid").data.length) {
+            loadDetails($("#evoViewDetail").data("currentIndex") + 1);
+        }
+    });
+
+    $("#evoViewButtonContainer [value='<< Primero']").click(function () {
+        if ($("#evoViewDetail").data("currentIndex") !== $("#GridEvolucion").data("tGrid").data.length - 1) {
+            loadDetails($("#GridEvolucion").data("tGrid").data.length - 1);
+        }
+    });
+
+    function cleanTitle(txt) {
+        return txt.replaceAll("\"", "").replaceAll("'", "");
+    }
+
+    function hasOverflown(element) {
+        var cont = $('<div>' + element.text() + '</div>').css("display", "table")
+            .css("z-index", "-1").css("position", "absolute")
+            .css("font-family", element.css("font-family"))
+            .css("font-size", element.css("font-size"))
+            .css("font-weight", element.css("font-weight")).appendTo('body');
+        var res = (cont.width() > element.width());
+        cont.remove();
+        return res;
+    }
+    
+</script>
+
+<div id="Evolucion">
+    <div id="evoGridContainer">
+        @{
+            Html.Telerik().Grid<catEvoluciones>()
+                .Name("GridEvolucion")
+                .DataBinding(b => b.Ajax().Select("_SelectEditing", "catEvolucion", new {pacId = ViewData["evolucion_pacId"]}))
+                .ToolBar(t =>
+                {
+                    t.Custom().Name("evoCmdAgregar").Text("Agregar").Ajax(true).Url("#");
+                    t.Custom().Name("evoCmdVer").Text("Ver").Ajax(true).Url("#");
+                })
+                .Columns(c =>
+                {
+                    c.Bound(s => s.evoFecha).Title("Fecha").Filterable(true).Width("15%").Format("{0:dd/MM/yyyy HH:mm}");
+                    c.Bound(s => s.evoDescripcion).Title("Descripción").Filterable(false).Width("25%");
+                        //.ClientTemplate("<span title='<#= cleanTitle(evoDescripcion) #>' class='ellipsis-item'> <#= evoDescripcion #> </span>");
+                    c.Bound(s => s.usrApellidoyNombre).Title("Profesional").Filterable(true).Width("20%");
+                        //.ClientTemplate("<span title='<#= cleanTitle(proApellidoYNombre) #>' class='ellipsis-item'> <#= proApellidoYNombre #> </span>"); 
+                    c.Bound(s => s.espNombre).Title("Especialdiad").Filterable(true).Width("20%");
+                        //.ClientTemplate("<span title='<#= cleanTitle(espNombre) #>' class='ellipsis-item'> <#= espNombre #> </span>"); 
+                    c.Bound(s => s.csNombre).Title("Centro de Salud").Filterable(true).Width("20%");
+                        //.ClientTemplate("<span title='<#= cleanTitle(csNombre) #>' class='ellipsis-item'> <#= csNombre #> </span>");
+                })
+                .HtmlAttributes(new { style = "height:100%;", pacId = ViewData["evolucion_pacId"] })
+                .Scrollable(s => s.Enabled(true).Height("72%"))
+                .Filterable()
+                .Selectable()
+                .Sortable()
+                .Localizable("es-AR")
+                .ClientEvents(e =>
+                    e.OnLoad("GridEvolucion_OnLoad")
+                        .OnRowSelected("GridEvolucion_OnRowSelected")
+                        .OnCommand("GridEvolucion_OnCommand")
+                        .OnComplete("GridEvolucion_OnComplete")
+                        .OnDataBound("GridEvolucion_OnDataBound")
+                )
+                .Render();
+        }
+    </div>
+    <div id="evoAddNew">
+        <input type="button" class="btn-volver t-button" value="< Volver"/>
+        <div class="evoTableContainer">
+            <table>
+                <thead>
+                <tr>
+                    <th colspan="2">Ultima Entrada</th>
+                    <th colspan="2">Nueva Entrada</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Fecha</td>
+                    <td><span class="evoLastEntry" data-field="evoFecha" ></span></td>
+                    <td>Fecha</td>
+                    <td><span class="evoNewEntry" data-field="evoFecha" id="evoNewDate"></span></td>
+                </tr>
+                <tr>
+                    <td>Profesional</td>
+                    <td><span class="evoLastEntry" data-field="usrApellidoyNombre" ></span></td>
+                    <td>Profesional</td>
+                    <td><span class="evoNewEntry" data-field="proId" id="evoNewProfesional"></span></td>
+                </tr>
+                <tr>
+                    <td>Especialidad</td>
+                    <td><span class="evoLastEntry" data-field="espNombre" ></span></td>
+                    <td>Especialidad</td>
+                    <td><span class="evoNewEntry" data-field="espId" id="evoNewEspecialidad"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea class="evoLastEntry" data-field="evoDescripcion" cols="50" rows="10" readonly></textarea>
+                    </td>
+                    <td colspan="2">
+                        <textarea class="evoNewEntry" data-field="evoDescripcion" cols="50" rows="10"></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="evoNewButtonContainer">
+            <input type="button" class="t-button" id="evoNewSaveButton" value="Guardar"/>
+            <input type="button" class="t-button" id="evoNewClearButton" value="Limpiar"/>
+        </div>
+        <div class="evoNewMessage">
+            
+        </div>
+    </div>
+    <div id="evoViewDetail">
+        <div>
+            <input type="button" class="btn-volver t-button" value="< Volver"/>
+        </div>
+        <div id="evoViewDataContainer">
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th colspan="2">Detalles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Fecha</td>
+                        <td><span class="evoDetail"  data-field="evoFecha"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Centro de Salud</td>
+                        <td><span class="evoDetail" data-field="csNombre"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Profesional</td>
+                        <td><span class="evoDetail"  data-field="usrApellidoyNombre"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Especialidad</td>
+                        <td><span class="evoDetail" data-field="espNombre"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="evd-tdiagprac">
+                    <thead>
+                    <tr>
+                        <th>Diagnosticos</th>
+                        <th>Prácticas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><ul class="evoDetail" data-field="Diagnosticos"></ul></td>
+                            <td><ul class="evoDetail" data-field="Practicas"></ul></td>
+                        </tr>                   
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <textarea class="evoDetail" readonly data-field="evoDescripcion"></textarea>
+            </div>
+        </div>
+        <div id="evoViewButtonContainer">
+            <div>
+                <input type="button" class="t-button" value="Siguiente >"/>
+                <input type="button" class="t-button" value="Ultimo >>"/>
+            </div>
+            <div>
+                <input type="button" class="t-button" value="<< Primero"/>
+                <input type="button" class="t-button" value="< Anterior"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    debugger;
+    //$("#evoNewEspecialidad").text($("#cbxEspecialidad").data("tComboBox").data[$("#cbxEspecialidad").data("tComboBox").selectedIndex].Text.split("(")[0])
+    //    .data("espId", $("#cbxEspecialidad").data("tComboBox").data[$("#cbxEspecialidad").data("tComboBox").selectedIndex].Value);
+   // $("#evoNewEspecialidad").text($("#cbxEspecialidad").data("tComboBox").text().split("(")[0]).data("espId", $("#cbxEspecialidad").data("tComboBox").value());
+    $("#evoNewEspecialidad").text($("#profApellidoyNombre").text());
+    $("#evoNewEspecialidad").text($("#turEspecialidadNombre").text());
+    //$("#evoNewProfesional").text($("#cbxProfesional").data("tComboBox").data[$("#cbxProfesional").data("tComboBox").selectedIndex].Text)
+    //    .data("proId", $("#cbxProfesional").data("tComboBox").data[$("#cbxProfesional").data("tComboBox").selectedIndex].Value);
+
+    $("#evoNewProfesional").text($("#lblUserName").text().replace("Hola ", "").replace("...", ""));
+</script>

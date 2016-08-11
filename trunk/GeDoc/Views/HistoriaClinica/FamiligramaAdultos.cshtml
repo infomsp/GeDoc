@@ -1,0 +1,65 @@
+﻿<div id="content">
+    <div class="content-box">
+        @*<center style="margin-bottom: 50px;">
+            <input type="button" value="toggle menu" onclick="console.log($('#wPaint').wPaint('menuOrientation')); $('#wPaint').wPaint('menuOrientation', $('#wPaint').wPaint('menuOrientation') === 'vertical' ? 'horizontal' : 'vertical');"/>
+        </center>*@
+        <div id="wPaint" class="BordeRedondeado" style="position: relative; width: 500px; height: 300px; background-color: white; border-color: grey; margin: 70px auto 20px auto;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var images = [
+    '/test/uploads/wPaint.png',
+    ];
+
+    function saveImg(image) {
+        var _Post = GetPathApp("HistoriaClinica/setImagenFamiligrama");
+        debugger;
+        AbrirWaitingCRUD();
+        var blob = image.replace("data:image/png;base64,", "");
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { Imagen: blob, hcAdultoId: $("#hcaduid").val() },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                $("#wPaint-img").attr("src", "@(Url.Content("~/Content/Fotos/Familigramas/"))" + respuesta);
+                $("#Familigrama").val(respuesta);
+                var _WindowHC = $("#wHCFamiligrama").data("tWindow");
+                _WindowHC.close();
+            }
+        });
+    }
+
+    function loadImgBg() {
+
+        // internal function for displaying background images modal
+        // where images is an array of images (base64 or url path)
+        // NOTE: that if you can't see the bg image changing it's probably
+        // becasue the foregroud image is not transparent.
+        this._showFileModal('bg', images);
+    }
+
+    function loadImgFg() {
+
+        // internal function for displaying foreground images modal
+        // where images is an array of images (base64 or url path)
+        this._showFileModal('fg', images);
+    }
+
+    // init wPaint
+    $('#wPaint').wPaint({
+        menuOffsetLeft: -35,
+        menuOffsetTop: -50,
+        saveImg: saveImg,
+        loadImgBg: null,
+        loadImgFg: null
+    });
+    $('#wPaint').wPaint('menuOrientation', 'horizontal');
+</script>
+

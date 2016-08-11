@@ -1,0 +1,327 @@
+﻿@using GeDoc.Models
+
+<style type="text/css">
+    
+    .t-pregunta {
+        max-width: 600px;
+    }
+
+    .t-respuesta {
+        max-width: 300px;
+    }
+
+    .t-parent-redes,.t-child-redes,.t-child-redes td,.t-parent-redes td,.t-responses-redes, .t-responses-redes td {
+        border: none;
+        border-spacing: 0;
+        border-collapse: collapse;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .t-responses-redes * {
+        border: 0!important;
+    }
+
+    .t-child-redes, .t-responses-redes {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .t-parent-redes>tbody>tr:nth-child(odd) {
+        background-color: #7FB5DA;
+    }
+
+    .td-categoria {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .t-child-redes tr:not(:last-child) {
+        border-bottom: 1px solid #7FB5DA;
+    }
+
+    .t-parent-redes>tbody>tr:nth-child(odd) tr:not(:last-child) {
+        border-bottom: 1px solid white;
+    }
+
+    #t-footer-redes th, #sumatoria, .t-center-text,.t-td-points {
+        text-align: center;
+    }
+
+    #t-footer-redes {
+        width: 100%;
+    }
+
+    #t-footer-redes * {
+        padding: 0;
+        border: none;
+    }
+
+    #sumatoria {
+        font-size: 30px;
+        position: relative;
+    }
+
+    .weighingHigh {
+        background-color: coral;
+    }
+
+    .weighingMid {
+        background-color: bisque;
+    }
+
+    .weighingLow {
+        background-color: aquamarine;
+    }
+
+    .background-span {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    #sumatoria-numero {
+        z-index: 1;
+        position: relative;
+    }
+
+</style>
+
+<script type="text/javascript">
+
+    function getTotalPoints() {
+        var totalPoints = 0;
+        $(".chk-response:checked").each(function () {
+            totalPoints += parseInt($(this).closest("tr").find(".t-td-points").attr("data-pts"));           
+        });
+        return totalPoints;
+    }
+
+    function getSetPoints() {
+        var totalPoints = getTotalPoints();
+        var actualPoints = parseInt($("#sumatoria-numero").text());
+       
+        animateNumber(actualPoints, totalPoints);
+
+        if (totalPoints > 3 && totalPoints < 7) {
+            $(".background-span").animate({ backgroundColor: $(".weighingMid").css("background-color") }, 500);
+        } else if (totalPoints < 4) {
+            $(".background-span").animate({ backgroundColor: $(".weighingLow").css("background-color") }, 500);
+        } else {
+            $(".background-span").animate({ backgroundColor: $(".weighingHigh").css("background-color") }, 500);
+        }
+    }
+
+    $(".chk-response").change(function () {
+        if (this.checked) {
+            $(this).closest("table").find(".t-td-points").css("font-weight", "normal");
+            $(this).closest("tr").find(".t-td-points").css("font-weight", "bold");
+            getSetPoints();
+        }   
+    });
+
+    function animateNumber(actual, total) {
+        if (actual < total) {
+            actual += 1;
+        } else if (actual > total) {
+            actual -= 1;
+        }
+        $("#sumatoria-numero").text(actual);
+
+        if (actual !== total) {
+            setTimeout(function () {
+                animateNumber(actual, total);
+            }, 50);
+        }
+    }
+
+    function optionsToBitwise() {
+        var checkedOptions = new Array();
+        var bitwise = 0;
+        $(".chk-response:checked").each(function() {
+            checkedOptions.push(parseInt($(this).val()));
+        });
+
+        for (var opt in checkedOptions) {
+            bitwise += Math.pow(2, checkedOptions[opt]);
+        }
+
+        return bitwise;
+    }
+
+    function r_saveData() {
+        if ($(".chk-response:checked").length < 2) {
+            return;
+        }
+        if (typeof (_encPerId) !== "undefined") {
+            $.post("@Url.Content("~/catEncuestaAPS/RedesSave")", {
+                encPerId: _encPerId,
+                encRedesRespuesta: optionsToBitwise(),
+                encRedesPuntaje: getTotalPoints()
+            }, function (d) {
+                console.log(d);
+            });
+        }        
+    }
+
+    function r_loadData() {
+        debugger;
+        if (typeof(_encPerId) !== "undefined") {
+            $.post("@Url.Content("~/catEncuestaAPS/RedesLoad")", { encPerId: _encPerId }, function (d) {
+                if (d && d.length > 0)
+                    r_setFormData(d[0]);
+                setSexAndAgeCheckboxs();
+            });
+        }
+    }
+
+    function r_setFormData(data) {
+        $(".chk-response").each(function () {
+            var value = parseInt($(this).val());
+            this.checked = Boolean(data.encRedesRespuesta & Math.pow(2, value));
+            if (this.checked) {
+                $(this).closest("table").find(".t-td-points").css("font-weight", "normal");
+                $(this).closest("tr").find(".t-td-points").css("font-weight", "bold");
+            }           
+        });      
+        getSetPoints();
+    }
+
+    function getPacAge() {
+        var pacFecha = $("#pacFechaNacimiento").data("tDatePicker");
+        if (pacFecha) {
+            return kludgeDatosRegistro.encFechaRetira.getFullYear() - pacFecha.selectedValue.getFullYear();
+        } else {
+            return 40;
+        }
+        
+    }
+
+    function getPacSex() {
+        return $("#tipoIdSexo").data("tComboBox").value();
+    }
+
+    function setSexAndAgeCheckboxs() {
+        debugger;
+        $("[name^='1-1-']").each(function() {
+            this.checked = false;
+            $(this).closest("table").find(".t-td-points").css("font-weight", "normal");
+        }); 
+        
+        var sex = getPacSex();
+        var age = getPacAge();
+
+        if (sex === "9") {
+            $("#chk-sex-f")[0].checked = true;
+            $("#chk-sex-f").closest("div").css("font-weight", "bold");
+            if (age < 55) {
+                $("[name='1-1']")[2].checked = true;
+            } else {
+                $("[name='1-1']")[3].checked = true;
+            }
+        } else {
+            $("#chk-sex-m")[0].checked = true;
+            $("#chk-sex-m").closest("div").css("font-weight", "bold");
+            if (age < 45) {
+                $("[name='1-1']")[0].checked = true;
+            } else {
+                $("[name='1-1']")[1].checked = true;
+            }
+        }
+        $("[name='1-1']").each(function () {
+            if(this.checked)
+                $(this).closest("tr").find(".t-td-points").css("font-weight", "bold");
+        });
+        getSetPoints();
+    }
+
+</script>
+
+@{
+    
+    var categorias = ViewData["redes_categorias"] as IQueryable<catEncuestaAPSRedesCategoria>;
+    var cuestionario = ViewData["redes_cuestionario"] as IQueryable<catEncuestaAPSRedesCuestionario>;
+    var ponderacion = ViewData["redes_ponderacion"] as IQueryable<catEncuestaAPSRedesPonderacion>;
+    
+    <div class="BordeRedondeado">
+        <table id="redestable" class="t-parent-redes"><tbody>
+            @foreach (catEncuestaAPSRedesCategoria cat in categorias)
+            {
+                <tr data-tid="@cat.encRedesCatId">
+                    <td class="td-categoria">@cat.encRedesCatNombre</td>
+                    <td><table class="t-child-redes"><tbody>
+                        @foreach (var pregunta in cuestionario.Where(r => r.encRedesCatId == cat.encRedesCatId))
+                        {
+                            <tr data-tid="@pregunta.encRedesCuesId">
+                                <td class="t-pregunta" colspan="@(pregunta.encRedesCuesId == 1 ? 1 : 2)"><b class="numero-pregunta">@(pregunta.encRedesCuesId). </b> @pregunta.encRedesCuesPregunta</td>
+                                @if (pregunta.encRedesCuesId == 1)
+                                {
+                                    <td>
+                                        <div style="margin-bottom: 10px;">
+                                            <input id="chk-sex-m" disabled="disabled" type="radio"/>Masculino
+                                        </div>
+                                        <div>
+                                            <input id="chk-sex-f" disabled="disabled" type="radio"/>Femenino
+                                        </div>
+                                    </td>
+                                }
+                                <td class="t-respuesta">
+                                    <table class="t-responses-redes">
+                                    @foreach (var pon in ponderacion.Where(r => r.encRedesCuesId == pregunta.encRedesCuesId))
+                                    {
+                                        <tr>
+                                            <td><input class="chk-response" type="radio" name="@(pregunta.encRedesCatId + "-" + pregunta.encRedesCuesId)" value="@pon.encRedesPonId" @(pon.encRedesPonId < 4 ? "disabled='disabled'" : "")/>@pon.encRedesPonTexto</td>
+                                            <td class="t-td-points" data-pts="@pon.encRedesPonPuntos">@pon.encRedesPonPuntos Pts</td>
+                                        </tr>
+                                    }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                        </tbody></table>
+                </tr>
+            }
+            </tbody></table>
+        <table id="t-footer-redes">
+            <thead>
+                <tr>
+                    <th>NIVEL DE RIESGO</th>
+                    <th>PUNTOS</th>
+                    <th>COMENTARIO</th>
+                    <th>SUMATORIA</th>
+                 </tr>
+            </thead>
+            <tbody>
+                <tr id="weighingRow">
+                    <td class="t-center-text">
+                        <div class="weighingHigh">Alto</div>
+                        <div class="weighingMid">Moderado</div>
+                        <div class="weighingLow">Bajo</div>
+                    </td>
+                    <td class="t-center-text">
+                        <div class="weighingHigh">7 o más</div>
+                        <div class="weighingMid">4 - 6</div>
+                        <div class="weighingLow">0 - 3</div>
+                    </td>
+                    <td>
+                        <div class="weighingHigh">Debe tener una consulta en el centro</div>
+                        <div class="weighingMid">Debe tener una consulta en el centro</div>
+                        <div class="weighingLow">Debe ser tenido en cuenta para actividades de promoción y prevención</div>
+                    </td>
+                    <td id="sumatoria"><span id="sumatoria-numero">0</span><span class="weighingLow background-span"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+}
+<script type="text/javascript">
+    function initRedes() {
+        r_loadData();
+    }
+
+    initRedes();
+
+</script>

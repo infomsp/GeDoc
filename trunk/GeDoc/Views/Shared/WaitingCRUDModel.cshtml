@@ -1,0 +1,18 @@
+﻿<script type="text/javascript">
+    function AbrirWaitingCRUD(idName) {
+
+        $('#divProcesando' + idName).css('display', 'block');
+    }
+    function CerrarWaitingCRUD(idName)
+    {
+        $('#divProcesando' + idName).css('display', 'none');
+    }
+</script>
+@model string
+
+<div id="divProcesando@(Model==null ? "" : Model.ToString())" class="es-overlay" style="display: none; text-align: center;">
+    <div style="margin-top: 30%;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <label style="vertical-align: middle;">Procesando...</label>
+    </div>
+</div>

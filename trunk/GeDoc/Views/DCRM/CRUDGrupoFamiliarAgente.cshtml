@@ -1,0 +1,154 @@
+@model GeDoc.catAgenteGrupoFamiliarWS
+
+<script type="text/javascript">
+    //Aplicamos algunos estilos
+    //$("#agtfAccion").attr("style", "display: none;");
+    //$("#agtfId").attr("style", "display: none;");
+    $("#agtfApellidoyNombre").attr("style", "width: 350px;");
+    $("#agtfDNI").attr("style", "width: 150px;");
+    $("#agtfDNI").keypress(function (event) {
+        if (event.keyCode < 45 || event.keyCode > 57) {
+            event.returnValue = false;
+            return false;
+        }
+    });
+
+    //Asignamos los valores de los campos\\
+    if ($("#agtfAccion").val() == "Consultar" || $("#agtfAccion").val() == "Eliminar") {
+        $('#frmcatAgenteGrupoFamiliar').find('input').attr("readonly", "readonly");
+        $('#tblVinculoFamiliar').find('input[type=radio]').attr("disabled", "disabled");
+    }
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatAgenteGrupoFamiliar").ready(function () {
+        if ($("#agtfDNI").val() == -1) {
+            $("#agtfDNI").val("");
+        }
+        if ($("#agtfAccion").val() === "Modificar") {
+            $("#agtfDNI").attr("readonly", "readonly");
+            $("#agtfApellidoyNombre").focus().select();
+        } else {
+            $("#agtfDNI").focus().select();
+        }
+
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+    function onAceptarcatAgenteGrupoFamiliar() {
+        if ($("#agtfAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatAgenteGrupoFamiliar').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        $('#tblVinculoFamiliar').find('input[type=radio]:checked').each(function (index) {
+            debugger;
+            $("#ospvId").val($(this).val());
+        });
+
+        debugger;
+        $("#agtIdGF").val(IdAgente);
+        var $form = $('#frmcatAgenteGrupoFamiliar');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridGrupoFamiliarAgente").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatAgenteGrupoFamiliar').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+    
+    function onCancelarcatAgenteGrupoFamiliar() {
+        var windowElement = $('#wCRUDcatAgenteGrupoFamiliar').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setAgenteGrupoFamiliar", "DCRM", FormMethod.Post, new { id = "frmcatAgenteGrupoFamiliar" }))
+{
+    <div id="divGridPrincipalcatAgenteGrupoFamiliar" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected">
+            Información del Familiar
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">DNI:</label>
+                @Html.TextBoxFor(model => Model.agtfDNI, new { @class = "SiempreMayuscula", maxlength = "8" })
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Apellido y Nombre:</label>
+                @Html.TextBoxFor(model => Model.agtfApellidoyNombre, new { @class = "SiempreMayuscula", maxlength = "100" })
+            </div>
+            <div style="height: 30px;">
+                <table id="tblVinculoFamiliar" style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none;">
+                            <label class="control-inline fancy-radio custom-color-green">
+                                <input type="radio" value="001" name="inline-radio2" @(Model.ospvId == "001" ? "checked" : "")>
+                                <span><i></i>CONYUGE</span>
+                            </label>
+                        </td>
+                        <td style="border: none;">
+                            <label class="control-inline fancy-radio custom-color-green">
+                                <input type="radio" value="002" name="inline-radio2" @(Model.ospvId == "002" ? "checked" : "")>
+                                <span><i></i>HIJO/A</span>
+                            </label>
+                        </td>
+                        <td style="border: none;">
+                            <label class="control-inline fancy-radio custom-color-green">
+                                <input type="radio" value="005" name="inline-radio2" @(Model.ospvId == "005" ? "checked" : "")>
+                                <span><i></i>CONCUBINA/O</span>
+                            </label>
+                        </td>
+                        <td style="border: none;">
+                            <label class="control-inline fancy-radio custom-color-green">
+                                <input type="radio" value="006" name="inline-radio2" @(Model.ospvId == "006" ? "checked" : "")>
+                                <span><i></i>EX-CONYUGE</span>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatAgenteGrupoFamiliar();" title="@(Model.agtfAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatAgenteGrupoFamiliar();" title="Cancelar" style="@(Model.agtfAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => Model.agtfAccion, new { style = "width: 200px; display: none;", id = "agtfAccion" })
+        @Html.HiddenFor(model => Model.agtfId, new { style = "width: 200px; display: none;", id = "agtfId" })
+        @Html.HiddenFor(model => Model.ospvId, new { style = "width: 200px; display: none;", id = "ospvId" })
+        @Html.HiddenFor(model => Model.agtIdGF, new { id = "agtIdGF" })
+    </div>
+}

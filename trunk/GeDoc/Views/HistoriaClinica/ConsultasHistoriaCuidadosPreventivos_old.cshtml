@@ -1,0 +1,445 @@
+﻿@model GeDoc.catHCAduPraPreventivaResulWS
+@{
+    ViewBag.Title = "ConsultasHistorialFamiliarYPersonal";
+}
+
+<br />
+<!--<label><b>APELLIDO Y NOMBRE: </b><input type="text" style="margin-right: 30px; width: 400px;"/><b>D.N.I.N°:</b><input type="text" style="width: 80px;"/></label>-->
+<br /><br />
+<label><b>PLANILLA DE CUIDADOS PREVENTIVOS: Para moyores de 18 años:</b></label>
+<br /><br />
+@using (Html.BeginForm("setHistoriaCuidadosPreventivos", "HistoriaClinica", FormMethod.Post, new { id = "tab4" }))
+{
+<table style="width: 100%; border: none; font-size: 10px;">
+        <tr style="text-align: center">
+            <td>PRÁCTICA</td>
+            <td colspan="10">RESULTADOS - MES /AÑO</td>
+        </tr>
+       @for (int i = 0; i < Model.listado.Count(); i++)
+       {
+           <tr>
+               @Html.HiddenFor(model => model.listado[i].aduPraPrevResId)
+               <td>@Model.listado[i].aduPraPrevDescri</td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha1, new { id=i+"_1f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul1, new { id=i+"_1r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha2, new { id=i+"_2f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul2, new { id=i+"_2r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha3, new { id=i+"_3f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul3, new { id=i+"_3r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha4, new { id=i+"_4f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul4, new { id=i+"_4r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha5, new { id=i+"_5f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul5, new { id=i+"_5r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha6, new { id=i+"_6f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul6, new { id=i+"_6r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha7, new { id=i+"_7f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul7, new { id=i+"_7r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha8, new { id=i+"_8f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul8, new { id=i+"_8r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha9, new { id=i+"_9f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul9, new { id=i+"_9r", style="width: 59px;"})
+               </td>
+               <td style="width: 8%">
+                   @Html.EditorFor(model => model.listado[i].aduPraPrevFecha10, new { id=i+"_10f", style="width: 59px; margin-bottom: 3px;"})<br />
+                   @Html.TextBoxFor(model => model.listado[i].aduPraPrevResul10, new { id=i+"_10r", style="width: 59px;"})
+               </td>
+           </tr>
+       }
+    <!--
+    <tr>
+        <td>T A</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>PESO</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>TALLA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>IMC</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>CIR. CINTURA(CC)</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>EX.DENTAL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>AG.VISUAL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>AG.AUDITIVA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>PAP</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>MAMOGRAFÍA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>PALPACIÓN MAMARIA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>AU CARDÍACA <br />A.A.A. - PULSOS</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>COLESTEROL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>TG.</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>HDL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>LDL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>GLUCEMIA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>SOMF a partir de los 50 años</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>VAC. ANTIGRIPAL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>VAC. ANTINEUMOC.</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>VAC. ANTI HB</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>VAC. DOBLE VIRAL<br /> TRIPLE VIRAL</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>VAC.ANTITETÁNICA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>PREV. DE ACCIDENTES</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>CONSEJO SOBRE<br />SALUD SEXUAL Y REPRODUCTIVA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>CONSEJO SOBRE <br />VIH - ITS</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>CONSEJO SOBRE <br />ADICCIONES</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>CONSEJO DIETA Y <br />ACT. FÍSICA</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    <tr>
+        <td>% RIESGO <br />CARDIOVASCULAR</td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+        <td style="width: 8%"><input type="text" style="margin-bottom: 3px; width: 59px;"/><br /><input type="text" style="width: 59px;"/></td>
+    </tr>
+    -->
+</table>
+}

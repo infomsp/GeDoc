@@ -1,0 +1,277 @@
+﻿@model GeDoc.proCompraDocumentacionWS
+
+@{ Html.RenderPartial("WaitingCRUD"); }
+
+<script src="@(Url.Content("~/Scripts/dropzone/dropzone.min.js"))" type="text/javascript"></script>
+<script type="text/javascript">
+    function onLoadComboBox_provId() {
+        var combobox = $('#provId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.provId == null ? 0 : Model.provId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.comaAccion)" == "Agregar" || "@(Model.comaAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onComboBoxLoadCRUD_provId() {
+        var combobox = $('#provId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.provId == null ? 0 : Model.provId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.comaAccion)" == "Agregar" || "@(Model.comaAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onChangeComboBoxCRUD_provId() {
+    }
+
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalproCompraAdjunto").ready(function () {
+        //Aplicamos algunos estilos
+        $('.t-widget.t-combobox.t-header').attr("style", "vertical-align: middle; width: 310px;");
+        $("#comaAccion").attr("style", "display: none;");
+        $("#comacomId").attr("style", "display: none;");
+        $("#comaId").attr("style", "display: none;");
+        $("#comaRenglones").attr("style", "width: 83%;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#comaAccion").val() == "Consultar" || $("#comaAccion").val() == "Eliminar" || $("#comaAccion").val() == "Recepción") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        if ($("#comaAccion").val() == "Recepción") {
+            $("#comaFechaDeEntrega").prop("disabled", false);
+            @{
+                var comaFechaDeEntrega = "";
+                if (Model.comaFechaDeEntrega != null)
+                {
+                    comaFechaDeEntrega = Model.comaFechaDeEntrega.Value.ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    comaFechaDeEntrega = DateTime.Now.ToString("dd/MM/yyyy");
+                }
+            }
+            $('#comaFechaDeEntrega').val('@(comaFechaDeEntrega)');
+        }
+
+        @{
+            var comaFechaDeRetiro = "";
+            if (Model.comaFechaDeRetiro != null)
+            {
+                comaFechaDeRetiro = Model.comaFechaDeRetiro.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#comaFechaDeRetiro').val('@(comaFechaDeRetiro)');
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    function onAceptarDocumentacionCompras() {
+        if ($("#comaAccion").val() == "Consultar") {
+            onCancelarCRUDDocumentacionCompras();
+            return;
+        }
+        if (!TieneArchivo && $("#comaAccion").val() != "Eliminar") {
+            jAlert("Debe cargar un archivo.", "¡Atención!", function () {
+                //$("form:not(.filter) :input:visible:enabled:first").focus().select();
+                $("#jumbotron").css("border-color", "red");
+            });
+            return;
+        }
+
+        var $form = $('#frmproCompraAdjunto');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridproCompraDocumentacion").data("tGrid").ajaxRequest();
+                    $("#Grid").data("tGrid").ajaxRequest();
+                    onCancelarCRUDDocumentacionCompras();
+                }
+            }
+        });
+    }
+
+    function onCancelarCRUDDocumentacionCompras() {
+        var windowElement = $('#wCRUDDocumentacionCompras').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setCompraDocumentacion", "proCompra", FormMethod.Post, new { id = "frmproCompraAdjunto" }))
+{
+    <div id="divGridPrincipalproCompraAdjunto" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="">
+            Información de la Documentación
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div id="divSubeArchivos">
+                <label style="vertical-align: baseline;">Archivo:</label>
+                <div id="jumbotron" style="border-color: cornflowerblue; border-style: dashed !important; height: 200px; margin-bottom: 30px;" class="BordeRedondeado dropzone"></div>
+                @{
+                if (Model.comaAccion == "Eliminar" || Model.comaAccion == "Recepción")
+                    {
+                        <div class="t-overlay t-state-disabled" style="height: 280px;"></div>
+                    }
+                }
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: middle;">Proveedor:</label>
+                @Html.EditorFor(model => Model.provId, "", "provId")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Fecha de Retiro:</label>
+                @Html.EditorFor(model => Model.comaFechaDeRetiro, "", "comaFechaDeRetiro")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Plazo de Entrega:</label>
+                @Html.EditorFor(model => Model.comaPlazoDeEntrega, "", "comaPlazoDeEntrega")
+            </div>
+            <div style="height: 30px; @(Model.comaAccion != "Recepción" ? "display: none;" : "")">
+                <label style="vertical-align: baseline;">Fecha de Recepción:</label>
+                @Html.EditorFor(model => Model.comaFechaDeEntrega, "", "comaFechaDeEntrega")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Renglones:</label>
+                @Html.EditorFor(model => Model.comaRenglones, "", "comaRenglones")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarDocumentacionCompras();" title="@(Model.comaAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarCRUDDocumentacionCompras();" title="Cancelar" style="@(Model.comaAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@(Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.comaAccion, new { style = "width: 200px; display: none;", id = "comaAccion" })
+        @Html.HiddenFor(model => Model.comacomId, new { style = "width: 200px; display: none;", id = "comacomId" })
+        @Html.HiddenFor(model => Model.comaId, new { style = "width: 200px; display: none;", id = "comaId" })
+        @Html.HiddenFor(model => Model.comaArchivo, new { style = "width: 200px; display: none;", id = "comaArchivo" })
+    </div>
+}
+
+<style type="text/css">
+    .dz-max-files-reached {
+        background-color: white;
+    }
+</style>
+
+<script>
+    var _Post = GetPathApp("proCompra/Descargar");
+    var TieneArchivo = false;
+    $("div#jumbotron").dropzone({
+        maxFiles: 1,
+        url: _Post,
+        acceptedFiles: 'image/*, application/pdf',
+        uploadMultiple: false,
+        addRemoveLinks: false,
+        dictMaxFilesExceeded: "No puede agregar más de 1 Archivo",
+        init: function () {
+            if ($("#comaAccion").val() != "Agregar") {
+                var thisDropzone = this;
+                //var _PostArchivo = GetPathApp("proCompra/GetAttachments");
+                if ($("#comaArchivo").val() != "") {
+                    TieneArchivo = true;
+                    var mockFile = {
+                        name: $("#comaArchivo").val(),
+                        size: 2000,
+                        progress: 100
+                    };
+
+                    // Call the default addedfile event handler
+                    thisDropzone.emit("addedfile", mockFile);
+
+                    var removeButton = Dropzone.createElement("<div style='text-align: center; margin-top: 8px; cursor: pointer;'><div class='t-button'>Quitar archivo</div></div>");
+                    // Capture the Dropzone instance as closure.
+                    var _this = this;
+                    // Listen to the click event
+                    removeButton.addEventListener("click", function (e) {
+                        // Make sure the button click doesn't submit the form:
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Remove the file preview.
+                        _this.removeFile(mockFile);
+                        // If you want to the delete the file on the server as well,
+                        // you can do the AJAX request here.
+                        TieneArchivo = false;
+                    });
+
+                    // Add the button to the file preview element.
+                    mockFile.previewElement.appendChild(removeButton);
+                    $(".dz-size").css("display", "none");
+                    $(".dz-progress").css("display", "none");
+                }
+            }
+            this.on("maxfilesexceeded", function (data) {
+                var res = eval('(' + data.xhr.responseText + ')');
+                //alert('Aquí');
+                //e.preventDefault();
+                //e.stopPropagation();
+            });
+            $(".dz-default.dz-message").attr('style', 'font-family: monospace; font-size: xx-large;');
+            this.on("addedfile", function (file) {
+                // Create the remove button
+                $("#jumbotron").css("border-color", "cornflowerblue");
+                var removeButton = Dropzone.createElement("<div style='text-align: center; margin-top: 8px; cursor: pointer;'><div class='t-button'>Quitar archivo</div></div>");
+                // Capture the Dropzone instance as closure.
+                var _this = this;
+                // Listen to the click event
+                removeButton.addEventListener("click", function (e) {
+                    // Make sure the button click doesn't submit the form:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Remove the file preview.
+                    _this.removeFile(file);
+                    // If you want to the delete the file on the server as well,
+                    // you can do the AJAX request here.
+                    TieneArchivo = false;
+                });
+
+                // Add the button to the file preview element.
+                file.previewElement.appendChild(removeButton);
+                TieneArchivo = true;
+            });
+        }
+    });
+</script>

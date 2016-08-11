@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Página en Mantenimiento</title>
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+.Estilo2 {
+	font-size: 24px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+</style></head>
+
+<body>
+<table width="967" border="0" align="center" cellpadding="4" cellspacing="0">
+  <tr>
+    <td colspan="3"><img src="/Images/General/Fondo.jpg" alt="MINISTERIO DE SALUD" width="959" height="92" /></td>
+  </tr>
+  <tr>
+    <td width="23">&nbsp;</td>
+    <td width="805"><table width="783" border="0" align="center" cellpadding="4" cellspacing="0">
+      <tr>
+        <td width="200" rowspan="3" valign="middle"><img src="/Images/General/EnConstruccion.jpg" alt="PAGINA EN MANTENIMIENTO" width="200" height="184" /></td>
+        <td colspan="2" align="center"><a href="javascript:close()"><img src="/Images/General/No.jpg" alt="CERRAR" width="130" height="120" border="0" /></a></td>
+        <td width="96">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="112">&nbsp;</td>
+        <td width="343"><div align="center" class="Estilo2">
+          <div align="left">ESTIMADO USUARIO</div>
+        </div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="144" colspan="2"><div align="center" class="Estilo2">EL SISTEMA SE ENCUENTRA TEMPORALMENTE EN MANTENIMIENTO<br />
+          GRACIAS POR SU COMPRENSIÓN</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="2">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+    <td width="127">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3"><img src="/Images/General/FondoHeader.jpg" alt="FONDO" width="949" height="29" /></td>
+  </tr>
+</table>
+</body>
+</html>

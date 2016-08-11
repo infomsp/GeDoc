@@ -1,0 +1,312 @@
+@model GeDoc.catLiquidacionHaberesWS
+
+@{
+    ViewData["StyleComboBox"] = "width: 350px; vertical-align: middle;";
+    ViewData["FiltroContains"] = true;
+}
+
+@{ Html.RenderPartial("WaitingCRUD"); }
+
+<script type="text/javascript">
+    function onLoadComboBox_tipoId() {
+        var combobox = $('#tipoId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.tipoId == null ? 0 : Model.tipoId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.liqAccion)" == "Agregar" || "@(Model.liqAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onLoadComboBox_perId() {
+        var combobox = $('#perId').data('tComboBox');
+        var selectItem = function (dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.perId == null ? 0 : Model.perId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.liqAccion)" == "Agregar" || "@(Model.liqAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onLoadComboBox_juzId() {
+        var combobox = $('#juzId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.juzId == null ? 0 : Model.juzId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.liqAccion)" == "Agregar" || "@(Model.liqAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    function onChangeComboBox_juzId() { }
+    function onChangeComboBox_bcoId() { }
+
+    function onLoadComboBox_bcoId() {
+        var combobox = $('#bcoId').data('tComboBox');
+        var selectItem = function(dataItem) {
+            //dataItem argument is a ComboBox data item.
+            return dataItem.Value == "@(Model.bcoId == null ? 0 : Model.bcoId)";
+        };
+
+        combobox.select(selectItem);
+
+        if ("@(Model.liqAccion)" == "Agregar" || "@(Model.liqAccion)" == "Modificar") {
+            combobox.enable();
+        } else {
+            combobox.disable();
+        }
+    }
+
+    //Aplicamos algunos estilos
+    $("#liqAccion").attr("style", "display: none;");
+    $("#liqId").attr("style", "display: none;");
+    $("#liqCaratulados").attr("style", "width: 90.8%;");
+    $("#liqNumeroExpediente").attr("style", "width: 120px;");
+    $('#liqNumeroExpediente').mask("999-99999-9999");
+    $('#liqNumeroExpediente').blur(function () {
+        if ($('#Expediente').val() != "") {
+            AbrirWaiting();
+            var _Post = GetPathApp('expExpediente/getExisteExpediente');
+            $.ajax({
+                url: _Post,
+                data: { Comprobante: $('#liqNumeroExpediente').val() },
+                type: 'POST',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    CerrarWaiting();
+                    jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                        $('#liqNumeroExpediente').val("");
+                        $('#liqNumeroExpediente').focus();
+                    });
+                    $('#popup_container').focus();
+                    $('#popup_ok').focus();
+                },
+                success: function (data) {
+                    CerrarWaiting();
+                    if (!data.Existe) {
+                        jAlert('El Expediente ingresado no existe.', '¡Atención!', function () {
+                            $('#liqNumeroExpediente').val("");
+                            $('#liqNumeroExpediente').focus();
+                        });
+                        $('#popup_container').focus();
+                        $('#popup_ok').focus();
+                    }
+                }
+            });
+        }
+    });
+
+    function onChangeComboBox_perId() {
+        var combobox = $('#perId').data('tComboBox');
+        debugger;
+        AbrirWaiting();
+        var _Post = GetPathApp('catLiquidacionHaberes/getInfoPersona');
+        $.ajax({
+            url: _Post,
+            data: { perId: combobox.value() },
+            type: 'POST',
+            error: function (xhr, ajaxOptions, thrownError) {
+                CerrarWaiting();
+                jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                    $('#liqNumeroExpediente').val("");
+                    $('#liqNumeroExpediente').focus();
+                });
+                $('#popup_container').focus();
+                $('#popup_ok').focus();
+            },
+            success: function (data) {
+                CerrarWaiting();
+                $("#perPadron").val(data.Padron);
+                $("#perSector").val(data.Sector);
+            }
+        });
+    }
+
+    //Asignamos los valores de los campos\\
+        @{
+            var liqFechaEntrada = "";
+            if (Model.liqFechaEntrada != null)
+            {
+                liqFechaEntrada = Model.liqFechaEntrada.ToString("dd/MM/yyyy");
+            }
+        }
+    $('#liqFechaEntrada').val('@(liqFechaEntrada)');
+
+
+    if ($("#liqAccion").val() == "Consultar" || $("#liqAccion").val() == "Eliminar") {
+        $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+    }
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatLiquidacionHaberes").ready(function() {
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+    function onAceptarcatLiquidacionHaberes() {
+        if ($("#liqAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatLiquidacionHaberes').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatLiquidacionHaberes');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatLiquidacionHaberes").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatLiquidacionHaberes').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+    
+    function onCancelarcatLiquidacionHaberes() {
+        var windowElement = $('#wCRUDcatLiquidacionHaberes').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatLiquidacionHaberes", "catLiquidacionHaberes", FormMethod.Post, new { id = "frmcatLiquidacionHaberes" }))
+{
+    <div id="divGridPrincipalcatLiquidacionHaberes" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected">
+            INFORMACIÓN DEL DESCUENTO DE HABERES
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+            <div style="height: 30px;">
+                <label style="vertical-align: middle; margin-left: 0px;">Tipo de Descuento:</label>
+                @Html.EditorFor(model => Model.tipoId, "", "tipoId")
+            </div>
+            <div class="BordeRedondeadoTab t-state-selected">
+                INFORMACIÓN DEL EMPLEADO
+            </div>
+            <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+                <label style="vertical-align: middle; margin-left: 0px;">Empleado:</label>
+                @Html.EditorFor(model => Model.perId, "", "perId")
+                <label style="vertical-align: baseline; margin-left: 60px;">Padrón:</label>
+                <input type="text" id="perPadron" style="width: 90px;" value="" disabled="disabled" />
+                <label style="vertical-align: baseline; margin-left: 60px;">Sector:</label>
+                <input type="text" id="perSector" value="" disabled="disabled" />
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Fecha de Entrada:</label>
+                @Html.EditorFor(model => Model.liqFechaEntrada, "", "liqFechaEntrada")
+                <label style="vertical-align: baseline; margin-left: 142px;">Expediente:</label>
+                @Html.TextBoxFor(model => Model.liqNumeroExpediente)
+                <label style="vertical-align: baseline; margin-left: 157px;">Autos:</label>
+                @Html.TextBoxFor(model => Model.liqAutos, new { maxlength = "30" })
+            </div>
+            <div>
+                <label style="vertical-align: top;">Caratulados:</label>
+                @Html.EditorFor(model => Model.liqCaratulados, "", "liqCaratulados")
+            </div>
+            <div style="height: 30px; margin-top: 5px;">
+                <label style="vertical-align: baseline;">Juzgado:</label>
+                @Html.EditorFor(model => Model.juzId, "", "juzId")
+                <label style="vertical-align: baseline; margin-left: 17%;">Banco:</label>
+                @Html.EditorFor(model => Model.bcoId, "", "bcoId")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Importe:</label>
+                @Html.EditorFor(model => Model.liqImporte, "", "liqImporte")
+                <label style="vertical-align: baseline; margin-left: 13%;">Importe Salario Familiar:</label>
+                @Html.EditorFor(model => Model.liqImporteSF, "", "liqImporteSF")
+                <label style="vertical-align: baseline; margin-left: 13%;">Cuotas:</label>
+                @Html.EditorFor(model => Model.liqCuotas, "", "liqCuotas")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatLiquidacionHaberes();" title="@(Model.liqAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Aceptar.png') no-repeat 0px 0px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatLiquidacionHaberes();" title="Cancelar" style="@(Model.liqAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Cancelar.png') no-repeat 0px 0px; vertical-align: middle;"/>
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @{
+            var ColorEstado = "rgba(181, 179, 179, 0.65)";
+            var ColorEstadoBorde = "#B5B3B3";
+            switch (Model.Estado)
+            {
+                case "SL":
+                    ColorEstado = "rgba(181, 179, 179, 0.65)";
+                    ColorEstadoBorde = "#B5B3B3";
+                    break;
+                case "EL":
+                    ColorEstado = "rgba(9, 9, 222, 0.53)";
+                    ColorEstadoBorde = "#0909DE";
+                    break;
+                case "LL":
+                    ColorEstado = "rgba(40, 144, 31, 0.72)";
+                    ColorEstadoBorde = "#28901F";
+                    break;
+                case "AN":
+                    ColorEstado = "rgba(193, 68, 46, 0.79)";
+                    ColorEstadoBorde = "#C1442E";
+                    break;
+            }
+        }
+        <div style="position: absolute; text-align: right; top: 47px; left: 76%; width: 220px; height: 20px;">
+            <div class="BordeRedondeado" style="padding: 10px; text-align: center; color: white; border-color: @(ColorEstadoBorde); background-color: @(ColorEstado);">
+                @{
+                    var Estado = "En proceso de Liquidación";
+                    if (Model.liqAccion != "Agregar")
+                    {
+                        Estado = Model.Estado;
+                    }
+                }
+                @Estado.ToUpper()
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.liqAccion, new { style = "width: 200px; display: none;", id = "liqAccion" })
+        @Html.HiddenFor(model => Model.liqId, new { style = "width: 200px; display: none;", id = "liqId" })
+    </div>
+}
+<script type="text/javascript">
+    $(".t-formatted-value").attr("style", "width: 95%; !Important");
+</script>

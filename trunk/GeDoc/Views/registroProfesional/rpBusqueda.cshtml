@@ -1,0 +1,53 @@
+ <div id="contenedorRegistrosProfesional" style="background:#fff">
+
+
+<div id="headerBusqueda" style="padding: 10px;">
+    <label>Tipo Documento</label>
+ @{ Html.Telerik().DropDownList()
+            .Name("cbxTipoDoc")
+            .DropDownHtmlAttributes(new { style = "width:Auto;" })
+             
+         //.ClientEvents(events => events.OnChange("onComboBoxChangeEspecialidad"))
+            .SelectedIndex(0)
+            .HtmlAttributes(new { style = "width: 300px; vertical-align: middle;" })
+            .BindTo((SelectList)ViewData["tipoIdTipoDocumento_Data"]).Render();
+  }
+         
+
+   
+    <label>Número de Documento: </label>
+    <input type="text" placeholder="Ingrese el Número de Documento de Agente" id="txtNumeroDocumentoCM" maxlength="8" style="width: 305px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" />
+    <button      id="btnBuscarCM" class="t-button t-button-icon" onclick="buscar();" style="width: 100px;">
+        <span class="t-icon t-search"></span> Buscar
+     </button>
+   
+
+</div>
+
+
+<!-- TAB  -->
+@{ Html.Telerik().TabStrip()
+        .Name("tabRegistroProfesional")
+        .HtmlAttributes(new { style = "height: 98%; padding: 0px; background: transparent; border: 0px; margin-left: -4px;" })
+        .Items(tabstrip =>
+        {
+            tabstrip.Add()
+                .Text("General")
+                .ContentHtmlAttributes(new { style = "height: 480px; padding: 8px;" })
+                .Content(() =>
+                {
+                   Html.RenderPartial("_Fotos");                    
+                ;});
+        })
+    .SelectedIndex(0)
+    .Render();
+ ;}
+
+</div>
+
+<script type="text/javascript" >
+    function Buscar()
+    {
+         
+    }
+</script>

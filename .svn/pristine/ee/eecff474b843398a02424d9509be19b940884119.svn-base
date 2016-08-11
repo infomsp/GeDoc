@@ -1,0 +1,310 @@
+@model GeDoc.proCompraOfertaWS
+
+@{ Html.RenderPartial("WaitingCRUD"); }
+@{ Html.RenderPartial("FiltroDesdeArchivo"); }
+<script type="text/javascript">
+    //Aplicamos algunos estilos
+    $("#comoProveedorNombre").attr("style", "width: 250px;");
+    $("#comoProveedorCUIT").attr("style", "width: 120px;");
+    //$("#comoNumeroPresupuesto").attr("disabled", "disabled");
+    $("#comoNumeroPresupuesto").attr("style", "width: 150px;");
+    $("#comoEsCompraSanJuan").attr("style", "vertical-align: middle;");
+    $("#comoEsCompraSanJuanPorcentaje").attr("style", "width: 60px; text-align: right;");
+    if ("@(Model.comoEsCompraSanJuan ? "SI" : "NO")" === "NO") {
+        $("#comoEsCompraSanJuanPorcentaje").attr("disabled", "disabled");
+    }
+    $("#comoEsAlternativa").attr("style", "vertical-align: middle;");
+    $("#Accion").attr("style", "display: none;");
+    $("#comId").attr("style", "display: none;");
+    $("#comoId").attr("style", "display: none;");
+    $('#comoProveedorCUIT').mask("99-99999999-9");
+    $('#comoProveedorNombre').blur(function () {
+        if ($('#comoProveedorNombre').val() != "") {
+            AbrirWaiting();
+            var _Post = GetPathApp('proCompra/getCUITProveedor');
+            $.ajax({
+                url: _Post,
+                data: { Proveedor: $('#comoProveedorNombre').val() },
+                type: 'POST',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    CerrarWaiting();
+                    jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                        $('#comoProveedorCUIT').val("");
+                        $('#comoProveedorCUIT').focus();
+                    });
+                    $('#popup_container').focus();
+                    $('#popup_ok').focus();
+                },
+                success: function (data) {
+                    CerrarWaiting();
+                    $('#comoProveedorCUIT').val(data.CUIT);
+                    $('#comoProveedorCUIT').focus();
+                }
+            });
+        }
+    });
+
+    $("#comoProveedorNombre").val("@(Model.comoProveedorNombre)");
+    debugger;
+    $('#comoFechaPresupuesto').val('@(Model.comoFechaPresupuesto.ToString("dd/MM/yyyy"))');
+
+    if ($("#Accion").val() == "Consultar" || $("#Accion").val() == "Eliminar") {
+        $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+    }
+    $("#comoEsCompraSanJuan").click(function () {
+        if ($("#comoEsCompraSanJuan").is(':checked')){
+            $("#comoEsCompraSanJuanPorcentaje").removeAttr("disabled");
+            $("#comoEsCompraSanJuanPorcentaje").focus().select();
+        } else {
+            $("#comoEsCompraSanJuanPorcentaje").attr("disabled", "disabled");
+        }
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+    function onAceptarCRUDOfertas() {
+        if ($("#Accion").val() == "Consultar") {
+            var windowElement = $('#wCRUDOfertasCompras').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmOfertasCompras');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function() {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar oferta.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function(respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function() {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridOfertas").data("tGrid").ajaxRequest();
+                    $("#Grid").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDOfertasCompras').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarTareas() {
+        var windowElement = $('#wCRUDOfertasCompras').data('tWindow');
+        windowElement.close();
+    }
+
+    $('#GridImportacion').on('onSuccessDesdeArchivo', function (event, resultado) {
+        // Agregamos el evento al div que escuchará
+        debugger;
+        if (resultado.Tipo === "Remove") {
+            $("#imgDesdeArchivo").show();
+            $("#imgDesdeArchivoOK").hide();
+            $("#btnDesdeArchivo").attr("title", "Importar información desde un archivo");
+            $("#lblDesdeArchivo").text("Importar Archivo");
+        } else {
+            $("#imgDesdeArchivo").hide();
+            $("#imgDesdeArchivoOK").show();
+            $("#lblDesdeArchivo").text("Ver Archivo Importado");
+            $("#btnDesdeArchivo").attr("title", "Ver información resultante de la importación");
+        }
+    });
+
+    function SetFocusGrilla() {
+        _RowIndexProductosOferta = _RowIndexProductosOferta < 0 || _RowIndexProductosOferta == null ? 0 : _RowIndexProductosOferta;
+        _CProductosOferta = _CProductosOferta < 0 || _CProductosOferta == null ? 0 : _CProductosOferta;
+        onCellSelectKeyUp(_RowIndexProductosOferta, _CProductosOferta, "gridComprasOfertasDetalle", _FilasVisiblesOferta, _ColumnasVisiblesOferta, false);
+
+        $("#gridComprasOfertasDetalle").attr("tabindex", 0).focus();
+    }
+
+    $("#GridImportacion").unbind("onAceptarDesdeArchivo");
+    $("#GridImportacion").on("onAceptarDesdeArchivo", function (event, resultado) {
+        if (ValidaCamposOfertas() !== 4) {
+            jAlert("El archivo importado no tiene las columnas de Marca, Precio y Observaciones, revise el Archivo por favor.", "¡Atención!", function (e) {
+                if (e) {
+                    SetFocusGrilla();
+                }
+            });
+            return;
+        } else {
+            ///////////////
+            AbrirWaitingCRUD();
+            var _Post = GetPathApp("proCompra/_SaveEditingProductosOfertaImportados");
+            $.ajax({
+                url: _Post,
+                data: { comId: _DatosRegistro_proCompra.comId },
+                type: "POST",
+                error: function (xhr, ajaxOptions, thrownError) {
+                    CerrarWaitingCRUD();
+                    jAlert("Falló el acceso al servidor", "¡Atención!", function () {
+                        SetFocusGrilla();
+                    });
+                    $('#popup_container').focus();
+                    $('#popup_ok').focus();
+                },
+                success: function (data) {
+                    CerrarWaitingCRUD();
+                    if (!data.IsValid) {
+                        jAlert(data.Mensaje, "¡Atención!", function () {
+                            SetFocusGrilla();
+                        });
+                        $("#popup_container").focus();
+                        $("#popup_ok").focus();
+                    } else {
+                        $("#gridComprasOfertasDetalle").data("tGrid").ajaxRequest();
+                        jAlert("Se procesó el archivo importado en forma correcta", "¡Atención!", function () {
+                            SetFocusGrilla();
+                        });
+                        $("#popup_container").focus();
+                        $("#popup_ok").focus();
+                    }
+                }
+            });
+        }
+    });
+
+    function ValidaCamposOfertas() {
+        var Campos = 0;
+        debugger;
+
+        Campos += $("#GridImportacion").find("td:[id='Detalle']").length;
+        Campos += $("#GridImportacion").find("td:[id='Marca']").length;
+        Campos += $("#GridImportacion").find("td:[id='Precio']").length;
+        Campos += $("#GridImportacion").find("td:[id='Observaciones']").length;
+
+        return Campos;
+    }
+
+</script>
+@{
+    string _PathContent = Url.Content("~/Content");
+    string _btnAceptar = "";
+    _btnAceptar = "background: url('" + Url.Content("~/Content/General") + "/Exportar2.png') no-repeat 0px 0px;";
+}
+
+@using (Html.BeginForm("setOferta", "proCompra", FormMethod.Post, new { id = "frmOfertasCompras" }))
+{
+    <div id="divGridPrincipalOfertas" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab">
+            Información de la Oferta
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+            <table style="width: 100%; border: none;">
+                <tr style="border: none;">
+                    <td style="width: 33.3%; text-align: left; border: none;">
+                        <label style="vertical-align: middle;">Nº Presupuesto:</label>
+                        @Html.EditorFor(model => Model.comoNumeroPresupuesto, new {style = "overflow: inherit;", id = "comoNumeroPresupuesto"})
+                    </td>
+                    <td style="width: 33.3%; text-align: center; border: none;">
+                        @Html.LabelFor(model => Model.comoFechaPresupuesto, "Fecha: ")
+                        @Html.EditorFor(model => Model.comoFechaPresupuesto, "", "comoFechaPresupuesto")
+                    </td>
+                    <td style="width: 33.33%; text-align: right; border: none;">
+                        @Html.LabelFor(model => Model.comoDiasValidezOferta, "Validez de la Oferta (Días): ")
+                        @Html.EditorFor(model => Model.comoDiasValidezOferta, new {style = "width: 120px;", id = "comoDiasValidezOferta"})
+                    </td>
+                </tr>
+            </table>
+            <div class="BordeRedondeadoTab">
+                Proveedor
+            </div>
+            <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.6%;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="width: 33.3%; text-align: left; border: none;" colspan="2">
+                            <label style="vertical-align: middle;">Razón Social:</label>
+                            @Html.EditorFor(model => Model.comoProveedorNombre, new {style = "width: 450px;", id = "comoProveedorNombre"})
+                        </td>
+                        <td style="width: 33.33%; text-align: right; border: none;">
+                            <label style="vertical-align: middle;">CUIT:</label>
+                            @Html.EditorFor(model => Model.comoProveedorCUIT, new {style = "width: 150px;", id = "comoProveedorCUIT"})
+                        </td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td style="width: 33.3%; text-align: left; border: none;" colspan="2">
+                            <div>
+                                <label>Beneficio de Compra San Juan:</label>
+                                @Html.EditorFor(model => Model.comoEsCompraSanJuan, new { style="vertical-align: middle;", id = "comoEsCompraSanJuan"})
+                                <label style="margin-left: 10px;">Porcentaje:</label>
+                                @Html.EditorFor(model => Model.comoEsCompraSanJuanPorcentaje, new {style = "width: 60px; text-align: right;", id = "comoEsCompraSanJuanPorcentaje"})
+                            </div>
+                        </td>
+                        <td style="width: 33.33%; text-align: right; border: none;">
+                            <label>Es Alternativa:</label>
+                            @Html.EditorFor(model => Model.comoEsAlternativa, new {style = "width: 150px; vertical-align: middle;", id = "comoEsAlternativa"})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="BordeRedondeadoTab">
+                <label style="margin-left: 30px;">Detalle de Productos / Bienes de Uso</label>
+                <label id="btnImportar" style="font-weight: 400; margin-left: 30px;" class="t-button" onclick=" onImportarArchivo(); " title="Importar detalle de productos ofertados.">
+                    <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" id="imgImportarOferta" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Excel.png') no-repeat 0px 0px; vertical-align: middle;"/>
+                    Importar
+                </label>
+            </div>
+            <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.6%;">
+                @{ Html.RenderPartial("ProductosOfertas", Model.DetalleOferta); }
+            </div>
+            <div style="text-align: center; margin-top: 10px;">
+                <div id="btnAceptar" class="t-button" onclick="onAceptarCRUDOfertas();" title="@(Model.Accion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar datos de la Oferta")">
+                    <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" id="imgAceptarOferta" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Aceptar.png') no-repeat 0px 0px; vertical-align: middle;" />
+                    <label id="lblAceptarOferta" style="cursor: pointer;">Aceptar</label>
+                </div>
+                <div id="btnCancelar" class="t-button" onclick="onCancelarTareas();" title="Cancelar" style="@(Model.Accion == "Consultar" ? "display: none;" : "")">
+                    <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" id="imgCancelarOferta" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Cancelar.png') no-repeat 0px 0px;  vertical-align: middle;" />
+                    <label id="lblCancelarOferta" style="cursor: pointer;">Cancelar</label>
+                </div>
+            </div>
+            @Html.EditorFor(model => Model.Accion, new {style = "width: 200px; display: none;", id = "Accion"})
+            @Html.EditorFor(model => Model.comId, new {style = "width: 200px; display: none;", id = "comId"})
+            @Html.EditorFor(model => Model.comoId, new {style = "width: 200px; display: none;", id = "comoId"})
+        </div>
+    </div>
+}
+
+<script>
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalOfertas").ready(function () {
+    });
+
+    $('#comoNumeroPresupuesto').keydown(function () {
+        if (event.shiftKey) {
+            event.preventDefault();
+        }
+
+        if (event.keyCode == 46 || event.keyCode == 8) {
+        }
+        else {
+            if (event.keyCode < 95) {
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if (event.keyCode < 96 || event.keyCode > 105) {
+                    event.preventDefault();
+                }
+            }
+        }
+    });
+
+    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+</script>

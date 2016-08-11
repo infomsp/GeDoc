@@ -1,0 +1,67 @@
+<script>
+
+    function onLoad_consultaProfesional() {
+        debugger;
+        var wRecibir = $(this).data("tWindow");              
+        wRecibir.center();
+    }
+
+    function OnDataBinding_consultaProfesional(e) {
+        e.data = $.extend(e.data, { dni: "32084050" });
+    }
+
+    function onCommand_consultaProfesional(e) {
+        var window = $('#wBusquedaProfesionales').data('tWindow');
+        window.close();
+       $("#inputSearch").val(e.dataItem.pNumDocumento)             
+       $('#btnBuscarCM').click()
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+ 
+</script>
+ 
+@{ViewData["profesionales"] = new List<GeDoc.catProfesionalWS>();}
+
+
+
+@{
+    Html.Telerik().Window()
+      .Name("wBusquedaProfesionales")
+      .Title("Busqueda de Profesionales")
+      .Visible(true)
+      .Content(() =>
+      {
+                  Html.Telerik().Grid((List<GeDoc.catProfesionalWS>)ViewData["profesionales"]).Name("profesionales").Pageable(pager => pager.PageSize(2)).DataKeys(keys =>
+                {
+                    keys.Add(p => p.pId);
+                }).DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_getProfesionalesByDNI", "registroProfesional");
+        })
+        .Columns(columns =>
+          {
+              columns.Command(commands =>
+             {
+                 commands.Custom("consultaItem")
+                     .Ajax(true)
+                     .ButtonType(GridButtonType.Image)
+                     .ImageHtmlAttributes(new { style = "background: url('/GeDoc/Content/2013.2.611/telerik/sprite.png') no-repeat -64px -177px" })
+                     .HtmlAttributes(new { title = "Consultar Tramite" }).DataRouteValues(route => route.Add(o => o.pId).RouteKey("orderID"));
+             }).Width("50px").Title("Acciones");              
+              columns.Add(o => o.pApellido).Title("Apellido").Width("150px");
+              columns.Add(o => o.pNombre).Title("Nombre").Width("150px");
+              columns.Add(o => o.pNumDocumento).Title("DNI").Width("100px");
+          }).ClientEvents(clientEvents => clientEvents.OnCommand("onCommand_consultaProfesional").OnDataBinding("OnDataBinding_consultaProfesional")).Scrollable(scroll => scroll.Enabled(true).Height(430)).HtmlAttributes(new { style = "width: 100%; heigth:500px" }).Render();
+      })      
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)      
+      .Modal(true)
+      .ClientEvents(clientEvents => clientEvents.OnLoad("onLoad_consultaProfesional"))
+      .Width(600)
+      .Height(500)           
+      .Render();
+}

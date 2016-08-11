@@ -1,0 +1,496 @@
+@model GeDoc.catCarnetWS
+
+@{
+    ViewData["StyleAutoComplete"] = "width: 368px;";
+    Html.RenderPartial("WaitingCRUD");
+}
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script type="text/javascript">
+    var SinFoto = true;
+
+    function formatDate(date, format) {
+        format = format || '{0:d}';
+        return $.telerik.formatString(format, date);
+    }
+
+    function onFotoCargada() {
+        SinFoto = false;
+        $("#carNumeroDocumento").removeClass("ES-ErrorValidacion");
+        $("#divCarnetMensajeError").hide("slide");
+    }
+
+    function onAceptarcatCarnet() {
+        if ($("#carAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatCarnet').data('tWindow');
+            windowElement.close();
+            return;
+        }
+        if (onValidarDatosCarnet()) {
+            return;
+        }
+
+        var oFoto = $("#foto");
+        if (oFoto[0].attributes.cambioFoto.value === "true") {
+            var blob = oFoto[0].toDataURL("image/png").replace("data:image/png;base64,", "");
+            $('#carFoto').val(blob);
+        } else {
+            $('#carFoto').val(null);
+        }
+
+        //Se genera el código QR\\
+        var qrcode = new QRCode("qrcode");
+        //qrcode.makeCode($("#tipoIdTipoDocumento").val() + "." + $("#carNumeroDocumento").val() + "." + $("#carApellido").val() + " " + $("#carNombre").val() + "." + $("#catMatriculaProfesional").val());
+        qrcode.makeCode($("#carNumeroDocumento").val());
+
+        var oQR = $("#qrcode").find("canvas");
+        var blobQR = oQR[0].toDataURL("image/png").replace("data:image/png;base64,", "");
+        $('#carCodigoQR').val(blobQR);
+
+        var $form = $('#frmcatCarnet');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    IdCarnet = respuesta.IdCarnet;
+                    $("#gridcatCarnet").data("tGrid").ajaxRequest();
+                    MensajeEmergente("Información", "Información actualizada correctamente, Imprima el Carnet", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                    $("#btnFrenteCarnet").show();
+                    $("#btnDorsoCarnet").hide();
+
+                    var windowPrint = $('#wImprimircatCarnet').data('tWindow');
+                    windowPrint.center().open();
+                }
+            }
+        });
+    }
+
+    function onValidarProfesional() {
+        var _url = GetPathApp('registroProfesional/getValida');
+        debugger;
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: { pTipoDoc: $("#tipoIdTipoDocumento").val(), pDocumento: $("#carNumeroDocumento").val() },
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al consultar datos.", "Error...", function () {
+                    $("#carNumeroDocumento").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Encontrado) {
+                    //Se cargan los datos.
+                    MensajeEmergente("¡Atención!", "Profesional encontrado.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                    $('#carId').val(respuesta.Datos.carId);
+                    $("#carApellido").val(respuesta.Datos.carApellido);
+                    $("#carNombre").val(respuesta.Datos.carNombre);
+                    $("#catMatriculaProfesional").val(respuesta.Datos.catMatriculaProfesional);
+                    if (respuesta.Datos.carVencimiento != null) {
+                        var FechaVto = parseInt(respuesta.Datos.carVencimiento.replace("/Date(", "").replace(")/", ""));
+                        $('#carVencimiento').data('tDatePicker').value(new Date(FechaVto));
+                    }
+                    $('#carFoto').val(respuesta.Datos.carFoto);
+
+                    var FechaImp = parseInt(respuesta.Datos.carFecha.replace("/Date(", "").replace(")/", ""));
+                    $("#carFecha").val(formatDate(new Date(FechaImp)));
+                    if (respuesta.Datos.carFechaImpresion != null) {
+                        FechaImp = parseInt(respuesta.Datos.carFechaImpresion.replace("/Date(", "").replace(")/", ""));
+                        $("#carFechaImpresion").val(formatDate(new Date(FechaImp)));
+                    }
+                    $("#carCandidadImpresiones").val(respuesta.Datos.carCandidadImpresiones);
+                    $("#carPersonalInterno").prop("checked", respuesta.Datos.carPersonalInterno);
+                    $("#divCarnetInfoAdicional").show("slide");
+                    var $ListaDoc = $("#profId_Lista");
+                    $ListaDoc.val(respuesta.Datos.profId).trigger("change");
+
+                    var $ListaZona = $("#repId_Lista");
+                    $ListaZona.val(respuesta.Datos.repId).trigger("change");
+
+                    $("#carApellido").focus().select();
+                    if ($("#carFoto").val() != null && $("#carFoto").val() != "") {
+                        SinFoto = false;
+                        var img = new Image();
+                        //indico la URL de la imagen
+                        var d = new Date();
+                        var _Path = "@Url.Content("~/")";
+                        img.src = _Path + $("#carFoto").val().replace("~/", "") + "?" + d.getTime();
+                        //defino el evento onload del objeto imagen
+                        img.onload = function () {
+                            //incluyo la imagen en el canvas
+                            var Foto = jQuery("#foto");
+                            var context = Foto[0].getContext("2d");
+                            context.drawImage(img, 0, 0, 300, 165);
+                        }
+                    }
+                } else {
+                    //$('#carId').val(respuesta.Datos.carId);
+                    $("#carApellido").val("");
+                    $("#carNombre").val("");
+                    $("#catMatriculaProfesional").val("");
+                    $('#carVencimiento').val("");
+                    $('#carFoto').val("");
+                    $("#divCarnetInfoAdicional").hide("slide");
+                    $("#carApellido").focus().select();
+                    $('#carPersonalInterno').val(false);
+                    SinFoto = true;
+                    var Foto = jQuery("#foto");
+                    var context = Foto[0].getContext("2d");
+                    context.clearRect(0, 0, 300, 165);
+                }
+                $("#carPersonalInterno").trigger("change");
+            }
+        });
+    }
+
+    function onCancelarcatCarnet() {
+        var windowElement = $('#wCRUDcatCarnet').data('tWindow');
+        windowElement.close();
+    }
+
+    function onValidarDatosCarnet() {
+        var _MensajeDeError = "";
+        var _Campo = "";
+        $("#divCarnetMensajeError").hide();
+
+        var _CampoEncontrado = "";
+        $('.ValidarInformacion').each(function (index) {
+            if (_MensajeDeError === "") {
+                if ($(this).val() === "" && (("catMatriculaProfesional, pacTelefonoCelular").indexOf($(this).attr("id")) === -1)) {
+                    _MensajeDeError = "Debe ingresar el campo " + $(this).attr("MensajeDeError") + ".";
+                    _CampoEncontrado = $(this).attr("id");
+                    _Campo = "#" + _CampoEncontrado;
+                }
+                if (_MensajeDeError === "") {
+                    switch ($(this).attr("id")) {
+                        case "carNumeroDocumento":
+                            if ($(this).val() < 1000000) {
+                                _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es incorrecto.";
+                                _CampoEncontrado = $(this).attr("id");
+                                _Campo = "#" + _CampoEncontrado;
+                            }
+                            break;
+                        case "catMatriculaProfesional":
+                            if ($(this).val() === "" && !$("#carPersonalInterno").is(":checked")) {
+                                _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es incorrecto.";
+                                _CampoEncontrado = $(this).attr("id");
+                                _Campo = "#" + _CampoEncontrado;
+                            }
+                            break;
+                    }
+                }
+            }
+        });
+        if (SinFoto && _MensajeDeError === "") {
+            _MensajeDeError = "Debe ingresar la foto.";
+            _CampoEncontrado = "carNumeroDocumento";
+            _Campo = "#" + _CampoEncontrado;
+        }
+
+        if (_MensajeDeError !== "") {
+            MensajeEmergente("¡Error!", _MensajeDeError, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+            $(_Campo).addClass("ES-ErrorValidacion");
+            $("#spanMensajeError").text(_MensajeDeError);
+            $("#divCarnetMensajeError").attr("class", "BordeRedondeado alert-danger");
+            $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+            //$("#divCarnetMensajeError").show();
+            $("#divCarnetMensajeError").css("display", "inline-table");
+            //$(_Campo).attr("title", "Es importante que la información ingresada sea coerente y real, por favor revise la información ingresada.");
+            $(_Campo).focus().select();
+            return true;
+        }
+
+        return false;
+    }
+</script>
+
+@using (Html.BeginForm("setcatCarnet", "registroProfesional", FormMethod.Post, new { id = "frmcatCarnet" }))
+{
+    <div id="divGridPrincipalrpEmisionCarnetCRUD" tabindex="1" style="overflow: hidden; outline: none;">
+        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+            Información Personal
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; /*overflow: scroll; overflow-x: hidden;*/">
+            <div id="divInformacionGeneralrpEmisionCarnetCRUD" style="padding: 10px;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none;" colspan="2">
+                            <div>
+                                <table style="border: none; width: 100%;">
+                                    <tr style="border: none;">
+                                        <td style="border: none; padding: 0px; text-align: left; width: 60%;">
+                                            <table style="border: none; width: 100%;">
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px;">
+                                                        <label style="vertical-align: baseline;">Documento:</label>
+                                                    </td>
+                                                    <td style="border: none; width: 210px;">
+                                                        @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdTipoDocumento_Lista")
+                                                    </td>
+                                                    <td style="border: none;">
+                                                        @Html.TextBoxFor(model => Model.carNumeroDocumento, new {id = "carNumeroDocumento", MensajeDeError = "Número de Documento", @class = "es-FondoFocusInput ValidarInformacion", style = "text-align: left; width: 120px;", maxlength = "8"})
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px; text-align: left; padding-top: 15px;" colspan="3">
+                                                        <label style="vertical-align: super;">Apellido:</label>
+                                                        @Html.TextBoxFor(model => Model.carApellido, new {id = "carApellido", MensajeDeError = "Apellido", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;", maxlength = "20"})
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px; text-align: left; padding-top: 15px; padding-bottom: 15px;" colspan="3">
+                                                        <label style="vertical-align: super;">Nombre:</label>
+                                                        @Html.TextBoxFor(model => Model.carNombre, new {id = "carNombre", MensajeDeError = "Nombre", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;", maxlength = "20"})
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px; width: 70px;">
+                                                        <label style="vertical-align: baseline;">Profesión:</label>
+                                                    </td>
+                                                    <td style="border: none;">
+                                                        @Html.Partial("EditorTemplates/_ListaDesplegable", "profId_Lista")
+                                                    </td>
+                                                    <td style="border: none;" colspan="3">
+                                                        <label style="vertical-align: baseline;">Matricula:</label>
+                                                        @Html.TextBoxFor(model => Model.catMatriculaProfesional, new {id = "catMatriculaProfesional", MensajeDeError = "Número de Matricula", @class = "es-FondoFocusInput ValidarInformacion", style = "text-align: left; width: 80px;", maxlength = "6"})
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px; padding-top: 10px; padding-bottom: 10px;" colspan="2">
+                                                        <label style="vertical-align: super;">Es Personal Interno:</label>
+                                                        @Html.CheckBoxFor(model => Model.carPersonalInterno, new {id = "carPersonalInterno", MensajeDeError = "Marca si es para el personal interno", @class = "es-FondoFocusInput ValidarInformacion", style = "text-align: left;"})
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px;">
+                                                        <label style="vertical-align: baseline;">Zona:</label>
+                                                    </td>
+                                                    <td style="border: none;" colspan="3">
+                                                        @Html.Partial("EditorTemplates/_ListaDesplegable", "repId_Lista#NO#430px")
+                                                    </td>
+                                                </tr>
+                                                <tr style="border: none;">
+                                                    <td style="border: none; padding: 0px; padding-left: 0px; padding-top: 15px;">
+                                                        <label style="vertical-align: baseline;">Vencimiento:</label>
+                                                    </td>
+                                                    <td style="border: none; padding: 0px; padding-top: 15px;">
+                                                        @Html.EditorFor(model => Model.carVencimiento)
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="border: none; padding: 0px; text-align: right;">
+                                            @{ Html.RenderPartial("_Fotos", ""); }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="divCarnetInfoAdicional" class="BordeRedondeado alert-success" style="vertical-align: middle; display: @(Model.carId > 0 ? "block" : "none"); padding: 15px; text-align: center; left: 20px;">
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px; text-align: left; width: 33.33%;">
+                            <label >Fecha de Alta:</label>
+                            <input id="carFecha" style="text-align: center;" disabled value="@(Model.carFecha.ToString("dd/MM/yyyy"))"/>
+                        </td>
+                        <td style="border: none; padding: 0px; width: 33.33%;">
+                            <label >Última Impresión:</label>
+                            <input id="carFechaImpresion" style="text-align: center;" disabled class="desactivar" value="@(Model.carFechaImpresion == null ? "" : Model.carFechaImpresion.Value.ToString("dd/MM/yyyy"))"/>
+                        </td>
+                        <td style="border: none; padding: 0px; width: 33.33%;">
+                            <label >Cantidad de Impresiones:</label>
+                            <input id="carCandidadImpresiones" style="text-align: right;" disabled class="desactivar" value="@(Model.carCandidadImpresiones)"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+            <div id="btnAceptarCarnet" style="width: 140px;" class="t-button" onclick="onAceptarcatCarnet();" title="Guardar cambios realizados.">
+                <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+                <label style="cursor: pointer; vertical-align: super;">Guardar</label>
+            </div>
+            <div id="btnCancelarCarnet" style="width: 140px;" class="t-button" onclick="onCancelarcatCarnet();" title="Cerrar alta de carnet">
+                <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-close"></i></span>
+                <label style="cursor: pointer; vertical-align: super;">Cancelar</label>
+            </div>
+        </div>
+        @Html.HiddenFor(model => Model.carId, new {id = "carId"})
+        @Html.HiddenFor(model => Model.tipoIdTipoDocumento, new {id = "tipoIdTipoDocumento"})
+        @Html.HiddenFor(model => Model.profId, new {id = "profId"})
+        @Html.HiddenFor(model => Model.carFoto, new {id = "carFoto"})
+        @Html.HiddenFor(model => Model.carCodigoQR, new {id = "carCodigoQR"})
+        @Html.HiddenFor(model => Model.carAccion, new {id = "carAccion"})
+        @Html.HiddenFor(model => Model.repId, new {id = "repId"})
+    </div>
+}
+
+<div id="divCarnetMensajeError" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; text-align: center; display: none; left: 20px; position: absolute; height: 43px; z-index: 10; width: 95.5%;">
+    <i style="position: absolute; left: 70px; margin-top: .8%;" class="fa fa-2x fa-warning"></i>
+    <div style="font-weight: bold; margin-bottom: 10px;">¡Atención!</div>
+    <span id="spanMensajeError">El Número de Documento que ha ingresado no fue encontrado, Ingrese los datos solicitados.</span>
+</div>
+
+<div id="qrcode" style="display: none;" ></div>
+@*<canvas id="cvQRcode"></canvas>*@
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatCarnet").ready(function() {
+        
+        //Aplicamos algunos estilos
+        $("#carAccion").attr("style", "display: none;");
+        $("#carId").attr("style", "display: none;");
+        $(".t-icon.t-icon-calendar").attr("title", "Abrir calendario");
+        //$("#carNombre").val($("#carNombreAuxiliar").val());
+        //$("#carNombre").attr("style", "width: 364px;");
+        //$("#carAccion").val("Agregar");
+
+        SoloEnteros("carNumeroDocumento");
+        SoloEnteros("catMatriculaProfesional");
+
+        if ($("#carAccion").val() === "Agregar") {
+            $("#carNumeroDocumento").val("");
+            $("#catMatriculaProfesional").val("");
+        }
+
+        $("#tipoIdTipoDocumento_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#tipoIdTipoDocumento").val($("#tipoIdTipoDocumento_Lista").val());
+        });
+        var $ListaDoc = $("#tipoIdTipoDocumento_Lista");
+        if ($('#tipoIdTipoDocumento').val() != "" && $('#tipoIdTipoDocumento').val() > 0) {
+            $ListaDoc.val($("#tipoIdTipoDocumento").val()).trigger("change");
+        } else {
+            $("#tipoIdTipoDocumento").val($("#tipoIdTipoDocumento_Lista").val());
+        }
+
+        $("#profId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#profId").val($("#profId_Lista").val());
+        });
+        var $ListaProf = $("#profId_Lista");
+        if ($('#profId').val() != "" && $('#profId').val() > 0) {
+            $ListaProf.val($("#profId").val()).trigger("change");
+        } else {
+            $("#profId").val($("#profId_Lista").val());
+        }
+
+        @{
+            var Fecha = "";
+            if (Model.carVencimiento != null)
+            {
+                Fecha = Model.carVencimiento.Value.ToString("dd/MM/yyyy");
+            }
+                
+        }
+        $('#carVencimiento').val("@(Fecha)");
+
+        $("#repId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function (e) {
+            $("#repId").val($("#repId_Lista").val());
+        });
+        var $ListaZona = $("#repId_Lista");
+        if ($('#repId').val() != "" && $('#repId').val() > 0) {
+            $ListaZona.val($("#repId").val()).trigger("change");
+        } else {
+            $("#repId").val($("#repId_Lista").val());
+        }
+
+        $("#carNumeroDocumento").focus().select();
+
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function(e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeClass("ES-ErrorValidacion");
+            $("#divCarnetMensajeError").hide("slide");
+        });
+
+        $("#carNumeroDocumento").change(function() {
+            onValidarProfesional();
+        });
+
+        if ($("#carNumeroDocumento").val() != null) {
+            SinFoto = false;
+            var img = new Image();
+            //indico la URL de la imagen
+            var d = new Date();
+            var _Path = "@Url.Content("~/")";
+            img.src = _Path + $("#carFoto").val().replace("~/", "") + "?" + d.getTime();
+            //defino el evento onload del objeto imagen
+            img.onload = function () {
+                //incluyo la imagen en el canvas
+                var Foto = jQuery("#foto");
+                var context = Foto[0].getContext("2d");
+                context.drawImage(img, 0, 0, 300, 165);
+            }
+        }
+
+        $('#carPersonalInterno').change(function () {
+            if (this.checked) {
+                $("#carVencimiento").val("");
+                $("#catMatriculaProfesional").val("");
+                $('#carVencimiento').data("tDatePicker").disable();
+                $("#catMatriculaProfesional").attr('disabled', 'disabled');
+
+                $("#repId_Lista").prop("disabled", false);
+            }
+            else {
+                $("#repId_Lista").prop("disabled", true);
+                $("#catMatriculaProfesional").removeAttr('disabled');
+                $('#carVencimiento').data("tDatePicker").enable();
+            }
+        });
+        $('#carPersonalInterno').trigger("change");
+
+        //Asignamos los valores de los campos\\
+        if ($("#carAccion").val() == "Consultar" || $("#carAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+            $("#btnAceptarCarnet").css("display", "none");
+            $('#carVencimiento').data("tDatePicker").disable();
+        }
+
+    });
+
+</script>

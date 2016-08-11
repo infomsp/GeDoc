@@ -1,0 +1,225 @@
+@model GeDoc.catHistoriaClinicaWS
+
+<!-- jQuery UI -->
+<script src="@Url.Content("~/Scripts/wPaint/lib/jquery.ui.widget.1.10.3.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/lib/jquery.ui.mouse.1.10.3.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/lib/jquery.ui.draggable.1.10.3.min.js")" type="text/javascript"></script>
+<!-- wColorPicker -->
+<link href="@Url.Content("~/Content/wPaint/lib/wColorPicker.min.css")" rel="stylesheet" type="text/css" media="screen">
+<script src="@Url.Content("~/Scripts/wPaint/lib/wColorPicker.min.js")" type="text/javascript"></script>
+
+<!-- wPaint -->
+<link href="@Url.Content("~/Content/wPaint/wPaint.min.css")" rel="stylesheet" type="text/css" media="screen">
+<script src="@Url.Content("~/Scripts/wPaint/wPaint.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/plugins/main/wPaint.menu.main.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/plugins/text/wPaint.menu.text.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/plugins/shapes/wPaint.menu.main.shapes.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/wPaint/plugins/file/wPaint.menu.main.file.min.js")" type="text/javascript"></script>
+
+<script>
+    function onActivate_wHistoriaClinicaMenu(evento) {
+        var wHC = $(this).data("tWindow");
+        wHC.center();
+    }
+
+    function onLoad_wCRUDwHCListaPerinatales(evento) {
+    }
+
+    function onActivate_wCRUDwHCListaPerinatales(evento) {
+        var wHC = $(this).data("tWindow");
+        wHC.center();
+    }
+
+    function onLoad_wCRUDwHCListaAdultos(evento) {
+    }
+
+    function onActivate_wCRUDwHCListaAdultos(evento) {
+        var wHC = $(this).data("tWindow");
+        wHC.center();
+    }
+
+    function onClickMenuHC(evento) {
+        switch (evento) {
+            case "PERINATAL":
+                AbrirWaitingCRUD();
+                debugger;
+                var _Post = GetPathApp("HistoriaClinica/getGrillaHC");
+                $.ajax({
+                    url: _Post,
+                    //data: { pacId: _pacId },
+                    type: 'POST',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        CerrarWaiting();
+                        jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                        });
+                        $('#popup_container').focus();
+                        $('#popup_ok').focus();
+                    },
+                    success: function (data) {
+                        CerrarWaitingCRUD();
+                        var _WindowHC = $("#wHCListaPerinatales").data("tWindow");
+                        _WindowHC.open();
+                        _WindowHC.content(data);
+
+                    }
+                });
+
+                break;
+            case "ADULTOS":
+                AbrirWaitingCRUD();
+                var _Post = GetPathApp("HistoriaClinica/getHistoriaClinicaAdulto");
+                $.ajax({
+                    url: _Post,
+                    data: {
+                        pacId: _pacId,
+                        pAccion: 'Consultar'
+                    },
+                    type: 'POST',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        CerrarWaiting();
+                        jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                        });
+                        $('#popup_container').focus();
+                        $('#popup_ok').focus();
+                    },
+                    success: function (data) {
+                        CerrarWaitingCRUD();
+                        var _WindowHC = $("#wHCListaAdultos").data("tWindow");
+                        _WindowHC.open().center();
+                        _WindowHC.content(data);
+
+                    }
+                });
+
+                break;
+            case "NIÑOS":
+                AbrirWaitingCRUD();
+                debugger;
+                var _Post = GetPathApp("HistoriaClinica/getGrillaHC");
+                $.ajax({
+                    url: _Post,
+                    //data: { pacId: _pacId },
+                    type: 'POST',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        CerrarWaiting();
+                        jAlert('Falló el acceso al servidor', '¡Atención!', function () {
+                        });
+                        $('#popup_container').focus();
+                        $('#popup_ok').focus();
+                    },
+                    success: function (data) {
+                        CerrarWaitingCRUD();
+                        var _WindowHC = $("#wHCListaNinos").data("tWindow");
+                        _WindowHC.open();
+                        _WindowHC.content(data);
+
+                    }
+                });
+
+                break;
+        }
+    }
+</script>
+<!--Menu de Historias Clinicas-->
+@{
+    var _Perinatal = "";
+    var _ClasePerinatal = "";
+    var _Adulto = "";
+    var _ClaseAdulto = "";
+    var _Pediatrica = "";
+    var _ClasePediatrica = "";
+
+    //if (Model.Paciente.pacEdad < 18)
+    //{
+    //    _Adulto = " disabled ";
+    //    _ClaseAdulto = " t-state-disabled ";
+    //}
+    //else
+    //{
+    //    _Pediatrica = " disabled ";
+    //    _ClasePediatrica = " t-state-disabled ";
+    //}
+
+    if (Model.Paciente.tipoSexoNombre == "Masculino")
+    {
+        _Perinatal = " disabled ";
+        _ClasePerinatal = " t-state-disabled ";
+    }
+    var _MenuHC = "<div class='BordeRedondeado' style='padding: 10px; margin: 15px 15px 15px 15px; border-color: #457177;'>"
+                    + "<button class='buttonMenu " + _ClasePerinatal + "' style='margin: 15px 15px 15px 15px;' " + _Perinatal + " onclick=\"onClickMenuHC('PERINATAL')\" >"
+                        + "PERINATAL</button>"
+                    + "<button class='buttonMenu " + _ClaseAdulto + "' style='margin: 15px 15px 15px 15px;' " + _Adulto + " onclick=\"onClickMenuHC('ADULTOS')\" >"
+                        + "FAMILIAR Y PERSONAL ADULTOS</button>"
+                    + "<button class='buttonMenu " + _ClasePediatrica + "' style='margin: 15px 15px 15px 15px;' " + _Pediatrica + " onclick=\"onClickMenuHC('NIÑOS')\" >"
+                        + "PEDIÁTRICA</button>"
+                  + "</button>";
+    
+    Html.Telerik().Window()
+        .Name("wHistoriaClinicaMenu")
+        .Title("Seleccione la Historia Clínica a revisar...")
+        .Visible(true)
+        .Content(_MenuHC)
+        .Buttons(b => b.Close())
+        .Draggable(true)
+        .Modal(true)
+        .Scrollable(false)
+        .ClientEvents(eventos => eventos.OnActivate("onActivate_wHistoriaClinicaMenu"))
+        .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wHCListaPerinatales")
+      .Title("Lista de Historias Clínicas Perinatales")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Height(360)
+      .Width(500)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDwHCListaPerinatales").OnLoad("onLoad_wCRUDwHCListaPerinatales"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wHCListaAdultos")
+      .Title("Lista de Historias Clínicas Adultos")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Height(700)
+      .Width(1024)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDwHCListaAdultos").OnLoad("onLoad_wCRUDwHCListaAdultos"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wHCListaNinos")
+      .Title("Lista de Historias Clínicas Niños")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Height(360)
+      .Width(500)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDwHCListaPerinatales").OnLoad("onLoad_wCRUDwHCListaPerinatales"))
+      .Render();
+}

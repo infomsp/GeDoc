@@ -1,0 +1,77 @@
+﻿ 
+<script type="text/javascript" >
+    //rgInit();
+
+    function rgInit() {
+        var url = GetPathApp('registroProfesional/getMenu');
+        $.get(url, null, function (data) {
+            $.each(data, function (i, item)
+            {
+                var newItem = $("<div class='buttonMenu' id='traId-" + item.traId + " '>'").append(item.traDescripcion).click(function (item)
+                {
+                    AbrirWaitingCRUD("waitingRegistroProfesional");
+                    var wRecibir = $("#wCRUDRegistroProfesionalesRecibir").data("tWindow");
+                    wRecibir.center().open();
+                    var _Post = GetPathApp("registroProfesional/getProfesionalDetalle");
+                    $.ajax({
+                        type: "POST",
+                        url: _Post,
+                        data: { p_traId: $(this).context.id },
+                        before: function ()
+                        {
+                            AbrirWaitingCRUD("waitingRegistroProfesional");
+                        },
+                        error: function() {
+                            CerrarWaitingCRUD("waitingRegistroProfesional");
+                            jAlert("Error al cargar la información", "Error...", function() {
+                                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                            });
+                        },
+                        success: function (respuesta) {                            
+                          
+                            if (respuesta != null) {
+                                $("#divCRUDRegistroProfesionalesRecibir_Content").html(respuesta);
+                            }
+                            CerrarWaitingCRUD("waitingRegistroProfesional");
+                        }
+                    });
+
+                });
+                $(".mainMenu").append(newItem);
+            });
+        });
+    }
+  
+
+    function onLoad_wCRUDRegistroProfesionalesRecibir() {
+        var wRecibir = $(this).data("tWindow");
+        var wContenido = wRecibir.content() + "<div id = 'divCRUDRegistroProfesionalesRecibir_Content' ></div>";
+        wRecibir.content(wContenido);
+    }
+
+</script>
+
+<div class="mainMenu">    
+         <div class="buttonMenu" id="traId-1">Inscripción de Titulo</div>
+         <div class="buttonMenu" id="traId-2">Retiro de Matricula</div>
+     </div>
+
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDRegistroProfesionalesRecibir")
+      .Title("Registro de Profesional")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel","waitingRegistroProfesional");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Width(330)
+      .Height(215)           
+      .ClientEvents(eventos => eventos.OnLoad("onLoad_wCRUDRegistroProfesionalesRecibir"))
+      .Render();
+}

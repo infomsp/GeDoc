@@ -1,0 +1,127 @@
+﻿@model GeDoc.catHCAdultoWS
+
+@{
+    ViewBag.Title = "ConsultasHistorialFamiliarYPersonal";
+}
+<script>
+    var UltimoRiesgo = "-";
+    function onEjecutaAccionHCListaCuidadosPreventivos(pAccion, aduCPId, hcaduid) {
+        if (pAccion === "Agregar") {
+            AbrirWaitingCRUD();
+            var _Post = GetPathApp("HistoriaClinica/getHistoriaClinicaCuidadosPreventivos");
+            $.ajax({
+                type: "POST",
+                url: _Post,
+                data: { id: aduCPId, phcaduid: hcaduid },
+                error: function () {
+                    CerrarWaitingCRUD();
+                    jAlert("Error al guardar datos.", "Error...", function () {
+                    });
+                },
+                success: function (respuesta) {
+                    CerrarWaitingCRUD();
+                    var _WindowHC = $("#wHCCRUDCuidadosPreventivos").data("tWindow");
+                    _WindowHC.title("Cuidados Preventivos");
+                    _WindowHC.center().open();
+                    _WindowHC.content(respuesta);
+                }
+            });
+            return;
+        }
+    }
+
+    function onCancelarCuidadosPreventivos() {
+        var windowElement = $("#wHCCRUDCuidadosPreventivos").data("tWindow");
+        windowElement.close();
+    }
+
+    function onActivate_wHCCRUDCuidadosPreventivos() {
+        $("#aduPraPrevResultado").focus().select();
+    }
+
+    function onDataBound_gridHCListaCuidadosPreventivos(e) {
+        debugger;
+        var grid = $(e.target).data("tGrid");
+        $(grid.data).each(function (i) {
+            if (this.RiesgoCardioActual !== UltimoRiesgo) {
+                UltimoRiesgo = this.RiesgoCardioActual;
+                onMensajeDeRiegoCardiovascular(UltimoRiesgo);
+            }
+        });
+    }
+</script>
+@(Html.Telerik().Grid<GeDoc.catHCAduPraPreventivaResulWS>()
+      .Name("gridHCListaCuidadosPreventivos")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.hcaduid);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+              <div style="margin-top: 5px; margin-left: 10px; margin-bottom: 5px;">
+                  <label class="t-button">
+                      <img class="t-icon t-add" onclick="onEjecutaAccionHCListaCuidadosPreventivos('Agregar', -1, @Model.hcaduid);" title="Agregar Historia Clínica Adultos"/>
+                  </label>
+              </div>
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getHCListaCuidadosPreventivos", "HistoriaClinica", new { hcaduId = Model.hcaduid });
+      })
+      .Columns(columns =>
+      {
+          //columns.Command(commands =>
+          //{
+          //    commands.Custom("cmdConsultar")
+          //        .Ajax(true)
+          //        .ButtonType(GridButtonType.Image)
+          //        .SendDataKeys(false)
+          //        .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Acuse de Recibo de licencia médica" })
+          //        //.HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("HistoriaClinica", "Examinar") })
+          //        .SendState(false)
+          //        .DataRouteValues(route =>
+          //        {
+          //            route.Add(o => o.hcaduid).RouteKey("hcaduid");
+          //        });
+          //}).Width("80px").Title("Acciones");
+          columns.Bound(c => c.hcaduid).Width("100px").Title("Id").Visible(false);
+          columns.Bound(c => c.aduPraPrevDescri).Width("200px").Title("Práctica").Visible(true);
+          columns.Bound(c => c.aduPraPrevFecha).Width("90px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+          columns.Bound(c => c.aduPraPrevResultado).Width("160px").Title("Resultado").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+          .ClientTemplate("<div title='<#= aduPraPrevResultado #>' style='width: 100%; text-align: left;'><img src='" + Url.Content("~/Content") + "/Estados/<#= ColorRiesgo #>' height='10px' width='10px' style='margin-right: 5px; display: <#= !MostrarImagen ? \"none\" : \"inline-block\" #>;' /><#= aduPraPrevResultado #></div>");
+          columns.Bound(c => c.Usuario).Width("200px").Title("Usuario").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+            .ClientTemplate("<label title='<#= Usuario #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Usuario #> </label>");
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnDataBound("onDataBound_gridHCListaCuidadosPreventivos"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(390))
+      .Sortable()
+      )
+@{
+    Html.Telerik().Window()
+      .Name("wHCCRUDCuidadosPreventivos")
+      .Title("Cuidados Preventivos")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUD");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(true)
+      .Modal(true)
+      .Height(250)
+      .Width(800)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wHCCRUDCuidadosPreventivos"))
+      .Render();
+}

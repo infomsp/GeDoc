@@ -1,0 +1,78 @@
+﻿@using GeDoc
+@model GeDoc.ParametrosMensaje
+
+@{
+    var InfoMensaje = new ParametrosMensaje();
+    var _Clase = "alert-danger";
+    var _Icono = "fa-warning";
+    var _Imagen = Url.Content("~/Content/General/Alertas/Atencion.png");
+    if (Model != null)
+    {
+        InfoMensaje = Model;
+    }
+    InfoMensaje.Visible = InfoMensaje.Visible == null ? true : InfoMensaje.Visible;
+    InfoMensaje.MostrarEmergente = InfoMensaje.MostrarEmergente == null ? false : InfoMensaje.MostrarEmergente;
+    InfoMensaje.Nombre = InfoMensaje.Nombre == "" ? "ES-MensajeDeError" : InfoMensaje.Nombre;
+
+    switch (InfoMensaje.TipoMensaje)
+    {
+        case "info":
+            _Clase = "alert-info";
+            _Icono = "fa-info-circle";
+            _Imagen = Url.Content("~/Content/General/Alertas/Ok.png");
+            break;
+        case "warning":
+            _Clase = "alert-warning";
+            _Icono = "fa-warning";
+            _Imagen = Url.Content("~/Content/General/Alertas/Atencion.png");
+            break;
+        case "success":
+            _Clase = "alert-success";
+            _Icono = "fa-check-square";
+            _Imagen = Url.Content("~/Content/General/Alertas/Ok.png");
+            break;
+        case "error":
+            _Clase = "alert-danger";
+            _Icono = "fa-times-circle";
+            _Imagen = Url.Content("~/Content/General/Alertas/Error.png");
+            break;
+        default:
+            _Clase = "alert-info";
+            _Icono = "fa-info-circle";
+            _Imagen = Url.Content("~/Content/General/Alertas/Ok.png");
+            break;
+    }
+
+    if ((InfoMensaje.Titulo ?? "") == "")
+    {
+        InfoMensaje.Titulo = "¡Atención!";
+    }
+}
+
+<div id="@InfoMensaje.Nombre" class="BordeRedondeado @_Clase" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; height: 38px;">
+    <i style="position: absolute; left: 5%; margin-top: 5px;" class="fa fa-2x @_Icono"></i>
+    <div style="font-weight: bold; margin-bottom: 10px;">@InfoMensaje.Titulo</div>
+    <span id="span@(InfoMensaje.Nombre)">@InfoMensaje.Mensaje</span>
+</div>
+
+<script>
+    function onMostrarMensaje(Mensaje) {
+        Mensaje = Mensaje == null ? "" : Mensaje;
+        $("#span@(InfoMensaje.Nombre)").text(Mensaje);
+        $("#@InfoMensaje.Nombre").show("slide");
+    }
+    function onOcultarMensaje() {
+        $("#@InfoMensaje.Nombre").hide("slide");
+    }
+
+    debugger;
+    if ("@InfoMensaje.MostrarEmergente" === "True") {
+        MensajeEmergente("@InfoMensaje.Titulo", "@InfoMensaje.Mensaje", "@_Imagen", true);
+    }
+
+    if ("@InfoMensaje.Visible" === "True") {
+        onMostrarMensaje("@InfoMensaje.Mensaje");
+    } else {
+        onOcultarMensaje();
+    }
+</script>

@@ -1,0 +1,1063 @@
+@model GeDoc.catPacientes
+
+@{
+    ViewData["StyleComboBox"] = "width: 200px;";
+    ViewData["StyleAutoComplete"] = "width: 60%;";
+    ViewData["FiltroContains"] = true;
+    ViewBag.eventoOnChange = "onChange";
+}
+
+<style>
+    .SeparaCampos {
+        margin-bottom: 10px;
+    }
+    .si-wrapper input {
+        font-size: 2em;
+        padding: .1em;
+    }
+</style>
+
+<link href="@Url.Content("~/Content/speech/speech-input.css")" rel="stylesheet" type="text/css">
+
+<script type="text/javascript">
+    function onChangepacFechaNacimiento() {
+        $("#pacEdad").val(CalcularEdad($("#pacFechaNacimiento").val()));
+    };
+
+    function onAceptarHCPacuienteCRUD() {
+        if (_DatosRegistroHCTurno == null){
+            if (onValidarDatos()) {
+                return;
+            }
+        } else {
+            debugger;
+            if ($("#divHCMensajeDiagnostico").find(".fa-check").length == 0) {
+                MensajeEmergente("¡Error!", "Debe cargar al menos un diagnóstico", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                $("#spanMensajeError").text("Debe cargar al menos un diagnóstico");
+                $("#divHCMensajeError").attr("class", "BordeRedondeado alert-danger");
+                $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+                $("#divHCMensajeError").css("display", "inline-table");
+                return;
+            }
+            if ($("#divHCMensajePracticas").find(".fa-check").length == 0) {
+                MensajeEmergente("¡Error!", "Debe cargar al menos una práctica", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                $("#spanMensajeError").text("Debe cargar al menos una práctica");
+                $("#divHCMensajeError").attr("class", "BordeRedondeado alert-danger");
+                $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+                $("#divHCMensajeError").css("display", "inline-table");
+                return;
+            }
+        }
+
+        debugger;
+        var $form = $('#frmhcPacienteCRUD');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            error: function() {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function(respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+
+                    MensajeEmergente("¡Error!", respuesta.Mensaje, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                    $(respuesta.Foco).addClass("ES-ErrorValidacion");
+                    $("#spanMensajeError").text(respuesta.Mensaje);
+                    $("#divHCMensajeError").attr("class", "BordeRedondeado alert-danger");
+                    $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+                    //$("#divHCMensajeError").show();
+                    $("#divHCMensajeError").css("display", "inline-table");
+                    $(respuesta.Foco).attr("title", "Envie el error al área de sistema de la Dirección de Control y Reconocimientos Médicos.");
+                    $(respuesta.Foco).focus().select();
+                } else {
+                    //onCancelarHCPacuienteCRUD();
+                    MensajeEmergente("Información...", "Los datos del Paciente se actualizaron correctamente.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                    //Se asigna el pacId\\
+                    $("#pacId").val(respuesta.IdPaciente);
+                    $("#divHCDisabled").css("display", "none");
+                    $("#pacApellido").focus().select();
+                    var wHistoriaClinica = $("#wHistoriaClinica").data("tWindow");
+                    if (wHistoriaClinica != null) {
+                        wHistoriaClinica.close();
+                    }
+                }
+            }
+        });
+    }
+
+    function onCancelarHCPacuienteCRUD() {
+        $("#divPacienteCRUD").hide();
+        $("#divHCMensajeError").hide();
+        $("#divPacienteCRUD").html("");
+        $("#btnBuscarPaciente").removeClass("t-state-disabled");
+        $("#divHCMensaje").hide();
+        $("#txtHCNumeroDocumento").val("");
+        $("#txtHCNumeroDocumento").removeAttr("disabled");
+        $("#tipoIdTipoDocumento_Lista").prop("disabled", false);
+        $("#tipoIdTipoDocumento_Lista").removeClass("t-state-disabled");
+        $("#divHCDisabled").css("display", "none");
+        onMensajePaciente(false);
+        $("#txtHCNumeroDocumento").focus().select();
+    }
+
+</script>
+
+@using (Html.BeginForm("setPaciente", "HistoriaClinica", FormMethod.Post, new { id = "frmhcPacienteCRUD" }))
+{
+    <div id="divGridPrincipalhcPacienteCRUD" tabindex="1" style="overflow: hidden; outline: none;">
+        @{
+            Html.RenderPartial("hcPacienteMenu");
+        }
+    <div id="divHCDatosTurno">
+        <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+            Información complementaria del Turno
+        </div>
+        <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; /*overflow: scroll; overflow-x: hidden;*/">
+            <table style="border: none;">
+                <tr style="border: none;">
+                    <td style="border: none; padding: 0px; padding-left: 5px;">
+                        <label style="vertical-align: baseline;">Visita:</label>
+                    </td>
+                    <td style="border: none;">
+                        @Html.Partial("EditorTemplates/_ListaDesplegable", "visitaId_Lista")
+                    </td>
+                    <td style="border: none; padding: 0px; padding-left: 40px;">
+                        <label style="vertical-align: baseline;">Control de Embarazo:</label>
+                    </td>
+                    <td style="border: none; padding-right: 40px;">
+                        @Html.CheckBoxFor(model => model.turControlEmbarazo, new {id = "turControlEmbarazo", MensajeDeError = "Control de Embarazo", @class = "es-FondoFocusInput", style = "margin-left: 5px;"})
+                    </td>
+                    <td style="border: none; padding: 0px; padding-left: 40px; border-left: 1px solid #9ba0a0;">
+                        <div id="divHCMensajeDiagnostico" class="@(Model.turTieneDiagnosticos ? "alert-success" : "alert-danger")" style="background-color: transparent;">
+                            <i id="iHCMensajeDiagnostico" style="position: relative;" class="fa fa-2x @(Model.turTieneDiagnosticos ? "fa-check" : "fa-times")"></i>
+                            <span style="position: relative; top: -4px; margin-right: 10px;">Diagnósticos</span>
+                        </div>
+                    </td>
+                    <td style="border: none; padding: 0px; padding-left: 40px; border-right: 1px solid #9ba0a0;">
+                        <div id="divHCMensajePracticas" class="@(Model.turTienePracticas ? "alert-success" : "alert-danger")" style="background-color: transparent;">
+                            <i id="iHCMensajePracticas" style="position: relative;" class="fa fa-2x @(Model.turTienePracticas ? "fa-check" : "fa-times")"></i>
+                            <span style="position: relative; top: -4px; margin-right: 10px;" >Prácticas</span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+        Información Personal
+    </div>
+    <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; /*overflow: scroll; overflow-x: hidden;*/">
+    <div id="divInformacionGeneralHCPaciente" style="padding: 10px;">
+    <table style="width: 100%; border: none;">
+    <tr style="border: none;">
+        <td style="border: none;" colspan="2">
+            <div>
+                <table style="border: none; width: 100%;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px; text-align: left;">
+                            <label style="vertical-align: super;">Apellido:</label>
+                            @Html.TextBoxFor(model => Model.pacApellido, new {id = "pacApellido", MensajeDeError = "Apellido", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;"})
+                        </td>
+                        <td style="border: none; padding: 0px; text-align: right;">
+                            <label style="vertical-align: super;">Nombre:</label>
+                            @Html.TextBoxFor(model => Model.pacNombre, new {id = "pacNombre", MensajeDeError = "Nombre", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;"})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none;">
+            <div class="SeparaCampos">
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0;">
+                            <label style="vertical-align: baseline;">CUIL:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.TextBoxFor(model => Model.pacCUIL, new {id = "pacCUIL", @class = "desactivar", style = "text-align: center; width: 110px;"})
+                        </td>
+                        <td style="border: none; padding: 0px; padding-left: 185px;">
+                            <label style="vertical-align: baseline;">Nacionalidad:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "paisId_Lista")
+                        </td>
+                        <td style="border: none; padding: 0px; padding-left: 40px;">
+                            <label style="vertical-align: baseline;">Género:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdSexo_Lista")
+                        </td>
+                    </tr>
+                </table>
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px; padding-left: 0px;">
+                            <label style="vertical-align: baseline;">Fecha de Nacimiento:</label>
+                        </td>
+                        <td style="border: none; padding: 0px;">
+                            @Html.EditorFor(model => Model.pacFechaNacimiento)
+                            @*<span id="pacFechaNacimiento_calendar" style="cursor: pointer;"><i class="fa fa-calendar"></i></span>*@
+                        </td>
+                        <td style="border: none; padding: 0px; padding-left: 20px;">
+                            <label style="vertical-align: baseline;">Edad:</label>
+                        </td>
+                        <td style="border: none; padding: 0px;">
+                            @Html.TextBoxFor(model => Model.pacEdad, new {@class = "desactivar", id = "pacEdad", style = "text-align: center; width: 50px;"})
+                        </td>
+                        <td style="border: none; padding: 0px; padding-left: 20px;">
+                            <label style="vertical-align: baseline;">Estado Civil:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdEstadoCivil_Lista")
+                        </td>
+                    </tr>
+                </table>
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">Donante de Órganos:</td>
+                        <td style="border: none;">
+                            <div class="BordeRedondeado" style="background-color: white; border-color: grey; padding: 3px; width: 100px; text-align: center;">
+                                <label>SI @Html.RadioButtonFor(model => model.pacDonaOrganos, true, new {@class = "desactivar", id = "pacDonaOrganos", style = "margin-left: 5px;"})</label>
+                                <label>NO @Html.RadioButtonFor(model => model.pacDonaOrganos, false, new {@class = "desactivar", id = "pacDonaOrganos", style = "margin-left: 5px;"})</label>
+                            </div>
+                        </td>
+                        <td style="border: none; padding-left: 68px;">Grupo Sanguíneo:</td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdGrupoSanguineo_Lista")
+                        </td>
+                        <td style="border: none; padding-left: 16px;">Ocupación:</td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdOcupacion_Lista")
+                        </td>
+                    </tr>
+                </table>
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">Obra Social:</td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "osId_Lista#NO#630px")
+                        </td>
+                    </tr>
+                </table>
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">Estudios:</td>
+                        <td style="border: none;">
+                            @{
+                                Model.pacEstudio = Model.pacEstudio == null || Model.pacEstudio == "" ? "N" : Model.pacEstudio;
+                            }
+                            <div class="BordeRedondeado" style="background-color: white; border-color: grey; width: 480px; text-align: center;">
+                                <label>@Html.RadioButtonFor(model => model.pacEstudio, "N", new {@class = "SacaSombra", id = "pacEstudio", style = "margin: 7px;"})</label> Ninguno
+                                <label>@Html.RadioButtonFor(model => model.pacEstudio, "P", new {@class = "SacaSombra", id = "pacEstudio", style = "margin: 7px;"})</label> Primaria
+                                <label>@Html.RadioButtonFor(model => model.pacEstudio, "S", new {@class = "SacaSombra", id = "pacEstudio", style = "margin: 7px;"})</label> Secundaria
+                                <label>@Html.RadioButtonFor(model => model.pacEstudio, "U", new {@class = "SacaSombra", id = "pacEstudio", style = "margin: 7px;"})</label> Terciaria / Universitaria
+                            </div>
+                        </td>
+                        <td style="border: none; padding: 0px; padding-left: 70px;">
+                            <label style="vertical-align: baseline;">Pueblo Originario:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "etnId_Lista")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="SeparaCampos">
+                <label style="vertical-align: baseline;">Teléfono Fijo:</label>
+                @Html.TextBoxFor(model => Model.pacTelefonoCasa, new {id = "pacTelefonoCasa", MensajeDeError = "Número de Telefono", placeholder = "Número de Telefono", @class = "es-FondoFocusInput ValidarInformacion", maxlength = "15", style = "text-align: left; width: 130px;"})
+                <span><i class="fa fa-phone" style="margin-left: -18px;"></i></span>
+                <label style="vertical-align: baseline; margin-left: 20px;">Teléfono Celular:</label>
+                @Html.TextBoxFor(model => Model.pacTelefonoCelular, new {@class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Número de Celular", placeholder = "Número de Celular", id = "pacTelefonoCelular", maxlength = "18", style = "text-align: left; width: 130px;"})
+                <span><i class="fa fa-mobile-phone" style="font-size: 18px; margin-left: -18px;"></i></span>
+                <label style="vertical-align: baseline; margin-left: 20px;">Correo Electrónico:</label>
+                @Html.TextBoxFor(model => Model.pacMail, new {id = "pacMail", MensajeDeError = "Correo Electrónico", placeholder = "correo@electronico.com.ar", @class = "es-FondoFocusInput", maxlength = "50", style = "text-align: left; width: 356px;"})
+                <span><i class="fa fa-envelope" style="margin-left: -24px;"></i></span>
+            </div>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none; width: 98.5%;" colspan="2">
+            <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                Domicilio
+            </div>
+            <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.5%;">
+                <div class="SeparaCampos">
+                    <table style="border: none; width: 100%;">
+                        <tr style="border: none;">
+                            <td style="border: none; padding: 0px; width: 50px;">
+                                <label style="vertical-align: baseline;">Calle:</label>
+                            </td>
+                            <td style="border: none; padding: 0px; width: 45%;">
+                                @*@Html.EditorFor(model => Model.pacCalle, new {id = "pacCalle", style = "text-align: left; width: 89%;"})*@
+                                @{
+                                    Html.Telerik().AutoComplete()
+                                        .Name("pacCalle")
+                                        .AutoFill(true)
+                                        .Filterable(filtering =>
+                                        {
+                                            filtering.FilterMode(AutoCompleteFilterMode.Contains);
+                                        })
+                                        .HighlightFirstMatch(true)
+                                        .HtmlAttributes(new {style = "text-align: left; width: 89%;"})
+                                        .BindTo((IEnumerable<string>) ViewData["pacCalle_Data"])
+                                        .Render();
+                                }
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Número:</label>
+                                @Html.TextBoxFor(model => Model.pacCalleNumero, new {id = "pacCalleNumero", MensajeDeError = "Número de Calle", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "text-align: left; width: 40px;", maxlength = "5"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Piso:</label>
+                                @Html.TextBoxFor(model => Model.pacPiso, new {id = "pacPiso", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 40px;", maxlength = "3"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Dpto:</label>
+                                @Html.TextBoxFor(model => Model.pacDepto, new {id = "pacDepto", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 40px;", maxlength = "3"})
+                            </td>
+                            @*<td style="border: none;">
+                                <label style="vertical-align: baseline;">Barrio:</label>
+                                @Html.TextBoxFor(model => Model.pacBarrio, new {id = "pacBarrio", MensajeDeError = "Barrio", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "text-align: left; width: 250px;", maxlength = "50"})
+                            </td>*@
+                        </tr>
+                    </table>
+                </div>
+                <div class="SeparaCampos">
+                    <table style="border: none; width: 100%;">
+                        <tr style="border: none;">
+                            <td style="border: none; padding: 0px; width: 50px;">
+                                <label style="vertical-align: baseline;">Ciudad:</label>
+                            </td>
+                            <td style="border: none;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "depId_Lista")
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Localidad:</label>
+                            </td>
+                            <td style="border: none; text-align: left;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "locId_Lista")
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Código Postal:</label>
+                                @Html.TextBoxFor(model => Model.pacCodigoPostal, new {id = "pacCodigoPostal", MensajeDeError = "Código Postal", @class = "es-FondoFocusInput ValidarInformacion", style = "text-align: left; width: 50px;", maxlength = "5"})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SeparaCampos">
+                    <table style="border: none; width: 100%;">
+                        <tr style="border: none;">
+                            <td style="border: none; padding: 0px; width: 50px;">
+                                <label style="vertical-align: baseline;">Barrio:</label>
+                            </td>
+                            <td style="border: none;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "barId_Lista")
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Manzana:</label>
+                            </td>
+                            <td style="border: none; text-align: left;">
+                                @Html.TextBoxFor(model => Model.pacManzana, new {id = "pacManzana", MensajeDeError = "Manzana", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 50px;", maxlength = "5"})
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Casa:</label>
+                                @Html.TextBoxFor(model => Model.pacCasa, new {id = "pacCasa", MensajeDeError = "Casa", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 50px;", maxlength = "5"})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SeparaCampos">
+                    <label style="vertical-align: baseline;">Referencias del Domicilio:</label>
+                    @Html.TextAreaFor(model => Model.pacDomicilioReferencias, new {id = "pacDomicilioReferencias", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 99%;", maxlength = "500", title = "Ingrese una referencia de como llegar al domicilio o algo que ayude a identificar la ubicación de la casa.", placeholder = "Ingrese una referencia de como llegar al domicilio o algo que ayude a identificar la ubicación de la casa."})
+                </div>
+            </div>
+        </td>
+    </tr>
+    </table>
+    </div>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" style="width: 140px;" class="t-button" onclick="onAceptarHCPacuienteCRUD();" title="Guardar cambios realizados en datos del Paciente">
+            <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+            <label style="cursor: pointer; vertical-align: super;">Guardar cambios</label>
+        </div>
+        <div id="btnCancelar" style="width: 140px;" class="t-button" onclick="onCancelarHCPacuienteCRUD();" title="Cancelar cambios realizados">
+            <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-close"></i></span>
+            <label style="cursor: pointer; vertical-align: super;">Cancelar</label>
+        </div>
+    </div>
+    @Html.HiddenFor(model => Model.pacId, new {id = "pacId"})
+    @Html.HiddenFor(model => Model.pacNumeroDocumento, new {id = "pacNumeroDocumento"})
+    @Html.HiddenFor(model => Model.tipoIdSexo, new {id = "tipoIdSexo"})
+    @Html.HiddenFor(model => Model.tipoIdEstadoCivil, new {id = "tipoIdEstadoCivil"})
+    @Html.HiddenFor(model => Model.locId, new {id = "locId"})
+    @Html.HiddenFor(model => Model.barId, new {id = "barId"})
+    @Html.HiddenFor(model => Model.depId, new {id = "depId"})
+    @Html.HiddenFor(model => Model.osId, new {id = "osId"})
+    @Html.HiddenFor(model => Model.paisId, new {id = "paisId"})
+    @Html.HiddenFor(model => Model.tipoIdGrupoSanguineo, new {id = "tipoIdGrupoSanguineo"})
+    @Html.HiddenFor(model => Model.tipoIdOcupacion, new {id = "tipoIdOcupacion"})
+    @Html.HiddenFor(model => Model.tipoIdTipoDocumento, new {id = "tipoIdTipoDocumento"})
+    @Html.HiddenFor(model => Model.etnId, new {id = "etnId"})
+    @Html.HiddenFor(model => Model.pacRiesgoCardiovascular, new {id = "pacRiesgoCardiovascular"})
+    @Html.HiddenFor(model => Model.visitaId, new {id = "visitaId"})
+    @Html.HiddenFor(model => Model.IdTurno, new {id = "IdTurno"})
+    @*@Html.HiddenFor(model => Model.pacFoto, new {id = "pacFoto"})*@
+    </div>
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalhcPacienteCRUD").ready(function() {
+        //Se aplica el scroll
+        var wHistoriaClinica = $("#wHistoriaClinica").data("tWindow");
+        var _Altura = 200;
+        if (wHistoriaClinica != null) {
+            _Altura = $(window).height() - 420;
+        } else {
+            _Altura = $(window).height() - (AlturaInicial + 220);
+        }
+        $('#divInformacionGeneralHCPaciente').slimScroll({
+            height: _Altura + "px",
+            color: '#265b77',
+            size: '10px',
+            railVisible: true,
+            alwaysVisible: true
+        });
+        //Aplicamos algunos estilos
+        $(".desactivar").attr("readonly", "readonly");
+        $(".t-dropdown-wrap.t-state-default").css("text-align", "left");
+
+        @*InicialicarDatePickerCastellano();
+        $('#pacFechaNacimiento').val('@(Model.pacId)');*@
+        $('#pacFechaNacimiento').addClass("es-FondoFocusInput ValidarInformacion");
+        $('#pacFechaNacimiento').attr("MensajeDeError", "Fecha de Nacimiento");
+
+        @{
+            var FechaNacimiento = "";
+            if (Model.pacFechaNacimiento != null)
+            {
+                FechaNacimiento = Model.pacFechaNacimiento.Value.ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                FechaNacimiento = DateTime.Now.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#pacFechaNacimiento').val('@(FechaNacimiento)');
+
+        //var nowTemp = new Date();
+        //var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        //$("#pacFechaNacimiento").datepicker({
+        //        format: "dd/mm/yyyy",
+        //        language: "es",
+        //        onRender: function(date) {
+        //            $("#pacFechaNacimiento").datepicker("setValue", value);
+        //            return date.valueOf() < now.valueOf() ? "disabled" : "";
+        //        }
+        //    })
+        //    .on("changeDate", function(e) {
+        //        $("#pacFechaNacimiento").datepicker("hide");
+        //        $("#pacEdad").val(CalcularEdad($("#pacFechaNacimiento").val()));
+        //    });
+        $("#pacEdad").val(CalcularEdad($("#pacFechaNacimiento").val()));
+
+        //$("#pacFechaNacimiento_calendar").click(function(e) {
+        //    $("#pacFechaNacimiento").datepicker("show");
+        //});
+        //$('#pacFechaNacimiento').datepicker("show");
+        //$('#pacFechaNacimiento').datepicker("hide");
+        $(".t-icon.t-icon-calendar").attr("title", "Abrir calendario");
+
+        $("#tipoIdEstadoCivil_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#tipoIdEstadoCivil").val($("#tipoIdEstadoCivil_Lista").val());
+        });
+        var $ListaEC = $("#tipoIdEstadoCivil_Lista");
+        if ($('#tipoIdEstadoCivil').val() != "" && $('#tipoIdEstadoCivil').val() > 0) {
+            $ListaEC.val($("#tipoIdEstadoCivil").val()).trigger("change");
+        } else {
+            $("#tipoIdEstadoCivil").val($("#tipoIdEstadoCivil_Lista").val());
+        }
+
+        $("#tipoIdSexo_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            var _Sexo = $("#tipoIdSexo_Lista").val() === "10" ? "Masculino" : "Femenino";
+            $("#tipoIdSexo").val($("#tipoIdSexo_Lista").val());
+            $("#pacCUIL").val(CalcularCUIL($("#pacNumeroDocumento").val(), _Sexo));
+            if (_Sexo === "Masculino") {
+                $("#turControlEmbarazo").attr("disabled", "disabled");
+            } else {
+                $("#turControlEmbarazo").removeAttr("disabled");
+            }
+        });
+        debugger;
+        var $ListaSexo = $("#tipoIdSexo_Lista");
+        if ($("#tipoIdSexo").val() === "") {
+            var _Sexo = $("#tipoIdSexo_Lista").val() === "10" ? "Masculino" : "Femenino";
+            $("#tipoIdSexo").val($("#tipoIdSexo_Lista").val());
+            $("#pacCUIL").val(CalcularCUIL($("#pacNumeroDocumento").val(), _Sexo));
+        } else {
+            $ListaSexo.val($("#tipoIdSexo").val()).trigger("change");
+        }
+
+        $("#paisId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#paisId").val($("#paisId_Lista").val());
+        });
+        var $ListaPais = $("#paisId_Lista");
+        if ($('#paisId').val() != "" && $('#paisId').val() > 0) {
+            $ListaPais.val($("#paisId").val()).trigger("change");
+        } else {
+            $("#paisId").val($("#paisId_Lista").val());
+        }
+
+        $("#osId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#osId").val($("#osId_Lista").val());
+        });
+        var $ListaOS = $("#osId_Lista");
+        if ($('#osId').val() != "" && $('#osId').val() > 0) {
+            $ListaOS.val($("#osId").val()).trigger("change");
+        } else {
+            $("#osId").val($("#osId_Lista").val());
+        }
+
+        $("#tipoIdGrupoSanguineo_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#tipoIdGrupoSanguineo").val($("#tipoIdGrupoSanguineo_Lista").val());
+        });
+        var $ListaGS = $("#tipoIdGrupoSanguineo_Lista");
+        if ($('#tipoIdGrupoSanguineo').val() != "" && $('#tipoIdGrupoSanguineo').val() > 0) {
+            $ListaGS.val($("#tipoIdGrupoSanguineo").val()).trigger("change");
+        } else {
+            $("#tipoIdGrupoSanguineo").val($("#tipoIdGrupoSanguineo_Lista").val());
+        }
+
+        $("#tipoIdOcupacion_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#tipoIdOcupacion").val($("#tipoIdOcupacion_Lista").val());
+        });
+        var $ListaOcupacion = $("#tipoIdOcupacion_Lista");
+        if ($('#tipoIdOcupacion').val() != "" && $('#tipoIdOcupacion').val() > 0) {
+            $ListaOcupacion.val($("#tipoIdOcupacion").val()).trigger("change");
+        } else {
+            $("#tipoIdOcupacion").val($("#tipoIdOcupacion_Lista").val());
+        }
+
+        $("#etnId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#etnId").val($("#etnId_Lista").val());
+        });
+        var $ListaEtnia = $("#etnId_Lista");
+        if ($('#etnId').val() != "" && $('#etnId').val() > 0) {
+            $ListaEtnia.val($("#etnId").val()).trigger("change");
+        } else {
+            $("#etnId").val($("#etnId_Lista").val());
+        }
+
+        $("#depId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#depId").val($("#depId_Lista").val());
+            RecargarLocalidades();
+            RecargarBarrios();
+        });
+        var $ListaDepartamentos = $("#depId_Lista");
+        if ($('#depId').val() != "" && $('#depId').val() > 0) {
+            $ListaDepartamentos.val($("#depId").val()).trigger("change");
+        } else {
+            $("#depId").val($("#depId_Lista").val());
+        }
+
+        $("#visitaId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function (e) {
+            $("#visitaId").val($("#visitaId_Lista").val());
+        });
+        var $ListaVisita = $("#visitaId_Lista");
+        if ($('#visitaId').val() != "" && $('#visitaId').val() > 0) {
+            $ListaVisita.val($("#visitaId").val()).trigger("change");
+        } else {
+            $("#visitaId").val($("#visitaId_Lista").val());
+        }
+
+        $('#pacTelefonoCasa').mask("(0999) 999-9999");
+        $('#pacTelefonoCelular').mask("(0999) 159-999999");
+        $('#pacCodigoPostal').mask("5499");
+        $("#pacPeso").keypress(function(event) {
+            if (event.keyCode < 45 || event.keyCode > 57) {
+                event.returnValue = false;
+                return false;
+            }
+        });
+        $('#pacTalla').mask('9,99');
+        $("#pacTalla").focusout(function(event) {
+            $(this).val($(this).val().replace("_", "0"));
+        });
+
+        $("#pacCalle").addClass("es-FondoFocusInput SiempreMayuscula ValidarInformacion");
+        $("#pacCalle").attr("MensajeDeError", "Calle");
+        $("#pacCalle").css("width", "98%");
+        $("#pacCalle").val("@(Model.pacCalle)");
+        $("#pacDomicilioReferencias").val("@(Model.pacDomicilioReferencias)");
+
+        $('#pacApellido').focus().select();
+        onMensajePaciente(true);
+
+        //Paso con enter de campo a campo
+        $(":input").bind("keypress", function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeAttr("title");
+            $(this).removeClass("ES-ErrorValidacion");
+            $("#divHCMensajeError").hide("slide");
+        });
+    });
+
+    function onMensajePaciente(Mostrar) {
+        var Mensaje = "";
+        if ($('#pacApellido').val() === "") {
+            $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-info");
+            $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-plus");
+            Mensaje = "Paciente Nuevo";
+            $("#divHCDisabled").css("display", "inline-table");
+        } else {
+            $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-success");
+            $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-check");
+            Mensaje = "Paciente Encontrado";
+            $("#divHCDisabled").css("display", "none");
+        }
+
+        var Imagen = "@Url.Content("~/Content/General/HC/Paciente.png")";
+        $("#divHCMensajeAccion").css("display", Mostrar ? "inline-block" : "none");
+        if (Mostrar) {
+            MensajeEmergente("¡Información!", Mensaje, "@Url.Content("~/Content/General/HC/Paciente.png")", true);
+            //Riesgo CargioVascular\\
+            if ($('#pacRiesgoCardiovascular').val() !== "") {
+                onMensajeDeRiegoCardiovascular($('#pacRiesgoCardiovascular').val());
+                return;
+            }
+        }
+        $("#spanHCMensajeAccion").text(Mensaje);
+        $("#imgHCMensajeAccion").attr("src", Imagen);
+    }
+
+    function onMensajeDeRiegoCardiovascular(Riesgo) {
+        var Imagen = "@Url.Content("~/Content/General/HC/Paciente.png")";
+        var Mensaje = "";
+        if (Riesgo === "ALTO") {
+            MensajeEmergente("¡Atención!", "Paciente con Riesgo Cardiovascular ¡ALTO!", "@Url.Content("~/Content/General/HC/RiesgoAlto.png")", true);
+            $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-danger");
+            $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-heartbeat");
+            Mensaje = "Paciente con RC ¡ALTO!";
+            Imagen = "@Url.Content("~/Content/General/HC/RiesgoAlto.png")";
+        } else if (Riesgo === "MEDIO") {
+            MensajeEmergente("¡Atención!", "Paciente con Riesgo Cardiovascular moderado", "@Url.Content("~/Content/General/HC/RiesgoModerado.png")", true);
+            $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-warning");
+            $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-exclamation");
+            Mensaje = "Paciente RC Moderado";
+            Imagen = "@Url.Content("~/Content/General/HC/RiesgoModerado.png")";
+        } else {
+            if ($('#pacApellido').val() === "") {
+                $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-info");
+                $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-plus");
+                Mensaje = "Paciente Nuevo";
+                $("#divHCDisabled").css("display", "inline-table");
+            } else {
+                $("#divHCMensajeAccion").attr("class", "BordeRedondeado alert-success");
+                $("#iHCMensajeAccion").attr("class", "fa fa-2x fa-check");
+                Mensaje = "Paciente Encontrado";
+                $("#divHCDisabled").css("display", "none");
+            }
+        }
+
+        $("#spanHCMensajeAccion").text(Mensaje);
+        $("#imgHCMensajeAccion").attr("src", Imagen);
+    }
+
+
+    function RecargarLocalidades() {
+        ProcesandoListaDesplegable("listaDesplegable_locId_Lista");
+        var _Post = GetPathApp("HistoriaClinica/ListaDeLocalidades");
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { depId: $("#depId").val() },
+            error: function() {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function(respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_locId_Lista").html(respuesta);
+
+                    $("#locId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function(e) {
+                        $("#locId").val($("#locId_Lista").val());
+                    });
+                    var $ListaLocalidades = $("#locId_Lista");
+                    if ($('#locId').val() != "" && $('#locId').val() > 0) {
+                        $ListaLocalidades.val($("#locId").val()).trigger("change");
+                    } else {
+                        $ListaLocalidades.trigger("change");
+                    }
+
+                    $ListaLocalidades.on("select2:open", function(e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+                }
+            }
+        });
+    }
+
+    function RecargarBarrios() {
+        ProcesandoListaDesplegable("listaDesplegable_barId_Lista");
+        var _Post = GetPathApp("HistoriaClinica/ListaDeBarrios");
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { depId: $("#depId").val() },
+            error: function() {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function(respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_barId_Lista").html(respuesta);
+
+                    $("#barId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function(e) {
+                        $("#barId").val($("#barId_Lista").val());
+                    });
+                    var $ListaLocalidades = $("#barId_Lista");
+                    if ($('#barId').val() != "" && $('#barId').val() > 0) {
+                        $ListaLocalidades.val($("#barId").val()).trigger("change");
+                    } else {
+                        $ListaLocalidades.trigger("change");
+                    }
+
+                    $ListaLocalidades.on("select2:open", function(e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+                }
+            }
+        });
+    }
+
+    function onValidarDatos() {
+        var _MensajeDeError = "";
+        var _Campo = "";
+        $("#divHCMensajeError").hide();
+
+        var Letra = "";
+        var _CampoEncontrado = "";
+        $('.ValidarInformacion').each(function(index) {
+            if (_MensajeDeError === "") {
+                if ($(this).val() === "" && (("pacDomicilioReferencia, pacBlockPiso, pacBlockDepto, pacCodigoPostal, pacTelefonoCasa, pacTelefonoCelular").indexOf($(this).attr("id")) === -1)) {
+                    _MensajeDeError = "Debe ingresar el campo " + $(this).attr("MensajeDeError") + " del Paciente.";
+                    _CampoEncontrado = $(this).attr("id");
+                    _Campo = "#" + _CampoEncontrado;
+                }
+                if (_MensajeDeError === "") {
+                    switch ($(this).attr("id")) {
+                    case "pacCodigoPostal":
+                        if ($(this).val() < 5400) {
+                            _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es incorrecto del Paciente.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "pacTelefonoCasa":
+                        debugger;
+                        if (($(this).val() === "(0___) ___-____" || $(this).val() === "") && ($("#pacTelefonoCelular").val() === "(0___) 15_-______" || $("#pacTelefonoCelular").val() === "")) {
+                            _MensajeDeError = "Debe ingresar al menos un " + $(this).attr("MensajeDeError") + ".";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "pacTelefonoCelular":
+                        debugger;
+                        if (($(this).val() === "(0___) 15_-______" || $(this).val() === "") && ($("#pacTelefonoCasa").val() === "(0___) ___-____" || $("#pacTelefonoCasa").val() === "")) {
+                            _MensajeDeError = "Debe ingresar al menos un " + $(this).attr("MensajeDeError") + ".";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "pacFechaNacimiento":
+                        if ($("#pacEdad").val() > 150) {
+                            _MensajeDeError = "La " + $(this).attr("MensajeDeError") + " ingresada, es incorrecta.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "pacMail":
+                        if (!validarEmail($(this).val())) {
+                            _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es Incorrecto.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (_MensajeDeError === "" && (("pacApellido, pacNombre, pacLugarTrabajo, pacCalle, pacBarrio").indexOf($(this).attr("id")) >= 0)) {
+                Letra = ValidaRepeticionDeCaracteres($(this).val());
+                if (Letra !== "") {
+                    _MensajeDeError = "El dato ingresado es incoherente, revise si ha repetido alguna letra de forma incorrecta.";
+                    _CampoEncontrado = $(this).attr("id");
+                    _Campo = "#" + _CampoEncontrado;
+                }
+                if (_MensajeDeError === "") {
+                    if (!ValidaNomenclacion($(this).val())) {
+                        _MensajeDeError = "El dato ingresado no parece ser real, revise la información por favor.";
+                        _CampoEncontrado = $(this).attr("id");
+                        _Campo = "#" + _CampoEncontrado;
+                    }
+                }
+            }
+        });
+
+        if (_MensajeDeError === "") {
+            //Validamos CUIT
+            if (!validaCuit($("#pacCUIL").val())) {
+                _MensajeDeError = "El CUIL es incorrecto, revise el sexo del Paciente.";
+                _CampoEncontrado = "pacCUIL";
+                _Campo = "#" + _CampoEncontrado;
+            }
+        }
+        if (_MensajeDeError !== "") {
+            MensajeEmergente("¡Error!", _MensajeDeError, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+            $(_Campo).addClass("ES-ErrorValidacion");
+            $("#spanMensajeError").text(_MensajeDeError);
+            $("#divHCMensajeError").attr("class", "BordeRedondeado alert-danger");
+            $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+            //$("#divHCMensajeError").show();
+            $("#divHCMensajeError").css("display", "inline-table");
+            $(_Campo).attr("title", "Es importante que la información ingresada sea coerente y real, por favor revise la información ingresada.");
+            $(_Campo).focus().select();
+            debugger;
+            $('#divInformacionGeneralHCPaciente').animate({
+                scrollTop: ($(_Campo).offset().top - ($("#divInformacionGeneralHCPaciente").offset().top + 20))
+            }, 2000);
+            $('#divInformacionGeneralHCPaciente').slimScroll({ scrollTo: ($(_Campo).offset().top - ($("#divInformacionGeneralHCPaciente").offset().top + 20)) + 'px' });
+            return true;
+        }
+
+        return false;
+    }
+
+    function ValidaRepeticionDeCaracteres(Cadena) {
+        var i = 0;
+        var counter = 0;
+        var strArreglo = Cadena.split('');
+        var Letra = strArreglo[0];
+        while (i <= Cadena.length) {
+            if (strArreglo[i] === Letra) {
+                counter++;
+            } else {
+                Letra = strArreglo[i];
+            }
+            i++;
+            if (counter > 2) {
+                return Letra;
+            }
+        }
+        return "";
+    }
+
+</script>
+
+<!-- Para ejecurar comandos por voz -->
+<div id = "divSpeakMenu" class="si-wrapper divSpeakMenu" style="display: block;">
+    @*<textarea id="txtComandos" placeholder="Evolución..." class="text-box multi-line si-input" style="width: 100%; margin-top: 10px;"></textarea>*@
+    @*<div id="btnComando" class="si-btn" style="cursor: pointer; top: 28px; right: 15px;" >
+        <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-4x fa-microphone"></i></span>
+    </div>*@
+</div>
+
+<script src="@Url.Content("~/Scripts/speech/speech-input.js")"></script>
+
+<script>
+    var Objeto;
+    var spMenu = { recognition: Objeto };
+    var UltimaOpcionMenu = "";
+    var ComandoGuardar = "onAceptarHCPacuienteCRUD";
+
+    function onIniciaMicrofono() {
+    }
+
+    function onFinalizaMicrofono() {
+        var _Div = $("#divGridPrincipalhcPacienteCRUD");//length
+        if (_Div.length == 0) {
+            spMenu.recognition.stop();
+        } else {
+            spMenu.recognition.start();
+        }
+    }
+
+    function onEjecutaComando(pTexto) {
+        //$("#txtComandos").val("");
+        //jAlert(pTexto, "");
+        switch (pTexto.toLowerCase().trim()) {
+            case "abrir evolución":
+                MensajeEmergente("Ingresando a...", "Evolución Periódica", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Evolución Periódica");
+                break;
+            case "abrir historia familiar":
+                MensajeEmergente("Ingresando a...", "Historia Familiar y Personal", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Historia Familiar y Personal");
+                break;
+            case "abrir familigrama":
+                MensajeEmergente("Ingresando a...", "Familigrama", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Familigrama");
+                break;
+            case "abrir problemas crónicos":
+                MensajeEmergente("Ingresando a...", "Problemas Crónicos", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Problemas Crónicos");
+                break;
+            case "abrir problemas transitorios":
+                MensajeEmergente("Ingresando a...", "Problemas Transitorios", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Problemas Transitorios");
+                break;
+            case "abrir cuidados preventivos":
+                MensajeEmergente("Ingresando a...", "Cuidados Preventivos", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Cuidados Preventivos");
+                break;
+            case "abrir examen físico":
+                MensajeEmergente("Ingresando a...", "Examen Físico", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Examen Físico");
+                break;
+            case "abrir vacunas":
+                MensajeEmergente("Ingresando a...", "Calendario de vacunación", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Vacunas");
+                break;
+            case "abrir diagnósticos":
+                MensajeEmergente("Ingresando a...", "Diagnósticos del paciente", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Diagnósticos");
+                break;
+            case "abrir prácticas":
+                MensajeEmergente("Ingresando a...", "Prácticas del paciente", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Prácticas");
+                break;
+            case "abrir estudios complementarios":
+                MensajeEmergente("Ingresando a...", "Estudios complementarios", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                onClickMenuHC("Estudios Complementarios");
+                break;
+            case "cerrar ventana":
+                MensajeEmergente("Saliendo...", "Cerrando ventana de datos.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                UltimaOpcionMenu = "";
+                var wHCMenuOpciones = $("#wHCMenu").data("tWindow");
+                wHCMenuOpciones.close();
+                break;
+            case "maximizar":
+                MensajeEmergente("Agrandar...", "Maximizando ventana.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                var wHCMenuOpciones = $("#wHCMenu").data("tWindow");
+                wHCMenuOpciones.maximize();
+                break;
+            case "guardar ahora":
+                debugger;
+                //jAlert(ComandoGuardar, "Titulo");
+                //$().trigger(ComandoGuardar);
+                //ComandoGuardar = "onAceptarHCPacuienteCRUD";
+                switch (UltimaOpcionMenu) {
+                case "Evolución Periódica":
+                    onGuardarHCEvolucionAdulto(false);
+                    break;
+                default:
+                    onAceptarHCPacuienteCRUD();
+                    break;
+                }
+                UltimaOpcionMenu = "";
+
+                break;
+            default:
+                //jAlert(UltimaOpcionMenu, "");
+                switch (UltimaOpcionMenu) {
+                case "Evolución Periódica":
+                    $("#txtComentario").val($("#txtComentario").val() != "" ? $("#txtComentario").val() + pTexto : pTexto);
+                    break;
+                default:
+                    if (pTexto.toLowerCase().trim().indexOf("abrir") >= 0) {
+                        MensajeEmergente("¡Error!", "Comando no reconocido.(" + pTexto + ")", "@Url.Content("~/Content/General/Alertas/Error.png")", true);
+                    }
+                    break;
+            }
+            break;
+        }
+    }
+
+    InicializarMicrofono(spMenu, "divSpeakMenu", null, "btnComando", true, onEjecutaComando, onIniciaMicrofono, onFinalizaMicrofono);
+    
+    //Si viene de turno ocultamos algunos campos\\
+    if (_DatosRegistroHCTurno != null) {
+        $("#btnCancelar").css("display", "none");
+        $("#divHCDatosTurno").css("display", "block");
+    } else {
+        $("#divHCDatosTurno").css("display", "none");
+    }
+
+</script>

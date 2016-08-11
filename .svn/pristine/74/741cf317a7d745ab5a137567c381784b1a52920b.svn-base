@@ -1,0 +1,111 @@
+﻿@using GeDoc
+
+
+
+<h3>@Html.Label("Reporte total de encuestados")</h3>
+
+<script>
+
+    //al cargar telerik
+    function onLoadModal() { }
+
+
+    function onCloseModal() {
+        $(".t-overlay").hide();
+    }
+
+    function onDataBindingGrid(args) {
+
+        // AbrirWaiting();
+        
+        args.data = $.extend(args.data, {
+            FechaDesde: fechaDesde,
+            FechaHasta: fechaHasta,
+            Localidad: localidad,
+            Departamento: departamento,
+            Especialidad: especialidad,
+            CentroDeSalud: centroDeSalud
+        });
+
+    }
+
+</script>
+
+
+@{
+    
+     string _PathContent = Url.Content("~/Content");
+     Html.Telerik().Grid((IEnumerable<GeDoc.spRptProturTotalEncuestados>)ViewData["spRptProturTotalEncuestados"])
+         .Name("Grid")
+         .DataKeys(keys =>
+         {
+             keys.Add(p => p.csId);
+         })
+         .Localizable("es-AR")
+         
+         .ToolBar(commands =>
+         {
+
+             commands.Custom().Ajax(true).Name("cmdAgregar").ButtonType(GridButtonType.ImageAndText)
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;" })
+                 .Text("Agregar")
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturTotalEncuestados", "Agregar") });
+             commands.Custom().Ajax(true).Name("cmdEditar").ButtonType(GridButtonType.ImageAndText).Text("Modificar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturTotalEncuestados", "Modificar") });
+             commands.Custom().Ajax(true).Name("cmdEliminar").ButtonType(GridButtonType.ImageAndText).Text("Desactivar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -15px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturTotalEncuestados", "Eliminar") });
+             commands.Custom().Ajax(true).Name("cmdActivar").ButtonType(GridButtonType.ImageAndText).Text("Activar")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -32px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturTotalEncuestados", "Activar") });
+             commands.Custom().Ajax(true).Name("cmdHorarios").ButtonType(GridButtonType.ImageAndText).Text("Horarios")
+                 .ImageHtmlAttributes(new { style = "background: url('" + _PathContent + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -336px;" })
+                 .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("spRptProturTotalEncuestados", "Horarios") });
+         })
+         .DataBinding(dataBinding =>
+         {
+             dataBinding.Ajax()
+                 .Select("_SelectEditing", "ReporteProturAvance", new { FechaDesde = "16/05/2015",  FechaHasta = "16/05/2016", Localidad = 0,
+                                                                        Departamento = 0, Especialidad = 0,
+                                                                        CentroDeSalud="0"});
+             
+
+
+         })
+         
+         .Columns(columns =>
+         {
+             columns.Bound(c => c.csId).Width("5%").Title("ID").Visible(false);
+             columns.Bound(c => c.Centro_de_salud).Width("15%").Title("Centro de salud").Visible(true);
+             columns.Bound(c => c.cantidad_encuestados).Width("15%").Title("Cantidad de encuestados").Visible(true);
+             columns.Bound(c => c.cantidad_turnos).Width("20%").Title("Cantidad de turnos").Visible(true);
+             columns.Bound(c => c.atentido).Width("15%").Title("Atendido local").Visible(true);
+             columns.Bound(c => c.derivados).Width("15%").Title("Derivados").Visible(true);
+             columns.Bound(c => c.no_resueltos).Width("15%").Title("No resuelto").Visible(true);
+             
+
+         })
+                 .Editable(editing => editing
+                         .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(false))
+                 .Pageable((paging) =>
+                            paging.Enabled(true)
+                                 .PageSize(((int)Session["FilasPorPagina"])))
+
+                .ClientEvents(events => events
+                    //.OnCommand("onCommandGrid")
+                    //.OnRowSelect("onRowSelectedEncuesta")
+                    .OnDataBinding("onDataBindingGrid")
+                    //.OnEdit("onEditEncuesta")
+                    //.OnSave("onSave")
+                    //.OnDataBound("onCommandGrid")
+                    )                            
+             .Footer(true)
+             .Filterable()
+             .Selectable()
+             .Scrollable(scroll => scroll.Enabled(true).Height(((int)Session["AlturaGrilla"])))
+             .Resizable(resizing => resizing.Columns(true))
+             .Sortable()       
+             .Render();
+             
+}

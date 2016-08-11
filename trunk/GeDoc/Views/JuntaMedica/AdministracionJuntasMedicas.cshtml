@@ -1,0 +1,366 @@
+﻿@using GeDoc
+@using GeDoc.Models.JuntaMedica.Modelo
+<script type="text/javascript">
+    var _DatosRegistro_TurnosJuntaMedica;
+    var idTurno;
+
+    function onRowSelectedTurnosJuntaMedica(e) {
+        var row = e.row;
+        var grid = $("#gridTurnosJuntaMedica").data("tGrid");
+        var dataItem = grid.dataItem(row);
+        _DatosRegistro_TurnosJuntaMedica = dataItem;
+    }
+
+    function onCommandTurnosJuntaMedica(e) {
+        //AbrirWaitingCRUD();
+        switch (e.name) {
+            case "cmdAsignar":
+                var wGestionJM = $("#wCRUDTurnoJuntaMedica").data("tWindow");
+                wGestionJM.center().open();
+                var _Post = GetPathApp("DCRM/CRUDSolicitudDeTurnoJuntaMedica");
+                $.ajax({
+                    type: "POST",
+                    url: _Post,
+                    error: function () {
+                        CerrarWaitingCRUD();
+                        jAlert("Error al generar turno para junta médica.", "Error...", function () {
+                        });
+                    },
+                    success: function (respuesta) {
+                        CerrarWaitingCRUD();
+                        if (respuesta != null) {
+                            $("#divwCRUDTurnoJuntaMedica_Content").html(respuesta);
+                            $("#txtNumeroDocumentoJM").focus().select();
+                        }
+                    }
+                });
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdImprimir":
+                var _Parametros = new Array(new Array(e.dataItem["turId"], 'turId'), new Array('A', 'Tipo'));
+                InvocarReporte('InformesJuntaMedicaUnificado', _Parametros, true);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdListadoXMedico":
+                var wListadoMedico = $("#wListadoXMedico").data("tWindow");
+                wListadoMedico.center().open();
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdAnular":
+                debugger;
+                if (e.dataItem["turEstado"] != "EM") {
+                    jAlert("No se puede anular este turno.", "¡Atención!");
+                    return;
+                }
+
+                onRowSelectedTurnosJuntaMedica(e);
+                onEjecutaAccionwCRUDTurnoJuntaMedicaAnulacion(e.dataItem);
+
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+    }
+
+    function onCancelarTurnosJuntaMedica() {
+        var _Window = $("#WTurnosJuntaMedicas").data("tWindow");
+        _Window.close();
+    }
+
+    function onDataBindingTurnosJuntaMedica(e) {
+    }
+
+    function onCompleteTurnosJuntaMedica(e) {
+        if (e.name !== "update" || e.name !== "insert") {
+            CerrarWaiting();
+        }
+    }
+
+    function TurnosJuntaMedica() {
+        AbrirWaiting();
+        var grid = $('#gridTurnosJuntaMedica').data("tGrid");
+        grid.ajaxRequest();
+    }
+
+    function onActivate_wCRUDTurnoJuntaMedicaMedicos() {
+        //AbrirWaitingCRUD("CRUDJuntaMedicaMedicos");
+    }
+
+    function onActivate_wCRUDTurnoJuntaMedica() {
+        AbrirWaitingCRUD("CRUDJuntaMedica");
+    }
+
+    function onActivate_wCRUDTurnoJuntaMedicaResultados() {
+        //AbrirWaitingCRUD("CRUDJuntaMedicaResultados");
+    }
+
+    function onActivate_wCRUDTurnoJuntaMedicaAnulacion() {
+        //AbrirWaitingCRUD("CRUDJuntaMedicaAnulacion");
+    }
+
+    function onClose_wCRUDTurnoJuntaMedica() {
+        $("#divwCRUDTurnoJuntaMedica_Content").html("");
+    }
+
+    function onLoad_wCRUDTurnoJuntaMedicaMedicos() {
+        var wGestionJM = $(this).data("tWindow");
+        var wContenido = wGestionJM.content() + "<div id = 'divwCRUDTurnoJuntaMedicaMedicos_Content' ></div>";
+        wGestionJM.content(wContenido);
+    }
+
+    function onLoad_wCRUDTurnoJuntaMedica() {
+        var wGestionJM = $(this).data("tWindow");
+        var wContenido = wGestionJM.content() + "<div id = 'divwCRUDTurnoJuntaMedica_Content' ></div>";
+        wGestionJM.content(wContenido);
+    }
+
+    function onLoad_wCRUDTurnoJuntaMedicaResultados() {
+        var wGestionJM = $(this).data("tWindow");
+        var wContenido = wGestionJM.content() + "<div id = 'divwCRUDTurnoJuntaMedicaResultados_Content' ></div>";
+        wGestionJM.content(wContenido);
+    }
+
+    function onLoad_wCRUDTurnoJuntaMedicaAnulacion() {
+        var wGestionJM = $(this).data("tWindow");
+        var wContenido = wGestionJM.content() + "<div id = 'divwCRUDTurnoJuntaMedicaAnulacion_Content' ></div>";
+        wGestionJM.content(wContenido);
+    }
+
+    function onEjecutaAccionwCRUDTurnoJuntaMedicaMedicos(turId, Medicos) {
+        var wGestionJM = $("#wCRUDTurnoJuntaMedicaMedicos").data("tWindow");
+        wGestionJM.center().open();
+        //AbrirWaitingCRUD();
+        var _Post = GetPathApp("JuntaMedica/getDatosMedicosJuntaMedica");
+        idTurno = turId;
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { turId: turId, MedicosTurnos: Medicos },
+            error: function () {
+                //CerrarWaitingCRUD();
+                jAlert("Error obtener médicos asignados a junta médica.", "Error...", function () {
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaitingCRUD();
+                if (respuesta != null) {
+                    $("#divwCRUDTurnoJuntaMedicaMedicos_Content").html(respuesta);
+                }
+            }
+        });
+    }
+
+    function onEjecutaAccionwCRUDTurnoJuntaMedicaAnulacion(Item) {
+        var wGestionJM = $("#wCRUDTurnoJuntaMedicaAnulacion").data("tWindow");
+        wGestionJM.center().open();
+        AbrirWaitingCRUD("CRUDJuntaMedicaAnulacion");
+        debugger;
+        var _Post = GetPathApp("JuntaMedica/getDatosJuntaMedica");
+        idTurno = Item.turId;
+        $.ajax({
+            type: "POST",
+            url: _Post,
+            data: { Item: JSON.stringify(Item) },
+            error: function () {
+                CerrarWaitingCRUD("CRUDJuntaMedicaAnulacion");
+                jAlert("Error obtener datos de junta médica.", "Error...", function () {
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("CRUDJuntaMedicaAnulacion");
+                if (respuesta != null) {
+                    $("#divwCRUDTurnoJuntaMedicaAnulacion_Content").html(respuesta);
+                }
+            }
+        });
+    }
+
+    function onEjecutaAccionwCRUDTurnoJuntaMedicaResultados(turId) {
+        idTurno = turId;
+        debugger;
+        var wGestionJM = $("#wCRUDTurnoJuntaMedicaResultados").data("tWindow");
+        wGestionJM.center().open();
+        $('#Resultados').val($('#lblFila' + turId).text());
+    }
+
+</script>
+<div>
+    @(Html.Telerik().Grid((IEnumerable<GeDoc.Models.JuntaMedica.Modelo.getListadoJuntasMedicas_Result>)ViewData["TurnosJuntaMedica"])
+    .Name("gridTurnosJuntaMedica")
+    .DataKeys(keys =>
+    {
+        keys.Add(p => p.turId);
+    })
+    .ToolBar(commands =>
+    {
+        commands.Custom().Ajax(true).Name("cmdAsignar").ButtonType(GridButtonType.ImageAndText)
+            .ImageHtmlAttributes(new {style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;"})
+            .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Agregar"), title = "Agregar turno para Junta Médica" })
+            .Text("Agregar");
+        commands.Custom().Ajax(true).Name("cmdListadoXMedico").ButtonType(GridButtonType.ImageAndText)
+            .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -239px;" })
+            .HtmlAttributes(new { title = "Imprimir listado de Juntas Médicas de acuerdo a distintos filtros" })
+            .Text("Listado x Médico");
+    })
+    .Localizable("es-AR")
+    .Columns(columns =>
+    {
+        columns.Command(commands =>
+        {
+            commands.Custom("cmdImprimir")
+                .Ajax(true)
+                .ButtonType(GridButtonType.Image)
+                .SendDataKeys(false)
+                .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content/General/Printer.png')") + " no-repeat 0px 0px; background-size: 16px 16px", title = "Imprimir Notificaciones" })
+                .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Examinar") })
+                .SendState(false)
+                .DataRouteValues(route =>
+                {
+                    route.Add(o => o.turId).RouteKey("turId");
+                });
+            commands.Custom("cmdAnular")
+                .Ajax(true)
+                .ButtonType(GridButtonType.Image)
+                .SendDataKeys(false)
+                .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -15px -336px;", title = "Anular Turno" })
+                .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Agregar") })
+                .SendState(false)
+                .DataRouteValues(route =>
+                {
+                    route.Add(o => o.turId).RouteKey("turId");
+                });
+        }).Width("80px").Title("Acciones");
+        columns.Bound(c => c.turFecha).Width("110px").Format("{0:dd/MM/yyyy}").Title("Fecha").Visible(true);
+        columns.Bound(c => c.turFecha).Width("80px").Format("{0:hh:mm}").Title("Hora").Visible(true).Filterable(false);
+        columns.Bound(c => c.tjDescripcion).Width("110px").Title("Motivo").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= tjDescripcion #>' style='cursor: pointer; white-space: nowrap;'><#= tjDescripcion #></label>");
+        columns.Bound(c => c.CantidadMedicos).Width("120px").Title("N° de Médicos").Visible(true).HtmlAttributes(new { style = "white-space: nowrap; text-align: center;" }).Filterable(true)
+        .ClientTemplate("<div class='ES-Circulo' title='<#= Medicos #>' onclick=\"onEjecutaAccionwCRUDTurnoJuntaMedicaMedicos(<#= turId #>, '<#= Medicos #>');\" style='cursor: pointer; background-color: #336699; color: white; text-align: center;'><#= CantidadMedicos #></div>");
+        columns.Bound(c => c.Medicos).Width("150px").Title("Médicos").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= Medicos #>' style='cursor: pointer;'><#= Medicos #></label>");
+        columns.Bound(c => c.CantidadEspecialidades).Width("120px").Title("N° de Especialidades").Visible(true).HtmlAttributes(new { style = "white-space: nowrap; text-align: center;" }).Filterable(true)
+        .ClientTemplate("<div class='ES-Circulo' title='<#= Especialidades #>' style='cursor: pointer; background-color: #c98400; color: white; text-align: center;'><#= CantidadEspecialidades #></div>");
+        columns.Bound(c => c.Especialidades).Width("150px").Title("Especialidades").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= Especialidades #>' style='cursor: pointer; white-space: nowrap;'><#= Especialidades #></label>");
+        columns.Bound(c => c.agtApellidoYNombre).Width("150px").Title("Agente").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= agtApellidoYNombre #>' style='cursor: pointer;'><#= agtApellidoYNombre #></label>");
+        columns.Bound(c => c.agtDNI).Width("100px").Title("DNI").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= agtDNI #>' style='cursor: pointer;'><#= agtDNI #></label>");
+        columns.Bound(c => c.turResultadoJM).Width("90px").Title("Resultado JM").Visible(true).HtmlAttributes(new { style = "white-space: nowrap; text-align: center;" })
+        .ClientTemplate("<div class='ES-Circulo' title='<#= turResultadoJM #>' onclick=\"onEjecutaAccionwCRUDTurnoJuntaMedicaResultados(<#= turId #>);\" style='cursor: pointer; background-color: <#= turResultadoJM == \"\" ? \"#C3C7C3\" : \"#06CC0A\" #>; color: white; text-align: center;'><label id='lblFila<#= turId #>' style='display: none;'><#= turResultadoJM #></label></div>");
+        columns.Bound(c => c.tipoDescripcion).Width("100px").Title("Estado").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+        .ClientTemplate("<label title='<#= tipoDescripcion #>' style='cursor: pointer;'><#= tipoDescripcion #></label>");
+    })
+    .Editable(editing => editing.Enabled(true)
+        .Mode(GridEditMode.PopUp))
+        .Pageable((paging) =>
+        paging.Enabled(true)
+        .PageSize(((int)Session["FilasPorPagina"])))
+        .DataBinding(dataBinding => dataBinding.Ajax().Select("getListadoDeTrunosJM", "JuntaMedica"))
+        .ClientEvents(clientEvents => clientEvents.OnCommand("onCommandTurnosJuntaMedica").OnRowSelect("onRowSelectedTurnosJuntaMedica").OnDataBinding("onDataBindingTurnosJuntaMedica").OnComplete("onCompleteTurnosJuntaMedica"))
+        .Footer(true)
+        .Selectable()
+        .Filterable()
+        .Scrollable(scroll => scroll.Enabled(true).Height(510))
+        .Resizable(resizing => resizing.Columns(true)))
+</div>
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDTurnoJuntaMedicaMedicos")
+      .Title("Asignación de Profesionales Médicos")
+      .Visible(false)
+      .Content(() =>
+      {
+        Html.RenderPartial("WaitingCRUDModel", "CRUDJuntaMedicaMedicos");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Width(424)
+      .Height(250)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDTurnoJuntaMedicaMedicos").OnLoad("onLoad_wCRUDTurnoJuntaMedicaMedicos"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDTurnoJuntaMedica")
+      .Title("Agregar Turno para Junta Médica")
+      .Visible(false)
+      .Content(() =>
+      {
+        Html.RenderPartial("WaitingCRUDModel", "CRUDJuntaMedica");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Width(824)
+      .Height(750)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDTurnoJuntaMedica").OnLoad("onLoad_wCRUDTurnoJuntaMedica").OnClose("onClose_wCRUDTurnoJuntaMedica"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDTurnoJuntaMedicaResultados")
+      .Title("Carga ...")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "CRUDJuntaMedicaResultados");
+          Html.RenderPartial("AdministracionJuntasMedicasCRUDResultado", new ResultadosTurnoJMWS());
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Width(424)
+      .Height(300)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDTurnoJuntaMedicaResultados").OnLoad("onLoad_wCRUDTurnoJuntaMedicaResultados"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDTurnoJuntaMedicaAnulacion")
+      .Title("Anulación ...")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("WaitingCRUDModel", "CRUDJuntaMedicaAnulacion");
+          //Html.RenderPartial("AdministracionJuntasMedicasAnulacion", new getListadoJuntasMedicas_Result());
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Modal(true)
+      .Width(824)
+      .Height(315)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDTurnoJuntaMedicaAnulacion").OnLoad("onLoad_wCRUDTurnoJuntaMedicaAnulacion"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wListadoXMedico")
+      .Title("Impresión...")
+      .Visible(false)
+      .Content(() =>
+      {
+          Html.RenderPartial("AdministracionJuntasMedicasListadoXMedico");
+      })
+      .Buttons(b => b.Close())
+      .Draggable(true)
+      .Scrollable(false)
+      .Resizable()
+      .Modal(true)
+      .Render();
+}

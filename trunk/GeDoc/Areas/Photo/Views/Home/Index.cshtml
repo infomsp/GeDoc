@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Photo</h2>
+
+<ul>
+    <li>@Html.ActionLink("Cat photos", "../../photo/cat", "Index")</li>
+    <li>@Html.ActionLink("Random photos", "../../photo/random", "Index")
+    @Html.ActionLink("Random photos", "Index", "Random", new { area = "Photo" }, null)
+    </li>
+</ul>

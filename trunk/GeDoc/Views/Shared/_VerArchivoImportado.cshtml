@@ -1,0 +1,84 @@
+﻿@using NavigationItemContainerExtensions = Telerik.Web.Mvc.UI.NavigationItemContainerExtensions
+@model GeDoc.ArchivoImportado
+<script type="text/javascript">                    
+</script>
+<style type="text/css" xml:lang="es-AR">
+    .tituloColumna {
+        color: black;
+    }
+</style>
+@{
+    bool Seleccionado = true;
+    int IndiceColumnas = 0;
+    bool SeleccionarUsuario = Model.Columnas.Count(w => w.Nombre == "Usuario") > 0;
+    bool SeleccionarDocumento = !SeleccionarUsuario;
+    bool SeleccionarPAN = Model.Columnas.Count(w => w.Nombre == "PAN") > 0;
+    bool pedirDetalle = true;
+    if (Session["PedirDetalle"] != null)
+    {
+        pedirDetalle = (bool)Session["PedirDetalle"];
+    }
+    bool incluirPAN = false;
+    if (Session["IncluirPAN"] != null)
+    {
+        incluirPAN = (bool)Session["IncluirPAN"];
+    }
+    if (SeleccionarPAN && incluirPAN)
+    {
+        SeleccionarDocumento = false;
+        SeleccionarUsuario = false;
+    }
+}
+<div class="BordeRedondeadoTab" style="font-weight: 100;">
+    <div style="text-align: right; margin-top: 5px;">
+        <label for="Customers-input" style="vertical-align: middle;">Total de Registros Importados:</label>
+        <label for="Customers-input" style="margin-left: 5px; vertical-align: middle; font-weight: 900;">@Model.Valores.Count</label>
+        <input type="hidden" id="hi_RegistrosImportados" value="@Model.Valores.Count"/>
+    </div>
+</div>            
+<div class="t-widget t-grid">
+    <div class="t-grid-content" style="height: 440px; font: 11px Helvetica, arial, freesans, clean, sans-serif; color: darkgray;">
+        <table cellspacing="0">
+            <tbody>
+                <tr>
+                    <td class="t-header tituloColumna" style="width: 24px; font-weight: bold; text-align: center;">Nº</td>
+                    @foreach (var Item in Model.Columnas)
+                    {
+                        <td id="@Item.Nombre" class="t-header tituloColumna" style="width: 300px; font-weight: bold;">@Item.Nombre</td>
+                    }
+                </tr>
+
+                @{ int Indice = 0; }
+                @foreach (var Item in Model.Valores)
+                {
+                    string lsClase = "";
+                    string lsEstilo = "";
+                    if ((Indice % 2) == 0)
+                    {
+                        lsClase = "t-alt";
+                    }
+                    <tr class="@lsClase">
+                        @{
+                    Indice++;
+                    if (Indice > 100)
+                    {
+                        break;
+                    }
+                        }
+                        <td style="width: 27px; text-align: right;">
+                            <span>@Indice</span>
+                        </td>
+                        
+
+                        @for (var CItem = 0; CItem < Model.Columnas.Count; CItem++)
+                        {
+                            <td style="width: 300px;">
+                                <span>@Item.Valor[CItem]</span>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

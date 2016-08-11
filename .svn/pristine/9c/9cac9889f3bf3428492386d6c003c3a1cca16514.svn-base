@@ -1,0 +1,114 @@
+@model GeDoc.catProveedorContactoWS
+
+<script type="text/javascript">
+    function onAceptarcatProveedorContacto() {
+        if ($("#pcAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatProveedorContacto').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatProveedorContacto');
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatProveedorContacto").data("tGrid").ajaxRequest();
+                    $("#gridcatProveedor").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatProveedorContacto').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+
+    function onCancelarcatProveedorContacto() {
+        var windowElement = $('#wCRUDcatProveedorContacto').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatProveedorContacto", "catProveedor", FormMethod.Post, new { id = "frmcatProveedorContacto" }))
+{
+    <div id="divGridPrincipalcatProveedorContacto" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected" style="color: white;">
+            DATOS PERSONALES
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Apellido y Nombre:</label>
+                @Html.EditorFor(model => Model.pcApellidoyNombre, "", "pcApellidoyNombre")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Teléfono:</label>
+                @Html.EditorFor(model => Model.pcTelefono, "", "pcTelefono")
+            </div>
+            <div style="height: 28px;">
+                <label style="vertical-align: baseline;">Correo Electrónico:</label>
+                @Html.EditorFor(model => Model.pcCorreoElectronico, "", "pcCorreoElectronico")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatProveedorContacto();" title="@(Model.pcAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+                <label id="lblAceptarOferta" style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatProveedorContacto();" title="Cancelar" style="@(Model.pcAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/2012.1.214/Simple")/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+                <label id="lblCancelarOferta" style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.EditorFor(model => Model.pcAccion, new { style = "width: 200px; display: none;", id = "pcAccion" })
+        @Html.EditorFor(model => Model.pcprovId, new { style = "width: 200px; display: none;", id = "pcprovId" })
+        @Html.EditorFor(model => Model.pcId, new { style = "width: 200px; display: none;", id = "pcId" })
+    </div>
+}
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatProveedorContacto").ready(function () {
+        //Aplicamos algunos estilos
+        $("#pcAccion").attr("style", "display: none;");
+        $("#pcprovId").attr("style", "display: none;");
+        $("#pcId").attr("style", "display: none;");
+        //$("#pcAccion").attr("disabled", "disabled");
+        //$("#pcprovId").attr("disabled", "disabled");
+        //$("#pcId").attr("disabled", "disabled");
+        $("#pcApellidoyNombre").attr("style", "width: 295px;");
+        $("#pcTelefono").attr("style", "width: 354px;");
+        $("#pcCorreoElectronico").attr("style", "width: 293px;");
+
+        //Asignamos los valores de los campos\\
+        if ($("#pcAccion").val() == "Consultar" || $("#pcAccion").val() == "Eliminar") {
+            $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+        }
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+        
+        //Paso con enter de campo a campo
+        $(':input').bind('keypress', function (e) {
+            if (e.which == 13) {
+                debugger;
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+        });
+    });
+
+</script>

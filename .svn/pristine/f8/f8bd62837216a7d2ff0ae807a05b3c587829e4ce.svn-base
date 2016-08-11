@@ -1,0 +1,238 @@
+﻿@model GeDoc.catHCAduEXAFISICOWS 
+
+@using (Html.BeginForm("setHistoriaClinicaExamenFisico", "HistoriaClinica", FormMethod.Post, new { id = "tab5" }))
+{ 
+  
+ @Html.HiddenFor(model => model.hcaduid)
+<br />
+<!--<label><b>APELLIDO Y NOMBRE: </b><input type="text" style="margin-right: 30px; width: 400px;"/><b>D.N.I.N°:</b><input type="text" style="width: 80px;"/></label><br /><br />-->
+<center><label><b>EXAMEN fÍSICO (1ra. CONSULTA)</b></label></center><br /><br />
+<label>
+       TA: @Html.TextBoxFor(model => model.aduFITA, new { @class = "desactivar", id = "aduFITA", style = "margin-right: 30px; width: 80px;" }) 
+       FC: @Html.TextBoxFor(model => model.aduFIFC, new { @class = "desactivar", id = "aduFIFC", style = "margin-right: 30px; width: 80px;" }) 
+       PESO: @Html.TextBoxFor(model => model.aduFIPeso, new { @class = "desactivar", id = "aduFIPeso", style = "margin-right: 30px; width: 80px;" }) 
+       TALLA: @Html.TextBoxFor(model => model.aduFITalla, new { @class = "desactivar", id = "aduFITalla", style = "margin-right: 30px; width: 80px;" }) 
+       I.M.C. @Html.TextBoxFor(model => model.aduFIIMC, new { @class = "desactivar", id = "aduFIIMC", style = "margin-right: 30px; width: 80px;" }) 
+       C.C. @Html.TextBoxFor(model => model.aduFICC, new { @class = "desactivar", id = "aduFICC", style = "margin-right: 30px; width: 80px;" }) 
+</label>
+<br /><br />
+<b style="font-size: 8px">INSTRUCTIVO: <input type="checkbox" checked disabled="disabled"> SIGNIFICA NORMAL. DESCRIBIR EL HALLAZGO ANORMAL EN LA SECCIÓN CORRESPONDIENTE.</b>
+<br /><br />
+<table style="width: 100%; border: none; font-size: 10px;">
+    <tr>
+        <td style="width: 50%; border: none;">
+            <table style="border: none; border-right: 5px solid;">
+                <tr  style="border: none;">
+                    <td style="border: none;"><label>PIEL</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIPiel, new { id = "aduFIPiel" })</td>
+                    <td style="border: none;"><label>SIN LESIONES SIGNIFICATIVAS</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>OJOS</label></td>
+                    <td style="border: none;"><label>¿USA LENTES?</label></td>
+                    <td style="border: none;"><label>NO @Html.RadioButtonFor(model => model.aduFILentes, false , new { id = "aduFILentes" ,style = ""}) SI @Html.RadioButtonFor(model => model.aduFILentes, true , new { id = "aduFILentes" ,style = ""}) ÚLTIMO CONTROL:</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"></td>
+                    <td colspan="2" style="border: none;"><label><p>AGUDEZA VISUAL:&nbsp;OD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OI</p></label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>OIDOS</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIOidos, new { id = "aduFIOidos" })</td>
+                    <td style="border: none;"><label>OTOSCOPIA NORMAL</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>DENTADURA</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIDentadura, new { id = "aduFIDentadura" })</td>
+                    <td style="border: none;"><label>EN BUEN ESTADO</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>PULMONES</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIPulmones, new { id = "aduFIPulmones" })</td>
+                    <td style="border: none;"><label>SIN RUIDOS AGREGADOS</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>CORAZÓN</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFICorazon, new { id = "aduFICorazon" })</td>
+                    <td style="border: none;"><label>RITMO REGULAR, SIN SOPLOS</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>ABDOMEN</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIAbdomen, new { id = "aduFIAbdomen" })</td>
+                    <td style="border: none;"><label>BLANDO, INDOLORO, SIN VISCEROMEGALIAS</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>GENITALES EXTER.</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIGenitales, new { id = "aduFIGenitales" })</td>
+                    <td style="border: none;"><label>NORMALES</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;"><label>MAMAS</label></td>
+                    <td style="border: none; text-align: center;">@Html.CheckBoxFor(model => model.aduFIMamas, new { id = "aduFIMamas" })</td>
+                    <td style="border: none;"><label>SIN NÓDULOS</label></td>
+                </tr>
+                <tr style="border: none;">
+                    <td colspan="2" style="border: none;"><label>OSTEOMIOARTICULAR</label></td>
+                    <td style="border: none;">@Html.CheckBoxFor(model => model.aduFIOsteo, new { id = "aduFIOsteo" })</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 50%; border: none; vertical-align: top;">
+             <table style="border: none; width: 100%;">
+                 <tr style="border: none;">
+                     <td style="border: none;"><center><b>HALLAZGOS ANORMALES</b></center></td>
+                 </tr>
+             </table>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td colspan="2" style="border: none;">
+            <label><b>PRÁCTICAS PARA SEGUIMIENTO DE PATOLOGÍAS CRÓNICAS (consignar Fecha y Resultados)</b></label>
+            <table style="width: 100%">
+                @for(int i = 0; i < Model.patologicas.Count(); i++){
+                    <tr>
+                        @Html.HiddenFor(model => model.patologicas[i].aduPraPatResId)
+                        <td>@Model.patologicas[i].aduPraPatDescri</td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha1, new { id=i+"_1f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul1, new { id=i+"_1r", style="width: 110px;"})
+                            @*<input type="text" style="width: 110px; margin-bottom: 3px;"/>*@
+                            @*<input type="text" style="width: 110px;"/>*@
+                        </td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha2, new { id=i+"_2f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul2, new { id=i+"_2r", style="width: 110px;"})
+                        </td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha3, new { id=i+"_3f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul3, new { id=i+"_3r", style="width: 110px;"})
+                        </td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha4, new { id=i+"_4f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul4, new { id=i+"_4r", style="width: 110px;"})
+                        </td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha5, new { id=i+"_5f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul5, new { id=i+"_5r", style="width: 110px;"})
+                        </td>
+                        <td style="width: 14%;">
+                            @Html.EditorFor(model => model.patologicas[i].aduPraPatFecha6, new { id=i+"_6f", style="width: 110px; margin-bottom: 3px;"})<br />
+                            @Html.TextBoxFor(model => model.patologicas[i].aduPraPatResul6, new { id=i+"_6r", style="width: 110px;"})
+                        </td>
+                    </tr>
+                }
+                <!--
+                <tr>
+                    <td>Hb A1C</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Creatinina</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Filtrado Glomedular MDRD</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Ind. Proteinuria / Creatininuria</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Ind. Albuminuria / Creatininuria</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Ionograma</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Calcio</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Orina Completa</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Hemograma</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>ECG</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Fondo de Ojo</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                <tr>
+                    <td>Examen de Pie</td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                    <td style="width: 14%;"><input type="text" style="width: 110px; margin-bottom: 3px;"/><br /><input type="text" style="width: 110px;"/></td>
+                </tr>
+                -->
+            </table>
+        </td>
+    </tr>
+</table>
+}

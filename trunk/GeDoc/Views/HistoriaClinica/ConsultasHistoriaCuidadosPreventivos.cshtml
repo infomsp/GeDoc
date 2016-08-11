@@ -1,0 +1,37 @@
+﻿@model List<GeDoc.catHCAduPraPreventivaResulWS>
+@{
+    ViewBag.Title = "ConsultasHistorialFamiliarYPersonal";
+}
+
+<div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+    Planilla de Prácticas
+</div>
+<div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+    @{
+        Html.Telerik().Grid(Model)
+            .Name("gridCuidadosPreventivos")
+            .Localizable("es-AR")
+            .DataKeys(keys =>
+            {
+                keys.Add(p => p.aduPraPrevId);
+            })
+            //.DataBinding(dataBinding =>
+            //{
+            //    dataBinding.Ajax()
+            //        .Select("getListadoDeGrupoFamiliar", "DCRM");
+            //})
+            .Columns(columns =>
+            {
+                columns.Bound(c => c.aduPraPrevDescri).Width("250px").Title("Práctica").Visible(true);
+                columns.Bound(c => c.aduPraPrevFecha).Format("{0:dd/MM/yyyy}").Width("80px").Title("Fecha").Visible(true);
+                columns.Bound(c => c.aduPraPrevResultado).Width("250px").Title("Resultado").Visible(true);
+                columns.Bound(c => c.Usuario).Width("200px").Title("Usuario").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                    .ClientTemplate("<label title='<#= Usuario #>' style='cursor: pointer;' style='white-space: nowrap;'><#= Usuario #> </label>");
+            })
+            .Footer(true)
+            .Selectable()
+            .Resizable(resizing => resizing.Columns(true))
+            .Scrollable(scroll => scroll.Enabled(true).Height(390))
+            .Render();
+    }
+</div>

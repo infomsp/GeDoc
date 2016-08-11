@@ -1,0 +1,958 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+@model GeDoc.catAgenteWS
+
+@{
+    ViewData["StyleComboBox"] = "width: 200px;";
+    ViewData["StyleAutoComplete"] = "width: 60%;";
+    ViewData["FiltroContains"] = true;
+}
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap/css/datepicker.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap/css/fancy.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<style>
+    .SeparaCampos {
+        margin-bottom: 10px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function onAceptarInformacionDeAgenteCRUD() {
+        if (onValidarDatos()) {
+            return;
+        }
+        debugger;
+        var oFoto = jQuery("#foto");
+        if (oFoto[0].attributes.cambioFoto.value === "true") {
+            var blob = oFoto[0].toDataURL("image/png").replace("data:image/png;base64,", "");
+            $('#agtFoto').val(blob);
+        } else {
+            $('#agtFoto').val(null);
+        }
+        $('#tblAntecedentesMedicos').find('input[type=checkbox]').each(function (index) {
+            $("#agt" + $(this)[0].id).val($(this)[0].checked);
+        });
+
+        var $form = $('#frmInformacionDeAgenteCRUD');
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            error: function() {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function(respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+
+                    MensajeEmergente("¡Error!", respuesta.Mensaje, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+                    $(respuesta.Foco).addClass("ES-ErrorValidacion");
+                    $("#spanMensajeError").text(respuesta.Mensaje);
+                    $("#divAgenteMensajeError").attr("class", "BordeRedondeado alert-danger");
+                    $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+                    $("#divAgenteMensajeError").show();
+                    $(respuesta.Foco).attr("title", "Envie el error al área de sistema de la Dirección de Control y Reconocimientos Médicos.");
+                    $(respuesta.Foco).focus().select();
+                } else {
+                    onCancelarInformacionDeAgenteCRUD();
+                    MensajeEmergente("Información...", "Los datos del Agente se actualizaron correctamente.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                }
+            }
+        });
+    }
+
+    function onCancelarInformacionDeAgenteCRUD() {
+        FrenarVideo();
+
+        $("#divAgenteCRUD").hide();
+        $("#divAgenteCRUD").html("");
+        $("#btnBuscarAgente").removeClass("t-state-disabled");
+        $("#divAgenteMensaje").hide();
+        $("#txtNumeroDocumentoAgente").val("");
+        $("#txtNumeroDocumentoAgente").removeAttr("disabled");
+        $("#txtNumeroDocumentoAgente").focus().select();
+    }
+
+</script>
+
+@using (Html.BeginForm("setAgente", "DCRM", FormMethod.Post, new { id = "frmInformacionDeAgenteCRUD" }))
+{
+    <div id="divGridPrincipalInformacionDeAgenteCRUD" tabindex="1" style="overflow: hidden; outline: none;">
+    <div id="divAgenteMensajeError" class="BordeRedondeado @(Model.agtId == 0 ? "alert-info" : "alert-danger")" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: @(Model.agtId == 0 ? "block" : "none"); height: 38px;">
+        <i style="position: absolute; left: 70px; margin-top: 5px;" class="fa fa-2x @(Model.agtId == 0 ? "fa-info-circle" : "fa-warning")"></i>
+        <div style="font-weight: bold; margin-bottom: 10px;">¡Atención!</div>
+        <span id="spanMensajeError">El Número de Documento que ha ingresado no fue encontrado, Ingrese los datos solicitados para dar de alta el Agente.</span>
+    </div>
+
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+        Información del Agente
+    </div>
+    <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+    <table style="width: 100%; border: none;">
+    <tr style="border: none;">
+        <td style="border: none;" colspan="2">
+            <div>
+                <table style="border: none; width: 100%;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px; text-align: left;">
+                            <label style="vertical-align: super;">Apellido:</label>
+                            @Html.TextBoxFor(model => Model.agtApellido, new {id = "agtApellido", MensajeDeError = "Apellido", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;"})
+                        </td>
+                        <td style="border: none; padding: 0px; text-align: right;">
+                            <label style="vertical-align: super;">Nombre:</label>
+                            @Html.TextBoxFor(model => Model.agtNombre, new {id = "agtNombre", MensajeDeError = "Nombre", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "width: 80%; font-size: x-large;"})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none; width: 60%;">
+            <div class="SeparaCampos">
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">
+                            <label style="vertical-align: baseline;">Género:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "agtSexo_Lista")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="SeparaCampos">
+                <label style="vertical-align: baseline;">CUIL:</label>
+                @Html.TextBoxFor(model => Model.agtCUIL, new {id = "agtCUIL", @class = "desactivar", style = "text-align: center; width: 110px;"})
+            </div>
+            <div class="SeparaCampos ospeId" style="text-align: left;">
+                <table style="border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">
+                            <label style="vertical-align: baseline;">Estado Civil:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "ospeId_Lista")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="SeparaCampos">
+                <label style="vertical-align: baseline;">Fecha de Nacimiento:</label>
+                @Html.TextBoxFor(model => Model.agtFechaNacimiento, new {id = "agtFechaNacimiento", @class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Fecha de Nacimiento", style = "text-align: center; width: 68px;", @readonly = "readonly"})
+                <span id="agtFechaNacimiento_calendar" style="cursor: pointer;"><i class="fa fa-calendar"></i></span>
+                <label style="vertical-align: baseline; margin-left: 20px;">Edad:</label>
+                @Html.TextBoxFor(model => Model.agtEdad, new {@class = "desactivar", id = "agtEdad", style = "text-align: center; width: 50px;"})
+            </div>
+            <div class="SeparaCampos">
+                <label style="vertical-align: baseline;">Teléfono Fijo:</label>
+                @Html.TextBoxFor(model => Model.agtTelefonoFijo, new {id = "agtTelefonoFijo", MensajeDeError = "Número de Telefono", placeholder = "Número de Telefono", @class = "es-FondoFocusInput ValidarInformacion", maxlength = "15", style = "text-align: left; width: 130px;"})
+                <span><i class="fa fa-phone" style="margin-left: -18px;"></i></span>
+                <label style="vertical-align: baseline; margin-left: 20px;">Teléfono Celular:</label>
+                @Html.TextBoxFor(model => Model.agtTelefonoMovil, new {@class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Número de Celular", placeholder = "Número de Celular", id = "agtTelefonoMovil", maxlength = "18", style = "text-align: left; width: 130px;"})
+                <span><i class="fa fa-mobile-phone" style="font-size: 18px; margin-left: -18px;"></i></span>
+            </div>
+            <div class="SeparaCampos">
+                <label style="vertical-align: baseline;">Correo Electrónico:</label>
+                @Html.TextBoxFor(model => Model.agtCorreoElectronico, new {id = "agtCorreoElectronico", MensajeDeError = "Correo Electrónico", placeholder = "correo@electronico.com.ar", @class = "es-FondoFocusInput ValidarInformacion", maxlength = "50", style = "text-align: left; width: 356px;"})
+                <span><i class="fa fa-envelope" style="margin-left: -24px;"></i></span>
+            </div>
+        </td>
+        <td style="border: none; text-align: right;">
+            @{ Html.RenderPartial("_Fotos", ""); }
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none;" colspan="2">
+            <div style="height: 30px;">
+                <table style="border: none; width: 100%;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">
+                            <label style="vertical-align: baseline;">Tarea:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tarId_Lista")
+                        </td>
+                        <td style="border: none; text-align: center;">
+                            <label style="vertical-align: baseline; margin-left: 10px;">Fecha de Ingreso:</label>
+                            @Html.TextBoxFor(model => Model.agtFechaIngreso, new
+                            {
+                                id = "agtFechaIngreso", @class = "es-FondoFocusInput ValidarInformacion", MensajeDeError = "Fecha de Ingreso", style = "text-align: center; width: 68px;", @readonly = "readonly"
+                            })
+                            <span id="agtFechaIngreso_calendar" style="cursor: pointer;"><i class="fa fa-calendar"></i></span>
+                        </td>
+                        <td style="border: none; text-align: right;">
+                            <label style="vertical-align: baseline; margin-left: 10px;">Lugar de Trabajo:</label>
+                            @Html.TextBoxFor(model => Model.agtLugarTrabajo, new {@class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", MensajeDeError = "Lugar de Trabajo", id = "agtLugarTrabajo", style = "width: 360px;"})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none; width: 98.5%;" colspan="2">
+            <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                Domicilio
+            </div>
+            <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.5%;">
+                <div class="SeparaCampos">
+                    <table style="border: none; width: 100%;">
+                        <tr style="border: none;">
+                            <td style="border: none; padding: 0px; width: 50px;">
+                                <label style="vertical-align: baseline;">Calle:</label>
+                            </td>
+                            <td style="border: none; padding: 0px; width: 45%;">
+                                @Html.EditorFor(model => Model.agtCalle, new {id = "agtCalle", style = "text-align: left; width: 89%;"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Número:</label>
+                                @Html.TextBoxFor(model => Model.agtCalleNumero, new {id = "agtCalleNumero", MensajeDeError = "Número de Calle", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "text-align: left; width: 40px;", maxlength = "5"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Piso:</label>
+                                @Html.TextBoxFor(model => Model.agtBlockPiso, new {id = "agtBlockPiso", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 40px;", maxlength = "3"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Dpto:</label>
+                                @Html.TextBoxFor(model => Model.agtBlockDepto, new {id = "agtBlockDepto", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 40px;", maxlength = "3"})
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Barrio:</label>
+                                @Html.TextBoxFor(model => Model.agtBarrio, new {id = "agtBarrio", MensajeDeError = "Barrio", @class = "es-FondoFocusInput SiempreMayuscula ValidarInformacion", style = "text-align: left; width: 250px;", maxlength = "50"})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SeparaCampos">
+                    <table style="border: none; width: 100%;">
+                        <tr style="border: none;">
+                            <td style="border: none; padding: 0px; width: 50px;">
+                                <label style="vertical-align: baseline;">Ciudad:</label>
+                            </td>
+                            <td style="border: none;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "depId_Lista")
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Localidad:</label>
+                            </td>
+                            <td style="border: none; text-align: left;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "locId_Lista")
+                            </td>
+                            <td style="border: none; text-align: right;">
+                                <label style="vertical-align: baseline;">Código Postal:</label>
+                                @Html.TextBoxFor(model => Model.agtCodigoPostal, new {id = "agtCodigoPostal", MensajeDeError = "Código Postal", @class = "es-FondoFocusInput ValidarInformacion", style = "text-align: left; width: 50px;", maxlength = "5"})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="SeparaCampos">
+                    <label style="vertical-align: baseline;">Referencias del Domicilio:</label>
+                    @Html.TextAreaFor(model => Model.agtDomicilioReferencia, new {id = "agtDomicilioReferencia", @class = "es-FondoFocusInput SiempreMayuscula", style = "text-align: left; width: 99%;", maxlength = "500", title = "Ingrese una referencia de como llegar al domicilio o algo que ayude a identificar la ubicación de la casa.", placeholder = "Ingrese una referencia de como llegar al domicilio o algo que ayude a identificar la ubicación de la casa."})
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr style="border: none;">
+        <td style="border: none; width: 98.5%;" colspan="2">
+            <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                Antecedentes Médicos
+            </div>
+            <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 98.5%;">
+                <div class="SeparaCampos">
+                    <table id="tblAntecedentesMedicos" style="border: none; width: 100%;">
+                        <tr style="border: none; height: 20px;">
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="Fuma" @(Model.agtFuma == null ? "" : (Model.agtFuma.Value ? "checked" : ""))>
+                                    <span>Fuma</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="HTA" @(Model.agtHTA == null ? "" : (Model.agtHTA.Value ? "checked" : "")) >
+                                    <span>Presión Alta</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="Colesterol" @(Model.agtColesterol == null ? "" : (Model.agtColesterol.Value ? "checked" : "")) >
+                                    <span>Colesterol</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="Diabetes" @(Model.agtDiabetes == null ? "" : (Model.agtDiabetes.Value ? "checked" : "")) >
+                                    <span>Diabetes</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="ActividadFisica" @(Model.agtActividadFisica == null ? "" : (Model.agtActividadFisica.Value ? "checked" : "")) >
+                                    <span>Actividad Física</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label class="fancy-checkbox custom-color-green">
+                                    <input type="checkbox" id="Alergias" @(Model.agtAlergias == null ? "" : (Model.agtAlergias.Value ? "checked" : "")) >
+                                    <span>Alergias</span>
+                                </label>
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Peso:</label>
+                                @Html.TextBoxFor(model => Model.agtPeso, new {id = "agtPeso", @class = "es-FondoFocusInput ValidarInformacion", maxlength = "3", MensajeDeError = "Peso", title = "Peso expresado en Kilogramos, por ejemplo 80", style = "text-align: left; width: 30px;"})
+                                <label style="vertical-align: baseline;">Kg.</label>
+                            </td>
+                            <td style="border: none;">
+                                <label style="vertical-align: baseline;">Talla:</label>
+                                @Html.TextBoxFor(model => Model.agtTalla, new {id = "agtTalla", @class = "es-FondoFocusInput ValidarInformacion", maxlength = "4", MensajeDeError = "Talla", title = "Altura expresada en metros, por ejemplo 1.78", style = "text-align: left; width: 30px;"})
+                                <label style="vertical-align: baseline;">Mt.</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </table>
+    <table style="width: 100%; border: none;">
+        <tr style="border: none;">
+            <td style="border: none;">
+                <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                    Grupo Familiar
+                </div>
+                <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+                    @{
+                        Html.Telerik().Grid<GeDoc.catAgenteGrupoFamiliarWS>()
+                            .Name("gridGrupoFamiliarAgente")
+                            .Localizable("es-AR")
+                            .DataKeys(keys =>
+                            {
+                                keys.Add(p => p.agtfId);
+                            })
+                            .ToolBar(commands =>
+                            {
+                                commands.Template("<div title=\"Agregar\" class=\"t-button\" onclick=\"onAccion_GrupoFamiliarAgente('Agregar', -1)\" style=\"padding: 0px; min-width: 26px; min-height: 24px;\"><img src=" + Url.Content("~/Content/General/Vacio-Transparente.png") + " height=\"16\" width=\"16\" style=\"padding: 0px; vertical-align: middle; margin-left: -3px; background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;\"/></div>");
+                            })
+                            .DataBinding(dataBinding =>
+                            {
+                                dataBinding.Ajax()
+                                    .Select("getListadoDeGrupoFamiliar", "DCRM");
+                            })
+                            .Columns(columns =>
+                            {
+                            columns.Command(commands =>
+                            {
+                                commands.Custom("cmdModificar_GrupoFamiliarAgente")
+                                    .Ajax(true)
+                                    .ButtonType(GridButtonType.Image)
+                                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat 0px -336px;" })
+                                    .HtmlAttributes(new { title = "Modificar" });
+                                commands.Custom("cmdEliminar_GrupoFamiliarAgente")
+                                    .Ajax(true)
+                                    .ButtonType(GridButtonType.Image)
+                                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -16px -336px;" })
+                                    .HtmlAttributes(new { title = "Eliminar" });
+                            }).Width("60px").Title("Acciones");
+                                columns.Bound(c => c.agtfDNI).Width("80px").Title("DNI").Visible(true);
+                                columns.Bound(c => c.agtfApellidoyNombre).Width("170px").Title("Apellido y Nombre").Visible(true).HtmlAttributes(new {style = "white-space: nowrap;"})
+                                    .ClientTemplate("<label title='<#= agtfApellidoyNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= agtfApellidoyNombre #> </label>");
+                                columns.Bound(c => c.Vinculo).Width("70px").Title("Vínculo").Visible(true);
+                            })
+                            .Footer(false)
+                            .Selectable()
+                            .ClientEvents(clientEvents => clientEvents.OnCommand("onCommand_GrupoFamiliarAgente"))
+                            .Scrollable(scroll => scroll.Enabled(true).Height(110))
+                            .Render();
+                    }
+                </div>
+            </td>
+            <td style="border: none;">
+                <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white;">
+                    Reparticiones
+                </div>
+                <div class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 96%; height: 87%;">
+                    @{
+                        Html.Telerik().Grid<GeDoc.catAgenteReparticionWS>()
+                            .Name("gridReparticionesAgente")
+                            .Localizable("es-AR")
+                            .DataKeys(keys =>
+                            {
+                                keys.Add(p => p.repId);
+                            })
+                            .ToolBar(commands =>
+                            {
+                                commands.Template("<div title=\"Agregar\" class=\"t-button\" onclick=\"onAccion_ReparticionAgente('Agregar', -1)\" style=\"padding: 0px; min-width: 26px; min-height: 24px;\"><img src=" + Url.Content("~/Content/General/Vacio-Transparente.png") + " height=\"16\" width=\"16\" style=\"padding: 0px; vertical-align: middle; margin-left: -3px; background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -48px -319px;\"/></div>");
+                            })
+                            .DataBinding(dataBinding =>
+                            {
+                                dataBinding.Ajax()
+                                    .Select("getListadoDeReparticiones", "DCRM");
+                            })
+                            .Columns(columns =>
+                            {
+                                columns.Command(commands =>
+                                {
+                                    commands.Custom("cmdEliminar_ReparticionesAgente")
+                                        .Ajax(true)
+                                        .ButtonType(GridButtonType.Image)
+                                        .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -16px -336px;" })
+                                        .HtmlAttributes(new { title = "Eliminar" });
+                                }).Width("60px").Title("Acciones");
+                                columns.Bound(c => c.repCodigo).Width("70px").Title("Código").Visible(true);
+                                columns.Bound(c => c.repNombre).Width("170px").Title("Repartición").Visible(true).HtmlAttributes(new {style = "white-space: nowrap;"})
+                                    .ClientTemplate("<label title='<#= repNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= repNombre #> </label>");
+                                columns.Bound(c => c.minNombre).Width("170px").Title("Ministerio").Visible(true).HtmlAttributes(new {style = "white-space: nowrap;"})
+                                    .ClientTemplate("<label title='<#= minNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= minNombre #> </label>");
+                            })
+                            .Footer(false)
+                            .HtmlAttributes(new {style = "text-align: left;"})
+                            .Selectable()
+                            .ClientEvents(clientEvents => clientEvents.OnCommand("onCommand_ReparticionAgente"))
+                            .Scrollable(scroll => scroll.Enabled(true).Height(110))
+                            .Render();
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarInformacionDeAgenteCRUD();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;"/>
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarInformacionDeAgenteCRUD();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px; vertical-align: middle;"/>
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+    @Html.HiddenFor(model => Model.agtId, new {id = "agtId"})
+    @Html.HiddenFor(model => Model.agtDNI, new {id = "agtDNI"})
+    @Html.HiddenFor(model => Model.agtSexo, new {id = "agtSexo"})
+    @Html.HiddenFor(model => Model.tarId, new {id = "tarId"})
+    @Html.HiddenFor(model => Model.ospeId, new {id = "ospeId"})
+    @Html.HiddenFor(model => Model.locId, new {id = "locId"})
+    @Html.HiddenFor(model => Model.depId, new {id = "depId"})
+    @Html.HiddenFor(model => Model.agtHTA, new {id = "agtHTA"})
+    @Html.HiddenFor(model => Model.agtFuma, new {id = "agtFuma"})
+    @Html.HiddenFor(model => Model.agtColesterol, new {id = "agtColesterol"})
+    @Html.HiddenFor(model => Model.agtDiabetes, new {id = "agtDiabetes"})
+    @Html.HiddenFor(model => Model.agtActividadFisica, new {id = "agtActividadFisica"})
+    @Html.HiddenFor(model => Model.agtAlergias, new {id = "agtAlergias"})
+    @Html.HiddenFor(model => Model.agtFoto, new {id = "agtFoto"})
+    </div>
+}
+
+<script src="@Url.Content("~/Scripts/Bootstrap/plugins/bootstrap-datepicker/bootstrap-datepicker.js")"></script>
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalInformacionDeAgenteCRUD").ready(function() {
+        //Aplicamos algunos estilos
+        $(".desactivar").attr("readonly", "readonly");
+        $(".t-dropdown-wrap.t-state-default").css("text-align", "left");
+
+        InicialicarDatePickerCastellano();
+
+        @{
+            var FechaNacimiento = "";
+            if (Model.agtFechaNacimiento != null)
+            {
+                FechaNacimiento = Model.agtFechaNacimiento.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#agtFechaNacimiento').val('@(FechaNacimiento)');
+
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        $("#agtFechaNacimiento").datepicker({
+                format: "dd/mm/yyyy",
+                language: "es",
+                onRender: function(date) {
+                    $("#agtFechaNacimiento").datepicker("setValue", value);
+                    return date.valueOf() < now.valueOf() ? "disabled" : "";
+                }
+            })
+            .on("changeDate", function(e) {
+                $("#agtFechaNacimiento").datepicker("hide");
+                $("#agtEdad").val(CalcularEdad($("#agtFechaNacimiento").val()));
+            });
+        $("#agtEdad").val(CalcularEdad($("#agtFechaNacimiento").val()));
+
+        $("#agtFechaNacimiento_calendar").click(function(e) {
+            $("#agtFechaNacimiento").datepicker("show");
+        });
+        $('#agtFechaNacimiento').datepicker("show");
+        $('#agtFechaNacimiento').datepicker("hide");
+
+        //Fecha de Ingreso
+        @{
+            var FechaDeIngreso = "";
+            if (Model.agtFechaIngreso != null)
+            {
+                FechaDeIngreso = Model.agtFechaIngreso.ToString("dd/MM/yyyy");
+            }
+        }
+        $('#agtFechaIngreso').val('@(FechaDeIngreso)');
+
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        $("#agtFechaIngreso").datepicker({
+                format: "dd/mm/yyyy",
+                language: "es",
+                onRender: function(date) {
+                    $("#agtFechaIngreso").datepicker("setValue", value);
+                    return date.valueOf() < now.valueOf() ? "disabled" : "";
+                }
+            })
+            .on("changeDate", function(e) {
+                $("#agtFechaIngreso").datepicker("hide");
+            });
+
+        $("#agtFechaIngreso_calendar").click(function(e) {
+            $("#agtFechaIngreso").datepicker("show");
+        });
+        $('#agtFechaIngreso').datepicker("show");
+        $('#agtFechaIngreso').datepicker("hide");
+
+        $("#ospeId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            var _EC = "C";
+            switch ($('#ospeId_Lista').val()) {
+                case 67:
+                    _EC = "C";
+                    break;
+                case 68:
+                    _EC = "D";
+                    break;
+                case 78:
+                    _EC = "N";
+                    break;
+                case 83:
+                    _EC = "S";
+                    break;
+                case 86:
+                    _EC = "V";
+                    break;
+            }
+            $("#ospeId").val(_EC);
+        });
+        var $ListaEC = $("#ospeId_Lista");
+        if ($('#ospeId').val() != "") {
+            var _EC = "C";
+            switch ($('#ospeId').val()) {
+            case "C":
+                _EC = 67;
+                break;
+            case "D":
+                _EC = 68;
+                break;
+            case "N":
+                _EC = 78;
+                break;
+            case "S":
+                _EC = 83;
+                break;
+            case "V":
+                _EC = 86;
+                break;
+            }
+            $ListaEC.val(_EC).trigger("change");
+        }
+
+        $("#agtSexo_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            var _Sexo = $("#agtSexo_Lista").val() === "1" ? "Masculino" : "Femenino";
+            $("#agtSexo").val(_Sexo);
+            $("#agtCUIL").val(CalcularCUIL($("#agtDNI").val(), _Sexo));
+        });
+        debugger;
+        var $ListaSexo = $("#agtSexo_Lista");
+        if ($("#agtSexo").val() === "") {
+            var _Sexo = $("#agtSexo_Lista").val() === "1" ? "Masculino" : "Femenino";
+            $("#agtSexo").val(_Sexo);
+            $("#agtCUIL").val(CalcularCUIL($("#agtDNI").val(), _Sexo));
+        } else {
+            $ListaSexo.val($("#agtSexo").val() === "Masculino" ? "1" : "2").trigger("change");
+        }
+
+        $("#tarId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#tarId").val($("#tarId_Lista").val());
+        });
+        var $ListaTarea = $("#tarId_Lista");
+        if ($('#tarId').val() != "" && $('#tarId').val() > 0) {
+            $ListaTarea.val($("#tarId").val()).trigger("change");
+        }
+
+        $("#depId_Lista").select2({
+            placeholder: "Ningún item seleccionado",
+            allowClear: false,
+            language: "es",
+            theme: "classic"
+        }).on("change", function(e) {
+            $("#depId").val($("#depId_Lista").val());
+            RecargarLocalidades();
+        });
+        var $ListaDepartamentos = $("#depId_Lista");
+        if ($('#depId').val() != "" && $('#depId').val() > 0) {
+            $ListaDepartamentos.val($("#depId").val()).trigger("change");
+        }
+
+        $('#agtTelefonoFijo').mask("(0999) 999-9999");
+        $('#agtTelefonoMovil').mask("(0999) 159-999999");
+        $('#agtCodigoPostal').mask("5499");
+        $("#agtPeso").keypress(function(event) {
+            if (event.keyCode < 45 || event.keyCode > 57) {
+                event.returnValue = false;
+                return false;
+            }
+        });
+        $('#agtTalla').mask('9,99');
+        $("#agtTalla").focusout(function(event) {
+            $(this).val($(this).val().replace("_", "0"));
+        });
+
+        $("#agtCalle").addClass("es-FondoFocusInput SiempreMayuscula ValidarInformacion");
+        $("#agtCalle").attr("MensajeDeError", "Calle");
+        $("#agtCalle").css("width", "98%");
+        $("#agtCalle").val("@(Model.agtCalle)");
+        $("#agtDomicilioReferencia").val("@(Model.agtDomicilioReferencia)");
+        $("#agtPeso").val("@(Model.agtPeso != null ? ((int)Model.agtPeso).ToString() : "")");
+
+        $('#agtApellido').focus().select();
+
+        //Cargamos Foto
+        @{
+            var PathImagen = (Model.agtFoto ?? "") != "" ? Model.agtFoto : "~/Content/General/Camara.png";
+        }
+        if ($("#agtFoto").val() !== "" && $("#agtFoto").val() != null) {
+            CargarFoto("@(Url.Content(PathImagen))");
+        }
+        //Paso con enter de campo a campo
+        $(":input").bind("keypress", function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeAttr("title");
+            $(this).removeClass("ES-ErrorValidacion");
+            $("#divAgenteMensajeError").hide("slide");
+        });
+    });
+
+    function RecargarLocalidades() {
+        ProcesandoListaDesplegable("listaDesplegable_locId_Lista");
+        var _Post = GetPathApp("DCRM/ListaDeLocalidades");
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { depId: $("#depId").val() },
+            error: function() {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function(respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_locId_Lista").html(respuesta);
+
+                    $("#locId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function(e) {
+                        $("#locId").val($("#locId_Lista").val());
+                    });
+                    var $ListaLocalidades = $("#locId_Lista");
+                    if ($('#locId').val() != "" && $('#locId').val() > 0) {
+                        $ListaLocalidades.val($("#locId").val()).trigger("change");
+                    } else {
+                        $ListaLocalidades.trigger("change");
+                    }
+
+                    $ListaLocalidades.on("select2:open", function(e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+                    //$(".select2.select2-container.select2-container--classic").css("width", "330px");
+                    //
+                }
+            }
+        });
+    }
+
+    function onValidarDatos() {
+        var _MensajeDeError = "";
+        var _Campo = "";
+        $("#divAgenteMensajeError").hide();
+
+        var Letra = "";
+        var _CampoEncontrado = "";
+        $('.ValidarInformacion').each(function(index) {
+            if (_MensajeDeError === "") {
+                if ($(this).val() === "" && (("agtDomicilioReferencia, agtBlockPiso, agtBlockDepto, agtCodigoPostal, agtTelefonoFijo, agtTelefonoMovil").indexOf($(this).attr("id")) === -1)) {
+                    _MensajeDeError = "Debe ingresar el campo " + $(this).attr("MensajeDeError") + " del Agente.";
+                    _CampoEncontrado = $(this).attr("id");
+                    _Campo = "#" + _CampoEncontrado;
+                }
+                if (_MensajeDeError === "") {
+                    switch ($(this).attr("id")) {
+                    case "agtCodigoPostal":
+                        if ($(this).val() < 5400) {
+                            _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es incorrecto del Agente.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "agtTelefonoFijo":
+                        debugger;
+                        if (($(this).val() === "(0___) ___-____" || $(this).val() === "") && ($("#agtTelefonoMovil").val() === "(0___) 15_-______" || $("#agtTelefonoMovil").val() === "")) {
+                            _MensajeDeError = "Debe ingresar al menos un " + $(this).attr("MensajeDeError") + ".";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "agtTelefonoMovil":
+                        debugger;
+                        if (($(this).val() === "(0___) 15_-______" || $(this).val() === "") && ($("#agtTelefonoFijo").val() === "(0___) ___-____" || $("#agtTelefonoFijo").val() === "")) {
+                            _MensajeDeError = "Debe ingresar al menos un " + $(this).attr("MensajeDeError") + ".";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "agtFechaNacimiento":
+                        if ($("#agtEdad").val() < 18 || $("#agtEdad").val() > 70) {
+                            _MensajeDeError = "La " + $(this).attr("MensajeDeError") + " ingresada, es incorrecta.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "agtFechaIngreso":
+                        var dateVar = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+                        var dsplit = dateVar.split("/");
+                        var dHoy = new Date(dsplit[2], dsplit[1], dsplit[0]);
+                        var dpFechaIngreso = $("#agtFechaIngreso").val();
+                        dsplit = dpFechaIngreso.split("/");
+                        var dFechaIngreso = new Date(dsplit[2], dsplit[1], dsplit[0]);
+                        if (dHoy < dFechaIngreso) {
+                            _MensajeDeError = "La " + $(this).attr("MensajeDeError") + " es incorrecta, no puede ser mayor a la fecha actual.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    case "agtCorreoElectronico":
+                        if (!validarEmail($(this).val())) {
+                            _MensajeDeError = "El " + $(this).attr("MensajeDeError") + " ingresado, es Incorrecto.";
+                            _CampoEncontrado = $(this).attr("id");
+                            _Campo = "#" + _CampoEncontrado;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (_MensajeDeError === "" && (("agtApellido, agtNombre, agtLugarTrabajo, agtCalle, agtBarrio").indexOf($(this).attr("id")) >= 0)) {
+                Letra = ValidaRepeticionDeCaracteres($(this).val());
+                if (Letra !== "") {
+                    _MensajeDeError = "El dato ingresado es incoherente, revise si ha repetido alguna letra de forma incorrecta.";
+                    _CampoEncontrado = $(this).attr("id");
+                    _Campo = "#" + _CampoEncontrado;
+                }
+                if (_MensajeDeError === "") {
+                    if (!ValidaNomenclacion($(this).val())) {
+                        _MensajeDeError = "El dato ingresado no parece ser real, revise la información por favor.";
+                        _CampoEncontrado = $(this).attr("id");
+                        _Campo = "#" + _CampoEncontrado;
+                    }
+                }
+            }
+        });
+
+        if (_MensajeDeError === "") {
+            //Validamos CUIT
+            if (!validaCuit($("#agtCUIL").val())) {
+                _MensajeDeError = "El CUIL es incorrecto, revise el sexo del Agente.";
+                _CampoEncontrado = "agtSexo";
+                _Campo = "#" + _CampoEncontrado;
+            }
+        }
+        if (_MensajeDeError !== "") {
+            MensajeEmergente("¡Error!", _MensajeDeError, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+            $(_Campo).addClass("ES-ErrorValidacion");
+            $("#spanMensajeError").text(_MensajeDeError);
+            $("#divAgenteMensajeError").attr("class", "BordeRedondeado alert-danger");
+            $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+            $("#divAgenteMensajeError").show();
+            $(_Campo).attr("title", "Es importante que la información ingresada sea coerente y real, por favor revise la información ingresada.");
+            $(_Campo).focus().select();
+            return true;
+        }
+
+        return false;
+    }
+
+    function ValidaRepeticionDeCaracteres(Cadena) {
+        var i = 0;
+        var counter = 0;
+        var strArreglo = Cadena.split('');
+        var Letra = strArreglo[0];
+        while (i <= Cadena.length) {
+            if (strArreglo[i] === Letra) {
+                counter++;
+            } else {
+                Letra = strArreglo[i];
+            }
+            i++;
+            if (counter > 2) {
+                return Letra;
+            }
+        }
+        return "";
+    }
+
+    function onCommand_GrupoFamiliarAgente(e) {
+        debugger;
+        switch (e.name) {
+            case "cmdModificar_GrupoFamiliarAgente":
+                onAccion_GrupoFamiliarAgente("Modificar", e.dataItem['agtfDNI']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            case "cmdEliminar_GrupoFamiliarAgente":
+                onAccion_GrupoFamiliarAgente("Eliminar", e.dataItem['agtfDNI']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+            //case "cmdConsultar_catProveedor":
+            //    onAccion_catProveedor("Consultar", e.dataItem['provId']);
+            //    e.preventDefault();
+            //    e.stopPropagation();
+            //    break;
+        }
+    }
+
+    function onAccion_GrupoFamiliarAgente(pAccion, idRegistro) {
+        switch (pAccion) {
+            case "Agregar":
+                break;
+            case "Modificar":
+                break;
+            case "Eliminar":
+                break;
+            case "Consultar":
+                break;
+        }
+
+        var wCliniMedica = $("#wCRUDcatAgenteGrupoFamiliar").data("tWindow");
+        $('#wCRUDcatAgenteGrupoFamiliar').css({ 'height': 250, 'width': 512 });
+        $('#wCRUDcatAgenteGrupoFamiliar').find('div.t-window-content').css({ 'height': 220, 'width': 500 });
+        wCliniMedica.content('<img src="@(Url.Content("~/Content/General/WaitingIndicator.gif"))" width="22px" alt="" /><strong> Cargando...</strong>');
+        wCliniMedica.ajaxRequest(GetPathApp("DCRM/getGrupoFamiliar") + "?pAccion=" + pAccion + "&agtfDNI=" + idRegistro);
+        wCliniMedica.title(pAccion).open();
+    }
+
+    function onActivate_wCRUDcatAgenteGrupoFamiliar() {
+        var _WindowHC = $(this).data("tWindow");
+        _WindowHC.center();
+    }
+
+    function onCommand_ReparticionAgente(e) {
+        debugger;
+        switch (e.name) {
+            case "cmdEliminar_ReparticionesAgente":
+                onAccion_ReparticionAgente("Eliminar", e.dataItem['repId']);
+                e.preventDefault();
+                e.stopPropagation();
+                break;
+        }
+    }
+
+    function onAccion_ReparticionAgente(pAccion, idRegistro) {
+        switch (pAccion) {
+            case "Agregar":
+                break;
+            case "Modificar":
+                break;
+            case "Eliminar":
+                break;
+            case "Consultar":
+                break;
+        }
+
+        var wCliniMedica = $("#wCRUDcatAgenteReparticiones").data("tWindow");
+        $('#wCRUDcatAgenteReparticiones').css({ 'height': 250, 'width': 562 });
+        $('#wCRUDcatAgenteReparticiones').find('div.t-window-content').css({ 'height': 220, 'width': 550 });
+        wCliniMedica.content('<img src="@(Url.Content("~/Content/General/WaitingIndicator.gif"))" width="22px" alt="" /><strong> Cargando...</strong>');
+        wCliniMedica.ajaxRequest(GetPathApp("DCRM/getReparticionAgente") + "?pAccion=" + pAccion + "&repId=" + idRegistro);
+        wCliniMedica.title(pAccion).open();
+    }
+
+    function onActivate_wCRUDcatAgenteReparticiones() {
+        var _WindowHC = $(this).data("tWindow");
+        _WindowHC.center();
+    }
+
+</script>
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDcatAgenteGrupoFamiliar")
+      .Title("Grupo Familiar")
+      .Visible(false)
+      .Content(() =>
+      { })
+      .Buttons(b => b.Maximize().Close())
+      .Draggable(true)
+      .Modal(true)
+      .Scrollable(false)
+      .Resizable()
+      //.Width(1000)
+      .Height(400)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDcatAgenteGrupoFamiliar"))
+      .Render();
+}
+
+@{
+    Html.Telerik().Window()
+      .Name("wCRUDcatAgenteReparticiones")
+      .Title("Reparticiones")
+      .Visible(false)
+      .Content(() =>
+      { })
+      .Buttons(b => b.Maximize().Close())
+      .Draggable(true)
+      .Modal(true)
+      .Scrollable(false)
+      .Resizable()
+      //.Width(1000)
+      .Height(400)
+      .ClientEvents(eventos => eventos.OnActivate("onActivate_wCRUDcatAgenteReparticiones"))
+      .Render();
+}

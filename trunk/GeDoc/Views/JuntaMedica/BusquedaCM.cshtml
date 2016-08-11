@@ -1,0 +1,247 @@
+@using GeDoc
+@using GeDoc.Models.JuntaMedica.Modelo
+<script>
+    var ItemsSeleccionadosJM = 0;
+    function onComplete_JuntaMedicaBusquedaCM(e) {
+        if (e.name != "update" && e.name != "insert") {
+            ItemsSeleccionadosJM = 0;
+            CerrarWaiting();
+            $("#txtBusquedaBusquedaCM").focus();
+        }
+    }
+
+    function onDataBinding_JuntaMedicaBusquedaCM(args) {
+        AbrirWaiting();
+        var textoBuscado = $("#txtBusquedaBusquedaCM").val() == null ? "" : $("#txtBusquedaBusquedaCM").val();
+        args.data = $.extend(args.data, { textoBuscado: textoBuscado });
+    }
+
+    function onCommand_JuntaMedicaBusquedaCM(e) {
+        switch (e.name) {
+        case "cmdAtencionMedica":
+            jConfirm("¿Confirma que " + e.dataItem["agtApellidoNombre"] + " está listo para la Atención Médica ?", "Confirmar...", function (r) {
+                if (r) {
+                    AbrirWaiting();
+                    var _Post = GetPathApp("JuntaMedica/setListoParaAtencion");
+                    $.ajax({
+                        type: "POST",
+                        url: _Post,
+                        data: { cmedId: e.dataItem["cmedId"], Operacion: "Individual" },
+                        error: function () {
+                            CerrarWaiting();
+                            jAlert("Error al guardar datos.", "Error...", function () {
+                                $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                            });
+                        },
+                        success: function (respuesta) {
+                            if (respuesta.Error) {
+                                var FocusControl = respuesta.Foco;
+                                jAlert(respuesta.Mensaje, "Error...", function () {
+                                    $("#" + FocusControl)[0].focus().select();
+                                });
+                            } else {
+                                $("#txtBusquedaBusquedaCM").val("");
+                                $("#gridBusquedaCM").data("tGrid").ajaxRequest();
+                                $("#txtBusquedaBusquedaCM").focus();
+                            }
+                        }
+                    });
+                }
+            });
+
+            e.preventDefault();
+            e.stopPropagation();
+            break;
+        }
+    }
+
+    function onCommand_AtenderMasivo() {
+        if (ItemsSeleccionadosJM > 0) {
+            var Mensaje = "¿Confirma Atención Médica para las " + ItemsSeleccionadosJM + " Cartas Médicas seleccionadas?";
+            if (ItemsSeleccionadosJM == 1) {
+                Mensaje = "¿Confirma Atención Médica para la Cartas Médica seleccionada?";
+            }
+            jConfirm(Mensaje, "Confirmar...", function (r) {
+                    if (r) {
+                        AbrirWaiting();
+                        var _Post = GetPathApp("JuntaMedica/setListoParaAtencion");
+                        $.ajax({
+                            type: "POST",
+                            url: _Post,
+                            data: { cmedId: -1, Operacion: "Masivo" },
+                            error: function () {
+                                CerrarWaiting();
+                                jAlert("Error al guardar datos.", "Error...", function () {
+                                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                                });
+                            },
+                            success: function (respuesta) {
+                                if (respuesta.Error) {
+                                    var FocusControl = respuesta.Foco;
+                                    jAlert(respuesta.Mensaje, "Error...", function () {
+                                        $("#" + FocusControl)[0].focus().select();
+                                    });
+                                } else {
+                                    $("#txtBusquedaBusquedaCM").val("");
+                                    $("#gridBusquedaCM").data("tGrid").ajaxRequest();
+                                    $("#txtBusquedaBusquedaCM").focus();
+                                }
+                            }
+                        });
+                    }
+                });
+        } else {
+            jAlert("Debe seleccionar al menos una Carta Médica.", "¡Atención!", function () {
+                $("#txtBusquedaBusquedaCM").focus();
+            });
+        }
+    }
+
+    function onCommand_RefreshBusquedaCM() {
+        $("#gridBusquedaCM").data("tGrid").ajaxRequest();
+    }
+
+    $("#txtBusquedaBusquedaCM").keydown(function (e) {
+        if (e.which === 13) {
+            var grid = $("#gridBusquedaCM").data("tGrid");
+            grid.ajaxRequest();
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $("#txtBusquedaBusquedaCM").focus(function(e) {
+        $(this).select();
+    });
+
+    function ValidaCheckBox_JuntaMedicaBusquedaCM(ItemSeleccionado, cbxSel) {
+        if ($('#gridBusquedaCM').data("tGrid").total == 0) {
+            return;
+        }
+        if ($(".ckTipoEmbozo:checkbox:checked").length == 0) {
+            $(".check_todos").removeAttr("checked");
+        } else if ($(".ckTipoEmbozo:checkbox:checked").length == $("#gridBusquedaCM").data('tGrid').total || $(".ckTipoEmbozo:checkbox:checked").length == $("#gridBusquedaCM").data('tGrid').pageSize) {
+            $(".check_todos").attr("checked", "checked");
+        } else if ($(".ckTipoEmbozo:checkbox:checked").length < $("#gridBusquedaCM").data('tGrid').total || $(".ckTipoEmbozo:checkbox:checked").length < $("#gridBusquedaCM").data('tGrid').pageSize) {
+            $(".check_todos").removeAttr("checked");
+        }
+
+        //Guardamos el estado
+        var _Post = GetPathApp('JuntaMedica/setListoParaAtencionChecked');
+        $.ajax({
+            url: _Post,
+            data: { cmedId: ItemSeleccionado, pChecked: cbxSel.checked },
+            type: 'POST',
+            error: function (xhr, ajaxOptions, thrownError) {
+                CerrarWaiting();
+                jAlert('Falló el acceso al servidor', '¡Atención!');
+            },
+            success: function (data) {
+                ItemsSeleccionadosJM = data;
+            }
+        });
+    }
+
+    function onLoad_JuntaMedicaBusquedaCM() {
+        $("#cbx_Seleccionado_All").click(function (event) {
+            debugger;
+            if ($("#gridBusquedaCM").data('tGrid').data.length == 0) {
+                return;
+            }
+            var _Checked = false;
+            if ($(this).is(":checked")) {
+                $(".ckTipoEmbozo:checkbox:not(:checked)").attr("checked", "checked");
+                _Checked = true;
+            } else {
+                $(".ckTipoEmbozo:checkbox:checked").removeAttr("checked");
+            }
+
+            $.ajax({
+                url: GetPathApp('JuntaMedica/setListoParaAtencionCheckedAll'),
+                data: { pChecked: _Checked },
+                type: 'POST',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    CerrarWaiting();
+                    jAlert('Falló el acceso al servidor', '¡Atención!');
+                },
+                success: function (data) {
+                    ItemsSeleccionadosJM = data;
+                }
+            });
+        });
+    }
+
+</script>
+@(Html.Telerik().Grid<getListaCMPorEstadosWS>()
+      .Name("gridBusquedaCM")
+      .DataKeys(keys =>
+      {
+          keys.Add(p => p.cmedId);
+      })
+      .Localizable("es-AR")
+      .ToolBar(commands => commands.Template(
+          @<text>
+              <div style="margin-top: 5px; margin-left: 10px; margin-bottom: 5px;">
+                  <label style="">Búsqueda:</label>
+                  <input type="text" id="txtBusquedaBusquedaCM" style="width: 449px;"/>
+                  <label class="t-button" style="margin-left: 10px;">
+                      <img class="t-icon" src="@Url.Content("~/Content/General/intercambio.gif")" onclick="onCommand_AtenderMasivo();" alt="AtenciónMasiva" title="Atención Médica de todos los items Seleccionados"/>
+                  </label>
+                  <label class="t-button">
+                      <img class="t-icon t-refresh" onclick="onCommand_RefreshBusquedaCM(this);" title="Recargar lista de Cartas Médicas"/>
+                  </label>
+              </div>
+           </text>))
+      .DataBinding(dataBinding =>
+      {
+          dataBinding.Ajax()
+              .Select("getListadoDeCartasABuscar", "JuntaMedica", new { textoBuscado = "" });
+      })
+      .Columns(columns =>
+      {
+          columns.Command(commands =>
+          {
+              commands.Custom("cmdAtencionMedica")
+                  .Ajax(true)
+                  .ButtonType(GridButtonType.Image)
+                  .SendDataKeys(false)
+                  .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -208px;", title = "Atención Médica" })
+                  .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("JuntaMedica", "Atención Médica") })
+                  .SendState(false)
+                  .DataRouteValues(route =>
+                  {
+                      route.Add(o => o.cmedId).RouteKey("cmedId");
+                  });
+          }).Width("60px").Title("Acciones");
+          //.HeaderTemplate("<div style='width: 100%; text-align: center;'><input type='checkbox' id='cbx_Seleccionado_All' class='check_todos' style='cursor: pointer;' title='Seleccionar todos los registros' /></div>")
+          columns.Bound(c => c.Seleccionado).Width("60px").Visible(ViewBag.Operacion != "Consulta")
+              .ClientTemplate("<div style='width: 100%; text-align: center;'><input type='checkbox' id='cbx_Seleccionado_<#= cmedId #>' <#= Seleccionado ? 'checked: checked' : '' #> class='ckTipoEmbozo' onclick='ValidaCheckBox_JuntaMedicaBusquedaCM(<#= cmedId #>, this);' style='cursor: pointer;' /></div>");
+          columns.Bound(c => c.prioridad).Width("60px").Title("Prioridad").Visible(true).Filterable(false)
+                .ClientTemplate("<label title='<#= prioridad == \"PA\" ? \"Alta\" : \"Normal\" #>' style='cursor: pointer;' style='white-space: nowrap;'><#= prioridad == \"PA\" ? \"Alta\" : \"Normal\" #></label>");
+          columns.Bound(c => c.cmedId).Width("100px").Title("Id").Visible(false);
+          columns.Bound(c => c.cmedNumero).Width("130px").Title("Número de CM").Visible(false);
+          columns.Bound(c => c.agtDNI).Width("90px").Title("DNI").Visible(true);
+          columns.Bound(c => c.cmedOrdenRecepcion).Width("50px").Title("Orden").Visible(true).Filterable(false);
+          columns.Bound(c => c.agtApellidoNombre).Width("300px").Title("Agente").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= agtApellidoNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= agtApellidoNombre #> </label>");
+          columns.Bound(c => c.espNombre).Width("130px").Title("Especialidad").Visible(true).HtmlAttributes(new { style = "white-space: nowrap;" })
+                .ClientTemplate("<label title='<#= espNombre #>' style='cursor: pointer;' style='white-space: nowrap;'><#= espNombre #> </label>");
+          columns.Bound(c => c.EstadoCM).Width("80px").Title("Estado").Visible(true);
+          columns.Bound(c => c.estFecha).Width("120px").Format("{0:dd/MM/yyyy hh:mm}").Title("Fecha").Visible(true);
+          columns.Bound(c => c.licFechaInicial).Width("120px").Format("{0:dd/MM/yyyy}").Title("Licencia Desde").Visible(false);
+          columns.Bound(c => c.licFechaFinal).Width("120px").Format("{0:dd/MM/yyyy}").Title("Licencia Hasta").Visible(false);
+      })
+      .Editable(editing => editing
+          .Mode(GridEditMode.PopUp).DisplayDeleteConfirmation(true))
+      .Pageable((paging) =>
+          paging.Enabled(true)
+              .PageSize(((int) Session["FilasPorPagina"])))
+      .Footer(true)
+      .Sortable()
+      .Filterable()
+      .Selectable()
+      .ClientEvents(events => events.OnComplete("onComplete_JuntaMedicaBusquedaCM").OnCommand("onCommand_JuntaMedicaBusquedaCM").OnDataBinding("onDataBinding_JuntaMedicaBusquedaCM").OnLoad("onLoad_JuntaMedicaBusquedaCM"))
+      .Resizable(resizing => resizing.Columns(true))
+      .Scrollable(scroll => scroll.Enabled(true).Height(((int) Session["AlturaGrilla"])))
+      )

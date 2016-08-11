@@ -1,0 +1,120 @@
+@model GeDoc.catProveedorWS
+
+<script type="text/javascript">
+    //Aplicamos algunos estilos
+    $("#provAccion").attr("style", "display: none;");
+    $("#provId").attr("style", "display: none;");
+    $("#provRazonSocial").attr("style", "width: 350px;");
+    $("#provNombreDeFantasia").attr("style", "width: 350px;");
+    $("#provRubro").attr("style", "width: 350px;");
+    $('#provCUIT').mask("99-99999999-9");
+    $("#provCUIT").attr("style", "width: 90px;");
+    $("#provDomicilio").attr("style", "width: 901px;");
+    $("#provTelefono").attr("style", "width: 350px;");
+    $("#provCorreoElectronico").attr("style", "width: 350px;");
+
+    //Asignamos los valores de los campos\\
+    if ($("#provAccion").val() == "Consultar" || $("#provAccion").val() == "Eliminar") {
+        $("form:not(.filter) :input:visible:enabled").attr("disabled", "disabled");
+    }
+    //Seleccionamos el primer campo
+    $("#divGridPrincipalcatProveedor").ready(function() {
+        debugger;
+        $("form:not(.filter) :input:visible:enabled:first").focus().select();
+    });
+
+    //Paso con enter de campo a campo
+    $(':input').bind('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            Avanzar(this);
+        }
+    });
+
+    function onAceptarcatProveedor() {
+        if ($("#provAccion").val() == "Consultar") {
+            var windowElement = $('#wCRUDcatProveedor').data('tWindow');
+            windowElement.close();
+            return;
+        }
+
+        var $form = $('#frmcatProveedor');
+        debugger;
+        //AbrirWaiting();
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function () {
+                //CerrarWaiting();
+                jAlert("Error al guardar datos.", "Error...", function() {
+                    $("form:not(.filter) :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                //CerrarWaiting();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    $("#gridcatProveedor").data("tGrid").ajaxRequest();
+                    var windowElement = $('#wCRUDcatProveedor').data('tWindow');
+                    windowElement.close();
+                }
+            }
+        });
+    }
+    
+    function onCancelarcatProveedor() {
+        var windowElement = $('#wCRUDcatProveedor').data('tWindow');
+        windowElement.close();
+    }
+</script>
+
+@using (Html.BeginForm("setcatProveedor", "catProveedor", FormMethod.Post, new { id = "frmcatProveedor" }))
+{
+    <div id="divGridPrincipalcatProveedor" tabindex="1" style="overflow: hidden; outline: none;" >
+        <div class="BordeRedondeadoTab t-state-selected">
+            INFORMACIÓN DEL PROVEEDOR
+        </div>
+        <div id="div2" class="BordeRedondeado BordesGrupoCRUD" style="margin-left: 0%; margin-top: 0px; padding: 8px; width: 97.9%; height: 87%;">
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Razón Social:</label>
+                @Html.TextBoxFor(model => Model.provRazonSocial, new { @class = "SiempreMayuscula" })
+                <label style="vertical-align: baseline; margin-left: 389px;">CUIT:</label>
+                @Html.EditorFor(model => Model.provCUIT, "", "provCUIT")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Nombre de Fantasía:</label>
+                @Html.TextBoxFor(model => Model.provNombreDeFantasia, new { @class = "SiempreMayuscula" })
+                @*<label style="vertical-align: baseline; margin-left: 62px;">Rubro(s):</label>
+                @Html.TextBoxFor(model => Model.provRubro, new { @class = "SiempreMayuscula" })*@
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Domicilio:</label>
+                @Html.EditorFor(model => Model.provDomicilio, "", "provDomicilio")
+            </div>
+            <div style="height: 30px;">
+                <label style="vertical-align: baseline;">Teléfono:</label>
+                @Html.EditorFor(model => Model.provTelefono, "", "provTelefono")
+                <label style="vertical-align: baseline; margin-left: 75px;">Correo Electrónico:</label>
+                @Html.EditorFor(model => Model.provCorreoElectronico, "", "provCorreoElectronico")
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <div id="btnAceptar" class="t-button" onclick="onAceptarcatProveedor();" title="@(Model.provAccion == "Consultar" ? "Cierra ventana de consulta" : "Confirmar")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Aceptar.png') no-repeat 0px 0px; vertical-align: middle;" />
+                <label style="cursor: pointer;">Aceptar</label>
+            </div>
+            <div id="btnCancelar" class="t-button" onclick="onCancelarcatProveedor();" title="Cancelar" style="@(Model.provAccion == "Consultar" ? "display: none;" : "")">
+                <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/General/Crud")/Cancelar.png') no-repeat 0px 0px;  vertical-align: middle;" />
+                <label style="cursor: pointer;">Cancelar</label>
+            </div>
+        </div>
+        @Html.EditorFor(model => Model.provAccion, new { style = "width: 200px; display: none;", id = "provAccion" })
+        @Html.EditorFor(model => Model.provId, new { style = "width: 200px; display: none;", id = "provId" })
+    </div>
+}

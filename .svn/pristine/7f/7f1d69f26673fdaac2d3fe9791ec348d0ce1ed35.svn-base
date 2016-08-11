@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<picture>
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Despacho</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/1.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Pasillo a Dirección Administrativa</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/2.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Pasillo a Dirección Administrativa</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/3.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Panorámica</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/4.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Panorámica Odontología</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/5.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Panorámica</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/6.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Personal-Contratos</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/7.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Bioestadísticas</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/8.jpg]]></imageURL>
+  </cat>
+
+  <cat>
+    <url><![CDATA[]]></url>
+    <target>_new</target>
+    <alt>Bioestadísticas</alt>
+    <imageURL><![CDATA[/Gedoc/Content/YsaSS-images/photo/cat/9.jpg]]></imageURL>
+  </cat>
+
+</picture>

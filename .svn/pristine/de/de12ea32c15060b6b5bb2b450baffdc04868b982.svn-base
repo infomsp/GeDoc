@@ -1,0 +1,179 @@
+@{
+    Html.RenderPartial("WaitingCRUD");
+}
+
+<style>
+</style>
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap/css/datepicker.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap/css/fancy.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<div id="div_hcPaciente" class="iconos" style="text-align: center;">
+    <div id="divHCMensajeAccion" class="BordeRedondeado alert-success" style="padding: 10px; left: 20px; position: absolute; display: none;">
+        <i id="iHCMensajeAccion" style="position: relative; top: -10px; margin-right: 10px;" class="fa fa-2x fa-check"></i>
+        <span style="position: relative; top: -15px; margin-right: 10px;" id="spanHCMensajeAccion" style="vertical-align: super;">Nuevo Paciente</span>
+        <img id="imgHCMensajeAccion" src="@Url.Content("~/Content/General/HC/Paciente.png")" height="38" width="38"/>
+    </div>
+
+    <div id="divHCMensajeError" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; text-align: center; display: none; left: 20px; position: absolute; height: 43px; z-index: 10; width: 95.5%;">
+        <i style="position: absolute; left: 70px; margin-top: .8%;" class="fa fa-2x fa-warning"></i>
+        <div style="font-weight: bold; margin-bottom: 10px;">¡Atención!</div>
+        <span id="spanMensajeError">El Número de Documento que ha ingresado no fue encontrado, Ingrese los datos solicitados para dar de alta el Paciente.</span>
+    </div>
+
+    <div id="divHCCargaDeDocumento" style="vertical-align: middle; padding: 10px; margin: 10px;">
+        <div>
+            <div class="input-group centraTabla">
+                <table style="border: none; text-align: left;">
+                    <tr style="border: none;">
+                        <td style="border: none; padding: 0px;">
+                            <label style="vertical-align: baseline;">Documento:</label>
+                        </td>
+                        <td style="border: none;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "tipoIdTipoDocumento_Lista")
+                        </td>
+                        <td style="border: none;">
+                            <input type="text" placeholder="N° de Documento" id="txtHCNumeroDocumento" maxlength="8" style="width: 125px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+                        </td>
+                        <td style="border: none;">
+                            <button id="btnBuscarPaciente" class="t-button t-button-icon" onclick="onBuscarPacienteHC();" style="width: 100px;">
+                                <span><i class="fa fa-search"></i><span style="font-family: sans-serif; margin-left: 5px;">Buscar</span></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="divHCMensaje" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <i style="position: fixed; left: 50px;" class="fa fa-4x fa-warning"></i>
+        <label style="font-weight: bold;">¡Atención! </label>
+        El Número de Documento que ha ingresado no Existe!
+        <p>Debe dirigirse a la "Dirección de Control y Reconocimientos Médicos" y Solicitar el Alta de su Carta Médica.</p>
+    </div>
+    <div id="divPacienteCRUD" class="BordeRedondeado" style="background-color: rgba(154, 209, 236, 0.28); vertical-align: middle; padding: 10px; margin: 10px; text-align: left; display: none; color: #0E4561; border-color: #0E4561;">
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/Bootstrap/plugins/bootstrap-datepicker/bootstrap-datepicker.js")"></script>
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var AlturaInicial = 0;
+    var _DatosRegistroHCTurno;
+
+    //Si viene de turno ocultamos algunos campos\\
+    var wHistoriaClinica = $("#wHistoriaClinica").data("tWindow");
+    if (wHistoriaClinica != null) {
+        _DatosRegistroHCTurno = _DatosRegistroTurno;
+    }
+
+    function ValidarHCFecha(campo) {
+        var dpFecha = $('#' + campo).data('tDatePicker');
+        var dateVar = "@(DateTime.Now.Date.ToString("dd/MM/yyyy"))";
+        var dsplit = dateVar.split("/");
+        var dHoy = new Date(dsplit[2], dsplit[1] - 1, dsplit[0]);
+        if (dHoy < dpFecha.value()) {
+            return true;
+        }
+
+        dHoy = new Date(1920, 0, 1);
+        if (dHoy >= dpFecha.value() || dpFecha.value() == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function onMostarErrorGeneralHC(_MensajeDeError, _Campo, spanMensaje, divMensaje, divScroll) {
+        MensajeEmergente("¡Error!", _MensajeDeError, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+        $(_Campo).addClass("ES-ErrorValidacion");
+        $("#" + spanMensaje).text(_MensajeDeError);
+        $("#" + divMensaje).attr("class", "BordeRedondeado alert-danger");
+        $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+        $("#" + divMensaje).css("display", "inline-table");
+        $(_Campo).attr("title", _MensajeDeError);
+        if (divScroll != null){
+            $('#' + divScroll).animate({
+                scrollTop: ($(_Campo).offset().top - ($("#" + divScroll).offset().top + 70))
+            }, 2000);
+            $('#' + divScroll).slimScroll({ scrollTo: ($(_Campo).offset().top - ($("#" + divScroll).offset().top + 70)) + 'px' });
+        }
+        $(_Campo).focus().select();
+    }
+
+    $("#tipoIdTipoDocumento_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        //$("#tipoIdTipoDocumento").val($("#tarId_Lista").val());
+    });
+    //var $ListaTarea = $("#tarId_Lista");
+    //if ($('#tarId').val() != "" && $('#tarId').val() > 0) {
+    //    $ListaTarea.val($("#tarId").val()).trigger("change");
+    //}
+
+    function onBuscarPacienteHC() {
+        if ($("#txtHCNumeroDocumento").val().trim() === "") {
+            $("#txtHCNumeroDocumento").focus().select();
+            return;
+        }
+
+        if ($("#btnBuscarPaciente").is(".t-state-disabled")) {
+            return;
+        }
+
+        AbrirWaitingCRUD();
+        var _idTurno = 0;
+        if (_DatosRegistroHCTurno != null) {
+            _idTurno = _DatosRegistroHCTurno.turId;
+        }
+
+        var UrlAccion = "@(Session["Usuario"] == null ? Url.Content("getMenuHC") : Url.Content("~/HistoriaClinica/getMenuHC"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { IdPaciente: $("#txtHCNumeroDocumento").val() * -1, tipoDocumento: $("#tipoIdTipoDocumento_Lista").val(), idTurno: _idTurno },
+            error: function () {
+                CerrarWaitingCRUD();
+                $("#txtHCNumeroDocumento").focus().select();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                //if (respuesta.Encontrado) {
+                debugger;
+                $("#divHCMensaje").hide();
+                $("#divPacienteCRUD").show();
+                $("#btnBuscarPaciente").addClass("t-state-disabled");
+                $("#tipoIdTipoDocumento_Lista").prop("disabled", true);
+                $("#txtHCNumeroDocumento").attr("disabled", "disabled");
+                $(".t-button.t-insert.t-button-icon").focus().select();
+                $("#divPacienteCRUD").html(respuesta);
+            }
+        });
+    }
+
+    $("#txtHCNumeroDocumento").keydown(function (e) {
+        $("#divHCMensaje").hide();
+        if (e.which === 13) {
+            onBuscarPacienteHC();
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    function onCargaMenuFinalizada() {
+        CerrarWaitingCRUD();
+        $("#txtHCNumeroDocumento").focus().select();
+        //MensajeEmergente("¡Atención!", "Es obligatorio cargar los datos del padre o tutor por que es MENOR.", "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+        //var AlturaInicial = $('#main').outerHeight();
+        AlturaInicial = $('body').outerHeight();
+        //alert($('body').outerHeight() - 22);
+    }
+</script>

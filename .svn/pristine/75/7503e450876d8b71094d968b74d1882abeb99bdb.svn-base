@@ -1,0 +1,95 @@
+@using GeDoc
+
+@model GeDoc.Models.JuntaMedica.Modelo.getListadoJuntasMedicas_Result
+
+<script type="text/javascript">
+    function onAceptarwCRUDTurnoJuntaMedicaAnulacion() {
+        if ($("#MotivoAnulacion").val() === "") {
+            jAlert("Debe escribir el Motivo de la Anulación del Turno.", "¡Atención!", function () {
+                $('#MotivoAnulacion').focus().select();
+            });
+            return;
+        }
+        jConfirm("¿Confirma la ANULACIÓN del turno de Junta Médica del Agente @Model.agtApellidoYNombre del día @(Model.turFecha.ToString("dd/MM/yyyy")) a las @(Model.turFecha.ToString("hh:mm")) ?", "Confirmar...", function (r) {
+            if (r) {
+                var _Post = GetPathApp("JuntaMedica/setAnulacionTurnoJM");
+                AbrirWaitingCRUD("CRUDJuntaMedicaAnulacion");
+                $.ajax({
+                    type: "POST",
+                    url: _Post,
+                    data: { turId: _DatosRegistro_TurnosJuntaMedica.turId, Motivo: $("#MotivoAnulacion").val() },
+                    error: function () {
+                        CerrarWaitingCRUD("CRUDJuntaMedicaAnulacion");
+                        jAlert("Error guardar los Anulacion de la junta médica.", "Error...", function () {
+                            $('#Anulacion').focus().select();
+                        });
+                    },
+                    success: function (respuesta) {
+                        CerrarWaitingCRUD("CRUDJuntaMedicaAnulacion");
+                        if (!respuesta.Error) {
+                            var grid = $("#gridTurnosJuntaMedica").data("tGrid");
+                            grid.ajaxRequest();
+                            onCancelarwCRUDTurnoJuntaMedicaAnulacion();
+                        } else {
+                            jAlert(respuesta.Mensaje, "¡Error!", function () {
+                                $('#Anulacion').focus().select();
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function onCancelarwCRUDTurnoJuntaMedicaAnulacion() {
+        var windowElement = $("#wCRUDTurnoJuntaMedicaAnulacion").data("tWindow");
+        $("#divwCRUDTurnoJuntaMedicaAnulacion_Content").html("");
+        windowElement.close();
+    }
+</script>
+
+<div id="divGridPrincipalCRUDTurnoJMAnulacion" tabindex="1" style="overflow: hidden; outline: none;" >
+    <div class="BordeRedondeadoTab" style="background-color: cadetblue; color: white; margin-left: 15px;">
+        Detalle del Turno de Junta Médica
+    </div>
+    <div style="padding: 15px;" class="BordeRedondeadoTabs" >
+        <div>
+            <label style="cursor: pointer;">Fecha: </label>
+            <input value="@(Model.turFecha == null ? "" : Model.turFecha.ToString("d"))" type="text" style = "width: 70px; margin-top: 10px; text-align: center;" disabled />
+            <label style="cursor: pointer;">Hora: </label>
+            <input value="@(Model.turFecha == null ? "" : Model.turFecha.ToString("hh:mm"))" type="text" style = "width: 60px;margin-top: 10px; text-align: center;" disabled />
+            <label style="cursor: pointer;">Motivo: </label>
+            <input value="@Model.tjDescripcion" type="text" style = "width: 484px;" title="@Model.tjDescripcion" disabled />
+            <label style="cursor: pointer;">Especialidades: </label>
+            <input value="@Model.Especialidades" type="text" style = "margin-top: 10px; width: 675px;" title="@Model.Especialidades" disabled />
+            <label style="cursor: pointer;">Agente: </label>
+            <input value="@Model.agtApellidoYNombre" type="text" style = "margin-top: 10px; width: 556px;" title="@Model.agtApellidoYNombre" disabled />
+            <label style="cursor: pointer;">DNI: </label>
+            <input value="@Model.agtDNI" type="text" style = "width: 120px; margin-bottom: 10px;" title="@Model.agtDNI" disabled />
+
+            <label style="cursor: pointer; vertical-align: top;">Motivo de Anulación: </label>
+            @*<input id="MotivoAnulacion" class="text-box multi-line" value="" type="" style="width: 98%; height: 100px;"/>*@
+            <textarea id="MotivoAnulacion" style="width: 636px;" rows="4" cols="50"></textarea>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarwCRUDTurnoJuntaMedicaAnulacion();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+        <div id="btnCancelar" class="t-button" onclick="onCancelarwCRUDTurnoJuntaMedicaAnulacion();" title="Cancelar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Cancelar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -46px -336px;  vertical-align: middle;" />
+            <label style="cursor: pointer;">Cancelar</label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    AbrirWaitingCRUD("CRUDJuntaMedicaAnulacion");
+    $("#divGridPrincipalCRUDTurnoJMAnulacion").ready(function () {
+        CerrarWaitingCRUD("CRUDJuntaMedicaAnulacion");
+        $('#MotivoAnulacion').focus().select();
+    });
+
+</script>

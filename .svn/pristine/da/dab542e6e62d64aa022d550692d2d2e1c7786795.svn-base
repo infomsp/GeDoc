@@ -1,0 +1,142 @@
+@using GeDoc
+
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script type="text/javascript">
+    function onAceptarwSeleccionaConsultorio() {
+        debugger;
+        if ($("#csscId_Lista").val() == null || $("#csscId_Lista").val() <= 0) {
+            jAlert("Debe seleccionar al menos un Consultorio / Centro de Atención", "Error...", function() {
+                $("#cssId_Lista").focus();
+            });
+            return;
+        }
+
+        ConsultorioSeleccionado.csscId = $("#csscId_Lista").val();
+        ConsultorioSeleccionado.csscNombre = $("#csscId_Lista option:selected").text();
+        SalaSeleccionada.cssId = $("#cssId_Lista").val();
+        SalaSeleccionada.cssNombre = $("#cssId_Lista option:selected").text();
+        $("#divTituloCatalogos").css("font-size", "large");
+        $("#divTituloCatalogos").html("@(ViewBag.CentroDeAtencionMensaje ?? "Turnos Ambulatorios") (Sala: " + SalaSeleccionada.cssNombre + ", @(ViewBag.EsCentroDeAtencion ? "Oficina" : "Consultorio"): " + ConsultorioSeleccionado.csscNombre + ")");
+
+        var wSelConsultorios = $("#wSeleccionDeConsultorio").data("tWindow");
+        wSelConsultorios.close();
+    }
+
+</script>
+
+<div id="divGridPrincipalwSeleccionaConsultorio" tabindex="1" style="overflow: hidden; outline: none;" >
+    <div style="padding-bottom: 15px;">
+        <div>
+            <table style="border: none;">
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <label>Sala:</label>
+                    </td>
+                    <td style="border: none;">
+                        <div class="cssId" style="text-align: left;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "cssId_Lista#NO#330px")
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border: none; height: 38px;">
+                    <td style="border: none; height: 38px;">
+                        <label>@(ViewBag.EsCentroDeAtencion ? "Oficina" : "Consultorio"):</label>
+                    </td>
+                    <td style="border: none;">
+                        <div class="csscId" style="text-align: left;">
+                            @Html.Partial("EditorTemplates/_ListaDesplegable", "csscId_Lista#NO#330px")
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <div id="btnAceptar" class="t-button" onclick="onAceptarwSeleccionaConsultorio();" title="Confirmar">
+            <img src="@Url.Content("~/Content/General/Vacio-Transparente.png")" alt="Aceptar" height="18" width="18" style="background: url('@Url.Content("~/Content/" + Session["Version"] + "/" + Session["Estilo"])/sprite.png') no-repeat -32px -336px; vertical-align: middle;" />
+            <label style="cursor: pointer;">Aceptar</label>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //Seleccionamos el primer campo
+    $("#csscId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaTipos = $("#csscId_Lista");
+    $ListaTipos.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+    $("#cssId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+        debugger;
+        var pValor = $("#cssId_Lista").val();
+        RecargarConsultorios(pValor);
+    });
+
+    var $ListaSalas = $("#cssId_Lista");
+    $ListaSalas.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+    //$(".select2.select2-container.select2-container--classic.select2-container--below.select2-container--focus").css("width", "400px");
+
+    $("#divGridPrincipalwSeleccionaConsultorio").ready(function () {
+        $('#cssId_Lista').focus().select();
+    });
+
+    function RecargarConsultorios(SalaId) {
+        ProcesandoListaDesplegable("listaDesplegable_csscId_Lista");
+        var _Post = GetPathApp("catTurno/getSalaConsultorios");
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { SalaId: SalaId },
+            error: function () {
+                jAlert("Error al guardar datos.", "Error...");
+            },
+            success: function (respuesta) {
+                if (respuesta.Error) {
+                    jAlert(respuesta.Mensaje, "Error...");
+                } else {
+                    $("#listaDesplegable_csscId_Lista").html(respuesta);
+
+                    $("#csscId_Lista").select2({
+                        placeholder: "Ningún item seleccionado",
+                        allowClear: false,
+                        language: "es",
+                        theme: "classic"
+                    }).on("change", function (e) {
+                    });
+                    var $ListaSalas = $("#csscId_Lista");
+                    $ListaSalas.on("select2:open", function (e) {
+                        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+                        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+                    });
+                    $(".select2.select2-container.select2-container--classic").css("width", "330px");
+                }
+            }
+        });
+    }
+
+</script>

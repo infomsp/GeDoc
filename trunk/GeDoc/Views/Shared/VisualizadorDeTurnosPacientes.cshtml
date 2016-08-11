@@ -1,0 +1,228 @@
+@using GeDoc
+
+@{
+    if ((int) (Session["TelevisorId"]) != -1 && Session["CentroDeSaludLogOut"] == "ERROR")
+    {
+        Html.RenderPartial("Mensaje", new ParametrosMensaje() { Nombre = "msg_VisualizadorTurnos", TipoMensaje = "error", MostrarEmergente = true, Titulo = "¡Atención!", Mensaje = "El código de Televisor Ingresado es Incorrecto.", Visible = true });
+    }
+    else
+    {
+<style>
+.UltimoPaciente {
+    background-color: #616975;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(114, 122, 134)),to(rgb(80, 88, 100)));
+    background-image: -webkit-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    background-image: -moz-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    background-image: -o-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    background-image: -ms-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    background-image: linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#727a86', EndColorStr='#505864');
+    /*border-bottom: 1px solid #33373d;*/
+    -webkit-box-shadow: inset 0px 1px 0px 0px #878e98;
+    -moz-box-shadow: inset 0px 1px 0px 0px #878e98;
+    box-shadow: inset 0px 1px 0px 0px #878e98;
+    /*width: 100%;
+    line-height: 2.75em;
+    text-indent: 2.75em;
+    display: block;
+    position: relative;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;*/
+    color: #fff;
+    text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+    -webkit-perspective: 800;
+	-moz-perspective: 800;
+	perspective: 800;
+    -webkit-transform-style: preserve-3d;
+	-webkit-transition: all 0.5s;
+    -moz-transform-style: preserve-3d;
+	-moz-transition: all 0.5s;
+    transform-style: preserve-3d;
+	transition: all 0.5s;
+}
+.rotar{
+	-webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+.rotar360{
+	-webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    transform: rotateY(360deg);
+}
+.UltimoConsultorio {
+    font-size: 0.857em; 
+    /*display: inline-block;
+    position: absolute;
+    right: 1em;
+    top: 50%; */
+    line-height: 1em;
+    height: 1em;
+    padding: .4em .6em;
+    /*margin: -.8em 0 0 0; 
+    color: #fff;
+    text-indent: 0;
+    text-align: center;*/
+    -webkit-border-radius: .769em;
+    -moz-border-radius: .769em;
+    border-radius: .769em;
+    -webkit-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, .26), 0px 1px 0px 0px rgba(255, 255, 255, .15);
+    -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, .26), 0px 1px 0px 0px rgba(255, 255, 255, .15);
+    box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, .26), 0px 1px 0px 0px rgba(255, 255, 255, .15);
+    text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+    /*font-weight: 500;*/
+    background: #48515c;
+}
+</style>
+<script type="text/javascript">
+    //function onComplete_catCentroDeSaludLLamador(e) {
+    //    if (e.name != "update" && e.name != "insert") {
+    //    }
+    //}
+</script>
+
+        <div id="divLlamadorDePacientes" style="height: 330px; border-color: #616975; margin: 10px 0px; padding-left: 20px; padding-right: 20px;">
+            <div style="height: 70px; margin-bottom: 35px; margin-top: 10px; font-size: xx-large;">
+                <table style="width: 100%;">
+                    <tr style="width: 100%;">
+                        <td style="width: 26%;">
+                            <img src="@Url.Content("~/Content/General/LogoGobMSP.png")" height="70"/>
+                        </td>
+                        <td style="text-align: center;">
+                            <label id="lblCentroDeSalud" style="font-size: 2.0rem; color: #9F262D;"></label>
+                        </td>
+                        <td style="width: 10%;">
+                            <label id="lblHoraActual" style="color: #9F262D; font-family: ledbdrev; font-size: 3rem;"></label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="divPacienteYBox" class="UltimoPaciente BordeRedondeado" style="text-align: center; font-size: xx-large; font-weight: bold; font-family: cursive;">
+                <div style="margin: 20px;">
+                    <label id="lblPacienteLlamado" style="vertical-align: -webkit-baseline-middle; font-size: 60px;"></label>
+                </div>
+                <div class="UltimoConsultorio" style="margin: 20px;">
+                    <label id="lblConsultorioLlamado" style="font-size: 40px;"></label>
+                </div>
+            </div>
+        </div>
+
+    <hr style="color: #3F51B5;" />
+        <div style="margin-bottom: 10px;">
+            <marquee id="mqPublicidad" behavior="left" style="text-shadow: 4px 4px 4px gray; color: #3F51B5; font-family: ledbdrev; font-size: 3rem; background-color: azure;"></marquee>
+        </div>
+    <hr style="color: #3F51B5;" />
+<div id="divGridPrincipalwVisualizadorDeTurnos" tabindex="1" style="overflow: hidden; outline: none; font-size: 25px;" >
+@*@(Html.Telerik().Grid<GeDoc.catCentroDeSaludLLamadorWS>()
+        .Name("gridLlamados")
+        .DataKeys(keys =>
+        {
+            keys.Add(p => p.llamId);
+        })
+        .Localizable("es-AR")
+        .HtmlAttributes(new {style = "height:100%; width: 99.8%;"})
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("_SelectEditingLlamados", "catTurno");
+        })
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.llamId).Width("50px").Title("Id").Visible(false);
+            columns.Bound(c => c.llamTexto1).Width("600px").Title((ViewBag.EsCentroDeAtencion ? ViewBag.CentroDeAtencionEntidad : "Pacientes") + " que fueron llamados").Visible(true);
+            columns.Bound(c => c.llamTexto2).Width("600px").Title((ViewBag.EsCentroDeAtencion ? "Oficina" : "Consultorio")).Visible(true).HtmlAttributes(new { style = "text-align: left;" });
+            columns.Bound(c => c.llamHoraDeLlamado).Width("60px").Title("Hora").Visible(true).HtmlAttributes(new { style = "text-align: right;" });
+        })
+        .Pageable((paging) =>
+            paging.Enabled(true)
+                .PageSize(10))
+        .ClientEvents(events => events.OnComplete("onComplete_catCentroDeSaludLLamador"))
+        .Footer(false)
+        .Selectable()
+        .Scrollable(scroll => scroll.Enabled(false)))*@
+</div>
+<audio id="audioNotificacion" >
+    <source src="@Url.Content("~/Content/Audio/timbreFuerte.mp3")" type="audio/mpeg">
+    Su browser no soporta audio.
+</audio>
+
+<div id="divReconectando" class="es-overlay" style="display: none; text-align: center; opacity: 0.8; background: gray;">
+    <div class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; margin: 10px; margin-top: 30%; text-align: center; height: 38px;">
+        <img src="@Url.Content("~/Content/General/WaitingIndicator.gif")" alt="Aceptar" height="28" width="28" style="vertical-align: middle;"/>
+        <span style="font-weight: bold; margin-bottom: 10px;">Error de conexión</span>
+        <br/>
+        <span>Problema de red, intentando establecer conexión con el servidor...</span>
+    </div>
+</div>
+    
+<script type="text/javascript">
+    var refreshPaciente = setInterval(function() {
+        BuscarNuevoLlamado();
+    }, 15000);
+
+    function BuscarNuevoLlamado() {
+        //var _Post = GetPathApp("catTurno/getLlamarProximoPaciente");
+        var _Post = "@(Session["Usuario"] == null ? Url.Content("getLlamarProximoPaciente") : Url.Content("~/catTurno/getLlamarProximoPaciente"))";
+        $.ajax({
+            //contentType: 'application/json',
+            type: "POST",
+            url: _Post,
+            data: { TelevisorId: TelevisorSeleccionado.csstId },
+            error: function() {
+                $("#divReconectando").show('slide');
+            },
+            success: function(respuesta) {
+                $("#divReconectando").hide('slide');
+                if (respuesta.Llamar) {
+                    Animar(respuesta.Datos.llamTexto1, respuesta.Datos.llamTexto2);
+                    //$("#gridLlamados").data("tGrid").ajaxRequest();
+                    ReconstruyeGrilla(respuesta.Grilla);
+                }
+                if (respuesta.Hora) {
+                    $("#lblHoraActual").html(respuesta.Hora);
+                }
+                if (respuesta.Marquesina && $("#mqPublicidad") !== respuesta.Marquesina) {
+                    $("#mqPublicidad").html(respuesta.Marquesina);
+                }
+            }
+        });
+    }
+
+    function Animar(texto1, texto2) {
+        $("#audioNotificacion").trigger("play");
+        $("#divPacienteYBox").css("transform", "rotateY(180deg)");
+        setTimeout(function() {
+            $("#divPacienteYBox").css("transform", "rotateY(0deg)");
+            debugger;
+            $("#lblPacienteLlamado").text(texto1);
+            $("#lblConsultorioLlamado").text(texto2);
+        }, 800);
+    }
+
+    BuscarNuevoLlamado();
+    if ("@(ViewBag.EsCentroDeAtencion)" === "True"){
+        $("#lblCentroDeSalud").html("@ViewBag.CentroDeAtencionMensaje");
+    } else {
+        $("#lblCentroDeSalud").html("@((int)(Session["TelevisorId"]) == -1 ? (Session["UsuarioCentroDeSalud"] as sisUsuariosCentroDeSalud).ucsCentroDeSalud : Session["CentroDeSaludLogOut"])");
+    }
+
+    function ReconstruyeGrilla(Datos) {
+        var Grilla = '<div class="t-widget t-grid" id="gridLlamados" style="width: 99.8%;"><table cellspacing="0"><colgroup><col style="width:600px"><col style="width:600px"><col style="width:60px"></colgroup><thead class="t-grid-header"><tr><th class="t-header" scope="col"><span class="t-link">Pacientes que fueron llamados</span></th><th class="t-header" scope="col"><span class="t-link">Consultorio</span></th><th class="t-header" scope="col"><span class="t-link">Hora</span></th></tr></thead><tbody>';
+        var Filas = "";
+        debugger;
+        for (var i = 0; i < Datos.length; i++) {
+            Filas += ((i == 1 || i==3 || i==5) ? '<tr class="t-alt"><td>' : "<tr><td>") + Datos[i].llamTexto1 + '</td><td style="text-align: left;">' + Datos[i].llamTexto2 + '</td><td style="text-align: right;" class="t-last">' + Datos[i].llamHoraDeLlamado + '</td></tr>';
+        }
+        var Pie = "</tbody></table></div>";
+        if (Filas === "") {
+            Filas = '<tr class="t-no-data"><td colspan="3">No hay datos.</td></tr>';
+        }
+        $("#divGridPrincipalwVisualizadorDeTurnos").html(Grilla + Filas + Pie);
+    }
+
+    //$(document).ready(function () {
+    //    $("#divGridPrincipalwVisualizadorDeTurnos").trigger("click");
+    //});
+</script>
+    }
+}

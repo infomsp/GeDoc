@@ -1,0 +1,151 @@
+﻿
+<script type="text/javascript">
+</script>
+<style>
+/*.contenedor{ float: left;}
+#camara{
+    width: 220px;
+}*/
+</style>
+<div class="BordeRedondeado" style="width: 530px;margin: 15px; border-color: burlywood;">
+    <div style="padding-top: 15px; margin-left: 15px;">
+        <table style="border: none;">
+            <tr style="border: none;">
+                <td style="width: 50%; text-align: center; padding-bottom: 10px; border: none;">
+                    <canvas id="foto" cambioFoto class="BordeRedondeado imgFoto" style="height: 165px; width: 220px;"></canvas>
+                </td>
+                <td id="tdCamara" style="border: none;">
+                    <video id="camara" class="BordeRedondeado imgFoto" poster="@Url.Content("~/Content/General/Camara.png")" style="width: 220px; margin-left: 15px; margin-top: -10px;"></video>
+                </td>
+            </tr>
+        </table>
+        <div id="botonera" style="margin-bottom: 10px; text-align: center;" title="Tomar foto">
+            <i id="botonFoto" class="fa fa-2x fa-camera" style="cursor: pointer; margin-right: 15px; text-align: center;">
+            </i>
+            <input id="fileUploadFotos" type="file" style="display: none;" size="1" />
+        </div>
+    </div>
+</div>
+<audio id="audioFoto" >
+    <source src="@Url.Content("~/Content/Audio/camara.mp3")" type="audio/mpeg">
+    Su browser no soporta audio.
+</audio>
+
+<script type="text/javascript">
+    //Inicalizamos la cámara\\
+    InicializaDatosCamara();
+
+    $('#foto').click(function () {
+        $('#fileUploadFotos').click();
+    });
+
+    $(document).ready(function (e) {
+        //Pedimos al navegador que nos da acceso a 
+        //algún dispositivo de video (la webcam)
+        debugger;
+        $("#foto")[0].attributes.cambioFoto.value = false;
+        navigator.getUserMedia({
+            "audio": false,
+            "video": true
+        }, function (streamVideo) {
+            window.datosVideo.StreamVideo = streamVideo;
+            window.datosVideo.url = window.URL.createObjectURL(streamVideo);
+            jQuery("#camara").attr("src", window.datosVideo.url);
+            $("#camara")[0].play();
+
+            @*var img = new Image();
+            //indico la URL de la imagen
+            var d = new Date();
+            img.src = "@Url.Content("~/Content/General/Camara.png")?" + d.getTime();
+            //defino el evento onload del objeto imagen
+            img.onload = function () {
+                //incluyo la imagen en el canvas
+                var Foto = jQuery("#foto");
+                var context = Foto[0].getContext("2d");
+                context.drawImage(img, 0, 0, 300, 165);
+            }*@
+        }, function () {
+            alert("No fue posible obtener acceso a la cámara.");
+        });
+
+    });
+
+    jQuery("#botonFoto").on("click", function (e) {
+        var oCamara, oFoto, oContexto, w, h;
+
+        $("#audioFoto").trigger("play");
+
+        oCamara = jQuery("#camara");
+        oFoto = jQuery("#foto");
+        w = oCamara.width();
+        h = oCamara.height();
+        oFoto.attr({
+            "width": w,
+            "height": h
+        });
+        oContexto = oFoto[0].getContext("2d");
+        oContexto.drawImage(oCamara[0], 0, 0, w, h);
+        $("#foto")[0].attributes.cambioFoto.value = true;
+        if (onFotoCargada != null) {
+            onFotoCargada();
+        }
+    });
+
+    $("#fileUploadFotos").on("change", function () {
+        //Get count of selected files
+        var countFiles = $(this)[0].files.length;
+
+        var imgPath = $(this)[0].value;
+        var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+        var image_holder = $("#foto");
+
+        if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof (FileReader) != "undefined") {
+
+                //loop for each file selected for uploaded.
+                for (var i = 0; i < countFiles; i++) {
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = new Image();
+                        //indico la URL de la imagen
+                        var d = new Date();
+                        img.src = e.target.result;
+                        //defino el evento onload del objeto imagen
+                        img.onload = function () {
+                            //incluyo la imagen en el canvas
+                            //var Foto = jQuery("#foto");
+                            var context = image_holder[0].getContext("2d");
+                            context.drawImage(img, 0, 0, 300, 165);
+                            $("#foto")[0].attributes.cambioFoto.value = true;
+                        }
+                    }
+
+                    //image_holder.show();
+                    reader.readAsDataURL($(this)[0].files[i]);
+                }
+                if (onFotoCargada != null) {
+                    onFotoCargada();
+                }
+            } else {
+                jAlert("El browser de su máquina, no acepta tratamiento de imagenes", "Error");
+            }
+        } else {
+            jAlert("Solo puede seleccionar archivos de Imagenes", "Error");
+        }
+    });
+
+    function CargarFoto(DatosImagen) {
+        var img = new Image();
+        //indico la URL de la imagen
+        var d = new Date();
+        img.src = DatosImagen;// + "?" + d.getTime();
+        //defino el evento onload del objeto imagen
+            img.onload = function () {
+                //incluyo la imagen en el canvas
+                var Foto = jQuery("#foto");
+                var context = Foto[0].getContext("2d");
+                context.drawImage(img, 0, 0, 300, 165);
+            }
+    }
+</script>

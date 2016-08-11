@@ -1,0 +1,716 @@
+﻿@model GeDoc.catHCAduHistoriaFamiliarTabWS
+@{
+    GeDoc.catHCAduAnteFamiliarWS anteFam = Model.antecedentesFamiliares;
+    ViewBag.eventoOnChange = "onChange";
+}
+
+<script>
+    function onChangeantecedentesMedicos_aduAMTranfusionesCuando() {
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+    }
+    function onChangehabitos_aduHAFumaCuando() {
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+    }
+    function onChangehabitos_aduHADejoCuando() {
+        $(this).removeAttr("title");
+        $(this).removeClass("ES-ErrorValidacion");
+        $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+    }
+
+    function ValidarfrmHCHistorialFamiliar() {
+        $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+
+        if (ValidarHCFecha("antecedentesMedicos_aduAMTranfusionesCuando") && $("#aduAMTranfusiones")[0].checked) {
+            onMostarErrorHF("Fecha incorrecta, no puede ser ni mayor a la fecha actual, ni menor a 1920.", "#antecedentesMedicos_aduAMTranfusionesCuando");
+            return false;
+        }
+        if (ValidarHCFecha("habitos_aduHAFumaCuando") && $("#tabaco:checked").val() === "FU") {
+            onMostarErrorHF("Fecha incorrecta, no puede ser ni mayor a la fecha actual, ni menor a 1920.", "#habitos_aduHAFumaCuando");
+            return false;
+        }
+        if (ValidarHCFecha("habitos_aduHADejoCuando") && $("#tabaco:checked").val() === "DJ") {
+            onMostarErrorHF("Fecha incorrecta, no puede ser ni mayor a la fecha actual, ni menor a 1920.", "#habitos_aduHADejoCuando");
+            return false;
+        }
+
+        if ($("#aduAFCancerOtroCual").val() == "" && $("#aduAFCancerOtro")[0].checked) {
+            onMostarErrorHF("Debe describir el cáncer.", "#aduAFCancerOtroCual");
+            return false;
+        }
+
+        if ($("#aduAMAlergiaCual").val() == "" && $("#aduAMAlergia")[0].checked) {
+            onMostarErrorHF("Debe describir la Alergia.", "#aduAMAlergiaCual");
+            return false;
+        }
+
+        if ($("#aduAMInfeccionesCual").val() == "" && $("#aduAMInfecciones")[0].checked) {
+            onMostarErrorHF("Debe describir la infección.", "#aduAMInfeccionesCual");
+            return false;
+        }
+
+        if ($("#aduHAFisico").is(":checked")) {
+            if ($("#aduAMMotivo1").val() === "" && $("#aduAMMotivo2").val() === "" && $("#aduAMMotivo3").val() === "") {
+                onMostarErrorHF("Debe ingresar al menos un motivo.", "#aduAMMotivo1");
+                return false;
+            }
+            if ($("#aduAMMotivo1").val() !== "") {
+                if ($("#aduAMAño1").val() <= 1950) {
+                    onMostarErrorHF("El año ingresado es incorrecto.", "#aduAMAño1");
+                    return false;
+                }
+            } else {
+                $("#aduAMAño1").val(0);
+            }
+            if ($("#aduAMMotivo2").val() !== "") {
+                if ($("#aduAMAño2").val() <= 1950) {
+                    onMostarErrorHF("El año ingresado es incorrecto.", "#aduAMAño2");
+                    return false;
+                }
+            } else {
+                $("#aduAMAño2").val(0);
+            }
+            if ($("#aduAMMotivo3").val() !== "") {
+                if ($("#aduAMAño3").val() <= 1950) {
+                    onMostarErrorHF("El año ingresado es incorrecto.", "#aduAMAño3");
+                    return false;
+                }
+            } else {
+                $("#aduAMAño3").val(0);
+            }
+        }
+
+        if ($("#aduHADrogaCual").val() == "" && $("#habitos_drogas:checked").val() == "SI") {
+            onMostarErrorHF("Debe describir la Droga.", "#aduHADrogaCual");
+            return false;
+        }
+
+        if (($("#aduHAVasosPorDia").val() == "" || $("#aduHAVasosPorDia").val() <= 0) && $("#alcohol:checked").val() == "CM") {
+            onMostarErrorHF("Debe ingresar la cantidad promedio de vasos que bebe.", "#aduHAVasosPorDia");
+            return false;
+        }
+
+        if ($("#aduHAFisicoTipo").val() === "" && $("#aduHAFisico").is(":checked")) {
+            onMostarErrorHF("Debe ingresar el tipo de actividad física.", "#aduHAFisicoTipo");
+            return false;
+        }
+
+        if ($("#aduHAFisicoFrecuancia").val() === "" && $("#aduHAFisico").is(":checked")) {
+            onMostarErrorHF("Debe ingresar la frecuencia.", "#aduHAFisicoFrecuancia");
+            return false;
+        }
+
+        if ($("#aduSPEmpleoTipo").val() == "" && $("#empleo:checked").val() == "True") {
+            onMostarErrorHF("Debe especificar el tipo de empleo.", "#aduSPEmpleoTipo");
+            return false;
+        }
+
+        if ($("#aduMAResiduoFrecu").val() == "" && $("#residuos:checked").val() == "True") {
+            onMostarErrorHF("Debe ingresar la frecuencia de recolección de residuos.", "#aduMAResiduoFrecu");
+            return false;
+        }
+
+        return true;
+    }
+
+    function onMostarErrorHF(_MensajeDeError, _Campo) {
+        MensajeEmergente("¡Error!", _MensajeDeError, "@Url.Content("~/Content/General/Alertas/Atencion.png")", true);
+        $(_Campo).addClass("ES-ErrorValidacion");
+        $("#spanMensajeHitorialFamiliar").text(_MensajeDeError);
+        $("#divHCMensajeErrorHitorialFamiliar").attr("class", "BordeRedondeado alert-danger");
+        $(".fa.fa-2x.fa-info-circle").attr("class", "fa fa-2x fa-warning");
+        $("#divHCMensajeErrorHitorialFamiliar").css("display", "inline-table");
+        $(_Campo).attr("title", _MensajeDeError);
+        $('#divHCHistorialFamiliar').animate({
+            scrollTop: ($(_Campo).offset().top - ($("#divHCHistorialFamiliar").offset().top + 70))
+        }, 2000);
+        $('#divHCHistorialFamiliar').slimScroll({ scrollTo: ($(_Campo).offset().top - ($("#divHCHistorialFamiliar").offset().top + 70)) + 'px' });
+        $(_Campo).focus().select();
+    }
+
+    function onAceptarHF() {
+        var $tab1 = $('#frmHCHistorialFamiliar');
+        debugger;
+        if (!ValidarfrmHCHistorialFamiliar()) {
+            return;
+        }
+        AbrirWaitingCRUD();
+        $.ajax({
+            type: "POST",
+            url: $tab1.attr("action"),
+            data: $tab1.serialize(),
+            error: function () {
+                CerrarWaitingCRUD();
+                jAlert("Error al guardar datos.", "Error...", function () {
+                    $("#frmHCHistorialFamiliar :input:visible:enabled:first").focus().select();
+                });
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD();
+                if (respuesta.Error) {
+                    var FocusControl = respuesta.Foco;
+                    jAlert(respuesta.Mensaje, "Error...", function () {
+                        $("#" + FocusControl)[0].focus().select();
+                    });
+                } else {
+                    MensajeEmergente("Información...", "Los datos del Paciente se actualizaron correctamente.", "@Url.Content("~/Content/General/Alertas/Ok.png")", true);
+                    var wHCMenuOpciones = $("#wHCMenu").data("tWindow");
+                    wHCMenuOpciones.close();
+                }
+            }
+        });
+
+    }
+</script>
+
+<table style="width: 100%; border: none;">
+    <tr style="border: none; height: 62px;">
+        <td colspan="1" style="border: none; width: 15%;">
+            <div id="btnGuardarHistorialFamiliar" class="t-button" onclick="onAceptarHF();" title="Guardar cambios en Historial Familiar">
+                <span style="cursor: pointer;"><i style="color: cornflowerblue;" class="fa fa-2x fa-save"></i></span>
+                <label style="cursor: pointer; vertical-align: super;">Guardar cambios</label>
+            </div>
+        </td>
+        <td colspan="3" style="border: none;">
+            <div id="divHCMensajeErrorHitorialFamiliar" class="BordeRedondeado alert-danger" style="text-align: center; display: none; width: 100%;">
+                <table style="width: 100%; border: none;">
+                    <tr style="border: none;">
+                        <td style="border: none; text-align: center; width: 5%;" rowspan="2">
+                            <i class="fa fa-2x fa-warning"></i>
+                        </td>
+                        <td colspan="1" style="border: none;">
+                            <div style="font-weight: bold; text-align: center;">¡Atención!</div>
+                        </td>
+                    </tr>
+                    <tr style="border: none;">
+                        <td colspan="2" style="border: none;">
+                            <span id="spanMensajeHitorialFamiliar">Mensaje</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<hr/>
+<div id="divHCHistorialFamiliar">
+    @using (Html.BeginForm("setHistoriaClinicaFamiliarYPersonal", "HistoriaClinica", FormMethod.Post, new {id = "frmHCHistorialFamiliar"}))
+    {
+
+        @Html.HiddenFor(model => model.antecedentesFamiliares.hcaduid)
+
+        <table style="width: 100%; border: none;">
+            @*     <tr style="border: none;">
+         <td colspan="4" style="border: none;"><b>INSTRUCTIVO: <input type="checkbox" checked disabled="disabled"> SIGNIFICA PRESENTE</b></td>
+     </tr>*@
+            <tr>
+                <td colspan="4" style="border: none;"><u>ANTECEDENTES FAMILIARES:</u></td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none; width: auto;">HIPERTENSIÓN ARTERIAL</td>
+                <td style="border: none; width: auto;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFHipertension, new {id = "aduAFHipertension", style = "margin-left: 5px;"})</td>
+                <td style="border: none; width: auto;">CÁNCER DE MAMA</td>
+                <td style="border: none; width: auto;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFCancerMama, new {id = "aduAFCancerMama", style = "margin-left: 5px;"})</td>
+            </tr>
+            <tr style="border: none;">
+                <td style="border: none;">ENF. CARDÍACAS DE LOS 55 AÑOS</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFCardiacas, new {id = "aduAFCardiacas", style = "margin-left: 5px;"})</td>
+                <td style="border: none;">OTROS CÁNCERES</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFCancerOtro, new {id = "aduAFCancerOtro", style = "margin-left: 5px;"}) CUALES? @(Model.antecedentesFamiliares.aduAFCancerOtro == true ? Html.TextBoxFor(model => model.antecedentesFamiliares.aduAFCancerOtroCual, new {id = "aduAFCancerOtroCual", style = "margin-left: 5px; width: 160px;"}) : Html.TextBoxFor(model => model.antecedentesFamiliares.aduAFCancerOtroCual, new {id = "aduAFCancerOtroCual", style = "margin-left: 5px; width: 160px;", disabled = "disabled"}))</td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none;">DIABETES</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFDiabetes, new {id = "aduAFDiabetes", style = "margin-left: 5px;"})</td>
+                <td style="border: none;">ENFERMEDAD CELIACA</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFCeliaca, new {id = "aduAFCeliaca", style = "margin-left: 5px;"})</td>
+            </tr>
+            <tr style="border: none;">
+                <td style="border: none;">ACCIDENTE CEREBRO VASCULAR</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFACV, new {id = "aduAFACV", style = "margin-left: 5px;"})</td>
+                <td style="border: none;">ABUSO DE DROGAS O DE ALCOHOL</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFDroga, new {id = "aduAFDroga", style = "margin-left: 5px;"})</td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none;">CÁNCER DE COLON O RECTO</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFCancerColon, new {id = "aduAFCancerColon", style = "margin-left: 5px;"})</td>
+                <td style="border: none;">DEPRESIÓN</td>
+                <td style="border: none;">@Html.CheckBoxFor(model => model.antecedentesFamiliares.aduAFDepresion, new {id = "aduAFDepresion", style = "margin-left: 5px;"})</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border: none;"><br/><br/><u>ANTECEDENTES MÉDICOS:</u></td>
+            </tr>
+            <tr style="border: none;">
+                <td style="border: none;" colspan="2">Alergía a medicamentos y otras causas</td>
+                <td style="border: none;" colspan="2">@Html.CheckBoxFor(model => model.antecedentesMedicos.aduAMAlergia, new {id = "aduAMAlergia", style = "margin-right: 40px;"}) CUÁLES: @(Model.antecedentesMedicos.aduAMAlergia == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAlergiaCual, new {id = "aduAMAlergiaCual", style = "margin-left: 5px; width: 160px;"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAlergiaCual, new {id = "aduAMAlergiaCual", style = "margin-left: 5px; width: 160px;", disabled = "disabled"}))</td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none;" colspan="2">Internaciones/operaciones/accidentes</td>
+                <td style="border: none;" colspan="4">@Html.CheckBoxFor(model => model.antecedentesMedicos.aduAMInterna, new {id = "aduAMInterna", style = "margin-left: 5px;"})</td>
+            </tr>
+            <tr style="border: none;">
+                <td style="border: none;"><u>Motivo</u></td>
+                <td style="border: none; width: 170px;">1) @(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo1, new {id = "aduAMMotivo1", style = "width: 130px;"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo1, new {id = "aduAMMotivo1", style = "width: 130px;", disabled = "disabled"}))</td>
+                <td style="border: none; width: 190px;">2) @(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo3, new {id = "aduAMMotivo2", style = "width: 150px;"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo2, new {id = "aduAMMotivo2", style = "width: 150px;", disabled = "disabled"}))</td>
+                <td style="border: none;">3)@(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo3, new {id = "aduAMMotivo3", style = "width: 150px;"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMMotivo3, new {id = "aduAMMotivo3", style = "width: 150px;", disabled = "disabled"}))</td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none;"><u>Año</u></td>
+                <td style="border: none;">1) @(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño1, new {id = "aduAMAño1", style = "width: 130px;", maxlength = "4"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño1, new {id = "aduAMAño1", style = "width: 130px;", maxlength = "4", disabled = "disabled", value = ""}))</td>
+                <td style="border: none;">2) @(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño2, new {id = "aduAMAño2", style = "width: 150px;", maxlength = "4"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño2, new {id = "aduAMAño2", style = "width: 150px;", maxlength = "4", disabled = "disabled", value = ""}))</td>
+                <td style="border: none;">3) @(Model.antecedentesMedicos.aduAMInterna == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño3, new {id = "aduAMAño3", style = "width: 150px;", maxlength = "4"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMAño3, new {id = "aduAMAño3", style = "width: 150px;", maxlength = "4", disabled = "disabled", value = ""}))</td>
+            </tr>
+            <tr style="border: none;">
+                <td style="border: none;">Transfuciones de sangre:</td>
+                <td style="border: none;" colspan="3">@Html.CheckBoxFor(model => model.antecedentesMedicos.aduAMTranfusiones, new {id = "aduAMTranfusiones", style = "margin-right: 30px;"})CUÁNDO? @(Model.antecedentesMedicos.aduAMTranfusiones == true ? Html.EditorFor(model => model.antecedentesMedicos.aduAMTranfusionesCuando, new {id = "aduAMTranfusionesCuando", style = "margin-left: 15px; width: 80px;"}) : Html.EditorFor(model => model.antecedentesMedicos.aduAMTranfusionesCuando, new {id = "aduAMTranfusionesCuando", style = "margin-left: 15px; width: 80px;", disabled = "disabled"}))
+                </td>
+            </tr>
+            <tr style="border: none;" class="t-alt">
+                <td style="border: none;">Infecciones de transmisión sexual:</td>
+                <td style="border: none;"colspan="3">@Html.CheckBoxFor(model => model.antecedentesMedicos.aduAMInfecciones, new {id = "aduAMInfecciones", style = "margin-right: 30px;"}) CUÁLES? @(Model.antecedentesMedicos.aduAMInfecciones == true ? Html.TextBoxFor(model => model.antecedentesMedicos.aduAMInfeccionesCual, new {id = "aduAMInfeccionesCual", style = "margin-left: 15px;"}) : Html.TextBoxFor(model => model.antecedentesMedicos.aduAMInfeccionesCual, new {id = "aduAMInfeccionesCual", style = "margin-left: 15px;", disabled = "disabled"}))</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border: none;"><br/><br/><u>ANTECEDENTES GINECO-OBSTÉTRICOS:</u></td>
+            </tr>
+            <tr>
+                <td style="border: none;">Menarca @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGMenarca, new {id = "aduAGMenarca", style = "width: 100px;", maxlength = "2"}) años</td>
+                <td style="border: none;">I.R.S: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGIRS, new {id = "aduAGIRS", style = "width: 80px;", maxlength = "2"}) años</td>
+                <td style="border: none;">Gestas: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGGestas, new {id = "aduAGGestas", style = "width: 35px;", maxlength = "2"}) Partos: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGPartos, new {id = "aduAGPartos", style = "width: 35px;", maxlength = "2"})</td>
+                <td style="border: none;">Cesáreas: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGCesareas, new {id = "aduAGCesareas", style = "width: 40px;", maxlength = "2"}) Abortos: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGAbortos, new {id = "aduAGAbortos", style = "width: 40px;", maxlength = "2"})</td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;">Cliclos: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGCiclos, new {id = "aduAGCiclos", style = "width: 50px;", maxlength = "5"})</td>
+                <td style="border: none;">Menopausia: @Html.TextBoxFor(model => model.antecedentesGinecologicos.aduAGMenopausia, new {id = "aduAGMenopausia", style = "width: 40px;", maxlength = "2"}) años</td>
+                <td style="border: none;" colspan="2">
+                    Anticoncepción quirúrgica:@Html.CheckBoxFor(model => model.antecedentesGinecologicos.aduAGQuirurgica, new {id = "aduAGQuirurgica", style = "margin-right: 15px;"})
+                    DIU @Html.CheckBoxFor(model => model.antecedentesGinecologicos.aduAGDIU, new {id = "aduAGDIU", style = "margin-right: 15px;"})
+                    Implante @Html.CheckBoxFor(model => model.antecedentesGinecologicos.aduAGImplante, new {id = "aduAGImplante", style = "margin-right: 15px;"})
+                    Madre Sola @Html.CheckBoxFor(model => model.antecedentesGinecologicos.aduAGMadreSola, new {id = "aduAGMadreSola", style = "margin-right: 15px;"})</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border: none;"><br/><br/><u>HÁBITOS:</u></td>
+            </tr>
+            <tr>
+                <td style="border: none;"><u>Tabaco</u></td>
+                <td style="border: none;">Fuma @Html.RadioButtonFor(model => model.habitos.tabaco, "FU", new {id = "tabaco", style = ""})</td>
+                <td style="border: none;" colspan="2">Desde cuándo fuma?
+                    @(Html.EditorFor(model => model.habitos.aduHAFumaCuando, new {id = "aduHAFumaCuando", style = "width: 80px;"}))
+                </td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;"></td>
+                <td style="border: none;">nunca fumó @Html.RadioButtonFor(model => model.habitos.tabaco, "NU", new {id = "tabaco", style = ""})</td>
+                <td style="border: none;" colspan="2">Dejó de fumar @Html.RadioButtonFor(model => model.habitos.tabaco, "DJ", new {id = "tabaco", style = ""}) <b>(fecha)</b>@(Html.EditorFor(model => model.habitos.aduHADejoCuando, new {id = "aduHADejoCuando", style = "margin-right: 50px; width: 80px;"})) Fumador pasivo @Html.RadioButtonFor(model => model.habitos.tabaco, "PS", new {id = "tabaco", style = ""})
+                </td>
+            </tr>
+            <tr>
+                <td style="border: none;"><u>Alcohol:</u></td>
+                <td style="border: none;">no bebe @Html.RadioButtonFor(model => model.habitos.alcohol, "NB", new {id = "alcohol", style = ""}) </td>
+                <td style="border: none;" colspan="2">Bebe @Html.RadioButtonFor(model => model.habitos.alcohol, "BE", new {id = "alcohol", style = "margin-right: 5px;"}) toma con las comidas @Html.RadioButtonFor(model => model.habitos.alcohol, "CM", new {id = "alcohol", style = ""}) ¿Cuántos vasos promedio por día? @(Model.habitos.alcohol == "BE" || Model.habitos.alcohol == "CM" ? Html.TextBoxFor(model => model.habitos.aduHAVasosPorDia, new {id = "aduHAVasosPorDia", style = "width: 30px", maxlength = 2 }) : Html.TextBoxFor(model => model.habitos.aduHAVasosPorDia, new {id = "aduHAVasosPorDia", style = "width: 30px", disabled = "disabled"}))</td>
+            </tr>
+            <tr>
+                <td style="border: none;"><u>Sedentarismo:</u> @Html.CheckBoxFor(model => model.habitos.aduHASedentarismo, new {id = "aduHASedentarismo", style = ""})</td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;"><u>Actividad Física:</u> @Html.CheckBoxFor(model => model.habitos.aduHAFisico, new {id = "aduHAFisico", style = ""}) </td>
+                <td style="border: none;">Tipo: @(Model.habitos.aduHAFisico == true ? Html.TextBoxFor(model => model.habitos.aduHAFisicoTipo, new {id = "aduHAFisicoTipo", style = "width:100px"}) : Html.TextBoxFor(model => model.habitos.aduHAFisicoTipo, new {id = "aduHAFisicoTipo", style = "width:100px", disabled = "disabled"})) </td>
+                <td style="border: none;" colspan="2">Frecuencia: @(Model.habitos.aduHAFisico == true ? Html.TextBoxFor(model => model.habitos.aduHAFisicoFrecuancia, new {id = "aduHAFisicoFrecuancia", style = "width:150px"}) : Html.TextBoxFor(model => model.habitos.aduHAFisicoFrecuancia, new {id = "aduHAFisicoFrecuancia", style = "width:150px", disabled = "disabled"}))</td>
+            </tr>
+            <tr>
+                <td style="border: none;" colspan="4"><u>Alimentación:</u> Lleva el salero a la mesa @Html.CheckBoxFor(model => model.habitos.aduHASalero, new {id = "aduHASalero", style = "margin-right: 15px;"}) Consume frutas o lácteos en el desayuno @Html.CheckBoxFor(model => model.habitos.aduHADesayuno, new {id = "aduHADesayuno", style = "margin-right: 15px;"})Consume frutas o ensalados con cada cómida @Html.CheckBoxFor(model => model.habitos.aduHAComida, new {id = "aduHAComida", style = ""})</td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;">¿Usa cinturón de seguridad o casco?</td>
+                <td style="border: none;">A veces @Html.RadioButtonFor(model => model.habitos.cinturon, "AV", new {id = "cinturon", style = ""})</td>
+                <td style="border: none;">siempre @Html.RadioButtonFor(model => model.habitos.cinturon, "SI", new {id = "cinturon", style = ""})</td>
+                <td style="border: none;">nunca @Html.RadioButtonFor(model => model.habitos.cinturon, "NO", new {id = "cinturon", style = ""})</td>
+            </tr>
+            <tr>
+                <td style="border: none;">¿Ha probado o se ha inyectado drogas alguna vez?</td>
+                <td style="border: none;">No @Html.RadioButtonFor(model => model.habitos.drogas, "NO", new {style = ""})</td>
+                <td style="border: none;">Si @Html.RadioButtonFor(model => model.habitos.drogas, "SI", new {style = ""})</td>
+                <td style="border: none;">¿cuáles? @(Model.habitos.aduHADrogaSi ? Html.TextBoxFor(model => model.habitos.aduHADrogaCual, new {id = "aduHADrogaCual", style = "width:130px"}) : Html.TextBoxFor(model => model.habitos.aduHADrogaCual, new {id = "aduHADrogaCual", style = "width:130px", disabled = "disabled"}))</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border: none;"><br/><br/><u>SITUACIÓN PSCICOSOCIAL</u></td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;" colspan="2"><b>¿Ha habido algún episodio de violencia entre los miembros de su familia?</b></td>
+                <td style="border: none;">No @Html.RadioButtonFor(model => model.psicosocial.violencia, "NO", new {id = "violencia", style = ""})</td>
+                <td style="border: none;">Si @Html.RadioButtonFor(model => model.psicosocial.violencia, "SI", new {id = "violencia", style = ""})</td>
+            </tr>
+            <tr>
+                <td style="border: none;" colspan="2"><b>Antecedentes de sucesos vitales que lo afecten actualmente</b></td>
+                <td style="border: none;">duelo @Html.CheckBoxFor(model => model.psicosocial.aduSPDuelo, new {id = "aduSPDuelo", style = "margin-right: 15px"}) separación @Html.CheckBoxFor(model => model.psicosocial.aduSPSeparacion, new {id = "aduSPSeparacion", style = ""})</td>
+                <td style="border: none;">pérdida del trabajo @Html.CheckBoxFor(model => model.psicosocial.aduSPTrabajo, new {id = "aduSPTrabajo", style = ""})</td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;">Traslados @Html.CheckBoxFor(model => model.psicosocial.aduSPTraslado, new {id = "aduSPTraslado", style = ""})</td>
+                <td style="border: none;" colspan="4">nacimiento @Html.CheckBoxFor(model => model.psicosocial.aduSPNacimiento, new {id = "aduSPNacimiento", style = ""})</td>
+            </tr>
+            <tr>
+                <td style="border: none;"><b>Empleo estable en la familia:</b></td>
+                <td style="border: none;">NO @Html.RadioButtonFor(model => model.psicosocial.empleo, false, new {id = "empleo", style = ""})</td>
+                <td style="border: none;" colspan="2">SI @Html.RadioButtonFor(model => model.psicosocial.empleo, true, new {id = "empleo", style = "margin-right: 25px"}) Tipo de ocupación? @(Model.psicosocial.empleo == true ? Html.TextBoxFor(model => model.psicosocial.aduSPEmpleoTipo, new {id = "aduSPEmpleoTipo", style = "width:150px"}) : Html.TextBoxFor(model => model.psicosocial.aduSPEmpleoTipo, new {id = "aduSPEmpleoTipo", style = "width:150px", disabled = "disabled"}))</td>
+            </tr>
+            @*<tr class="t-alt">
+                <td style="border: none;" colspan="2"><b>Ante alguna necesidad o problema personal a quién recurre:</b></td>
+                <td style="border: none;">Amigos: @Html.CheckBoxFor(model => model.psicosocial.aduSPAmigos, new {id = "aduSPAmigos", style = "margin-right: 20px"})Vecinos: @Html.CheckBoxFor(model => model.psicosocial.aduSPVecinos, new {id = "aduSPVecinos", style = ""})</td>
+                <td style="border: none;">Flia: @Html.CheckBoxFor(model => model.psicosocial.aduSPFamilia, new {id = "aduSPFamilia", style = ""}) Inst. Pública/Privada: @Html.CheckBoxFor(model => model.psicosocial.aduSPInstituto, new {id = "aduSPInstituto", style = ""})</td>
+            </tr>
+            <tr>
+                <td style="border: none;">Otros: @Html.CheckBoxFor(model => model.psicosocial.aduSPOtros, new {id = "aduSPOtros", style = ""})</td>
+                <td style="border: none;">¿Cuales? @(Model.psicosocial.aduSPOtros == true ? Html.TextBoxFor(model => model.psicosocial.aduSPCuales, new {id = "aduSPCuales", style = "width:100px"}) : Html.TextBoxFor(model => model.psicosocial.aduSPCuales, new {id = "aduSPCuales", style = "width:100px", disabled = "disabled"}))</td>
+                <td style="border: none;">Nadie: @Html.CheckBoxFor(model => model.psicosocial.aduSPNadie, new {id = "aduSPNadie", style = ""})</td>
+                <td style="border: none;"><input type="checkbox"/></td>
+            </tr>*@
+            <tr>
+                <td style="border: none;"><br/><br/><u>MEDIO AMBIENTE</u></td>
+            </tr>
+            <tr>
+                <td style="border: none;">Vivienda: </td>
+                <td style="border: none;">N° de habitaciones: @Html.TextBoxFor(model => model.medioAmbiente.aduMAHabitaciones, new {id = "aduMAHabitaciones", style = "width:40px", maxlength = "2"})</td>
+                <td style="border: none;">N° de convivientes: @Html.TextBoxFor(model => model.medioAmbiente.aduMAConvivientes, new {id = "aduMAConvivientes", style = "width:40px", maxlength = "2"})</td>
+                <td style="border: none;">Vivienda inconveniente: SI @Html.RadioButtonFor(model => model.medioAmbiente.vivienda, true, new {id = "vivienda", style = ""}) NO @Html.RadioButtonFor(model => model.medioAmbiente.vivienda, false, new {id = "vivienda", style = ""})</td>
+            </tr>
+            <tr class="t-alt">
+                <td style="border: none;">Agua Potable: </td>
+                <td style="border: none;">SI @Html.RadioButtonFor(model => model.medioAmbiente.agua, true, new {id = "agua", style = ""}) NO @Html.RadioButtonFor(model => model.medioAmbiente.agua, false, new {id = "agua", style = ""})</td>
+                <td style="border: none;" colspan="2">Recolección de residuos: SI @Html.RadioButtonFor(model => model.medioAmbiente.residuos, true, new {id = "residuos", style = ""}) NO @Html.RadioButtonFor(model => model.medioAmbiente.residuos, false, new {id = "residuos", style = ""}) Con qué frecuencia? @(Model.medioAmbiente.aduMAResiduoSi ? Html.TextBoxFor(model => model.medioAmbiente.aduMAResiduoFrecu, new {id = "aduMAResiduoFrecu", style = "width:90px"}) : Html.TextBoxFor(model => model.medioAmbiente.aduMAResiduoFrecu, new {id = "aduMAResiduoFrecu", style = "width:90px", disabled = "disabled"}))</td>
+            </tr>
+            <tr>
+                <td style="border: none;">Baño instalado: </td>
+                <td style="border: none;">SI @Html.RadioButtonFor(model => model.medioAmbiente.banio, true, new {id = "banio", style = ""}) NO @Html.RadioButtonFor(model => model.medioAmbiente.banio, false, new {id = "banio", style = ""})</td>
+                <td style="border: none;" colspan="2">Cloacas: SI @Html.RadioButtonFor(model => model.medioAmbiente.cloacas, true, new {id = "cloacas", style = ""}) NO @Html.RadioButtonFor(model => model.medioAmbiente.cloacas, false, new {id = "cloacas", style = ""})</td>
+            </tr>
+        </table>
+    }
+</div>
+<hr/>
+@{
+    var FechaActual = "";
+    FechaActual = DateTime.Now.ToString("dd/MM/yyyy");
+}
+
+@*<script src="@Url.Content("~/Scripts/Bootstrap/plugins/bootstrap-datepicker/bootstrap-datepicker.js")"></script>*@
+<script>
+    var FechaActual = "@FechaActual";
+    $(document).ready(function () {
+        debugger;
+        $(".t-icon.t-icon-calendar").attr("title", "Abrir calendario");
+
+        $("#frmHCHistorialFamiliar :input").bind("keypress", function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                Avanzar(this);
+            }
+            $(this).removeAttr("title");
+            $(this).removeClass("ES-ErrorValidacion");
+            $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+        });
+
+        $("#frmHCHistorialFamiliar :input").bind("change", function (e) {
+            $(this).removeAttr("title");
+            $(this).removeClass("ES-ErrorValidacion");
+            $("#divHCMensajeErrorHitorialFamiliar").hide("slide");
+        });
+
+        $("#divHCHistorialFamiliar").slimScroll({
+            height: '400px',
+            color: '#265b77',
+            size: '10px',
+            railVisible: true,
+            alwaysVisible: true
+        });
+
+        @{
+            var Fecha = "";
+            if (Model.habitos.aduHAFumaCuando != null)
+            {
+                Fecha = Model.habitos.aduHAFumaCuando.Value.ToString("dd/MM/yyyy");
+            }
+                
+        }
+        $('#habitos_aduHAFumaCuando').val('@(Fecha)');
+
+        @{
+            Fecha = "";
+            if (Model.antecedentesMedicos.aduAMTranfusionesCuando != null)
+            {
+                Fecha = Model.antecedentesMedicos.aduAMTranfusionesCuando.Value.ToString("dd/MM/yyyy");
+            }
+                
+        }
+        $('#antecedentesMedicos_aduAMTranfusionesCuando').val('@(Fecha)');
+
+        @{
+            Fecha = "";
+            if (Model.habitos.aduHADejoCuando != null)
+            {
+                Fecha = Model.habitos.aduHADejoCuando.Value.ToString("dd/MM/yyyy");
+            }
+                
+        }
+        $('#habitos_aduHADejoCuando').val('@(Fecha)');
+
+        $('#aduAFCancerOtro').change(function () {
+            if (this.checked) {
+                $("#aduAFCancerOtroCual").removeAttr('disabled');
+                $("#aduAFCancerOtroCual").focus().select();
+            }
+            else {
+                $("#aduAFCancerOtroCual").val('');
+                $("#aduAFCancerOtroCual").attr('disabled', 'disabled');
+            }
+        });
+
+        $('#aduAMAlergia').change(function () {
+            if (this.checked) {
+                $("#aduAMAlergiaCual").removeAttr('disabled');
+                $("#aduAMAlergiaCual").focus().select();
+            }
+            else {
+                $("#aduAMAlergiaCual").val('');
+                $("#aduAMAlergiaCual").attr('disabled', 'disabled');
+            }
+        });
+
+        $('#aduAMInterna').change(function () {
+            if (this.checked) {
+                $("#aduAMMotivo1").removeAttr('disabled');
+                $("#aduAMMotivo2").removeAttr('disabled');
+                $("#aduAMMotivo3").removeAttr('disabled');
+                $("#aduAMAño1").removeAttr('disabled');
+                $("#aduAMAño2").removeAttr('disabled');
+                $("#aduAMAño3").removeAttr('disabled');
+                $("#aduAMMotivo1").focus().select();
+            }
+            else {
+                $("#aduAMMotivo1").val('');
+                $("#aduAMMotivo2").val('');
+                $("#aduAMMotivo3").val('');
+                $("#aduAMAño1").val('');
+                $("#aduAMAño2").val('');
+                $("#aduAMAño3").val('');
+                $("#aduAMMotivo1").attr('disabled', 'disabled');
+                $("#aduAMMotivo2").attr('disabled', 'disabled');
+                $("#aduAMMotivo3").attr('disabled', 'disabled');
+                $("#aduAMAño1").attr('disabled', 'disabled');
+                $("#aduAMAño2").attr('disabled', 'disabled');
+                $("#aduAMAño3").attr('disabled', 'disabled');
+            }
+        });
+
+        if ("True" === "@(Model.antecedentesMedicos.aduAMTranfusiones)") {
+            $('#antecedentesMedicos_aduAMTranfusionesCuando').data("tDatePicker").enable();
+        } else {
+            $('#antecedentesMedicos_aduAMTranfusionesCuando').data("tDatePicker").disable();
+        }
+        $('#aduAMTranfusiones').change(function () {
+            var dtFechaTrans = $('#antecedentesMedicos_aduAMTranfusionesCuando').data("tDatePicker");
+            if (this.checked) {
+                dtFechaTrans.value(FechaActual);
+                dtFechaTrans.enable();
+                $("#antecedentesMedicos_aduAMTranfusionesCuando").focus().select();
+            }
+            else {
+                dtFechaTrans.value(null);
+                dtFechaTrans.disable();
+            }
+        });
+
+        $('#aduAMInfecciones').change(function () {
+            if (this.checked) {
+                $("#aduAMInfeccionesCual").removeAttr('disabled');
+                $("#aduAMInfeccionesCual").focus().select();
+            }
+            else {
+                $("#aduAMInfeccionesCual").val('');
+                $("#aduAMInfeccionesCual").attr('disabled', 'disabled');
+            }
+        });
+
+        var Tabaco = "@(Model.habitos.tabaco)";
+        switch (Tabaco) {
+        case 'FU':
+            $('#habitos_aduHAFumaCuando').data("tDatePicker").enable();
+            $('#habitos_aduHADejoCuando').data("tDatePicker").disable();
+            break;
+        case 'DJ':
+            $('#habitos_aduHAFumaCuando').data("tDatePicker").disable();
+            $('#habitos_aduHADejoCuando').data("tDatePicker").enable();
+            $("#habitos_aduHADejoCuando").focus().select();
+            break;
+        default:
+            $('#habitos_aduHAFumaCuando').data("tDatePicker").disable();
+            $('#habitos_aduHADejoCuando').data("tDatePicker").disable();
+            break;
+        }
+
+        $('input[type=radio][id=tabaco]').on('change', function () {
+            var dtFecha = $('#habitos_aduHAFumaCuando').data("tDatePicker");
+            switch ($(this).val()) {
+            case 'FU':
+                dtFecha = $('#habitos_aduHAFumaCuando').data("tDatePicker");
+                dtFecha.value(FechaActual);
+                dtFecha.enable();
+                dtFecha = $('#habitos_aduHADejoCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                $("#habitos_aduHAFumaCuando").focus().select();
+                break;
+            case 'DJ':
+                dtFecha = $('#habitos_aduHAFumaCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                dtFecha = $('#habitos_aduHADejoCuando').data("tDatePicker");
+                dtFecha.value(FechaActual);
+                dtFecha.enable();
+                $("#habitos_aduHADejoCuando").focus().select();
+                break;
+            case 'NU':
+                dtFecha = $('#habitos_aduHAFumaCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                dtFecha = $('#habitos_aduHADejoCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                break;
+            case 'PS':
+                dtFecha = $('#habitos_aduHAFumaCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                dtFecha = $('#habitos_aduHADejoCuando').data("tDatePicker");
+                dtFecha.value(null);
+                dtFecha.disable();
+                break;
+            }
+        });
+
+        $('input[type=radio][id=alcohol]').on('change', function () {
+            switch ($(this).val()) {
+            case 'CM':
+                $('#aduHAVasosPorDia').val('');
+                $('#aduHAVasosPorDia').removeAttr('disabled');
+                $("#aduHAVasosPorDia").focus().select();
+                break;
+            case 'BE':
+                $('#aduHAVasosPorDia').val('');
+                $('#aduHAVasosPorDia').attr('disabled', 'disabled');
+                break;
+            case 'NB':
+                $('#aduHAVasosPorDia').val('');
+                $('#aduHAVasosPorDia').attr('disabled', 'disabled');
+                break;
+            }
+        });
+        SoloEnteros("aduHAVasosPorDia");
+        SoloEnteros("aduAMAño1");
+        SoloEnteros("aduAMAño2");
+        SoloEnteros("aduAMAño3");
+        SoloEnteros("aduAGMenarca");
+        SoloEnteros("aduAGIRS");
+        SoloEnteros("aduAGPartos");
+        SoloEnteros("aduAGGestas");
+        SoloEnteros("aduAGCesareas");
+        SoloEnteros("aduAGAbortos");
+        SoloEnteros("aduMAHabitaciones");
+        SoloEnteros("aduMAConvivientes");
+
+        $('#aduHAFisico').change(function () {
+            $("#aduHAFisicoTipo").removeAttr("title");
+            $("#aduHAFisicoTipo").removeClass("ES-ErrorValidacion");
+            $("#aduHAFisicoFrecuancia").removeAttr("title");
+            $("#aduHAFisicoFrecuancia").removeClass("ES-ErrorValidacion");
+            if (this.checked) {
+                $("#aduHAFisicoTipo").removeAttr('disabled');
+                $("#aduHAFisicoFrecuancia").removeAttr('disabled');
+                $("#aduHAFisicoTipo").focus().select();
+            }
+            else {
+                $("#aduHAFisicoTipo").val('');
+                $("#aduHAFisicoTipo").attr('disabled', 'disabled');
+                $("#aduHAFisicoFrecuancia").val('');
+                $("#aduHAFisicoFrecuancia").attr('disabled', 'disabled');
+            }
+        });
+
+        $('input[type=radio][id=habitos_drogas]').on('change', function () {
+            $("#aduHADrogaCual").removeAttr("title");
+            $("#aduHADrogaCual").removeClass("ES-ErrorValidacion");
+            switch ($(this).val()) {
+            case 'SI':
+                $('#aduHADrogaCual').val('');
+                $('#aduHADrogaCual').removeAttr('disabled');
+                $("#aduHADrogaCual").focus().select();
+                break;
+            case 'NO':
+                $('#aduHADrogaCual').val('');
+                $('#aduHADrogaCual').attr('disabled', 'disabled');
+                break;
+            }
+        });
+
+        $('input[type=radio][id=empleo]').on('change', function () {
+            $("#aduSPEmpleoTipo").removeAttr("title");
+            $("#aduSPEmpleoTipo").removeClass("ES-ErrorValidacion");
+            switch ($(this).val()) {
+            case "True":
+                $('#aduSPEmpleoTipo').val('');
+                $('#aduSPEmpleoTipo').removeAttr('disabled');
+                $("#aduSPEmpleoTipo").focus().select();
+                break;
+            case "False":
+                $('#aduSPEmpleoTipo').val('');
+                $('#aduSPEmpleoTipo').attr('disabled', 'disabled');
+                break;
+            }
+        });
+        //-
+        $('#aduSPOtros').change(function () {
+            if (this.checked) {
+                $("#aduSPCuales").removeAttr('disabled');
+                $("#aduSPCuales").focus().select();
+            }
+            else {
+                $("#aduSPCuales").val('');
+                $("#aduSPCuales").attr('disabled', 'disabled');
+            }
+        });
+
+        $('input[type=radio][id=residuos]').on('change', function () {
+            switch ($(this).val()) {
+            case "True":
+                $('#aduMAResiduoFrecu').val('');
+                $('#aduMAResiduoFrecu').removeAttr('disabled');
+                $("#aduMAResiduoFrecu").focus().select();
+                break;
+            case "False":
+                $('#aduMAResiduoFrecu').val('');
+                $('#aduMAResiduoFrecu').attr('disabled', 'disabled');
+                break;
+            }
+        });
+        $('#aduAGCiclos').mask("99/99");
+        //Se desactiva aquellos campos que solo son de mujeres\\
+        if ($("#tipoIdSexo_Lista").val() === "10") {
+            //Es Hombre, se desactivan los campos de gineco
+            $("#aduAFCancerMama").attr("disabled", "disabled");
+            $("#aduAGMenarca").attr("disabled", "disabled");
+            $("#aduAGIRS").attr("disabled", "disabled");
+            $("#aduAGPartos").attr("disabled", "disabled");
+            $("#aduAGGestas").attr("disabled", "disabled");
+            $("#aduAGCesareas").attr("disabled", "disabled");
+            $("#aduAGCiclos").attr("disabled", "disabled");
+            $("#aduAGAbortos").attr("disabled", "disabled");
+            $("#aduAGQuirurgica").attr("disabled", "disabled");
+            $("#aduAGDIU").attr("disabled", "disabled");
+            $("#aduAGImplante").attr("disabled", "disabled");
+            $("#aduAGMadreSola").attr("disabled", "disabled");
+            $("#aduAGMenopausia").attr("disabled", "disabled");
+        }
+    });
+</script>

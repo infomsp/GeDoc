@@ -1,0 +1,520 @@
+﻿@model GeDoc.Models.catTurnoBloqueoMasivo
+@*<script src="@Url.Content("~/Scripts/CRUDGrillas.js")"></script>*@
+
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="@Url.Content("~/Content/jquery.timepicker.css")">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.ui.datepicker-es.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.timepicker.js")" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+
+        //debugger;
+        //$("#fDesde").remove();
+        //$('#cont-fDesde').empty();
+        //$('#cont-fDesde').append('<input type="text" id="fDesde" size="10" class="input" /><i class="fa fa-calendar"></i>');
+        //$("#fDesde").datepicker({
+        //    closeText: 'Cerrar',
+        //    prevText: 'Ant',
+        //    nextText: 'Sig',
+        //    currentText: 'Hoy',
+        //    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        //    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        //    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+        //    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        //    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        //    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié;', 'Juv', 'Vie', 'Sáb'],
+        //    dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        //    weekHeader: 'Sm',
+        //    dateFormat: 'dd/mm/yy',
+        //    //inline: true,
+        //    minDate: 0,
+        //    onClose: function (selectedDate) {
+        //        $("#fHasta").datepicker("option", "minDate", selectedDate);
+        //    }
+        //});
+
+
+        //$("#fHasta").remove();
+        //$('#cont-fHasta').empty();
+        //$('#cont-fHasta').append('<input type="text" id="fHasta" size="10" class="input" /><i class="fa fa-calendar"></i>');
+        //$("#fHasta").datepicker({
+        //    closeText: 'Cerrar',
+        //    prevText: 'Ant',
+        //    nextText: 'Sig',
+        //    currentText: 'Hoy',
+        //    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        //    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        //    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+        //    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        //    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        //    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié;', 'Juv', 'Vie', 'Sáb'],
+        //    dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        //    weekHeader: 'Sm',
+        //    dateFormat: 'dd/mm/yy',
+        //    //inline: true
+        //});
+
+    });//FIN - $(document).ready()
+
+
+
+
+
+
+
+
+    $("#rdbBloquea").change(function () {
+        if ($(this).is(':checked')) {
+            //jAlert('Bloquear', "Atención");            
+            $("#btnAceptar").val("Bloquear");
+            $("#motBloqueo").show();
+        }
+    });
+    $("#rdbDesbloquea").change(function () {
+        if ($(this).is(':checked')) {
+            //jAlert('Desbloquea', "Atención");
+            $("#btnAceptar").val("Desbloquear");
+            $("#motBloqueo").hide();
+        }
+    });
+
+
+
+    $("#habilitaHra").change(function () {
+        if ($(this).is(':checked')) {
+            $("#hraDesde").val("").prop("disabled", false);
+            $("#hraHasta").val("").prop("disabled", false);
+        }
+        else {
+            //$("#hraDesde").val("00:00").prop("disabled", true);
+            //$("#hraHasta").val("23:59").prop("disabled", true);
+            $("#hraDesde").val("").prop("disabled", true);
+            $("#hraHasta").val("").prop("disabled", true);
+        }
+    });
+
+    //$("#hraDesde").prop("disabled", true).val("00:00");
+    //$("#hraHasta").prop("disabled", true).val("23:59");
+    $("#hraDesde").prop("disabled", true);
+    $("#hraHasta").prop("disabled", true);
+
+    $("#hraDesde").timepicker({
+        timeFormat: 'H:i',
+        'disableTextInput': true,
+    });
+
+    $("#hraHasta").timepicker({
+        timeFormat: 'H:i',
+        'disableTextInput': true,
+    });
+
+
+
+    function CargaEspecialidades(id) {
+
+    }
+
+
+    function CargaEspecialistas(id) {
+        //AbrirWaiting();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CargaEspecialistas", "catTurnoBloqueoMasivo")',
+            dataType: 'json',
+            data: { espId: $("#Especialidad").val() },
+            success: function (data, textStatus, jqXHR) {
+                $("#Especialista")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialista").append('<option value="0">TODOS</option>');
+
+                console.log("Entra al EACH");
+                $.each(data, function (key, value) {
+                    $("#Especialista").append('<option value=' + value.Value + '>' + value.Text + '</option>');
+                })
+
+                console.log(data.count);
+                $("#Especialista").prop("disabled", false);
+                // CerrarWaiting();
+            },
+            error: function () {
+                jAlert('Ha ocurrido un error!', "Atención");
+
+                $("#Especialista")
+                .find('option')
+                .remove()
+                .end();
+
+                $("#Especialista").append('<option value="0">TODOS</option>');
+
+                $("#Especialista").prop("disabled", true);
+            }
+        });
+    }
+
+    $("#btnAceptar").click(function () {
+
+        if (validaFechaDesde() && validaFechaHasta() && validaHoras()) {
+
+
+            jConfirm(obtenerMsgConfirm(), $("input[type=radio]:checked").val() == "BLCK" ? "Confirmar Bloqueo" : "Confirmar Desbloqueo", function (r) {
+
+                if (r == true) {
+                    AbrirWaiting();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ProcesaBloqueoMasivo", "catTurnoBloqueoMasivo")',
+                        dataType: 'json',
+                        data: {
+                            fDesde: $("#fDesde").data('tDatePicker').inputValue,
+                            fHasta: $("#fHasta").data('tDatePicker').inputValue,
+                            hraDesde: $("#hraDesde").val(),
+                            hraHasta: $("#hraHasta").val(),
+                            especialistaId: $("#Especialista").val(),
+                            especialidadId: $("#Especialidad").val(),
+                            motivoBloqueo: $("#MotivoBloqueo").val(),
+                            tipoBloqueo: $("input[type=radio]:checked").val()
+                        },
+                        success: function (data, textStatus, jqXHR) {
+
+                            //Codigo success
+                            jAlert(data.msg, "Atencion", function () {
+                               
+
+
+
+
+
+                            });
+                            CerrarWaiting();
+
+                        },
+                        error: function () {
+                            jAlert('Ha ocurrido un error!', "Atencion");
+                            CerrarWaiting();
+                        }
+                    });
+                }
+
+                //Caso de no aceptar
+                //jAlert('Confirmed: ' + r, 'Confirmation Results');
+            });
+        }
+
+
+    });
+
+    function validaFechaDesde() {
+
+        if ($("#fDesde").val().length == 0) {
+            jAlert("El campo \"Fecha Desde\" es requerido", "Atención");
+            this.focus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+
+    function validaFechaHasta() {
+
+        if ($("#fHasta").val().length == 0) {
+            jAlert("El campo \"Fecha Hasta\" es requerido", "Atención");
+            this.focus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    function validaHraDesde() {
+
+        if ($("#hraDesde").val().length == 0) {
+            jAlert("El campo \"Hora Desde\" es requerido", "Atención");
+            this.focus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    function validaHraHasta() {
+
+        if ($("#hraHasta").val().length == 0) {
+            jAlert("El campo \"Hora Hasta\" es requerido", "Atención");
+            this.focus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+
+    function validaHoras() {
+        if ($("#habilitaHra").is(':checked')) {
+            if (validaHraDesde() && validaHraHasta()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+
+    function obtenerMsgConfirm() {
+
+        if ($("input[type=radio]:checked").val() == "BLCK") {
+
+            debugger;
+
+            if ($("#Especialista").val() == "0" && $("#Especialidad").val() == "0") {
+                return "El proceso bloquera todos los turnos de cualquier Especialidad y para cualquier Especialista, en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            if ($("#Especialista").val() == "0" && $("#Especialidad").val() != "0") {
+                return "El proceso bloquera todos los turnos de cualquier Especialista para la Especialidad " + $("#Especialidad option:selected").text() + ", en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            if ($("#Especialista").val() != "0" && $("#Especialidad").val() == "0") {
+                return "El proceso bloquera todos los turnos de cualquier Especialidad para el Especialista " + $("#Especialista option:selected").text() + ", en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            return "El proceso bloquera todos los turnos en el rago de fecha y hora seleccionados";
+        }
+        else {
+
+            debugger;
+
+            if ($("#Especialista").val() == "0" && $("#Especialidad").val() == "0") {
+                return "El proceso desbloquera todos los turnos de cualquier Especialidad y para cualquier Especialista, en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            if ($("#Especialista").val() == "0" && $("#Especialidad").val() != "0") {
+                return "El proceso desbloquera todos los turnos de cualquier Especialista para la Especialidad " + $("#Especialidad option:selected").text() + ", en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            if ($("#Especialista").val() != "0" && $("#Especialidad").val() == "0") {
+                return "El proceso desbloquera todos los turnos de cualquier Especialidad para el Especialista " + $("#Especialista option:selected").text() + ", en el rago de fecha y hora seleccionados.\n¿Desea continuar?";
+            }
+
+            return "El proceso desbloquera todos los turnos en el rago de fecha y hora seleccionados"
+        }
+
+
+
+
+    }
+
+
+    function fDesde_onChange() {
+        var datepicker_desde = $('#fDesde').data('tDatePicker'); // $(this) is equivalent to $('#DatePicker')
+        var datepicker_hasta = $('#fHasta').data('tDatePicker');
+        debugger;
+        datepicker_hasta.minValue = datepicker_desde.selectedValue;
+        datepicker_hasta.value(datepicker_desde.selectedValue);
+        datepicker_hasta.trigger("change");
+        //datepicker_hasta.selectedValue = datepicker_desde.selectedValue;
+
+        // Use the datepicker client object
+    }
+
+    function fHasta_onChange() {
+        var datepicker = $('#fHasta').data('tDatePicker');; // $(this) is equivalent to $('#DatePicker')
+        debugger;
+        // Use the datepicker client object
+    }
+
+    
+
+</script>
+
+<style>
+
+    .t-picker-wrap {
+        width : 107px;    
+    }
+
+
+    tr td {
+        border: none;
+    }
+
+    table {
+        /*border:solid black 2px ;*/
+        border: none;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+
+    .input {
+        width: 208px;
+    }
+
+    .inputHra {
+        width: 104px;
+    }
+
+    label {
+        text-align: right;
+    }
+
+    .container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /*margin:auto;*/
+        /*border:solid red 2px ;*/
+    }
+
+    .groupRadio {
+        margin-top: 5px;
+        padding-left: 25px;
+    }
+
+    #chkHra {
+        /*border: solid;*/
+        position: absolute;
+        margin-top: 15px;
+        margin-left: -81px;
+    }
+</style>
+
+<div class="container">
+
+
+
+
+    <table>
+
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Opciones de Acción:</legend>
+
+
+                    <div class="groupRadio">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="opciones" id="rdbBloquea" value="BLCK" checked>
+                                Bloqueo masivo de turnos.
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="opciones" id="rdbDesbloquea" value="DBLCK">
+                                Desbloqueo masivo de turnos.
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <label>Fecha Desde:</label>
+            </td>
+            <td id="cont-fDesde">
+                @{
+                    @Html.Telerik().DatePicker().Name("fDesde").Min(DateTime.Today.Date).ClientEvents(events => events.OnChange("fDesde_onChange"));
+                }
+                @*<input type="date" id="fDesde" size="10" class="input" /><i class="fa fa-calendar"></i>*@
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>Fecha Hasta:</label>
+            </td>
+            <td id="cont-fHasta">
+                @{
+                    @Html.Telerik().DatePicker().Name("fHasta").Min(DateTime.Today.Date).ClientEvents(events => events.OnChange("fHasta_onChange"));
+                }
+                @*<input type="date" id="fHasta" class="input" /><i class="fa fa-calendar"></i>*@
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <label>Hora Desde:</label>
+            </td>
+            <td>
+                <input id="hraDesde" size="10" class="inputHra" disabled="disabled" /><i class="fa fa-clock-o"></i>
+            </td>
+
+            <td rowspan="2" id="chkHra">
+                <input type="checkbox" id="habilitaHra" />
+                Habilitar franja horaria.
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>Hora Hasta:</label>
+            </td>
+            <td>
+                <input id="hraHasta" class="inputHra" /><i class="fa fa-clock-o"></i>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <label>Especialidad:</label>
+            </td>
+            <td>
+                @{
+                    @Html.DropDownList("Especialidad", ViewData["Especialidad"] as SelectList, new { @onchange = "CargaEspecialistas(this.value);", @class = "input t-dropdown" });
+                    
+                }
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>Especialista:</label>
+            </td>
+            <td>
+                @{
+                    @Html.DropDownList("Especialista", ViewData["Especialista"] as List<SelectListItem>, new { @class = "input", @onchange = "CargaEspecialidades(this.value);" });//, @disabled = "disabled"
+                }
+            </td>
+        </tr>
+
+        <tr id="motBloqueo">
+            <td>
+                <label>Motivo Bloqueo:</label>
+            </td>
+            <td>
+                @{
+                    @Html.DropDownList("MotivoBloqueo", ViewData["MotivoBloqueo"] as List<SelectListItem>, new { @class = "input" });
+                }
+            </td>
+        </tr>
+
+
+    </table>
+
+    <input type="button" id="btnAceptar" value="Bloquear" class="t-button" style="margin-left: 50%;" />
+</div>
+
+
+
+
+
+
+

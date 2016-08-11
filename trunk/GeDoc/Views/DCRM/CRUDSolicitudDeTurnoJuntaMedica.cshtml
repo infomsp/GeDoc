@@ -1,0 +1,351 @@
+@using GeDoc.Models.JuntaMedica.Modelo
+
+<link href="@Url.Content("~/Content/bootstrap-switch-master/bootstrap-switch.min.css")" rel="stylesheet" type="text/css" media="screen">
+<link href="@Url.Content("~/Content/select2.min.css")" rel="stylesheet" type="text/css" media="screen">
+
+<script>
+    function onChangeFechaTurno() {
+        $("#divError").hide();
+    }
+</script>
+
+<div class="iconos BordeRedondeado" style="text-align: center; background: white; padding-top: 3px; padding-bottom: 3px; border-color: cornflowerblue;">
+    <div id="divCargaDeDocumentoJM" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center;">
+        <div>
+            <label>Número de Documento: </label>
+            <input type="text" placeholder="Ingrese el DNI" id="txtNumeroDocumentoJMCRUD" maxlength="8" style="width: 125px;" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+            <button id="btnBuscarJM" class="t-button t-button-icon" onclick="onBuscarAgenteCRUDJM();" style="width: 100px;">
+                <span class="t-icon t-search"></span> Buscar
+            </button>
+        </div>
+    </div>
+    <div id="divAgenteInexistente" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        El Número de Documento que ha ingresado no Existe!
+        <p>Debe dirigirse a la "Dirección de Control y Reconocimientos Médicos" y Solicitar el Turno Personalmente.</p>
+    </div>
+    <div id="divError" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        <p><span id="spanMensajeError">No se ha podido completar la operación, intente en unos minutos nuevamente.</span></p>
+    </div>
+    <div id="divErrorEspecialidades" class="BordeRedondeado alert-warning" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        Debe seleccionar al menos una Especialidad
+    </div>
+    <div id="divErrorServidor" class="BordeRedondeado alert-danger" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none;">
+        <label style="font-weight: bold;">¡Atención! </label>
+        No se ha podido completar la operación, intente en unos minutos nuevamente.
+        <p>Si el problema persiste, comuniquese con el "Área de Sistemas del Nivel Central".</p>
+    </div>
+    <div id="divAgenteEncontrado" class="BordeRedondeado" style="vertical-align: middle; padding: 10px; margin: 10px; text-align: center; display: none; border-color: cornflowerblue;">
+        <label>Agente, <span id="spanNombreAgente" style="font-weight: bold;">CARLOS BUENO RICARDO</span></label>
+        <p>Seleccione el "Motivo", la Fecha y al menos una "Especialidad" y luego "Confirme" el Turno para la Junta Médica.</p>
+        <div style="margin-left: 34%; margin-bottom: 20px;">
+            <div class="BordeSombreado" style="width: 215px; padding: 15px; border-color: cornflowerblue;">
+                <table id="tblEspecialidades" style="border: none;">
+                    <tr style="height: 30px; padding: 8px; border: none; background-color: cornflowerblue; color: whitesmoke;">
+                        <td colspan="2"><b>MOTIVO</b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none;">
+                        <td colspan="2">
+                            <div class="tjId" style="text-align: left;">
+                                @Html.Partial("EditorTemplates/_ListaDesplegable", "tjId_Lista")
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none; background-color: cornflowerblue; color: whitesmoke;">
+                        <td colspan="2"><b>FECHA</b></td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none; color: whitesmoke;">
+                        <td colspan="2">
+                            @{ Html.Telerik().DatePicker()
+                                   .Name("dtFechaTurno")
+                                   .Value(DateTime.Now)
+                                   .ShowButton(true)
+                                   .OpenOnFocus(true)
+                                   .TodayButton()
+                                   .ClientEvents(eventos => eventos.OnChange("onChangeFechaTurno"))
+                                   .Render();
+                                //.HtmlAttributes(new { id = "dtFechaTurno"})
+                            }
+
+                        </td>
+                    </tr>
+                    <tr style="height: 30px; padding: 8px; border: none; background-color: cornflowerblue; color: whitesmoke;">
+                        <td colspan="2"><b>ESPECIALIDADES</b></td>
+                    </tr>
+                    @foreach (var item in (List<getDatosEspecialidades_Result>) ViewBag.EspecialidadesJM)
+                    {
+                        <tr style="height: 30px; padding: 8px; border: none;">
+                            <td style="text-align: left; border: none;">
+                                @(item.espNombre):
+                            </td>
+                            <td style="border: none;">
+                                <input type="checkbox" id="chk@(item.espId)" value="@(item.espId)" class="my-checkbox">
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+        <button class="t-button t-insert t-button-icon" onclick="onGenerarCRUDJM();" style="width: 100px;">
+            <span class="t-icon t-insert"></span> Confirmar
+        </button>
+        <button class="t-button t-button-icon" onclick="onCancelarCRUDJM();" style="width: 100px;">
+            <span class="t-icon t-cancel"></span> Cancelar
+        </button>
+    </div>
+
+    @{
+        if (Session["Usuario"] == null)
+        {
+            @Html.Telerik().ScriptRegistrar().Globalization(true).DefaultGroup(group => group.Combined(true).Compress(true))
+        }
+    }
+
+    <div id="divOverlayCM" class="es-overlay" style="z-index: 19014; display: none;"></div>
+    <div id="wPopUpMensajeCM" class="t-widget" style="z-index: 19019; display: none;">
+        <div class="t-window-titlebar t-header" style="height: 17px;">
+            <span class="t-window-title">Solicitud de Turno de Junta Médica</span>
+        </div>
+        <div class="t-window-content t-content" style="">
+            <div>
+                @*<label>Carta Médica N°: </label><b><span id="spanNroCM"></span></b>
+                <br/>*@
+                <p>Debe presentarse por la <b>Dirección de Control y Reconocimientos Médicos</b> el día <b><span id="spanFechaCM"></span></b> a las <b><span id="spanHoraCM"></span></b> hs.
+                </p>
+                <br/>
+                <p>IMPORTANTE: No olvide llevar todos los estudios y certificados médicos correspondientes.</p>
+                <br/>
+                @*<p>Usted debe avisar a su jefe y/o director, antes de las 2 primeras horas de iniciada su jornada laboral, caso contrario será nulo todo lo actuado.
+                </p>*@
+            </div>
+            <hr/>
+            <div style="text-align: center; width: 100%;">
+                <button class="t-button t-close t-button-icon" onclick="onCerrarMensajeCM();" style="width: 100px;">
+                    <span class="t-icon t-close"></span> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/bootstrap-switch-master/bootstrap-switch.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/select2.min.js")"></script>
+
+<script type="text/javascript">
+    var IdAgente = -1;
+
+    AbrirWaitingCRUD("CRUDJuntaMedica");
+
+    function AjustarAPantalla() {
+        if (isMobile()) {
+            zoomPantalla = '0.5';
+            $('.iconos').css({ 'zoom': zoomPantalla });
+        }
+    }
+    //Seleccionamos el primer campo
+    $("#divCargaDeDocumentoJM").ready(function () {
+        debugger;
+        CerrarWaitingCRUD("CRUDJuntaMedica");
+        AjustarAPantalla();
+    });
+
+    function onCancelarCRUDJM() {
+        $("#divAgenteEncontrado").hide();
+        $("#divAgenteInexistente").hide();
+        $("#divErrorEspecialidades").hide();
+        $("#divErrorServidor").hide();
+        $("#divError").hide();
+        $("#txtNumeroDocumentoJMCRUD").val("");
+        $("#btnBuscarJM").removeClass("t-state-disabled");
+        $("#txtNumeroDocumentoJMCRUD").removeAttr("disabled");
+        $("#txtNumeroDocumentoJMCRUD").focus().select();
+    }
+
+    function onBuscarAgenteCRUDJM() {
+        if ($("#txtNumeroDocumentoJMCRUD").val().trim() === "") {
+            $("#txtNumeroDocumentoJMCRUD").focus().select();
+            return;
+        }
+
+        if ($("#btnBuscarJM").is(".t-state-disabled")) {
+            return;
+        }
+
+        AbrirWaitingCRUD("CRUDJuntaMedica");
+        debugger;
+        IdAgente = -1;
+        var UrlAccion = "@(Url.Content("~/DCRM/onBuscarAgenteJM"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { nroDocumento: $("#txtNumeroDocumentoJMCRUD").val() },
+            error: function () {
+                CerrarWaitingCRUD("CRUDJuntaMedica");
+                $("#txtNumeroDocumentoJMCRUD").focus().select();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("CRUDJuntaMedica");
+                if (respuesta.Encontrado) {
+                    debugger;
+                    $("#divAgenteInexistente").hide();
+                    $("#divError").hide();
+                    $("#divErrorServidor").hide();
+                    var Agente = respuesta.Datos.agtApellidoyNombre;
+                    $("#divAgenteEncontrado").show();
+                    $("#btnBuscarJM").addClass("t-state-disabled");
+                    $("#txtNumeroDocumentoJMCRUD").attr("disabled", "disabled");
+                    $("#spanNombreAgente").text(Agente);
+                    $(".t-button.t-insert.t-button-icon").focus().select();
+                    IdAgente = respuesta.Datos.agtId;
+                    if (respuesta.Datos.turId > 0) {
+                        onAbrirMensajeCM(respuesta.Datos);
+                    }
+                } else {
+                    $("#divAgenteInexistente").show();
+                    $("#txtNumeroDocumentoJMCRUD").val("");
+                    $("#txtNumeroDocumentoJMCRUD").focus().select();
+                }
+            }
+        });
+    }
+
+
+    function CentrarCRUDTurnoJM() {
+        var AnchoPantalla = $("#wCRUDTurnoJuntaMedica").width();
+        var AltoPantalla = $("#wCRUDTurnoJuntaMedica").height();
+        debugger;
+        if (isMobile()) {
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: 0,
+                top: 50
+            });
+        } else {
+            if ("@(Session["Usuario"] == null ? "AJUSTAR" : "NOAJUSTAR")" === "AJUSTAR" || isMobile()) {
+                AjustarAPantalla();
+            }
+            $('#wPopUpMensajeCM').css({
+                position: 'absolute',
+                left: (AnchoPantalla - 702) / 2,
+                top: (AltoPantalla - $('#wPopUpMensajeCM').outerHeight()) / 2
+            });
+        }
+    }
+
+    $(window).resize(function () {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        //CentrarCRUDTurnoJM();
+    });
+
+    function formatoFecha(date, format) {
+        format = format || '{0:d}';
+        return $.telerik.formatString(format, date);
+    }
+
+    function onGenerarCRUDJM() {
+        $("#divAgenteInexistente").hide();
+        $("#divErrorEspecialidades").hide();
+        $("#divErrorServidor").hide();
+        $("#divError").hide();
+        //Genera una nueva carta médica//
+        if ($('#tblEspecialidades').find('input[type=checkbox]:checked').length == 0) {
+            $("#divErrorEspecialidades").show();
+            return;
+        }
+        var Especialidades = "";
+        $('#tblEspecialidades').find('input[type=checkbox]:checked').each(function (index) {
+            //alert(index + ": " + );
+            Especialidades = Especialidades + "#" + $(this).val() + "#";
+        });
+
+        AbrirWaitingCRUD("CRUDJuntaMedica");
+        debugger;
+        var dpFecha = $('#dtFechaTurno').data('tDatePicker');
+        var FechaTurno = formatoFecha(dpFecha.value(), "{0:d}");
+
+        var UrlAccion = "@(Url.Content("~/DCRM/onConfirmaTurnoJM"))";
+        $.ajax({
+            type: "POST",
+            url: UrlAccion,
+            data: { agtId: IdAgente, tjId: $("#tjId_Lista").val(), Especialidades: Especialidades, pFecha: FechaTurno },
+            error: function () {
+                CerrarWaitingCRUD("CRUDJuntaMedica");
+                onCancelarCRUDJM();
+                $("#divErrorServidor").show();
+            },
+            success: function (respuesta) {
+                CerrarWaitingCRUD("CRUDJuntaMedica");
+                if (respuesta.Encontrado) {
+                    onAbrirMensajeCM(respuesta.Datos);
+                    var grid = $("#gridTurnosJuntaMedica").data("tGrid");
+                    grid.ajaxRequest();
+                } else {
+                    CerrarWaitingCRUD("CRUDJuntaMedica");
+                    //onCancelarCRUDJM();
+                    $("#spanMensajeError").text(respuesta.Mensaje);
+                    $("#divError").show();
+                }
+            }
+        });
+    }
+
+    function onAbrirMensajeCM(Datos) {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        CentrarCRUDTurnoJM();
+        //jConfirm("¿Confirma la Impresión de Notificaciones?", "Imprimir...", function (r) {
+        //    if (r) {
+        debugger;
+                var _Parametros = new Array(new Array(Datos.turId, 'turId'), new Array('A', 'Tipo'));
+                InvocarReporte('InformesJuntaMedicaUnificado', _Parametros, true);
+
+                $("#spanNroCM").text(Datos.cmedNumero);
+                $("#spanFechaCM").text(Datos.FechaTexto);
+                $("#spanHoraCM").text(Datos.Hora);
+                $("#divOverlayCM").show();
+                $("#wPopUpMensajeCM").show();
+                $(".t-button.t-close.t-button-icon").focus().select();
+       //     }
+       // });
+    }
+    function onCerrarMensajeCM() {
+        // aquí le pasamos la clase o id de nuestro div a centrar (en este caso "caja")
+        $("#divOverlayCM").hide();
+        $("#wPopUpMensajeCM").hide();
+        onCancelarCRUDJM();
+    }
+
+    $("#txtNumeroDocumentoJMCRUD").keydown(function (e) {
+        $("#divErrorServidor").hide();
+        if (e.which === 13) {
+            onBuscarAgenteCRUDJM();
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $('input[class="my-checkbox"]').bootstrapSwitch();
+
+    $("#tjId_Lista").select2({
+        placeholder: "Ningún item seleccionado",
+        allowClear: false,
+        language: "es",
+        theme: "classic"
+    }).on("change", function (e) {
+    });
+
+    var $ListaTipos = $("#tjId_Lista");
+    $ListaTipos.on("select2:open", function (e) {
+        $(".select2-dropdown.select2-dropdown--above").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--below").css("z-index", "19201");
+        $(".select2-dropdown.select2-dropdown--open").css("z-index", "19201");
+    });
+
+    CentrarCRUDTurnoJM();
+    $("#txtNumeroDocumentoJMCRUD").focus().select();
+    CerrarWaitingCRUD("CRUDJuntaMedica");
+
+</script>
