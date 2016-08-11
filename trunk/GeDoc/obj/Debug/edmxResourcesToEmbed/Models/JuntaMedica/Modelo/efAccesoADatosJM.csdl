@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="efAccesoADatosJMModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="efAccesoADatosJMJuntaMedicaEntities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="getListaCMPorEstados" ReturnType="Collection(efAccesoADatosJMModel.getListaCMPorEstados_Result)">
+      <Parameter Name="Estados" Mode="In" Type="String" />
+      <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosAgente" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgente_Result)">
+      <Parameter Name="agtId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosAgenteGrupoFamiliar" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgenteGrupoFamiliar_Result)">
+      <Parameter Name="agtId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosAgenteReparticiones" ReturnType="Collection(efAccesoADatosJMModel.getDatosAgenteReparticiones_Result)">
+      <Parameter Name="agtId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="getListaEspecialidades" ReturnType="Collection(efAccesoADatosJMModel.getListaEspecialidades_Result)" />
+    <FunctionImport Name="setCartaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+      <Parameter Name="cmedId" Mode="In" Type="Int64" />
+      <Parameter Name="espId" Mode="In" Type="Int32" />
+      <Parameter Name="cmedMotivoSolicitud" Mode="In" Type="String" />
+      <Parameter Name="prioridad" Mode="In" Type="String" />
+      <Parameter Name="usrNombre" Mode="In" Type="String" />
+      <Parameter Name="Accion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getBusquedaAgentes" ReturnType="Collection(efAccesoADatosJMModel.getBusquedaAgentes_Result)">
+      <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getBusquedaAgenteByDocumento" ReturnType="Collection(efAccesoADatosJMModel.getBusquedaAgenteByDocumento_Result)">
+      <Parameter Name="nroDocumento" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getCartaMedicaByAgente" ReturnType="Collection(efAccesoADatosJMModel.getCartaMedicaByAgente_Result)">
+      <Parameter Name="agtId" Mode="In" Type="Int64" />
+    </FunctionImport>
+    <FunctionImport Name="getListaCMGestion" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestion_Result)">
+      <Parameter Name="Estados" Mode="In" Type="String" />
+      <Parameter Name="TextoBuscado" Mode="In" Type="String" />
+      <Parameter Name="Usuario" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosEspecialidades" ReturnType="Collection(efAccesoADatosJMModel.getDatosEspecialidades_Result)" />
+    <FunctionImport Name="getDatosTiposJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.getDatosTiposJuntaMedica_Result)" />
+    <FunctionImport Name="setJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+      <Parameter Name="turFecha" Mode="In" Type="DateTime" />
+      <Parameter Name="tjId" Mode="In" Type="Int16" />
+      <Parameter Name="agtId" Mode="In" Type="Int32" />
+      <Parameter Name="turResultadoJM" Mode="In" Type="String" />
+      <Parameter Name="turEstado" Mode="In" Type="String" />
+      <Parameter Name="turEstadoFecha" Mode="In" Type="DateTime" />
+      <Parameter Name="usrNombre" Mode="In" Type="String" />
+      <Parameter Name="Especialidades" Mode="In" Type="String" />
+      <Parameter Name="EsSobreTurno" Mode="In" Type="Boolean" />
+      <Parameter Name="Accion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getListadoJuntasMedicas" ReturnType="Collection(efAccesoADatosJMModel.getListadoJuntasMedicas_Result)" />
+    <FunctionImport Name="getListaMedicos" ReturnType="Collection(efAccesoADatosJMModel.getListaMedicos_Result)" />
+    <FunctionImport Name="setMedicosJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+      <Parameter Name="turId" Mode="In" Type="Int32" />
+      <Parameter Name="Medicos" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="setResultadoJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+      <Parameter Name="turId" Mode="In" Type="Int32" />
+      <Parameter Name="Resultado" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getJuntaMedicaByAgente" ReturnType="Collection(efAccesoADatosJMModel.getJuntaMedicaByAgente_Result)">
+      <Parameter Name="agtId" Mode="In" Type="Int64" />
+    </FunctionImport>
+    <FunctionImport Name="setAnulacionJuntaMedica" ReturnType="Collection(efAccesoADatosJMModel.MensajeDeProceso)">
+      <Parameter Name="turId" Mode="In" Type="Int32" />
+      <Parameter Name="Motivo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getBusquedaCMByDocumentoByFecha" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestion_Result)">
+      <Parameter Name="nroDocumento" Mode="In" Type="String" />
+      <Parameter Name="FechaLicencia" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="getListaCMGestionFiltroEspecial" ReturnType="Collection(efAccesoADatosJMModel.getListaCMGestionFiltroEspecial_Result)">
+      <Parameter Name="minId" Mode="In" Type="Int32" />
+      <Parameter Name="FechaDesde" Mode="In" Type="DateTime" />
+      <Parameter Name="FechaHasta" Mode="In" Type="DateTime" />
+      <Parameter Name="TipoFecha" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="getListaDesplegableMinisterios" ReturnType="Collection(efAccesoADatosJMModel.getListaDesplegableMinisterios_Result)" />
+    <EntitySet Name="catAgente" EntityType="efAccesoADatosJMModel.catAgente" />
+    <EntitySet Name="catAgenteGrupoFamiliar" EntityType="efAccesoADatosJMModel.catAgenteGrupoFamiliar" />
+    <EntitySet Name="CatArticulos" EntityType="efAccesoADatosJMModel.CatArticulos" />
+    <EntitySet Name="CatCambioEstado" EntityType="efAccesoADatosJMModel.CatCambioEstado" />
+    <EntitySet Name="CatCiudad" EntityType="efAccesoADatosJMModel.CatCiudad" />
+    <EntitySet Name="catDepartamento" EntityType="efAccesoADatosJMModel.catDepartamento" />
+    <EntitySet Name="CatDivision" EntityType="efAccesoADatosJMModel.CatDivision" />
+    <EntitySet Name="catLocalidad" EntityType="efAccesoADatosJMModel.catLocalidad" />
+    <EntitySet Name="catMinisterio" EntityType="efAccesoADatosJMModel.catMinisterio" />
+    <EntitySet Name="catMotivo" EntityType="efAccesoADatosJMModel.catMotivo" />
+    <EntitySet Name="CatPais" EntityType="efAccesoADatosJMModel.CatPais" />
+    <EntitySet Name="CatProvincia" EntityType="efAccesoADatosJMModel.CatProvincia" />
+    <EntitySet Name="catReparticion" EntityType="efAccesoADatosJMModel.catReparticion" />
+    <EntitySet Name="catTarea" EntityType="efAccesoADatosJMModel.catTarea" />
+    <EntitySet Name="ospEstadoCivil" EntityType="efAccesoADatosJMModel.ospEstadoCivil" />
+    <EntitySet Name="ospVinculoFamiliar" EntityType="efAccesoADatosJMModel.ospVinculoFamiliar" />
+    <AssociationSet Name="FK_catAgente_catLocalidad" Association="efAccesoADatosJMModel.FK_catAgente_catLocalidad">
+      <End Role="catLocalidad" EntitySet="catLocalidad" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgente_catTarea" Association="efAccesoADatosJMModel.FK_catAgente_catTarea">
+      <End Role="catTarea" EntitySet="catTarea" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgente_ospEstadoCivil" Association="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil">
+      <End Role="ospEstadoCivil" EntitySet="ospEstadoCivil" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteGrupoFamiliar_catAgente" Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente">
+      <End Role="catAgente" EntitySet="catAgente" />
+      <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" Association="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+      <End Role="ospVinculoFamiliar" EntitySet="ospVinculoFamiliar" />
+      <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catCiudad_catProvincia" Association="efAccesoADatosJMModel.FK_catCiudad_catProvincia">
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+      <End Role="CatCiudad" EntitySet="CatCiudad" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catDepartamento_CatProvincia" Association="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia">
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+      <End Role="catDepartamento" EntitySet="catDepartamento" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catLocalidad_catDepartamento" Association="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento">
+      <End Role="catDepartamento" EntitySet="catDepartamento" />
+      <End Role="catLocalidad" EntitySet="catLocalidad" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catReparticion_catMinisterio" Association="efAccesoADatosJMModel.FK_catReparticion_catMinisterio">
+      <End Role="catMinisterio" EntitySet="catMinisterio" />
+      <End Role="catReparticion" EntitySet="catReparticion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catProvincia_catPais" Association="efAccesoADatosJMModel.FK_catProvincia_catPais">
+      <End Role="CatPais" EntitySet="CatPais" />
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+    </AssociationSet>
+    <EntitySet Name="catCalle" EntityType="efAccesoADatosJMModel.catCalle" />
+    <EntitySet Name="catAgenteReparticion" EntityType="efAccesoADatosJMModel.catAgenteReparticion" />
+    <AssociationSet Name="FK_catAgenteReparticion_catAgente" Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente">
+      <End Role="catAgente" EntitySet="catAgente" />
+      <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteReparticion_catReparticion" Association="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion">
+      <End Role="catReparticion" EntitySet="catReparticion" />
+      <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+    </AssociationSet>
+    <FunctionImport Name="getEstadisticaDCRM" ReturnType="Collection(efAccesoADatosJMModel.getEstadisticaDCRM_Result)">
+      <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+      <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosTableroDeComandoDCRM" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Result)" />
+    <EntitySet Name="CatEspecialidad" EntityType="efAccesoADatosJMModel.CatEspecialidad" />
+    <FunctionImport Name="getDatosTableroDeComandoDCRM_Top10" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top10_Result)">
+      <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+      <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+      <Parameter Name="espId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="gesCartaMedicaUltimoEstado" EntityType="efAccesoADatosJMModel.gesCartaMedicaUltimoEstado" />
+    <FunctionImport Name="getDatosTableroDeComandoDCRM_Top5Espera" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top5Espera_Result)" />
+    <FunctionImport Name="getDatosTableroDeComandoDCRM_Linea_Pato" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Linea_Pato_Result)">
+      <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+      <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+      <Parameter Name="espId" Mode="In" Type="Int32" />
+      <Parameter Name="diagId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="getDatosTableroDeComandoDCRM_Torta_Pato" ReturnType="Collection(efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Torta_Pato_Result)">
+      <Parameter Name="fecDesde" Mode="In" Type="DateTime" />
+      <Parameter Name="fecHasta" Mode="In" Type="DateTime" />
+      <Parameter Name="espId" Mode="In" Type="Int32" />
+      <Parameter Name="diagId" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="getListaCMPorEstados_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="usrId" Nullable="true" />
+    <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="espId" Nullable="true" />
+    <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+    <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="Int32" Name="sucId" Nullable="false" />
+    <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+    <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+    <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+    <Property Type="String" Name="EstadoCM" Nullable="false" />
+    <Property Type="String" Name="espNombre" Nullable="true" />
+    <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Ministerios" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Reparticiones" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="TieneJM" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="getDatosAgente_Result">
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="String" Name="agtCUIL" Nullable="true" MaxLength="13" />
+    <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" />
+    <Property Type="DateTime" Name="agtFechaNacimiento" Nullable="false" Precision="23" />
+    <Property Type="Byte" Name="agtEdad" Nullable="false" />
+    <Property Type="Int32" Name="tarId" Nullable="false" />
+    <Property Type="String" Name="agtLugarTrabajo" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="agtFechaIngreso" Nullable="false" Precision="23" />
+    <Property Type="String" Name="agtCalle" Nullable="true" MaxLength="80" />
+    <Property Type="Int16" Name="agtCalleNumero" Nullable="true" />
+    <Property Type="String" Name="agtBlock" Nullable="true" MaxLength="5" />
+    <Property Type="String" Name="agtBlockPiso" Nullable="true" MaxLength="2" />
+    <Property Type="String" Name="agtBlockDepto" Nullable="true" MaxLength="2" />
+    <Property Type="String" Name="agtBarrio" Nullable="true" MaxLength="30" />
+    <Property Type="String" Name="agtManzana" Nullable="true" MaxLength="6" />
+    <Property Type="String" Name="agtSector" Nullable="true" MaxLength="5" />
+    <Property Type="Int16" Name="agtCodigoPostal" Nullable="true" />
+    <Property Type="Int32" Name="locId" Nullable="true" />
+    <Property Type="Binary" Name="agtFoto" Nullable="true" MaxLength="Max" />
+    <Property Type="Boolean" Name="agtOrigenInfOSP" Nullable="false" />
+    <Property Type="Int32" Name="Edad" Nullable="true" />
+    <Property Type="String" Name="EstadoCivil" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Tarea" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="getDatosAgenteGrupoFamiliar_Result">
+    <Property Type="Int32" Name="agtfId" Nullable="false" />
+    <Property Type="String" Name="agtfApellidoyNombre" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="agtfDNI" Nullable="false" />
+    <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="String" Name="Vinculo" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="getDatosAgenteReparticiones_Result">
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="Int32" Name="repId" Nullable="false" />
+    <Property Type="String" Name="repCodigo" Nullable="false" MaxLength="6" />
+    <Property Type="String" Name="repNombre" Nullable="false" MaxLength="80" />
+    <Property Type="String" Name="repCorreo" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="repCodigoNew" Nullable="true" MaxLength="6" />
+    <Property Type="Int32" Name="minId" Nullable="false" />
+    <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" />
+  </ComplexType>
+  <ComplexType Name="getListaEspecialidades_Result">
+    <Property Type="Int32" Name="espId" Nullable="false" />
+    <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="espDescripcion" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="espPermiteOtraEspecialidad" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="MensajeDeProceso">
+    <Property Type="Boolean" Name="IsValid" Nullable="false" />
+    <Property Type="String" Name="Mensaje" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="getBusquedaAgentes_Result">
+    <Property Type="Int64" Name="agtId" Nullable="false" />
+    <Property Type="String" Name="agtDNI" Nullable="false" />
+    <Property Type="String" Name="agtApellidoyNombre" Nullable="false" />
+    <Property Type="String" Name="agtLugarDeTrabajo" Nullable="false" />
+    <Property Type="String" Name="agtDomicilio" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="getBusquedaAgenteByDocumento_Result">
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="agtDomicilio" Nullable="true" MaxLength="168" />
+  </ComplexType>
+  <ComplexType Name="getCartaMedicaByAgente_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="cmedNumero" Nullable="false" />
+    <Property Type="DateTime" Name="cmedFecha" Nullable="false" />
+    <Property Type="Int64" Name="turId" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="getListaCMGestion_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="usrId" Nullable="true" />
+    <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="espId" Nullable="true" />
+    <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+    <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="Int32" Name="sucId" Nullable="false" />
+    <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+    <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+    <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+    <Property Type="String" Name="EstadoCM" Nullable="false" />
+    <Property Type="String" Name="espNombre" Nullable="true" />
+    <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Ministerios" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="Reparticiones" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="licCantidad" Nullable="false" />
+    <Property Type="String" Name="Articulo" Nullable="true" MaxLength="2" />
+  </ComplexType>
+  <ComplexType Name="getDatosEspecialidades_Result">
+    <Property Type="Int32" Name="espId" Nullable="false" />
+    <Property Type="String" Name="espNombre" Nullable="true" MaxLength="20" />
+  </ComplexType>
+  <ComplexType Name="getDatosTiposJuntaMedica_Result">
+    <Property Type="Int16" Name="tjId" Nullable="false" />
+    <Property Type="String" Name="tjDescripcion" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="getListadoJuntasMedicas_Result">
+    <Property Type="Int64" Name="turId" Nullable="false" />
+    <Property Type="DateTime" Name="turFecha" Nullable="false" Precision="23" />
+    <Property Type="Int16" Name="tjId" Nullable="false" />
+    <Property Type="String" Name="tjDescripcion" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="agtId" Nullable="true" />
+    <Property Type="String" Name="agtApellidoYNombre" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="String" Name="agtCUIL" Nullable="true" MaxLength="13" />
+    <Property Type="String" Name="turResultadoJM" Nullable="true" />
+    <Property Type="String" Name="turEstado" Nullable="false" MaxLength="2" />
+    <Property Type="String" Name="tipoDescripcion" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="turEstadoFecha" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="usrId" Nullable="false" />
+    <Property Type="String" Name="usrUsuario" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="usrNombre" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="usrApellido" Nullable="false" MaxLength="20" />
+    <Property Type="Boolean" Name="turEsSobreTurno" Nullable="false" />
+    <Property Type="Int32" Name="CantidadMedicos" Nullable="true" />
+    <Property Type="Int32" Name="CantidadEspecialidades" Nullable="true" />
+    <Property Type="String" Name="Especialidades" Nullable="true" />
+    <Property Type="String" Name="Medicos" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="getListaMedicos_Result">
+    <Property Type="Int32" Name="medId" Nullable="false" />
+    <Property Type="String" Name="medApellidoyNombre" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="medDNI" Nullable="false" />
+    <Property Type="Int32" Name="medMatricula" Nullable="false" />
+    <Property Type="Int32" Name="espId" Nullable="false" />
+    <Property Type="Int32" Name="usrId" Nullable="true" />
+    <Property Type="Int16" Name="medTopeDiasLicencia" Nullable="true" />
+    <Property Type="String" Name="medConsultorio" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="getJuntaMedicaByAgente_Result">
+    <Property Type="Int64" Name="turId" Nullable="false" />
+    <Property Type="DateTime" Name="turFecha" Nullable="false" Precision="23" />
+    <Property Type="Int16" Name="tjId" Nullable="false" />
+    <Property Type="Int32" Name="agtId" Nullable="true" />
+    <Property Type="String" Name="turResultadoJM" Nullable="true" />
+    <Property Type="String" Name="turEstado" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="turEstadoFecha" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="usrId" Nullable="false" />
+    <Property Type="Boolean" Name="turEsSobreTurno" Nullable="false" />
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="getListaCMGestionFiltroEspecial_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="cmedNumero" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="String" Name="cmedMotivoSolicitud" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="cmedFecha" Nullable="true" Precision="23" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+    <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="usrId" Nullable="true" />
+    <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="espId" Nullable="true" />
+    <Property Type="String" Name="prioridad" Nullable="true" MaxLength="2" />
+    <Property Type="String" Name="agtApellidoNombre" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="Int32" Name="sucId" Nullable="false" />
+    <Property Type="String" Name="estHora" Nullable="true" MaxLength="5" />
+    <Property Type="Int32" Name="cmedOrdenRecepcion" Nullable="true" />
+    <Property Type="DateTime" Name="licFechaInicial" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="licFechaFinal" Nullable="true" Precision="23" />
+    <Property Type="String" Name="EstadoCM" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="espNombre" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="agtLugarTrabajo" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Ministerios" Nullable="true" />
+    <Property Type="String" Name="Reparticiones" Nullable="true" />
+    <Property Type="Int32" Name="licCantidad" Nullable="false" />
+    <Property Type="String" Name="Articulo" Nullable="false" MaxLength="103" />
+  </ComplexType>
+  <ComplexType Name="getListaDesplegableMinisterios_Result">
+    <Property Type="Int32" Name="minId" Nullable="false" />
+    <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" />
+  </ComplexType>
+  <EntityType Name="catAgente">
+    <Key>
+      <PropertyRef Name="agtId" />
+    </Key>
+    <Property Type="Int32" Name="agtId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="agtDNI" Nullable="false" />
+    <Property Type="String" Name="agtCUIL" MaxLength="13" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Type="DateTime" Name="agtFechaNacimiento" Nullable="false" Precision="3" />
+    <Property Type="Byte" Name="agtEdad" Nullable="false" />
+    <Property Type="Int32" Name="tarId" Nullable="false" />
+    <Property Type="String" Name="agtLugarTrabajo" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="DateTime" Name="agtFechaIngreso" Nullable="false" Precision="3" />
+    <Property Type="String" Name="agtCalle" MaxLength="80" FixedLength="false" Unicode="false" />
+    <Property Type="Int16" Name="agtCalleNumero" />
+    <Property Type="String" Name="agtBlock" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtBlockPiso" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtBlockDepto" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtBarrio" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtManzana" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtSector" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Type="Int16" Name="agtCodigoPostal" />
+    <Property Type="Int32" Name="locId" />
+    <Property Type="Boolean" Name="agtOrigenInfOSP" Nullable="false" />
+    <Property Type="String" Name="agtFoto" MaxLength="4000" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtSexo" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Type="Boolean" Name="agtFuma" />
+    <Property Type="Boolean" Name="agtHTA" />
+    <Property Type="Boolean" Name="agtColesterol" />
+    <Property Type="Boolean" Name="agtDiabetes" />
+    <Property Type="Boolean" Name="agtActividadFisica" />
+    <Property Type="Boolean" Name="agtAlergias" />
+    <Property Type="Decimal" Name="agtPeso" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="agtTalla" Precision="18" Scale="2" />
+    <Property Type="String" Name="agtTelefonoFijo" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtTelefonoMovil" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtCorreoElectronico" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catLocalidad" Relationship="efAccesoADatosJMModel.FK_catAgente_catLocalidad" FromRole="catAgente" ToRole="catLocalidad" />
+    <NavigationProperty Name="catTarea" Relationship="efAccesoADatosJMModel.FK_catAgente_catTarea" FromRole="catAgente" ToRole="catTarea" />
+    <NavigationProperty Name="ospEstadoCivil" Relationship="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil" FromRole="catAgente" ToRole="ospEstadoCivil" />
+    <NavigationProperty Name="catAgenteGrupoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente" FromRole="catAgente" ToRole="catAgenteGrupoFamiliar" />
+    <Property Type="String" Name="agtDomicilioReferencia" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtApellido" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="agtNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catAgenteReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente" FromRole="catAgente" ToRole="catAgenteReparticion" />
+  </EntityType>
+  <EntityType Name="catAgenteGrupoFamiliar">
+    <Key>
+      <PropertyRef Name="agtfId" />
+    </Key>
+    <Property Type="Int32" Name="agtfId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="agtfApellidoyNombre" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="agtfDNI" Nullable="false" />
+    <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_catAgente" FromRole="catAgenteGrupoFamiliar" ToRole="catAgente" />
+    <NavigationProperty Name="ospVinculoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" FromRole="catAgenteGrupoFamiliar" ToRole="ospVinculoFamiliar" />
+  </EntityType>
+  <EntityType Name="CatArticulos">
+    <Key>
+      <PropertyRef Name="artId" />
+    </Key>
+    <Property Type="Int32" Name="artId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="artCodigo" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="artNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="artObservaciones" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="artTipoLicencia" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+    <Property Type="Int32" Name="artTopeDias" Nullable="false" />
+    <Property Type="Boolean" Name="artControl" Nullable="false" />
+    <Property Type="Boolean" Name="artConfirmaAlta" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CatCambioEstado">
+    <Key>
+      <PropertyRef Name="caesId" />
+    </Key>
+    <Property Type="Int16" Name="caesId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="caesCodigo" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="caesDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="CatCiudad">
+    <Key>
+      <PropertyRef Name="cddId" />
+    </Key>
+    <Property Type="Int32" Name="cddId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="cddNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="prvId" Nullable="false" />
+    <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catCiudad_catProvincia" FromRole="CatCiudad" ToRole="CatProvincia" />
+  </EntityType>
+  <EntityType Name="catDepartamento">
+    <Key>
+      <PropertyRef Name="depId" />
+    </Key>
+    <Property Type="Int32" Name="depId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="depNombre" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="prvId" Nullable="false" />
+    <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia" FromRole="catDepartamento" ToRole="CatProvincia" />
+    <NavigationProperty Name="catLocalidad" Relationship="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento" FromRole="catDepartamento" ToRole="catLocalidad" />
+  </EntityType>
+  <EntityType Name="CatDivision">
+    <Key>
+      <PropertyRef Name="DivId" />
+    </Key>
+    <Property Type="Int32" Name="DivId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="DivNombre" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="DivObservaciones" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="estEstado" MaxLength="2" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="catLocalidad">
+    <Key>
+      <PropertyRef Name="locId" />
+    </Key>
+    <Property Type="Int32" Name="locId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="locNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="depId" Nullable="false" />
+    <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_catLocalidad" FromRole="catLocalidad" ToRole="catAgente" />
+    <NavigationProperty Name="catDepartamento" Relationship="efAccesoADatosJMModel.FK_catLocalidad_catDepartamento" FromRole="catLocalidad" ToRole="catDepartamento" />
+  </EntityType>
+  <EntityType Name="catMinisterio">
+    <Key>
+      <PropertyRef Name="minId" />
+    </Key>
+    <Property Type="Int32" Name="minId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="minNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catReparticion" Relationship="efAccesoADatosJMModel.FK_catReparticion_catMinisterio" FromRole="catMinisterio" ToRole="catReparticion" />
+  </EntityType>
+  <EntityType Name="catMotivo">
+    <Key>
+      <PropertyRef Name="motId" />
+    </Key>
+    <Property Type="Int32" Name="motId" Nullable="false" />
+    <Property Type="String" Name="motNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="CatPais">
+    <Key>
+      <PropertyRef Name="paisId" />
+    </Key>
+    <Property Type="Int32" Name="paisId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="paisNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="CatProvincia" Relationship="efAccesoADatosJMModel.FK_catProvincia_catPais" FromRole="CatPais" ToRole="CatProvincia" />
+  </EntityType>
+  <EntityType Name="CatProvincia">
+    <Key>
+      <PropertyRef Name="prvId" />
+    </Key>
+    <Property Type="Int32" Name="prvId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="prvNombre" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="paisId" Nullable="false" />
+    <NavigationProperty Name="CatCiudad" Relationship="efAccesoADatosJMModel.FK_catCiudad_catProvincia" FromRole="CatProvincia" ToRole="CatCiudad" />
+    <NavigationProperty Name="catDepartamento" Relationship="efAccesoADatosJMModel.FK_catDepartamento_CatProvincia" FromRole="CatProvincia" ToRole="catDepartamento" />
+    <NavigationProperty Name="CatPais" Relationship="efAccesoADatosJMModel.FK_catProvincia_catPais" FromRole="CatProvincia" ToRole="CatPais" />
+  </EntityType>
+  <EntityType Name="catReparticion">
+    <Key>
+      <PropertyRef Name="repId" />
+    </Key>
+    <Property Type="Int32" Name="repId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="repCodigo" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Type="String" Name="repNombre" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="repCorreo" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="minId" />
+    <Property Type="String" Name="repCodigoNew" MaxLength="6" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="catMinisterio" Relationship="efAccesoADatosJMModel.FK_catReparticion_catMinisterio" FromRole="catReparticion" ToRole="catMinisterio" />
+    <NavigationProperty Name="catAgenteReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion" FromRole="catReparticion" ToRole="catAgenteReparticion" />
+  </EntityType>
+  <EntityType Name="catTarea">
+    <Key>
+      <PropertyRef Name="tarId" />
+    </Key>
+    <Property Type="Int32" Name="tarId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="tarDescripcion" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_catTarea" FromRole="catTarea" ToRole="catAgente" />
+  </EntityType>
+  <EntityType Name="ospEstadoCivil">
+    <Key>
+      <PropertyRef Name="ospeId" />
+    </Key>
+    <Property Type="String" Name="ospeId" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Type="String" Name="ospeDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgente_ospEstadoCivil" FromRole="ospEstadoCivil" ToRole="catAgente" />
+  </EntityType>
+  <EntityType Name="ospVinculoFamiliar">
+    <Key>
+      <PropertyRef Name="ospvId" />
+    </Key>
+    <Property Type="String" Name="ospvId" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Type="String" Name="ospvDescripcion" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catAgenteGrupoFamiliar" Relationship="efAccesoADatosJMModel.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" FromRole="ospVinculoFamiliar" ToRole="catAgenteGrupoFamiliar" />
+  </EntityType>
+  <Association Name="FK_catAgente_catLocalidad">
+    <End Type="efAccesoADatosJMModel.catLocalidad" Role="catLocalidad" Multiplicity="0..1" />
+    <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catLocalidad">
+        <PropertyRef Name="locId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="locId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgente_catTarea">
+    <End Type="efAccesoADatosJMModel.catTarea" Role="catTarea" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catTarea">
+        <PropertyRef Name="tarId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="tarId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgente_ospEstadoCivil">
+    <End Type="efAccesoADatosJMModel.ospEstadoCivil" Role="ospEstadoCivil" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ospEstadoCivil">
+        <PropertyRef Name="ospeId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="ospeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteGrupoFamiliar_catAgente">
+    <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="efAccesoADatosJMModel.catAgenteGrupoFamiliar" Role="catAgenteGrupoFamiliar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catAgente">
+        <PropertyRef Name="agtId" />
+      </Principal>
+      <Dependent Role="catAgenteGrupoFamiliar">
+        <PropertyRef Name="agtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+    <End Type="efAccesoADatosJMModel.ospVinculoFamiliar" Role="ospVinculoFamiliar" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catAgenteGrupoFamiliar" Role="catAgenteGrupoFamiliar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ospVinculoFamiliar">
+        <PropertyRef Name="ospvId" />
+      </Principal>
+      <Dependent Role="catAgenteGrupoFamiliar">
+        <PropertyRef Name="ospvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catCiudad_catProvincia">
+    <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="efAccesoADatosJMModel.CatCiudad" Role="CatCiudad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatProvincia">
+        <PropertyRef Name="prvId" />
+      </Principal>
+      <Dependent Role="CatCiudad">
+        <PropertyRef Name="prvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catDepartamento_CatProvincia">
+    <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catDepartamento" Role="catDepartamento" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatProvincia">
+        <PropertyRef Name="prvId" />
+      </Principal>
+      <Dependent Role="catDepartamento">
+        <PropertyRef Name="prvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catLocalidad_catDepartamento">
+    <End Type="efAccesoADatosJMModel.catDepartamento" Role="catDepartamento" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catLocalidad" Role="catLocalidad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catDepartamento">
+        <PropertyRef Name="depId" />
+      </Principal>
+      <Dependent Role="catLocalidad">
+        <PropertyRef Name="depId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catReparticion_catMinisterio">
+    <End Type="efAccesoADatosJMModel.catMinisterio" Role="catMinisterio" Multiplicity="0..1" />
+    <End Type="efAccesoADatosJMModel.catReparticion" Role="catReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catMinisterio">
+        <PropertyRef Name="minId" />
+      </Principal>
+      <Dependent Role="catReparticion">
+        <PropertyRef Name="minId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catProvincia_catPais">
+    <End Type="efAccesoADatosJMModel.CatPais" Role="CatPais" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="efAccesoADatosJMModel.CatProvincia" Role="CatProvincia" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatPais">
+        <PropertyRef Name="paisId" />
+      </Principal>
+      <Dependent Role="CatProvincia">
+        <PropertyRef Name="paisId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="catCalle">
+    <Key>
+      <PropertyRef Name="callId" />
+    </Key>
+    <Property Type="Int32" Name="callId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="callNombre" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="catAgenteReparticion">
+    <Key>
+      <PropertyRef Name="agtrId" />
+    </Key>
+    <Property Type="Int32" Name="agtrId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="agtId" Nullable="false" />
+    <Property Type="Int32" Name="repId" Nullable="false" />
+    <NavigationProperty Name="catAgente" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catAgente" FromRole="catAgenteReparticion" ToRole="catAgente" />
+    <NavigationProperty Name="catReparticion" Relationship="efAccesoADatosJMModel.FK_catAgenteReparticion_catReparticion" FromRole="catAgenteReparticion" ToRole="catReparticion" />
+  </EntityType>
+  <Association Name="FK_catAgenteReparticion_catAgente">
+    <End Type="efAccesoADatosJMModel.catAgente" Role="catAgente" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catAgenteReparticion" Role="catAgenteReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catAgente">
+        <PropertyRef Name="agtId" />
+      </Principal>
+      <Dependent Role="catAgenteReparticion">
+        <PropertyRef Name="agtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteReparticion_catReparticion">
+    <End Type="efAccesoADatosJMModel.catReparticion" Role="catReparticion" Multiplicity="1" />
+    <End Type="efAccesoADatosJMModel.catAgenteReparticion" Role="catAgenteReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catReparticion">
+        <PropertyRef Name="repId" />
+      </Principal>
+      <Dependent Role="catAgenteReparticion">
+        <PropertyRef Name="repId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="getEstadisticaDCRM_Result">
+    <Property Type="String" Name="Medico" Nullable="true" MaxLength="41" />
+    <Property Type="String" Name="EspecialidadMedico" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="EspecialidadCM" Nullable="false" MaxLength="20" />
+    <Property Type="DateTime" Name="Fecha" Nullable="true" />
+    <Property Type="Int32" Name="MinimoTiempoDeEspera" Nullable="true" />
+    <Property Type="Int32" Name="PromedioTiempoDeEspera" Nullable="true" />
+    <Property Type="Int32" Name="MaximoTiempoDeEspera" Nullable="true" />
+    <Property Type="Int32" Name="MinimoTiempoDeAtencion" Nullable="true" />
+    <Property Type="Int32" Name="PromedioTiempoDeAtencion" Nullable="true" />
+    <Property Type="Int32" Name="MaximoTiempoDeAtencion" Nullable="true" />
+    <Property Type="Int32" Name="MinimoTiempoOcioso" Nullable="true" />
+    <Property Type="Int32" Name="PromedioTiempoOcioso" Nullable="true" />
+    <Property Type="Int32" Name="MaximoTiempoOcioso" Nullable="true" />
+    <Property Type="Int32" Name="CantidadDeAtenciones" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="getDatosTableroDeComandoDCRM_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="DateTime" Name="cmedFecha" Nullable="false" Precision="23" />
+    <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="Medico" Nullable="true" MaxLength="41" />
+    <Property Type="Int32" Name="UsuarioMedico" Nullable="true" />
+    <Property Type="DateTime" Name="Emitida" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="EnEspera" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="ListaParaAtencion" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="AtencionMedica" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="Atendido" Nullable="true" Precision="23" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" />
+    <Property Type="String" Name="EspecialidadMedico" Nullable="false" MaxLength="20" />
+    <Property Type="DateTime" Name="Ocio" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="Fecha" Nullable="true" />
+    <Property Type="Int32" Name="TiempoDeEspera" Nullable="true" />
+    <Property Type="Int32" Name="TiempoDeAtencion" Nullable="true" />
+    <Property Type="Int32" Name="TiempoOcioso" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="CatEspecialidad">
+    <Key>
+      <PropertyRef Name="espId" />
+    </Key>
+    <Property Type="Int32" Name="espId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="espDescripcion" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="espPermiteOtraEspecialidad" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="getDatosTableroDeComandoDCRM_Top10_Result">
+    <Property Type="String" Name="Especialidad" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="espId" Nullable="false" />
+    <Property Type="Int32" Name="diagId" Nullable="false" />
+    <Property Type="String" Name="Cantidad" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="diagDescripcion" Nullable="false" MaxLength="250" />
+  </ComplexType>
+  <EntityType Name="gesCartaMedicaUltimoEstado">
+    <Key>
+      <PropertyRef Name="cmedId" />
+    </Key>
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="estEstado" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+    <Property Type="DateTime" Name="estFecha" Nullable="false" Precision="3" />
+    <Property Type="Int32" Name="usrId" />
+    <Property Type="String" Name="cmedObservaciones" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <ComplexType Name="getDatosTableroDeComandoDCRM_Top5Espera_Result">
+    <Property Type="Int64" Name="cmedId" Nullable="false" />
+    <Property Type="String" Name="agtApellidoyNombre" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="espNombre" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="Minutos" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="getDatosTableroDeComandoDCRM_Linea_Pato_Result">
+    <Property Type="String" Name="Periodo" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="Cantidad" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="getDatosTableroDeComandoDCRM_Torta_Pato_Result">
+    <Property Type="Int32" Name="depId" Nullable="true" />
+    <Property Type="String" Name="depNombre" Nullable="true" MaxLength="60" />
+    <Property Type="Decimal" Name="Promedio" Nullable="true" Precision="10" Scale="3" />
+  </ComplexType>
+</Schema>
