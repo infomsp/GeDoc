@@ -1072,7 +1072,6 @@
             }
          });
         debugger;
-        console.dir(fechaPlanilla)
 
         //console.log(fechaPlanilla)
         //cuando agregan
@@ -1080,16 +1079,26 @@
 
             var verificacionAgregar = false;
 
-            if (!$("#programadoCuando").val()) {
+            if ($("#programado-input").val() == 'SI') {
 
-                var fechaPlanillaParseada = parseDate(fechaPlanilla);
+                if ($("#programadoCuando").val() != '') {
 
-                var fechaPlanillaAgregar = $("#programadoCuando").val();
+                    var fechaPlanillaParseada = parseDate(fechaPlanilla);
 
-                fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
+                    var fechaPlanillaAgregar = $("#programadoCuando").val();
 
+                    fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
+
+                    if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
+
+                        if (fechaPlanillaParseada < fechaPlanillaAgregar) {
+                            verificacionAgregar = true;
+                        }
+                    }
+                }
+            } else {
+                verificacionAgregar = true;
             }
-
 
             //if (($("#derivado-input").val() == 'NO')) {
             //    verificacionAgregar = true
@@ -1103,12 +1112,7 @@
             //    }
             //}
 
-            if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
 
-                if (fechaPlanillaParseada < fechaPlanillaAgregar) {
-                    verificacionAgregar = true;
-                }
-            }
 
             if (verificacionAgregar) {
 
@@ -1148,29 +1152,50 @@
 
             var verificacionEditar = false;
 
+            if ($("#programado-input").val() == 'SI') {
 
-            if ($("#programadoCuando").val() != '') {
+                if ($("#programadoCuando").val() != '') {
 
-                var fechaPlanillaParseada = parseDate(fechaPlanilla);
+                    var fechaPlanillaParseada = parseDate(fechaPlanilla);
 
-                var fechaPlanillaAgregar = $("#programadoCuando").val();
+                    var fechaPlanillaAgregar = $("#programadoCuando").val();
 
-                fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
+                    fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
 
-            }
+                    if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
 
-
-            if (($("#derivado-input").val() == 'NO')) {
-                verificacionEditar = true
-            } else {
-
-                if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
-
-                    if (fechaPlanillaParseada < fechaPlanillaAgregar) {
-                        verificacionEditar = true;
+                        if (fechaPlanillaParseada < fechaPlanillaAgregar) {
+                            verificacionEditar = true;
+                        }
                     }
                 }
+            } else {
+                verificacionEditar = true;
             }
+
+
+            //if ($("#programadoCuando").val() != '') {
+
+            //    var fechaPlanillaParseada = parseDate(fechaPlanilla);
+
+            //    var fechaPlanillaAgregar = $("#programadoCuando").val();
+
+            //    fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
+
+            //}
+
+
+            //if (($("#derivado-input").val() == 'NO')) {
+            //    verificacionEditar = true
+            //} else {
+
+            //    if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
+
+            //        if (fechaPlanillaParseada < fechaPlanillaAgregar) {
+            //            verificacionEditar = true;
+            //        }
+            //    }
+            //}
 
 
             if (verificacionEditar) {
