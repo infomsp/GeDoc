@@ -1,0 +1,13 @@
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\bin\Debug\EnvioCorreoElectronico.exe.config
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\bin\Debug\EnvioCorreoElectronico.exe.manifest
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\bin\Debug\EnvioCorreoElectronico.application
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\bin\Debug\EnvioCorreoElectronico.exe
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\bin\Debug\EnvioCorreoElectronico.pdb
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.csprojResolveAssemblyReference.cache
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.frmEnvioCorreo.resources
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.Properties.Resources.resources
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.csproj.GenerateResource.Cache
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.exe.manifest
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.application
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.exe
+D:\Proyecto\GeDoc\trunk\EnvioCorreoElectronico\obj\x86\Debug\EnvioCorreoElectronico.pdb

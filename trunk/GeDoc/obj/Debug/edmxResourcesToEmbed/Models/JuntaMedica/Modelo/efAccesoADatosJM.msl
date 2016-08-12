@@ -1,0 +1,631 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="efAccesoADatosJMModelStoreContainer" CdmEntityContainer="efAccesoADatosJMJuntaMedicaEntities">
+    <FunctionImportMapping FunctionImportName="getListaCMPorEstados" FunctionName="efAccesoADatosJMModel.Store.getListaCMPorEstados">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMPorEstados_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+          <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="sucId" ColumnName="sucId" />
+          <ScalarProperty Name="estHora" ColumnName="estHora" />
+          <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+          <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+          <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosAgente" FunctionName="efAccesoADatosJMModel.Store.getDatosAgente">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgente_Result">
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+          <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+          <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+          <ScalarProperty Name="agtFechaNacimiento" ColumnName="agtFechaNacimiento" />
+          <ScalarProperty Name="agtEdad" ColumnName="agtEdad" />
+          <ScalarProperty Name="tarId" ColumnName="tarId" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="agtFechaIngreso" ColumnName="agtFechaIngreso" />
+          <ScalarProperty Name="agtCalle" ColumnName="agtCalle" />
+          <ScalarProperty Name="agtCalleNumero" ColumnName="agtCalleNumero" />
+          <ScalarProperty Name="agtBlock" ColumnName="agtBlock" />
+          <ScalarProperty Name="agtBlockPiso" ColumnName="agtBlockPiso" />
+          <ScalarProperty Name="agtBlockDepto" ColumnName="agtBlockDepto" />
+          <ScalarProperty Name="agtBarrio" ColumnName="agtBarrio" />
+          <ScalarProperty Name="agtManzana" ColumnName="agtManzana" />
+          <ScalarProperty Name="agtSector" ColumnName="agtSector" />
+          <ScalarProperty Name="agtCodigoPostal" ColumnName="agtCodigoPostal" />
+          <ScalarProperty Name="locId" ColumnName="locId" />
+          <ScalarProperty Name="agtFoto" ColumnName="agtFoto" />
+          <ScalarProperty Name="agtOrigenInfOSP" ColumnName="agtOrigenInfOSP" />
+          <ScalarProperty Name="Edad" ColumnName="Edad" />
+          <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
+          <ScalarProperty Name="Tarea" ColumnName="Tarea" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosAgenteGrupoFamiliar" FunctionName="efAccesoADatosJMModel.Store.getDatosAgenteGrupoFamiliar">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgenteGrupoFamiliar_Result">
+          <ScalarProperty Name="agtfId" ColumnName="agtfId" />
+          <ScalarProperty Name="agtfApellidoyNombre" ColumnName="agtfApellidoyNombre" />
+          <ScalarProperty Name="agtfDNI" ColumnName="agtfDNI" />
+          <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="Vinculo" ColumnName="Vinculo" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosAgenteReparticiones" FunctionName="efAccesoADatosJMModel.Store.getDatosAgenteReparticiones">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosAgenteReparticiones_Result">
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="repId" ColumnName="repId" />
+          <ScalarProperty Name="repCodigo" ColumnName="repCodigo" />
+          <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+          <ScalarProperty Name="repCorreo" ColumnName="repCorreo" />
+          <ScalarProperty Name="repCodigoNew" ColumnName="repCodigoNew" />
+          <ScalarProperty Name="minId" ColumnName="minId" />
+          <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListaEspecialidades" FunctionName="efAccesoADatosJMModel.Store.getListaEspecialidades">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaEspecialidades_Result">
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="espDescripcion" ColumnName="espDescripcion" />
+          <ScalarProperty Name="espPermiteOtraEspecialidad" ColumnName="espPermiteOtraEspecialidad" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="setCartaMedica" FunctionName="efAccesoADatosJMModel.Store.setCartaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+          <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+          <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getBusquedaAgenteByDocumento" FunctionName="efAccesoADatosJMModel.Store.getBusquedaAgenteByDocumento">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getBusquedaAgenteByDocumento_Result">
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="agtDomicilio" ColumnName="agtDomicilio" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getCartaMedicaByAgente" FunctionName="efAccesoADatosJMModel.Store.getCartaMedicaByAgente">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getCartaMedicaByAgente_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListaCMGestion" FunctionName="efAccesoADatosJMModel.Store.getListaCMGestion">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestion_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+          <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="sucId" ColumnName="sucId" />
+          <ScalarProperty Name="estHora" ColumnName="estHora" />
+          <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+          <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+          <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+          <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+          <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+          <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+          <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosEspecialidades" FunctionName="efAccesoADatosJMModel.Store.getDatosEspecialidades">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosEspecialidades_Result">
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTiposJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.getDatosTiposJuntaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTiposJuntaMedica_Result">
+          <ScalarProperty Name="tjId" ColumnName="tjId" />
+          <ScalarProperty Name="tjDescripcion" ColumnName="tjDescripcion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="setJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setJuntaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+          <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+          <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListadoJuntasMedicas" FunctionName="efAccesoADatosJMModel.Store.getListadoJuntasMedicas">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListadoJuntasMedicas_Result">
+          <ScalarProperty Name="turId" ColumnName="turId" />
+          <ScalarProperty Name="turFecha" ColumnName="turFecha" />
+          <ScalarProperty Name="tjId" ColumnName="tjId" />
+          <ScalarProperty Name="tjDescripcion" ColumnName="tjDescripcion" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="agtApellidoYNombre" ColumnName="agtApellidoYNombre" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+          <ScalarProperty Name="turResultadoJM" ColumnName="turResultadoJM" />
+          <ScalarProperty Name="turEstado" ColumnName="turEstado" />
+          <ScalarProperty Name="tipoDescripcion" ColumnName="tipoDescripcion" />
+          <ScalarProperty Name="turEstadoFecha" ColumnName="turEstadoFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="usrUsuario" ColumnName="usrUsuario" />
+          <ScalarProperty Name="usrNombre" ColumnName="usrNombre" />
+          <ScalarProperty Name="usrApellido" ColumnName="usrApellido" />
+          <ScalarProperty Name="turEsSobreTurno" ColumnName="turEsSobreTurno" />
+          <ScalarProperty Name="CantidadMedicos" ColumnName="CantidadMedicos" />
+          <ScalarProperty Name="CantidadEspecialidades" ColumnName="CantidadEspecialidades" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListaMedicos" FunctionName="efAccesoADatosJMModel.Store.getListaMedicos">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaMedicos_Result">
+          <ScalarProperty Name="medId" ColumnName="medId" />
+          <ScalarProperty Name="medApellidoyNombre" ColumnName="medApellidoyNombre" />
+          <ScalarProperty Name="medDNI" ColumnName="medDNI" />
+          <ScalarProperty Name="medMatricula" ColumnName="medMatricula" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="medTopeDiasLicencia" ColumnName="medTopeDiasLicencia" />
+          <ScalarProperty Name="medConsultorio" ColumnName="medConsultorio" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="setMedicosJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setMedicosJuntaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+          <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+          <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="setResultadoJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setResultadoJuntaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+          <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+          <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getJuntaMedicaByAgente" FunctionName="efAccesoADatosJMModel.Store.getJuntaMedicaByAgente">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getJuntaMedicaByAgente_Result">
+          <ScalarProperty Name="turId" ColumnName="turId" />
+          <ScalarProperty Name="turFecha" ColumnName="turFecha" />
+          <ScalarProperty Name="tjId" ColumnName="tjId" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="turResultadoJM" ColumnName="turResultadoJM" />
+          <ScalarProperty Name="turEstado" ColumnName="turEstado" />
+          <ScalarProperty Name="turEstadoFecha" ColumnName="turEstadoFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="turEsSobreTurno" ColumnName="turEsSobreTurno" />
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="setAnulacionJuntaMedica" FunctionName="efAccesoADatosJMModel.Store.setAnulacionJuntaMedica">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.MensajeDeProceso">
+          <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+          <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getBusquedaCMByDocumentoByFecha" FunctionName="efAccesoADatosJMModel.Store.getBusquedaCMByDocumentoByFecha">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestion_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+          <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="sucId" ColumnName="sucId" />
+          <ScalarProperty Name="estHora" ColumnName="estHora" />
+          <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+          <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+          <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+          <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+          <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+          <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+          <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListaCMGestionFiltroEspecial" FunctionName="efAccesoADatosJMModel.Store.getListaCMGestionFiltroEspecial">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaCMGestionFiltroEspecial_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedNumero" ColumnName="cmedNumero" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="cmedMotivoSolicitud" ColumnName="cmedMotivoSolicitud" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="prioridad" ColumnName="prioridad" />
+          <ScalarProperty Name="agtApellidoNombre" ColumnName="agtApellidoNombre" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="sucId" ColumnName="sucId" />
+          <ScalarProperty Name="estHora" ColumnName="estHora" />
+          <ScalarProperty Name="cmedOrdenRecepcion" ColumnName="cmedOrdenRecepcion" />
+          <ScalarProperty Name="licFechaInicial" ColumnName="licFechaInicial" />
+          <ScalarProperty Name="licFechaFinal" ColumnName="licFechaFinal" />
+          <ScalarProperty Name="EstadoCM" ColumnName="EstadoCM" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="Ministerios" ColumnName="Ministerios" />
+          <ScalarProperty Name="Reparticiones" ColumnName="Reparticiones" />
+          <ScalarProperty Name="licCantidad" ColumnName="licCantidad" />
+          <ScalarProperty Name="Articulo" ColumnName="Articulo" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getListaDesplegableMinisterios" FunctionName="efAccesoADatosJMModel.Store.getListaDesplegableMinisterios">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getListaDesplegableMinisterios_Result">
+          <ScalarProperty Name="minId" ColumnName="minId" />
+          <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="catAgente">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgente">
+        <MappingFragment StoreEntitySet="catAgente">
+          <ScalarProperty Name="agtNombre" ColumnName="agtNombre" />
+          <ScalarProperty Name="agtApellido" ColumnName="agtApellido" />
+          <ScalarProperty Name="agtDomicilioReferencia" ColumnName="agtDomicilioReferencia" />
+          <ScalarProperty Name="agtCorreoElectronico" ColumnName="agtCorreoElectronico" />
+          <ScalarProperty Name="agtTelefonoMovil" ColumnName="agtTelefonoMovil" />
+          <ScalarProperty Name="agtTelefonoFijo" ColumnName="agtTelefonoFijo" />
+          <ScalarProperty Name="agtTalla" ColumnName="agtTalla" />
+          <ScalarProperty Name="agtPeso" ColumnName="agtPeso" />
+          <ScalarProperty Name="agtAlergias" ColumnName="agtAlergias" />
+          <ScalarProperty Name="agtActividadFisica" ColumnName="agtActividadFisica" />
+          <ScalarProperty Name="agtDiabetes" ColumnName="agtDiabetes" />
+          <ScalarProperty Name="agtColesterol" ColumnName="agtColesterol" />
+          <ScalarProperty Name="agtHTA" ColumnName="agtHTA" />
+          <ScalarProperty Name="agtFuma" ColumnName="agtFuma" />
+          <ScalarProperty Name="agtSexo" ColumnName="agtSexo" />
+          <ScalarProperty Name="agtFoto" ColumnName="agtFoto" />
+          <ScalarProperty Name="agtOrigenInfOSP" ColumnName="agtOrigenInfOSP" />
+          <ScalarProperty Name="locId" ColumnName="locId" />
+          <ScalarProperty Name="agtCodigoPostal" ColumnName="agtCodigoPostal" />
+          <ScalarProperty Name="agtSector" ColumnName="agtSector" />
+          <ScalarProperty Name="agtManzana" ColumnName="agtManzana" />
+          <ScalarProperty Name="agtBarrio" ColumnName="agtBarrio" />
+          <ScalarProperty Name="agtBlockDepto" ColumnName="agtBlockDepto" />
+          <ScalarProperty Name="agtBlockPiso" ColumnName="agtBlockPiso" />
+          <ScalarProperty Name="agtBlock" ColumnName="agtBlock" />
+          <ScalarProperty Name="agtCalleNumero" ColumnName="agtCalleNumero" />
+          <ScalarProperty Name="agtCalle" ColumnName="agtCalle" />
+          <ScalarProperty Name="agtFechaIngreso" ColumnName="agtFechaIngreso" />
+          <ScalarProperty Name="agtLugarTrabajo" ColumnName="agtLugarTrabajo" />
+          <ScalarProperty Name="tarId" ColumnName="tarId" />
+          <ScalarProperty Name="agtEdad" ColumnName="agtEdad" />
+          <ScalarProperty Name="agtFechaNacimiento" ColumnName="agtFechaNacimiento" />
+          <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+          <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+          <ScalarProperty Name="agtCUIL" ColumnName="agtCUIL" />
+          <ScalarProperty Name="agtDNI" ColumnName="agtDNI" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catAgenteGrupoFamiliar">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgenteGrupoFamiliar">
+        <MappingFragment StoreEntitySet="catAgenteGrupoFamiliar">
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+          <ScalarProperty Name="agtfDNI" ColumnName="agtfDNI" />
+          <ScalarProperty Name="agtfApellidoyNombre" ColumnName="agtfApellidoyNombre" />
+          <ScalarProperty Name="agtfId" ColumnName="agtfId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatArticulos">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatArticulos">
+        <MappingFragment StoreEntitySet="CatArticulos">
+          <ScalarProperty Name="artConfirmaAlta" ColumnName="artConfirmaAlta" />
+          <ScalarProperty Name="artControl" ColumnName="artControl" />
+          <ScalarProperty Name="artTopeDias" ColumnName="artTopeDias" />
+          <ScalarProperty Name="artTipoLicencia" ColumnName="artTipoLicencia" />
+          <ScalarProperty Name="artObservaciones" ColumnName="artObservaciones" />
+          <ScalarProperty Name="artNombre" ColumnName="artNombre" />
+          <ScalarProperty Name="artCodigo" ColumnName="artCodigo" />
+          <ScalarProperty Name="artId" ColumnName="artId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatCambioEstado">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatCambioEstado">
+        <MappingFragment StoreEntitySet="CatCambioEstado">
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="caesDescripcion" ColumnName="caesDescripcion" />
+          <ScalarProperty Name="caesCodigo" ColumnName="caesCodigo" />
+          <ScalarProperty Name="caesId" ColumnName="caesId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatCiudad">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatCiudad">
+        <MappingFragment StoreEntitySet="CatCiudad">
+          <ScalarProperty Name="prvId" ColumnName="prvId" />
+          <ScalarProperty Name="cddNombre" ColumnName="cddNombre" />
+          <ScalarProperty Name="cddId" ColumnName="cddId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catDepartamento">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catDepartamento">
+        <MappingFragment StoreEntitySet="catDepartamento">
+          <ScalarProperty Name="prvId" ColumnName="prvId" />
+          <ScalarProperty Name="depNombre" ColumnName="depNombre" />
+          <ScalarProperty Name="depId" ColumnName="depId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatDivision">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatDivision">
+        <MappingFragment StoreEntitySet="CatDivision">
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="DivObservaciones" ColumnName="DivObservaciones" />
+          <ScalarProperty Name="DivNombre" ColumnName="DivNombre" />
+          <ScalarProperty Name="DivId" ColumnName="DivId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catLocalidad">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catLocalidad">
+        <MappingFragment StoreEntitySet="catLocalidad">
+          <ScalarProperty Name="depId" ColumnName="depId" />
+          <ScalarProperty Name="locNombre" ColumnName="locNombre" />
+          <ScalarProperty Name="locId" ColumnName="locId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catMinisterio">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catMinisterio">
+        <MappingFragment StoreEntitySet="catMinisterio">
+          <ScalarProperty Name="minNombre" ColumnName="minNombre" />
+          <ScalarProperty Name="minId" ColumnName="minId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catMotivo">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catMotivo">
+        <MappingFragment StoreEntitySet="catMotivo">
+          <ScalarProperty Name="motNombre" ColumnName="motNombre" />
+          <ScalarProperty Name="motId" ColumnName="motId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatPais">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatPais">
+        <MappingFragment StoreEntitySet="CatPais">
+          <ScalarProperty Name="paisNombre" ColumnName="paisNombre" />
+          <ScalarProperty Name="paisId" ColumnName="paisId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CatProvincia">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatProvincia">
+        <MappingFragment StoreEntitySet="CatProvincia">
+          <ScalarProperty Name="paisId" ColumnName="paisId" />
+          <ScalarProperty Name="prvNombre" ColumnName="prvNombre" />
+          <ScalarProperty Name="prvId" ColumnName="prvId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catReparticion">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catReparticion">
+        <MappingFragment StoreEntitySet="catReparticion">
+          <ScalarProperty Name="repCodigoNew" ColumnName="repCodigoNew" />
+          <ScalarProperty Name="minId" ColumnName="minId" />
+          <ScalarProperty Name="repCorreo" ColumnName="repCorreo" />
+          <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+          <ScalarProperty Name="repCodigo" ColumnName="repCodigo" />
+          <ScalarProperty Name="repId" ColumnName="repId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catTarea">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catTarea">
+        <MappingFragment StoreEntitySet="catTarea">
+          <ScalarProperty Name="tarDescripcion" ColumnName="tarDescripcion" />
+          <ScalarProperty Name="tarId" ColumnName="tarId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ospEstadoCivil">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.ospEstadoCivil">
+        <MappingFragment StoreEntitySet="ospEstadoCivil">
+          <ScalarProperty Name="ospeDescripcion" ColumnName="ospeDescripcion" />
+          <ScalarProperty Name="ospeId" ColumnName="ospeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ospVinculoFamiliar">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.ospVinculoFamiliar">
+        <MappingFragment StoreEntitySet="ospVinculoFamiliar">
+          <ScalarProperty Name="ospvDescripcion" ColumnName="ospvDescripcion" />
+          <ScalarProperty Name="ospvId" ColumnName="ospvId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catCalle">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catCalle">
+        <MappingFragment StoreEntitySet="catCalle">
+          <ScalarProperty Name="callNombre" ColumnName="callNombre" />
+          <ScalarProperty Name="callId" ColumnName="callId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catAgenteReparticion">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.catAgenteReparticion">
+        <MappingFragment StoreEntitySet="catAgenteReparticion">
+          <ScalarProperty Name="repId" ColumnName="repId" />
+          <ScalarProperty Name="agtId" ColumnName="agtId" />
+          <ScalarProperty Name="agtrId" ColumnName="agtrId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="getEstadisticaDCRM" FunctionName="efAccesoADatosJMModel.Store.getEstadisticaDCRM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getEstadisticaDCRM_Result">
+          <ScalarProperty Name="Medico" ColumnName="Medico" />
+          <ScalarProperty Name="EspecialidadMedico" ColumnName="EspecialidadMedico" />
+          <ScalarProperty Name="EspecialidadCM" ColumnName="EspecialidadCM" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="MinimoTiempoDeEspera" ColumnName="MinimoTiempoDeEspera" />
+          <ScalarProperty Name="PromedioTiempoDeEspera" ColumnName="PromedioTiempoDeEspera" />
+          <ScalarProperty Name="MaximoTiempoDeEspera" ColumnName="MaximoTiempoDeEspera" />
+          <ScalarProperty Name="MinimoTiempoDeAtencion" ColumnName="MinimoTiempoDeAtencion" />
+          <ScalarProperty Name="PromedioTiempoDeAtencion" ColumnName="PromedioTiempoDeAtencion" />
+          <ScalarProperty Name="MaximoTiempoDeAtencion" ColumnName="MaximoTiempoDeAtencion" />
+          <ScalarProperty Name="MinimoTiempoOcioso" ColumnName="MinimoTiempoOcioso" />
+          <ScalarProperty Name="PromedioTiempoOcioso" ColumnName="PromedioTiempoOcioso" />
+          <ScalarProperty Name="MaximoTiempoOcioso" ColumnName="MaximoTiempoOcioso" />
+          <ScalarProperty Name="CantidadDeAtenciones" ColumnName="CantidadDeAtenciones" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="cmedFecha" ColumnName="cmedFecha" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="Medico" ColumnName="Medico" />
+          <ScalarProperty Name="UsuarioMedico" ColumnName="UsuarioMedico" />
+          <ScalarProperty Name="Emitida" ColumnName="Emitida" />
+          <ScalarProperty Name="EnEspera" ColumnName="EnEspera" />
+          <ScalarProperty Name="ListaParaAtencion" ColumnName="ListaParaAtencion" />
+          <ScalarProperty Name="AtencionMedica" ColumnName="AtencionMedica" />
+          <ScalarProperty Name="Atendido" ColumnName="Atendido" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="EspecialidadMedico" ColumnName="EspecialidadMedico" />
+          <ScalarProperty Name="Ocio" ColumnName="Ocio" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="TiempoDeEspera" ColumnName="TiempoDeEspera" />
+          <ScalarProperty Name="TiempoDeAtencion" ColumnName="TiempoDeAtencion" />
+          <ScalarProperty Name="TiempoOcioso" ColumnName="TiempoOcioso" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="CatEspecialidad">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.CatEspecialidad">
+        <MappingFragment StoreEntitySet="CatEspecialidad">
+          <ScalarProperty Name="espPermiteOtraEspecialidad" ColumnName="espPermiteOtraEspecialidad" />
+          <ScalarProperty Name="espDescripcion" ColumnName="espDescripcion" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Top10" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Top10">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top10_Result">
+          <ScalarProperty Name="Especialidad" ColumnName="Especialidad" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="diagId" ColumnName="diagId" />
+          <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+          <ScalarProperty Name="diagDescripcion" ColumnName="diagDescripcion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="gesCartaMedicaUltimoEstado">
+      <EntityTypeMapping TypeName="efAccesoADatosJMModel.gesCartaMedicaUltimoEstado">
+        <MappingFragment StoreEntitySet="gesCartaMedicaUltimoEstado">
+          <ScalarProperty Name="cmedObservaciones" ColumnName="cmedObservaciones" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="estFecha" ColumnName="estFecha" />
+          <ScalarProperty Name="estEstado" ColumnName="estEstado" />
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Top5Espera" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Top5Espera">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Top5Espera_Result">
+          <ScalarProperty Name="cmedId" ColumnName="cmedId" />
+          <ScalarProperty Name="agtApellidoyNombre" ColumnName="agtApellidoyNombre" />
+          <ScalarProperty Name="espNombre" ColumnName="espNombre" />
+          <ScalarProperty Name="Minutos" ColumnName="Minutos" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Linea_Pato" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Linea_Pato">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Linea_Pato_Result">
+          <ScalarProperty Name="Periodo" ColumnName="Periodo" />
+          <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="getDatosTableroDeComandoDCRM_Torta_Pato" FunctionName="efAccesoADatosJMModel.Store.getDatosTableroDeComandoDCRM_Torta_Pato">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosJMModel.getDatosTableroDeComandoDCRM_Torta_Pato_Result">
+          <ScalarProperty Name="depId" ColumnName="depId" />
+          <ScalarProperty Name="depNombre" ColumnName="depNombre" />
+          <ScalarProperty Name="Promedio" ColumnName="Promedio" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

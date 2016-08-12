@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="efGeDocModeloStoreContainer" CdmEntityContainer="efGeDocEntities">
+    <EntitySetMapping Name="catReparticion">
+      <EntityTypeMapping TypeName="efGeDocModelo.catReparticion">
+        <MappingFragment StoreEntitySet="catReparticion">
+          <ScalarProperty Name="repNombre" ColumnName="repNombre" />
+          <ScalarProperty Name="repId" ColumnName="repId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catSector">
+      <EntityTypeMapping TypeName="efGeDocModelo.catSector">
+        <MappingFragment StoreEntitySet="catSector">
+          <ScalarProperty Name="ccId" ColumnName="ccId" />
+          <ScalarProperty Name="secCodigo" ColumnName="secCodigo" />
+          <ScalarProperty Name="repId" ColumnName="repId" />
+          <ScalarProperty Name="secLinkMapa" ColumnName="secLinkMapa" />
+          <ScalarProperty Name="secUbicacionGeografica" ColumnName="secUbicacionGeografica" />
+          <ScalarProperty Name="secNombre" ColumnName="secNombre" />
+          <ScalarProperty Name="secId" ColumnName="secId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catZona">
+      <EntityTypeMapping TypeName="efGeDocModelo.catZona">
+        <MappingFragment StoreEntitySet="catZona">
+          <ScalarProperty Name="zonIdDependencia" ColumnName="zonIdDependencia" />
+          <ScalarProperty Name="zonNombre" ColumnName="zonNombre" />
+          <ScalarProperty Name="zonCodigo" ColumnName="zonCodigo" />
+          <ScalarProperty Name="zonId" ColumnName="zonId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="proResolucion">
+      <EntityTypeMapping TypeName="efGeDocModelo.proResolucion">
+        <MappingFragment StoreEntitySet="proResolucion">
+          <ScalarProperty Name="tnlId" ColumnName="tnlId" />
+          <ScalarProperty Name="resNotificacionDiaInicio" ColumnName="resNotificacionDiaInicio" />
+          <ScalarProperty Name="resNotificacionVencimiento" ColumnName="resNotificacionVencimiento" />
+          <ScalarProperty Name="resEsImportante" ColumnName="resEsImportante" />
+          <ScalarProperty Name="resLinkArchivo" ColumnName="resLinkArchivo" />
+          <ScalarProperty Name="resResuelve" ColumnName="resResuelve" />
+          <ScalarProperty Name="resConsiderando" ColumnName="resConsiderando" />
+          <ScalarProperty Name="resFecha" ColumnName="resFecha" />
+          <ScalarProperty Name="resNumero" ColumnName="resNumero" />
+          <ScalarProperty Name="resId" ColumnName="resId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="proResolucionExpedientes">
+      <EntityTypeMapping TypeName="efGeDocModelo.proResolucionExpedientes">
+        <MappingFragment StoreEntitySet="proResolucionExpedientes">
+          <ScalarProperty Name="resId" ColumnName="resId" />
+          <ScalarProperty Name="reseExpedienteAnio" ColumnName="reseExpedienteAnio" />
+          <ScalarProperty Name="reseExpedienteNumero" ColumnName="reseExpedienteNumero" />
+          <ScalarProperty Name="zonId" ColumnName="zonId" />
+          <ScalarProperty Name="reseId" ColumnName="reseId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="proResolucionNotificacionEmpleado">
+      <EntityTypeMapping TypeName="efGeDocModelo.proResolucionNotificacionEmpleado">
+        <MappingFragment StoreEntitySet="proResolucionNotificacionEmpleado">
+          <ScalarProperty Name="perId" ColumnName="perId" />
+          <ScalarProperty Name="resId" ColumnName="resId" />
+          <ScalarProperty Name="resneId" ColumnName="resneId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisLogEnvioEmail">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisLogEnvioEmail">
+        <MappingFragment StoreEntitySet="sisLogEnvioEmail">
+          <ScalarProperty Name="leMensajeError" ColumnName="leMensajeError" />
+          <ScalarProperty Name="leEnviado" ColumnName="leEnviado" />
+          <ScalarProperty Name="leDestinatarioEmail" ColumnName="leDestinatarioEmail" />
+          <ScalarProperty Name="leDestinatario" ColumnName="leDestinatario" />
+          <ScalarProperty Name="leFecha" ColumnName="leFecha" />
+          <ScalarProperty Name="leId" ColumnName="leId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisMenu">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisMenu">
+        <MappingFragment StoreEntitySet="sisMenu">
+          <ScalarProperty Name="mnuController" ColumnName="mnuController" />
+          <ScalarProperty Name="mnuAccion" ColumnName="mnuAccion" />
+          <ScalarProperty Name="mnuImagen" ColumnName="mnuImagen" />
+          <ScalarProperty Name="mnuTitulo" ColumnName="mnuTitulo" />
+          <ScalarProperty Name="mnuOrden" ColumnName="mnuOrden" />
+          <ScalarProperty Name="mnuNombre" ColumnName="mnuNombre" />
+          <ScalarProperty Name="mnuId" ColumnName="mnuId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisTipo">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisTipo">
+        <MappingFragment StoreEntitySet="sisTipo">
+          <ScalarProperty Name="tipoCodigo" ColumnName="tipoCodigo" />
+          <ScalarProperty Name="tipoColor" ColumnName="tipoColor" />
+          <ScalarProperty Name="tipoImagen" ColumnName="tipoImagen" />
+          <ScalarProperty Name="tipoDescripcion" ColumnName="tipoDescripcion" />
+          <ScalarProperty Name="tipoeId" ColumnName="tipoeId" />
+          <ScalarProperty Name="tipoId" ColumnName="tipoId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisTipoEntidad">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisTipoEntidad">
+        <MappingFragment StoreEntitySet="sisTipoEntidad">
+          <ScalarProperty Name="tipoeDescripcion" ColumnName="tipoeDescripcion" />
+          <ScalarProperty Name="tipoeCodigo" ColumnName="tipoeCodigo" />
+          <ScalarProperty Name="tipoeId" ColumnName="tipoeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisUsuario">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisUsuario">
+        <MappingFragment StoreEntitySet="sisUsuario">
+          <ScalarProperty Name="usrEmail" ColumnName="usrEmail" />
+          <ScalarProperty Name="estId" ColumnName="estId" />
+          <ScalarProperty Name="usrPassword" ColumnName="usrPassword" />
+          <ScalarProperty Name="usrApellidoyNombre" ColumnName="usrApellidoyNombre" />
+          <ScalarProperty Name="usrNombreDeUsuario" ColumnName="usrNombreDeUsuario" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sisUsuarioEstado">
+      <EntityTypeMapping TypeName="efGeDocModelo.sisUsuarioEstado">
+        <MappingFragment StoreEntitySet="sisUsuarioEstado">
+          <ScalarProperty Name="ueMotivo" ColumnName="ueMotivo" />
+          <ScalarProperty Name="ueFecha" ColumnName="ueFecha" />
+          <ScalarProperty Name="tipoId" ColumnName="tipoId" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimiento">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimiento">
+        <MappingFragment StoreEntitySet="catRequerimiento">
+          <ScalarProperty Name="reqLinkId" ColumnName="reqLinkId" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="reqFechaEstimado" ColumnName="reqFechaEstimado" />
+          <ScalarProperty Name="reqTiempoEstimado" ColumnName="reqTiempoEstimado" />
+          <ScalarProperty Name="perIdSolicitante" ColumnName="perIdSolicitante" />
+          <ScalarProperty Name="reqDescripcion" ColumnName="reqDescripcion" />
+          <ScalarProperty Name="reqAsunto" ColumnName="reqAsunto" />
+          <ScalarProperty Name="tipoIdTipo" ColumnName="tipoIdTipo" />
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoAdjunto">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoAdjunto">
+        <MappingFragment StoreEntitySet="catRequerimientoAdjunto">
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+          <ScalarProperty Name="reqaObservaciones" ColumnName="reqaObservaciones" />
+          <ScalarProperty Name="reqaArchivo" ColumnName="reqaArchivo" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="reqaFecha" ColumnName="reqaFecha" />
+          <ScalarProperty Name="reqaId" ColumnName="reqaId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoComentarios">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoComentarios">
+        <MappingFragment StoreEntitySet="catRequerimientoComentarios">
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="reqcComentario" ColumnName="reqcComentario" />
+          <ScalarProperty Name="reqcFecha" ColumnName="reqcFecha" />
+          <ScalarProperty Name="reqcId" ColumnName="reqcId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoEstado">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoEstado">
+        <MappingFragment StoreEntitySet="catRequerimientoEstado">
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+          <ScalarProperty Name="reqeObservaciones" ColumnName="reqeObservaciones" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="reqeFecha" ColumnName="reqeFecha" />
+          <ScalarProperty Name="tipoIdEstado" ColumnName="tipoIdEstado" />
+          <ScalarProperty Name="reqeId" ColumnName="reqeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoLogTrabajo">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoLogTrabajo">
+        <MappingFragment StoreEntitySet="catRequerimientoLogTrabajo">
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="reqlObservaciones" ColumnName="reqlObservaciones" />
+          <ScalarProperty Name="reqlTiempo" ColumnName="reqlTiempo" />
+          <ScalarProperty Name="reqlFecha" ColumnName="reqlFecha" />
+          <ScalarProperty Name="reqlId" ColumnName="reqlId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoNotificaciones">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoNotificaciones">
+        <MappingFragment StoreEntitySet="catRequerimientoNotificaciones">
+          <ScalarProperty Name="reqnArchivoAdjunto" ColumnName="reqnArchivoAdjunto" />
+          <ScalarProperty Name="reqnError" ColumnName="reqnError" />
+          <ScalarProperty Name="reqnEnviado" ColumnName="reqnEnviado" />
+          <ScalarProperty Name="reqnDestinatarioEmail" ColumnName="reqnDestinatarioEmail" />
+          <ScalarProperty Name="reqnDestinatario" ColumnName="reqnDestinatario" />
+          <ScalarProperty Name="reqnFecha" ColumnName="reqnFecha" />
+          <ScalarProperty Name="reqnMensaje" ColumnName="reqnMensaje" />
+          <ScalarProperty Name="reqnId" ColumnName="reqnId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catRequerimientoNotificaUsuario">
+      <EntityTypeMapping TypeName="efGeDocModelo.catRequerimientoNotificaUsuario">
+        <MappingFragment StoreEntitySet="catRequerimientoNotificaUsuario">
+          <ScalarProperty Name="reqId" ColumnName="reqId" />
+          <ScalarProperty Name="requNotificar" ColumnName="requNotificar" />
+          <ScalarProperty Name="usrId" ColumnName="usrId" />
+          <ScalarProperty Name="requId" ColumnName="requId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catPersona">
+      <EntityTypeMapping TypeName="efGeDocModelo.catPersona">
+        <MappingFragment StoreEntitySet="catPersona">
+          <ScalarProperty Name="perFuncion" ColumnName="perFuncion" />
+          <ScalarProperty Name="gdId" ColumnName="gdId" />
+          <ScalarProperty Name="ofiId" ColumnName="ofiId" />
+          <ScalarProperty Name="perIdPersonaCronos" ColumnName="perIdPersonaCronos" />
+          <ScalarProperty Name="perAutorizaNotificarSMS" ColumnName="perAutorizaNotificarSMS" />
+          <ScalarProperty Name="perDomicilio" ColumnName="perDomicilio" />
+          <ScalarProperty Name="perFechaCasamiento" ColumnName="perFechaCasamiento" />
+          <ScalarProperty Name="paisId" ColumnName="paisId" />
+          <ScalarProperty Name="tipoIdEstadoCivil" ColumnName="tipoIdEstadoCivil" />
+          <ScalarProperty Name="perLeeoEscribe" ColumnName="perLeeoEscribe" />
+          <ScalarProperty Name="profId" ColumnName="profId" />
+          <ScalarProperty Name="perFoto" ColumnName="perFoto" />
+          <ScalarProperty Name="perAntiguedadDiasVacaciones" ColumnName="perAntiguedadDiasVacaciones" />
+          <ScalarProperty Name="perAntiguedadMesesVacaciones" ColumnName="perAntiguedadMesesVacaciones" />
+          <ScalarProperty Name="perAntiguedadAniosVacaciones" ColumnName="perAntiguedadAniosVacaciones" />
+          <ScalarProperty Name="perAntiguedadDiasPago" ColumnName="perAntiguedadDiasPago" />
+          <ScalarProperty Name="perAntiguedadMesesPago" ColumnName="perAntiguedadMesesPago" />
+          <ScalarProperty Name="perAntiguedadAniosPago" ColumnName="perAntiguedadAniosPago" />
+          <ScalarProperty Name="perObservaciones" ColumnName="perObservaciones" />
+          <ScalarProperty Name="secId" ColumnName="secId" />
+          <ScalarProperty Name="perAntiguedadDias" ColumnName="perAntiguedadDias" />
+          <ScalarProperty Name="perAntiguedadMeses" ColumnName="perAntiguedadMeses" />
+          <ScalarProperty Name="perAntiguedadAnios" ColumnName="perAntiguedadAnios" />
+          <ScalarProperty Name="perEsContratado" ColumnName="perEsContratado" />
+          <ScalarProperty Name="perEmail" ColumnName="perEmail" />
+          <ScalarProperty Name="perCelular" ColumnName="perCelular" />
+          <ScalarProperty Name="perTelefono" ColumnName="perTelefono" />
+          <ScalarProperty Name="perCUIL" ColumnName="perCUIL" />
+          <ScalarProperty Name="perDNI" ColumnName="perDNI" />
+          <ScalarProperty Name="provId" ColumnName="provId" />
+          <ScalarProperty Name="perFechaNacimiento" ColumnName="perFechaNacimiento" />
+          <ScalarProperty Name="tipoIdSexo" ColumnName="tipoIdSexo" />
+          <ScalarProperty Name="perApellidoyNombre" ColumnName="perApellidoyNombre" />
+          <ScalarProperty Name="perPadron" ColumnName="perPadron" />
+          <ScalarProperty Name="perId" ColumnName="perId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="efAccesoADatosJMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="efAccesoADatosJMModelStoreContainer">
+    <EntitySet Name="catAgente" EntityType="efAccesoADatosJMModel.Store.catAgente" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catAgenteGrupoFamiliar" EntityType="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catAgenteReparticion" EntityType="efAccesoADatosJMModel.Store.catAgenteReparticion" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatArticulos" EntityType="efAccesoADatosJMModel.Store.CatArticulos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catCalle" EntityType="efAccesoADatosJMModel.Store.catCalle" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatCambioEstado" EntityType="efAccesoADatosJMModel.Store.CatCambioEstado" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatCiudad" EntityType="efAccesoADatosJMModel.Store.CatCiudad" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catDepartamento" EntityType="efAccesoADatosJMModel.Store.catDepartamento" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatDivision" EntityType="efAccesoADatosJMModel.Store.CatDivision" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatEspecialidad" EntityType="efAccesoADatosJMModel.Store.CatEspecialidad" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catLocalidad" EntityType="efAccesoADatosJMModel.Store.catLocalidad" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catMinisterio" EntityType="efAccesoADatosJMModel.Store.catMinisterio" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catMotivo" EntityType="efAccesoADatosJMModel.Store.catMotivo" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatPais" EntityType="efAccesoADatosJMModel.Store.CatPais" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CatProvincia" EntityType="efAccesoADatosJMModel.Store.CatProvincia" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catReparticion" EntityType="efAccesoADatosJMModel.Store.catReparticion" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="catTarea" EntityType="efAccesoADatosJMModel.Store.catTarea" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="gesCartaMedicaUltimoEstado" EntityType="efAccesoADatosJMModel.Store.gesCartaMedicaUltimoEstado" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ospEstadoCivil" EntityType="efAccesoADatosJMModel.Store.ospEstadoCivil" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ospVinculoFamiliar" EntityType="efAccesoADatosJMModel.Store.ospVinculoFamiliar" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_catAgente_catLocalidad" Association="efAccesoADatosJMModel.Store.FK_catAgente_catLocalidad">
+      <End Role="catLocalidad" EntitySet="catLocalidad" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgente_catTarea" Association="efAccesoADatosJMModel.Store.FK_catAgente_catTarea">
+      <End Role="catTarea" EntitySet="catTarea" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgente_ospEstadoCivil" Association="efAccesoADatosJMModel.Store.FK_catAgente_ospEstadoCivil">
+      <End Role="ospEstadoCivil" EntitySet="ospEstadoCivil" />
+      <End Role="catAgente" EntitySet="catAgente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteGrupoFamiliar_catAgente" Association="efAccesoADatosJMModel.Store.FK_catAgenteGrupoFamiliar_catAgente">
+      <End Role="catAgente" EntitySet="catAgente" />
+      <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar" Association="efAccesoADatosJMModel.Store.FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+      <End Role="ospVinculoFamiliar" EntitySet="ospVinculoFamiliar" />
+      <End Role="catAgenteGrupoFamiliar" EntitySet="catAgenteGrupoFamiliar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteReparticion_catAgente" Association="efAccesoADatosJMModel.Store.FK_catAgenteReparticion_catAgente">
+      <End Role="catAgente" EntitySet="catAgente" />
+      <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catAgenteReparticion_catReparticion" Association="efAccesoADatosJMModel.Store.FK_catAgenteReparticion_catReparticion">
+      <End Role="catReparticion" EntitySet="catReparticion" />
+      <End Role="catAgenteReparticion" EntitySet="catAgenteReparticion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catCiudad_catProvincia" Association="efAccesoADatosJMModel.Store.FK_catCiudad_catProvincia">
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+      <End Role="CatCiudad" EntitySet="CatCiudad" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catDepartamento_CatProvincia" Association="efAccesoADatosJMModel.Store.FK_catDepartamento_CatProvincia">
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+      <End Role="catDepartamento" EntitySet="catDepartamento" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catLocalidad_catDepartamento" Association="efAccesoADatosJMModel.Store.FK_catLocalidad_catDepartamento">
+      <End Role="catDepartamento" EntitySet="catDepartamento" />
+      <End Role="catLocalidad" EntitySet="catLocalidad" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catProvincia_catPais" Association="efAccesoADatosJMModel.Store.FK_catProvincia_catPais">
+      <End Role="CatPais" EntitySet="CatPais" />
+      <End Role="CatProvincia" EntitySet="CatProvincia" />
+    </AssociationSet>
+    <AssociationSet Name="FK_catReparticion_catMinisterio" Association="efAccesoADatosJMModel.Store.FK_catReparticion_catMinisterio">
+      <End Role="catMinisterio" EntitySet="catMinisterio" />
+      <End Role="catReparticion" EntitySet="catReparticion" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="catAgente">
+    <Key>
+      <PropertyRef Name="agtId" />
+    </Key>
+    <Property Name="agtId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="agtDNI" Type="int" Nullable="false" />
+    <Property Name="agtCUIL" Type="varchar" MaxLength="13" />
+    <Property Name="agtApellidoyNombre" Type="varchar" Nullable="false" MaxLength="100" />
+    <Property Name="ospeId" Type="char" Nullable="false" MaxLength="1" />
+    <Property Name="agtFechaNacimiento" Type="datetime" Nullable="false" />
+    <Property Name="agtEdad" Type="tinyint" Nullable="false" />
+    <Property Name="tarId" Type="int" Nullable="false" />
+    <Property Name="agtLugarTrabajo" Type="varchar" MaxLength="50" />
+    <Property Name="agtFechaIngreso" Type="datetime" Nullable="false" />
+    <Property Name="agtCalle" Type="varchar" MaxLength="80" />
+    <Property Name="agtCalleNumero" Type="smallint" />
+    <Property Name="agtBlock" Type="varchar" MaxLength="5" />
+    <Property Name="agtBlockPiso" Type="varchar" MaxLength="2" />
+    <Property Name="agtBlockDepto" Type="varchar" MaxLength="2" />
+    <Property Name="agtBarrio" Type="varchar" MaxLength="30" />
+    <Property Name="agtManzana" Type="varchar" MaxLength="6" />
+    <Property Name="agtSector" Type="varchar" MaxLength="5" />
+    <Property Name="agtCodigoPostal" Type="smallint" />
+    <Property Name="locId" Type="int" />
+    <Property Name="agtOrigenInfOSP" Type="bit" Nullable="false" />
+    <Property Name="agtFoto" Type="varchar" MaxLength="4000" />
+    <Property Name="agtSexo" Type="varchar" MaxLength="15" />
+    <Property Name="agtFuma" Type="bit" />
+    <Property Name="agtHTA" Type="bit" />
+    <Property Name="agtColesterol" Type="bit" />
+    <Property Name="agtDiabetes" Type="bit" />
+    <Property Name="agtActividadFisica" Type="bit" />
+    <Property Name="agtAlergias" Type="bit" />
+    <Property Name="agtPeso" Type="decimal" Scale="2" />
+    <Property Name="agtTalla" Type="decimal" Scale="2" />
+    <Property Name="agtTelefonoFijo" Type="varchar" MaxLength="50" />
+    <Property Name="agtTelefonoMovil" Type="varchar" MaxLength="50" />
+    <Property Name="agtCorreoElectronico" Type="varchar" MaxLength="50" />
+    <Property Name="agtDomicilioReferencia" Type="varchar" MaxLength="500" />
+    <Property Name="agtApellido" Type="varchar" MaxLength="50" />
+    <Property Name="agtNombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="catAgenteGrupoFamiliar">
+    <Key>
+      <PropertyRef Name="agtfId" />
+    </Key>
+    <Property Name="agtfId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="agtfApellidoyNombre" Type="varchar" Nullable="false" MaxLength="100" />
+    <Property Name="agtfDNI" Type="int" Nullable="false" />
+    <Property Name="ospvId" Type="char" Nullable="false" MaxLength="3" />
+    <Property Name="agtId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catAgenteReparticion">
+    <Key>
+      <PropertyRef Name="agtrId" />
+    </Key>
+    <Property Name="agtrId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="agtId" Type="int" Nullable="false" />
+    <Property Name="repId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CatArticulos">
+    <Key>
+      <PropertyRef Name="artId" />
+    </Key>
+    <Property Name="artId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="artCodigo" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="artNombre" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="artObservaciones" Type="varchar" MaxLength="50" />
+    <Property Name="artTipoLicencia" Type="char" Nullable="false" MaxLength="2" />
+    <Property Name="artTopeDias" Type="int" Nullable="false" />
+    <Property Name="artControl" Type="bit" Nullable="false" />
+    <Property Name="artConfirmaAlta" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catCalle">
+    <Key>
+      <PropertyRef Name="callId" />
+    </Key>
+    <Property Name="callId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="callNombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CatCambioEstado">
+    <Key>
+      <PropertyRef Name="caesId" />
+    </Key>
+    <Property Name="caesId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="caesCodigo" Type="varchar" Nullable="false" MaxLength="10" />
+    <Property Name="caesDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="estEstado" Type="char" Nullable="false" MaxLength="2" />
+  </EntityType>
+  <EntityType Name="CatCiudad">
+    <Key>
+      <PropertyRef Name="cddId" />
+    </Key>
+    <Property Name="cddId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="cddNombre" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="prvId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catDepartamento">
+    <Key>
+      <PropertyRef Name="depId" />
+    </Key>
+    <Property Name="depId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="depNombre" Type="varchar" Nullable="false" MaxLength="60" />
+    <Property Name="prvId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CatDivision">
+    <Key>
+      <PropertyRef Name="DivId" />
+    </Key>
+    <Property Name="DivId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="DivNombre" Type="nvarchar" MaxLength="50" />
+    <Property Name="DivObservaciones" Type="nvarchar" MaxLength="50" />
+    <Property Name="estEstado" Type="char" MaxLength="2" />
+  </EntityType>
+  <EntityType Name="CatEspecialidad">
+    <Key>
+      <PropertyRef Name="espId" />
+    </Key>
+    <Property Name="espId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="espNombre" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="espDescripcion" Type="nvarchar" MaxLength="50" />
+    <Property Name="espPermiteOtraEspecialidad" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catLocalidad">
+    <Key>
+      <PropertyRef Name="locId" />
+    </Key>
+    <Property Name="locId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="locNombre" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="depId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catMinisterio">
+    <Key>
+      <PropertyRef Name="minId" />
+    </Key>
+    <Property Name="minId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="minNombre" Type="varchar" Nullable="false" MaxLength="80" />
+  </EntityType>
+  <EntityType Name="catMotivo">
+    <Key>
+      <PropertyRef Name="motId" />
+    </Key>
+    <Property Name="motId" Type="int" Nullable="false" />
+    <Property Name="motNombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CatPais">
+    <Key>
+      <PropertyRef Name="paisId" />
+    </Key>
+    <Property Name="paisId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="paisNombre" Type="varchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CatProvincia">
+    <Key>
+      <PropertyRef Name="prvId" />
+    </Key>
+    <Property Name="prvId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="prvNombre" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="paisId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="catReparticion">
+    <Key>
+      <PropertyRef Name="repId" />
+    </Key>
+    <Property Name="repId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="repCodigo" Type="char" Nullable="false" MaxLength="6" />
+    <Property Name="repNombre" Type="varchar" Nullable="false" MaxLength="80" />
+    <Property Name="repCorreo" Type="varchar" MaxLength="100" />
+    <Property Name="minId" Type="int" />
+    <Property Name="repCodigoNew" Type="char" MaxLength="6" />
+  </EntityType>
+  <EntityType Name="catTarea">
+    <Key>
+      <PropertyRef Name="tarId" />
+    </Key>
+    <Property Name="tarId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="tarDescripcion" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="gesCartaMedicaUltimoEstado">
+    <Key>
+      <PropertyRef Name="cmedId" />
+    </Key>
+    <Property Name="cmedId" Type="bigint" Nullable="false" />
+    <Property Name="estEstado" Type="char" Nullable="false" MaxLength="2" />
+    <Property Name="estFecha" Type="datetime" Nullable="false" />
+    <Property Name="usrId" Type="int" />
+    <Property Name="cmedObservaciones" Type="varchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="ospEstadoCivil">
+    <Key>
+      <PropertyRef Name="ospeId" />
+    </Key>
+    <Property Name="ospeId" Type="char" Nullable="false" MaxLength="1" />
+    <Property Name="ospeDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ospVinculoFamiliar">
+    <Key>
+      <PropertyRef Name="ospvId" />
+    </Key>
+    <Property Name="ospvId" Type="char" Nullable="false" MaxLength="3" />
+    <Property Name="ospvDescripcion" Type="varchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_catAgente_catLocalidad">
+    <End Role="catLocalidad" Type="efAccesoADatosJMModel.Store.catLocalidad" Multiplicity="0..1" />
+    <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catLocalidad">
+        <PropertyRef Name="locId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="locId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgente_catTarea">
+    <End Role="catTarea" Type="efAccesoADatosJMModel.Store.catTarea" Multiplicity="1" />
+    <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catTarea">
+        <PropertyRef Name="tarId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="tarId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgente_ospEstadoCivil">
+    <End Role="ospEstadoCivil" Type="efAccesoADatosJMModel.Store.ospEstadoCivil" Multiplicity="1" />
+    <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ospEstadoCivil">
+        <PropertyRef Name="ospeId" />
+      </Principal>
+      <Dependent Role="catAgente">
+        <PropertyRef Name="ospeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteGrupoFamiliar_catAgente">
+    <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="catAgenteGrupoFamiliar" Type="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catAgente">
+        <PropertyRef Name="agtId" />
+      </Principal>
+      <Dependent Role="catAgenteGrupoFamiliar">
+        <PropertyRef Name="agtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteGrupoFamiliar_ospVinculoFamiliar">
+    <End Role="ospVinculoFamiliar" Type="efAccesoADatosJMModel.Store.ospVinculoFamiliar" Multiplicity="1" />
+    <End Role="catAgenteGrupoFamiliar" Type="efAccesoADatosJMModel.Store.catAgenteGrupoFamiliar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ospVinculoFamiliar">
+        <PropertyRef Name="ospvId" />
+      </Principal>
+      <Dependent Role="catAgenteGrupoFamiliar">
+        <PropertyRef Name="ospvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteReparticion_catAgente">
+    <End Role="catAgente" Type="efAccesoADatosJMModel.Store.catAgente" Multiplicity="1" />
+    <End Role="catAgenteReparticion" Type="efAccesoADatosJMModel.Store.catAgenteReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catAgente">
+        <PropertyRef Name="agtId" />
+      </Principal>
+      <Dependent Role="catAgenteReparticion">
+        <PropertyRef Name="agtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catAgenteReparticion_catReparticion">
+    <End Role="catReparticion" Type="efAccesoADatosJMModel.Store.catReparticion" Multiplicity="1" />
+    <End Role="catAgenteReparticion" Type="efAccesoADatosJMModel.Store.catAgenteReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catReparticion">
+        <PropertyRef Name="repId" />
+      </Principal>
+      <Dependent Role="catAgenteReparticion">
+        <PropertyRef Name="repId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catCiudad_catProvincia">
+    <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="CatCiudad" Type="efAccesoADatosJMModel.Store.CatCiudad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatProvincia">
+        <PropertyRef Name="prvId" />
+      </Principal>
+      <Dependent Role="CatCiudad">
+        <PropertyRef Name="prvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catDepartamento_CatProvincia">
+    <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="1" />
+    <End Role="catDepartamento" Type="efAccesoADatosJMModel.Store.catDepartamento" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatProvincia">
+        <PropertyRef Name="prvId" />
+      </Principal>
+      <Dependent Role="catDepartamento">
+        <PropertyRef Name="prvId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catLocalidad_catDepartamento">
+    <End Role="catDepartamento" Type="efAccesoADatosJMModel.Store.catDepartamento" Multiplicity="1" />
+    <End Role="catLocalidad" Type="efAccesoADatosJMModel.Store.catLocalidad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catDepartamento">
+        <PropertyRef Name="depId" />
+      </Principal>
+      <Dependent Role="catLocalidad">
+        <PropertyRef Name="depId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catProvincia_catPais">
+    <End Role="CatPais" Type="efAccesoADatosJMModel.Store.CatPais" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="CatProvincia" Type="efAccesoADatosJMModel.Store.CatProvincia" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CatPais">
+        <PropertyRef Name="paisId" />
+      </Principal>
+      <Dependent Role="CatProvincia">
+        <PropertyRef Name="paisId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_catReparticion_catMinisterio">
+    <End Role="catMinisterio" Type="efAccesoADatosJMModel.Store.catMinisterio" Multiplicity="0..1" />
+    <End Role="catReparticion" Type="efAccesoADatosJMModel.Store.catReparticion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catMinisterio">
+        <PropertyRef Name="minId" />
+      </Principal>
+      <Dependent Role="catReparticion">
+        <PropertyRef Name="minId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fnValidaDeterminacionFechaJM" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Fecha" Type="datetime" Mode="In" />
+    <Parameter Name="Especialidades" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="getBusquedaAgenteByDocumento" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="nroDocumento" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="getBusquedaCMByDocumentoByFecha" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="nroDocumento" Type="varchar" Mode="In" />
+    <Parameter Name="FechaLicencia" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="getCartaMedicaByAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="agtId" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="getDatosAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="agtId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosAgenteGrupoFamiliar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="agtId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosAgenteReparticiones" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="agtId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosEspecialidades" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getDatosTableroDeComandoDCRM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getDatosTableroDeComandoDCRM_Linea_Pato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+    <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+    <Parameter Name="espId" Type="int" Mode="In" />
+    <Parameter Name="diagId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosTableroDeComandoDCRM_Top10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+    <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+    <Parameter Name="espId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosTableroDeComandoDCRM_Top5Espera" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getDatosTableroDeComandoDCRM_Torta_Pato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+    <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+    <Parameter Name="espId" Type="int" Mode="In" />
+    <Parameter Name="diagId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="getDatosTiposJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getEstadisticaDCRM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fecDesde" Type="datetime" Mode="In" />
+    <Parameter Name="fecHasta" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="getJuntaMedicaByAgente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="agtId" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="getListaCMGestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Estados" Type="varchar(max)" Mode="In" />
+    <Parameter Name="TextoBuscado" Type="varchar" Mode="In" />
+    <Parameter Name="Usuario" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="getListaCMGestionFiltroEspecial" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="minId" Type="int" Mode="In" />
+    <Parameter Name="FechaDesde" Type="datetime" Mode="In" />
+    <Parameter Name="FechaHasta" Type="datetime" Mode="In" />
+    <Parameter Name="TipoFecha" Type="char" Mode="In" />
+  </Function>
+  <Function Name="getListaCMPorEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Estados" Type="varchar(max)" Mode="In" />
+    <Parameter Name="TextoBuscado" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="getListaDesplegableMinisterios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getListadoJuntasMedicas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getListaEspecialidades" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="getListaMedicos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="setAnulacionJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="turId" Type="int" Mode="In" />
+    <Parameter Name="Motivo" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="setCartaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cmedId" Type="bigint" Mode="In" />
+    <Parameter Name="espId" Type="int" Mode="In" />
+    <Parameter Name="cmedMotivoSolicitud" Type="char" Mode="In" />
+    <Parameter Name="prioridad" Type="char" Mode="In" />
+    <Parameter Name="usrNombre" Type="varchar" Mode="In" />
+    <Parameter Name="Accion" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="setJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="turFecha" Type="datetime" Mode="In" />
+    <Parameter Name="tjId" Type="smallint" Mode="In" />
+    <Parameter Name="agtId" Type="int" Mode="In" />
+    <Parameter Name="turResultadoJM" Type="varchar(max)" Mode="In" />
+    <Parameter Name="turEstado" Type="char" Mode="In" />
+    <Parameter Name="turEstadoFecha" Type="datetime" Mode="In" />
+    <Parameter Name="usrNombre" Type="varchar" Mode="In" />
+    <Parameter Name="Especialidades" Type="varchar(max)" Mode="In" />
+    <Parameter Name="EsSobreTurno" Type="bit" Mode="In" />
+    <Parameter Name="Accion" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="setMedicosJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="turId" Type="int" Mode="In" />
+    <Parameter Name="Medicos" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="setResultadoJuntaMedica" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="turId" Type="int" Mode="In" />
+    <Parameter Name="Resultado" Type="varchar(max)" Mode="In" />
+  </Function>
+</Schema>
