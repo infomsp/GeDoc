@@ -364,11 +364,6 @@
             verificarEspecialidadRepetida(e);
         });
 
-        //evento en click cancerlar n ofunciona
-        //$("#btnCancelar").on('click', function () {
-        //    $("#gridEspecialidadesPopUp > div.t-window-titlebar.t-header > div > a > span").trigger('click');
-        //});
-
         //las rayas
         $('label[for="espId"]').after('<span><hr class="style-two"></hr><p style="margin-top: -2px; margin-bottom: 0px;  font-weight: bold; text-align: left;">ingreso</p></span>');
         $('label[for="derivado"]').after('<span><hr class="style-two"></hr><p style="margin-top: -2px; margin-bottom: 0px;  font-weight: bold; text-align: left;">egreso</p></span>');
