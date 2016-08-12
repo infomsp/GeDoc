@@ -384,6 +384,8 @@
 
         if (e.mode == "insert") {
 
+            //<span class='t-window-title'></span>
+
             var derivado = $("#derivado").data('tComboBox');
             derivado.enable();
             var programadoEn = $("#programadoEn").data('tComboBox');
@@ -436,7 +438,7 @@
 
 
     function onSavePaciente(e) {
-        debugger
+
         var values = e.values;
         _pacId = values.pacId;
     }
@@ -994,16 +996,13 @@
         return 0;
     }
     function onSaveEspecialidades(e) {
-        debugger;
-
-        //agrega planilla
+         debugger;
 
         if (typeof (tinyMCE.activeEditor) == "object" && tinyMCE.activeEditor != null) {
 
             tinymce.triggerSave();
             var com = encodeURI(tinymce.activeEditor.getContent());
             e.values.comentario = com;
-            
         }
 
         var values = e.values;
