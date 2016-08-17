@@ -123,6 +123,28 @@ namespace GeDoc.Controllers
             var result = context.spGetPlanillaResueltos(plaid).ToList();
             int? resultint = result[0];
             return resultint;
+
+            //var cantidad = 0;
+
+            //var encuestados = (
+            //    from a in context.catEncuestaSinAdmisionPersona
+            //    where a.plaId == plaid
+            //    select a.encId
+            //                  ).ToList();
+
+
+            //for (int i = 0; i < encuestados.Count(); i++) { 
+                
+            //    var especEncuestados = (
+            //        from a in context.catEncuestaSinadmisionPersonaEspecialidad
+            //        where a.encId == encuestados[i] 
+            //        select a
+
+            //        ).ToList();
+
+            //}
+
+            //    return 1;
         }
 
 

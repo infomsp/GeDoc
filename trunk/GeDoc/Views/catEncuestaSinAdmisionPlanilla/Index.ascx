@@ -313,12 +313,12 @@
 
         //$(".editor-label").append("<p></p>");
 
-        $("#atendidoLocal-input").prop('disabled', true);
-        $("#derivado-input").prop('disabled', true);
+        //$("#atendidoLocal-input").prop('disabled', true);
+        //$("#derivado-input").prop('disabled', true);
 
 
-        $("#interconsulta-input").prop('disabled', true);
-        $("#derivado-input").prop('disabled', true);
+        //$("#interconsulta-input").prop('disabled', true);
+        //$("#derivado-input").prop('disabled', true);
 
         //verificación de interconsulta y derivado (no pueden estar ambos en si)
         $('#derivado-input').focus(function () {
@@ -382,7 +382,14 @@
             var derivado = $("#derivado").data('tComboBox');
             derivado.enable();
             var programadoEn = $("#programadoEn").data('tComboBox');
-            programadoEn.disable();
+
+            //agrega el campo de centro de salud dependiendo si está programado o no
+            //if ($("#programado-input").val() == 'SI') {
+            //    programadoEn.enable();
+            //} else {
+            //    programadoEn.disable();
+            //}
+            
             var programadoCuando = $("#programadoCuando");
             programadoCuando.attr("disabled", true);
             $("#atendidoLocal").bind("valueChange", function () {
@@ -990,8 +997,17 @@
     }
     function onSaveEspecialidades(e) {
         debugger;
-
         //agrega planilla
+
+
+        console.dir(e.values)
+        //agrega o no campo de centro de salud dependiendo si está programado
+        if ($("#programado-input").val() == 'NO') {
+            e.values.programadoEn = '';
+        }
+
+        //agrega fecha
+        e.values.programadoCuando = $("#programadoCuando").val();
 
         if (typeof (tinyMCE.activeEditor) == "object" && tinyMCE.activeEditor != null) {
 
@@ -1169,29 +1185,6 @@
                 verificacionEditar = true;
             }
 
-
-            //if ($("#programadoCuando").val() != '') {
-
-            //    var fechaPlanillaParseada = parseDate(fechaPlanilla);
-
-            //    var fechaPlanillaAgregar = $("#programadoCuando").val();
-
-            //    fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
-
-            //}
-
-
-            //if (($("#derivado-input").val() == 'NO')) {
-            //    verificacionEditar = true
-            //} else {
-
-            //    if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
-
-            //        if (fechaPlanillaParseada < fechaPlanillaAgregar) {
-            //            verificacionEditar = true;
-            //        }
-            //    }
-            //}
 
 
             if (verificacionEditar) {
