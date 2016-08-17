@@ -313,12 +313,12 @@
 
         //$(".editor-label").append("<p></p>");
 
-        $("#atendidoLocal-input").prop('disabled', true);
-        $("#derivado-input").prop('disabled', true);
+        //$("#atendidoLocal-input").prop('disabled', true);
+        //$("#derivado-input").prop('disabled', true);
 
 
-        $("#interconsulta-input").prop('disabled', true);
-        $("#derivado-input").prop('disabled', true);
+        //$("#interconsulta-input").prop('disabled', true);
+        //$("#derivado-input").prop('disabled', true);
 
         //verificación de interconsulta y derivado (no pueden estar ambos en si)
         $('#derivado-input').focus(function () {
@@ -1185,29 +1185,6 @@
                 verificacionEditar = true;
             }
 
-
-            //if ($("#programadoCuando").val() != '') {
-
-            //    var fechaPlanillaParseada = parseDate(fechaPlanilla);
-
-            //    var fechaPlanillaAgregar = $("#programadoCuando").val();
-
-            //    fechaPlanillaAgregar = parseDate(fechaPlanillaAgregar);
-
-            //}
-
-
-            //if (($("#derivado-input").val() == 'NO')) {
-            //    verificacionEditar = true
-            //} else {
-
-            //    if ((fechaPlanillaAgregar != 'Invalid Date') && (typeof (fechaPlanillaAgregar) != 'undefined')) {
-
-            //        if (fechaPlanillaParseada < fechaPlanillaAgregar) {
-            //            verificacionEditar = true;
-            //        }
-            //    }
-            //}
 
 
             if (verificacionEditar) {
