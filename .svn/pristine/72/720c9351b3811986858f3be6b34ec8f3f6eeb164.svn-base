@@ -1,0 +1,350 @@
+﻿@{
+    ViewBag.Title = "ExportarReportes";
+}
+
+<link rel="stylesheet" href="@Url.Content("~/Content/960_12_col.css")">
+
+
+
+<style type="text/css">
+    .rptBtn {
+        height: 30px;
+        width: 30px;
+    }
+
+    .rptImg {
+        margin-left: -5px;
+        height: 25px;
+        width: 25px;
+    }
+
+    .container_12 {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .row {
+        margin-top: 20px;
+    }
+
+
+    .box {
+        border: solid 1px;
+        height: 90px;
+        text-align: center;
+        border-radius: 15px;
+    }
+
+
+        .box::after {
+            content: "";
+            width: 0px;
+            height: 0px;
+            border: 0.8em solid transparent;
+            position: relative;
+            left: 0%;
+            bottom: -24px;
+            border-top: 10px solid rgb(111, 111, 111);
+        }
+
+    #centerH3 {
+        margin-top: 21%;
+    }
+
+    .radioCenter {
+        margin-top: 12px;
+        margin-left: 65px;
+    }
+
+
+    .disabledControl {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+    /*.box.top::after {
+    left: 45%;
+    bottom: -20px;
+    border-top: 10px solid #444;
+}*/
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#fechaHasta').load(function () {
+            debugger;
+            var datepicker_desde = $('#fechaDesde').data('tDatePicker');
+            var datepicker_hasta = $('#fechaHasta').data('tDatePicker');
+
+            datepicker_hasta.minValue = datepicker_desde.selectedValue;
+        });
+
+        $('#rdbRango').click(function () {
+            $('#fechas').removeClass("disabledControl");
+            $(" input[type=radio].tipoFiltro").attr("disabled", false);
+        });
+
+        $('#rdbTodo').click(function () {
+            $('#fechas').addClass("disabledControl");
+            $(" input[type=radio].tipoFiltro").attr("disabled", true);
+        });
+
+
+
+
+
+
+    });
+
+
+    function fechaDesde_onChange() {
+        var datepicker_desde = $('#fechaDesde').data('tDatePicker');
+        var datepicker_hasta = $('#fechaHasta').data('tDatePicker');
+        debugger;
+
+        datepicker_hasta.minValue = datepicker_desde.selectedValue;
+
+        if (datepicker_hasta.selectedValue < datepicker_desde.selectedValue) {
+            datepicker_hasta.value(datepicker_desde.selectedValue);
+        }
+    }
+
+
+    function getReporte(rptNomb) {
+        var _url;
+        var _urlGet;
+
+        if (rptNomb != "") {
+
+            //Set URLs
+            switch (rptNomb) {
+                case "rptDatosPersonal": {
+                    _urlCrea = '@Url.Action("exportDatosPersonalToExcel", "rptAPS_REDES")';
+                    _urlGet = '@Url.Action("GetDatosPersonalToExcel", "rptAPS_REDES")';
+                } break;
+
+                case "rptRangoEtario": {
+                    _urlCrea = '@Url.Action("exportRangoEtarioToExcel", "rptAPS_REDES")';
+                    _urlGet = '@Url.Action("GetRangoEtarioToExcel", "rptAPS_REDES")';
+                } break;
+
+                case "rptRedes": {
+                    _urlCrea = '@Url.Action("exportRedesToExcel", "rptAPS_REDES")';
+                    _urlGet = '@Url.Action("GetRedesToExcel", "rptAPS_REDES")';
+                } break;
+
+                case "rptTotalesEncuesta": {
+                    _urlCrea = '@Url.Action("exportTotalesEncuestaToExcel", "rptAPS_REDES")';
+                    _urlGet = '@Url.Action("GetTotalesEncuestaToExcel", "rptAPS_REDES")';
+                } break;
+
+
+                default: {
+                    jAlert("Ha ocurrido un error!", "Atencion");
+                    return;
+                } break;
+
+            }
+
+
+            var data = {
+                fDesde: $(" input[type=radio].rangoFecha:checked").val() == "todo" ? null : $("#fechaDesde").data('tDatePicker').inputValue,
+                fHasta: $(" input[type=radio].rangoFecha:checked").val() == "todo" ? null : $("#fechaHasta").data('tDatePicker').inputValue,
+                tipoFiltro: $(" input[type=radio].rangoFecha:checked").val() == "todo" ? null : $(" input[type=radio].tipoFiltro:checked").val()
+            }
+
+
+
+            //console.log(data);
+            debugger;
+            //Llamada ajax para exportar y descargar archivos excel
+            AbrirWaiting();
+            $.ajax({
+                type: 'POST',
+                url: _urlCrea,
+                cahe: false,
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    console.log(data);
+                    if (data.Ok) {
+
+                        debugger;
+                        CerrarWaiting();
+                        location.href = _urlGet;
+                    }
+                    else {
+                        jAlert('Ha ocurrido un error!', "Atencion");
+                        CerrarWaiting();
+                    }
+
+                },
+                error: function (data) {
+                    console.log(data);
+                    debugger;
+                    jAlert('Ha ocurrido un error!', "Atencion");
+                    CerrarWaiting();
+                }
+            });
+
+
+
+        }
+
+
+
+        //debugger;
+
+    }
+
+</script>
+@*<h2>ExportarReportes</h2>
+
+<p>Seleccione el reporte que desea exportar a Excel</p>*@
+<div class="container_12 ">
+
+
+    <div class="container_12 grid_5 prefix_1">
+        <fieldset class=" " style="margin-top: -45px; border-radius: 20px; border-color: #777777;">
+            <legend>Opciones de Filtrado:</legend>
+
+            <form action="/" method="post" class="formFiltros">
+
+
+                <div class="row">
+                    <div class="grid_2">
+                        <label>
+                            <input type="radio" class="tipoFiltro" name="opciones" id="rdbRetira" value="false" checked>
+                            Por fecha de Retiro
+                        </label>
+                    </div>
+
+                    <div class="grid_2">
+                        <label>
+                            <input type="radio" class="tipoFiltro" name="opciones" id="rdbCarga" value="true">
+                            Por fecha de Carga
+                        </label>
+                    </div>
+                </div>
+
+                <!-- New Row -->
+                <div class="clear"></div>
+
+
+                <div class="row">
+                    <!-- Fechas -->
+
+                    <div id="fechas" class="grid_2">
+                        <div class="box boxFlecha">
+                            <div style="margin-bottom: 5px;">
+                                <label>Fecha Desde:</label>
+                                @{
+                                    DateTime primerDiaMesActual = Convert.ToDateTime("01/" + DateTime.Today.Month + "/" + DateTime.Today.Year);
+                                    @Html.Telerik().DatePicker().Name("fechaDesde").Value(primerDiaMesActual).ClientEvents(events => events.OnChange("fechaDesde_onChange"));//.Min(DateTime.Today.Date).ClientEvents(events => events.OnChange("fDesde_onChange"));
+                                }
+                            </div>
+
+                            <div>
+                                <label>Fecha Hasta:</label>
+                                @{
+                                        //DateTime primerDiaMesActual = Convert.ToDateTime("01/" + DateTime.Today.Month + "/" + DateTime.Today.Year);
+                                    
+                                    @Html.Telerik().DatePicker().Name("fechaHasta").Value(DateTime.Today);//.Min(DateTime.Today.Date).ClientEvents(events => events.OnChange("fDesde_onChange"));
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="allTime" class="grid_2 ">
+                        <div class=" box boxFlecha">
+                            <h3 id="centerH3">Todos los tiempos</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+
+            <!-- New Row -->
+            <div class="clear"></div>
+
+
+
+            <div class="row">
+                <div class="grid_2">
+                    <label>
+                        <input class="radioCenter rangoFecha" type="radio" name="opciones" id="rdbRango" value="rango" checked>
+                    </label>
+                </div>
+                <div class="grid_2">
+                    <label>
+                        <input class="radioCenter rangoFecha" type="radio" name="opciones" id="rdbTodo" value="todo">
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="container_12 grid_5">
+
+        <div id="rptDatosPersonal">
+            <div class="grid_3 ">
+                <h2>Reporte "Datos de Personal"</h2>
+            </div>
+            <div class="grid_1">
+                <button class="rptBtn" type="submit" onclick="getReporte('rptDatosPersonal');">
+                    <img class="rptImg" src="@Url.Content("~/Content/General/Excel2013.png")" alt="Exportar Datos de Personal"/>
+                </button>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div id="rptRangoEtario">
+            <div class="grid_3">
+                <h2>Reporte "Rango Etario"</h2>
+            </div>
+            <div class="grid_1">
+                <button class="rptBtn" type="submit" onclick="getReporte('rptRangoEtario');">
+                    <img class="rptImg" src="@Url.Content("~/Content/General/Excel2013.png")" alt="Exportar Rango Etario"/>
+                </button>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div id="rptRedes">
+            <div class="grid_3 ">
+                <h2>Reporte "Redes"</h2>
+            </div>
+            <div class="grid_1">
+                <button class="rptBtn" type="submit" onclick="getReporte('rptRedes');">
+                    <img class="rptImg" src="@Url.Content("~/Content/General/Excel2013.png")" alt="Exportar Redes"/>
+                </button>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        <div id="rptTotalesEncuesta">
+            <div class="grid_3 ">
+                <h2>Reporte "Totales Encuesta"</h2>
+            </div>
+            <div class="grid_1">
+                <button class="rptBtn" type="submit" onclick="getReporte('rptTotalesEncuesta');">
+                    <img class="rptImg" src="@Url.Content("~/Content/General/Excel2013.png")" alt="Exportar Totales Encuesta"/>
+                </button>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+

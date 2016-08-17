@@ -644,7 +644,7 @@
             var selectedID = e.row.getElementsByTagName('td')[1].innerHTML;
             var fechaSelected = e.row.getElementsByTagName('td')[2].innerHTML;
             var csNombre = $("#uscs").html();
-            var Encuestador = e.row.getElementsByTagName('td')[3].innerHTML;
+            var Encuestador = e.row.getElementsByTagName('td')[4].innerHTML;
 
             if ($("#RowID").length == 0) {
                 $(this).append("<input type=\"hidden\" value=\"" + selectedID + "\" name=\"RowID\" id=\"RowID\">  ");
@@ -1133,7 +1133,7 @@
                     type: 'POST',
                     url: '<%=Url.Action("verificarEspecialidad","catEncuestaSinAdmisionPlanilla")%>',
                     //dataType: 'json',
-                    data: { especialidad: _especialidad, paciente: _pacId },
+                    data: { especialidad: _especialidad, paciente: _pacId, planilla: _plaId },
                     cache: false,
                     sync: false,
                     success: function (data) {
@@ -1306,17 +1306,19 @@
                 .Ajax(true)
                     .ButtonType(GridButtonType.Image)
                     .Text("Esp.")
-                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -208px;", title = "Agregar persona" });
+                    .ImageHtmlAttributes(new { style =  "background: url('" + Url.Content("~/Content") + "/" + Session["Version"] + "/" + Session["Estilo"] + "/sprite.png') no-repeat -64px -208px;", title = "Agregar persona" });
                 commands.Custom("PlanillaProcesar")
+
                     .Ajax(true)
                     .ButtonType(GridButtonType.Image)
 
-                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/General" + "/planilla.png'); background-size: 16px; ", title = "Procesar planilla" });
-
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/General" + "/planilla.png'); background-size: 16px;", title = "Procesar planilla" })
+                    .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("catEncuestaSinAdmisionPlanilla", "Procesar Planilla") });
                 commands.Custom("generarReporte")
                     .Ajax(true)
                     .ButtonType(GridButtonType.Image)
-                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/General" + "/report.png'); background-size: 16px; ", title = "Generar reporte" });
+                    .ImageHtmlAttributes(new { style = "background: url('" + Url.Content("~/Content") + "/General" + "/report.png'); background-size: 16px; ", title = "Generar reporte" })
+                    .HtmlAttributes(new { style = "display: " + (Session["Permisos"] as GeDoc.Acciones).Visibilidad("catEncuestaSinAdmisionPlanilla", "Reporte Protur") });
                     
                
             }).Width("12%").Title("Acciones");

@@ -157,9 +157,23 @@ namespace GeDoc.Controllers
                 RedirectToAction("LogOff", "Account");
                 return null;
             }
-           
-            var _NombreUsuario = (Session["Usuario"] as sisUsuario).usrNombreDeUsuario.ToString();
 
+            var _csId = (Session["UsuarioCentroDeSalud"] as GeDoc.sisUsuariosCentroDeSalud).csId;
+            var _NombreUsuario = (Session["Usuario"] as sisUsuario).usrNombreDeUsuario.ToString();
+            var _CentroDeSalud = (Session["Usuario"] as sisUsuario).usrNombreDeUsuario.ToString();
+
+
+            var centrodesalud = (from d in context.catCentroDeSalud
+                                 where d.csId == _csId
+                                 select d.csNombre).ToList();
+
+            var csActual=(from d in context.catCentroDeSalud.ToList() join a
+                           in context.catDepartamento on d.depId equals a.depId
+                          where d.csId == _csId
+                          select "Domicilio : " + d.csDomicilio + " - Tel: " + d.csTelefono + " - Departamento: " + a.depNombre
+                          ).ToList();
+
+            
             var query = (from d in context.rptProturReportePlanilla(plaId).ToList()
                          select new rptProturReportePlanilla()
                          {
@@ -178,7 +192,8 @@ namespace GeDoc.Controllers
                              ATENDIDO_LOCAL = d.ATENDIDO_LOCAL,
                              PROGRAMADO = d.PROGRAMADO,
                              INTERCONSULTA = d.INTERCONSULTA,
-                             RESUELTO = d.RESUELTO,
+                             //RESUELTO = d.RESUELTO,
+                             RESUELTO = d.PROGRAMADO == "SI" || d.ATENDIDO_LOCAL  == "SI"   ? "SI" : "NO",
                              ESPECIALIDAD = d.ESPECIALIDAD,
                              LOCALIDAD = d.LOCALIDAD,
                              EDAD = d.EDAD
@@ -189,7 +204,10 @@ namespace GeDoc.Controllers
             var ret = Json(new {
                 total = (totalRecords + rows - 1) / rows,
                 page,
+                csSalud = centrodesalud,
+                csActual,
                 _NombreUsuario,
+                _fechaprint = DateTime.Now.ToString("dd-MM-yyy hh:mm:ss"),
                 records = totalRecords,
                 rows = (from item in query
                         select new {
@@ -1188,7 +1206,7 @@ namespace GeDoc.Controllers
 
         //para verificar especialidades repetidas al agregar o editar
         [AcceptVerbs(HttpVerbs.Post)]
-        public int verificarEspecialidad(int? paciente, int? especialidad)
+        public int verificarEspecialidad(int? paciente, int? especialidad, int? planilla)
         {
 
             var result = (
@@ -1197,7 +1215,8 @@ namespace GeDoc.Controllers
                             on a.encId equals b.encId into c
                             from d in c
                             where d.espId == especialidad &&
-                                  a.pacId == paciente
+                                  a.pacId == paciente &&
+                                  a.plaId == planilla //agregado para corregir error
                             select (d)
                          ).Count();
             if (result > 0)
