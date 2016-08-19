@@ -1950,7 +1950,6 @@
     <EntitySet Name="catHCAduMedioAmbiente" EntityType="efAccesoADatosModel.catHCAduMedioAmbiente" />
     <EntitySet Name="catHCAduPraPatologicas" EntityType="efAccesoADatosModel.catHCAduPraPatologicas" />
     <EntitySet Name="catHCAduPraPatologicasResul" EntityType="efAccesoADatosModel.catHCAduPraPatologicasResul" />
-    <EntitySet Name="catHCAduPraPreventiva" EntityType="efAccesoADatosModel.catHCAduPraPreventiva" />
     <EntitySet Name="catHCAduPraPreventivaResul" EntityType="efAccesoADatosModel.catHCAduPraPreventivaResul" />
     <EntitySet Name="catHCAduProCronicos" EntityType="efAccesoADatosModel.catHCAduProCronicos" />
     <EntitySet Name="catHCAduProTransitorios" EntityType="efAccesoADatosModel.catHCAduProTransitorios" />
@@ -2071,10 +2070,6 @@
     <AssociationSet Name="FK_catHCAduPraPatologicasResul_sisUsuario" Association="efAccesoADatosModel.FK_catHCAduPraPatologicasResul_sisUsuario">
       <End Role="sisUsuario" EntitySet="sisUsuario" />
       <End Role="catHCAduPraPatologicasResul" EntitySet="catHCAduPraPatologicasResul" />
-    </AssociationSet>
-    <AssociationSet Name="FK_catHCAduPraPrevResul_catHCAduPraPreventiva" Association="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva">
-      <End Role="catHCAduPraPreventiva" EntitySet="catHCAduPraPreventiva" />
-      <End Role="catHCAduPraPreventivaResul" EntitySet="catHCAduPraPreventivaResul" />
     </AssociationSet>
     <AssociationSet Name="FK_catHCAduPraPrevResul_sisUsuario" Association="efAccesoADatosModel.FK_catHCAduPraPrevResul_sisUsuario">
       <End Role="sisUsuario" EntitySet="sisUsuario" />
@@ -2376,6 +2371,20 @@
     <AssociationSet Name="FK_catTurnoLogAsignacion_sisUsuario" Association="efAccesoADatosModel.FK_catTurnoLogAsignacion_sisUsuario">
       <End Role="sisUsuario" EntitySet="sisUsuario" />
       <End Role="catTurnoLogAsignacion" EntitySet="catTurnoLogAsignacion" />
+    </AssociationSet>
+    <EntitySet Name="catHCAduPraPreventiva" EntityType="efAccesoADatosModel.catHCAduPraPreventiva" />
+    <AssociationSet Name="FK_catHCAduPraPrevResul_catHCAduPraPreventiva" Association="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva">
+      <End Role="catHCAduPraPreventiva" EntitySet="catHCAduPraPreventiva" />
+      <End Role="catHCAduPraPreventivaResul" EntitySet="catHCAduPraPreventivaResul" />
+    </AssociationSet>
+    <EntitySet Name="enlEspecialidadesPorCS" EntityType="efAccesoADatosModel.enlEspecialidadesPorCS" />
+    <AssociationSet Name="FK_enlEspecialidadesPorCS_catCentroDeSalud" Association="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catCentroDeSalud">
+      <End Role="catCentroDeSalud" EntitySet="catCentroDeSalud" />
+      <End Role="enlEspecialidadesPorCS" EntitySet="enlEspecialidadesPorCS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_enlEspecialidadesPorCS_catEspecialidad" Association="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catEspecialidad">
+      <End Role="catEspecialidad" EntitySet="catEspecialidad" />
+      <End Role="enlEspecialidadesPorCS" EntitySet="enlEspecialidadesPorCS" />
     </AssociationSet>
   </EntityContainer>
   <ComplexType Name="spPases_Result">
@@ -3438,6 +3447,7 @@
     <NavigationProperty Name="catUmbralTiemposTurno" Relationship="efAccesoADatosModel.FK_catUmbralTiemposTurno_catCentroDeSalud" FromRole="catCentroDeSalud" ToRole="catUmbralTiemposTurno" />
     <NavigationProperty Name="catEncuestaSinadmisionPersonaEspecialidad" Relationship="efAccesoADatosModel.FK_catEncuestaSinadmisionPersonaEspecialidad_catCentroDeSalud" FromRole="catCentroDeSalud" ToRole="catEncuestaSinadmisionPersonaEspecialidad" />
     <NavigationProperty Name="catUmbralTiemposTurnoEspecialidad" Relationship="efAccesoADatosModel.FK_catUmbralTiemposTurnoEspecialidad_catCentroDeSalud" FromRole="catCentroDeSalud" ToRole="catUmbralTiemposTurnoEspecialidad" />
+    <NavigationProperty Name="enlEspecialidadesPorCS" Relationship="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catCentroDeSalud" FromRole="catCentroDeSalud" ToRole="enlEspecialidadesPorCS" />
   </EntityType>
   <EntityType Name="catCentrodeSaludAux">
     <Key>
@@ -3825,6 +3835,7 @@
     <NavigationProperty Name="catAgenda" Relationship="efAccesoADatosModel.FK_catAgenda_catEspecialidad" FromRole="catEspecialidad" ToRole="catAgenda" />
     <NavigationProperty Name="catEncuestaSinadmisionPersonaEspecialidad" Relationship="efAccesoADatosModel.FK_catEncuestaSinadmisionPersonaEspecialidad_catEncuestaSinadmisionPersonaEspecialidad" FromRole="catEspecialidad" ToRole="catEncuestaSinadmisionPersonaEspecialidad" />
     <NavigationProperty Name="catUmbralTiemposTurnoEspecialidad" Relationship="efAccesoADatosModel.FK_catUmbralTiemposTurnoEspecialidad_catEspecialidad" FromRole="catEspecialidad" ToRole="catUmbralTiemposTurnoEspecialidad" />
+    <NavigationProperty Name="enlEspecialidadesPorCS" Relationship="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catEspecialidad" FromRole="catEspecialidad" ToRole="enlEspecialidadesPorCS" />
   </EntityType>
   <EntityType Name="catEstadisticaGRH">
     <Key>
@@ -11770,16 +11781,6 @@
     <NavigationProperty Name="catHCAduPraPatologicas" Relationship="efAccesoADatosModel.FK_catHCAduPraPatologicasResul_catHCAduPraPatologicas" FromRole="catHCAduPraPatologicasResul" ToRole="catHCAduPraPatologicas" />
     <NavigationProperty Name="sisUsuario" Relationship="efAccesoADatosModel.FK_catHCAduPraPatologicasResul_sisUsuario" FromRole="catHCAduPraPatologicasResul" ToRole="sisUsuario" />
   </EntityType>
-  <EntityType Name="catHCAduPraPreventiva">
-    <Key>
-      <PropertyRef Name="aduPraPrevId" />
-    </Key>
-    <Property Type="Int64" Name="aduPraPrevId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Type="Int32" Name="aduPraPrevCodigo" Nullable="false" />
-    <Property Type="String" Name="aduPraPrevDescri" MaxLength="150" FixedLength="false" Unicode="false" />
-    <Property Type="String" Name="aduPraPrevTipoDeDato" MaxLength="255" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="catHCAduPraPreventivaResul" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva" FromRole="catHCAduPraPreventiva" ToRole="catHCAduPraPreventivaResul" />
-  </EntityType>
   <EntityType Name="catHCAduPraPreventivaResul">
     <Key>
       <PropertyRef Name="aduPraPrevResId" />
@@ -11791,8 +11792,8 @@
     <Property Type="DateTime" Name="aduPraPrevFecha" Precision="3" />
     <Property Type="String" Name="aduPraPrevResultado" MaxLength="250" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="catHCAdulto" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAdulto" FromRole="catHCAduPraPreventivaResul" ToRole="catHCAdulto" />
-    <NavigationProperty Name="catHCAduPraPreventiva" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva" FromRole="catHCAduPraPreventivaResul" ToRole="catHCAduPraPreventiva" />
     <NavigationProperty Name="sisUsuario" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_sisUsuario" FromRole="catHCAduPraPreventivaResul" ToRole="sisUsuario" />
+    <NavigationProperty Name="catHCAduPraPreventiva" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva" FromRole="catHCAduPraPreventivaResul" ToRole="catHCAduPraPreventiva" />
   </EntityType>
   <EntityType Name="catHCAduProCronicos">
     <Key>
@@ -12812,18 +12813,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_catHCAduPraPrevResul_catHCAduPraPreventiva">
-    <End Type="efAccesoADatosModel.catHCAduPraPreventiva" Role="catHCAduPraPreventiva" Multiplicity="1" />
-    <End Type="efAccesoADatosModel.catHCAduPraPreventivaResul" Role="catHCAduPraPreventivaResul" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="catHCAduPraPreventiva">
-        <PropertyRef Name="aduPraPrevId" />
-      </Principal>
-      <Dependent Role="catHCAduPraPreventivaResul">
-        <PropertyRef Name="aduPraPrevId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_catHCAduPraPrevResul_sisUsuario">
     <End Type="efAccesoADatosModel.sisUsuario" Role="sisUsuario" Multiplicity="1" />
     <End Type="efAccesoADatosModel.catHCAduPraPreventivaResul" Role="catHCAduPraPreventivaResul" Multiplicity="*" />
@@ -13836,6 +13825,69 @@
       </Principal>
       <Dependent Role="catTurnoLogAsignacion">
         <PropertyRef Name="usrId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="catHCAduPraPreventiva">
+    <Key>
+      <PropertyRef Name="aduPraPrevId" />
+    </Key>
+    <Property Type="Int64" Name="aduPraPrevId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="aduPraPrevCodigo" Nullable="false" />
+    <Property Type="String" Name="aduPraPrevDescri" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevTipoDeDato" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevGrupo" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevReferenciaMinHombre" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevReferenciaMaxHombre" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevReferenciaMinMujer" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevReferenciaMaxMujer" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="aduPraPrevValoresLista" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="catHCAduPraPreventivaResul" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva" FromRole="catHCAduPraPreventiva" ToRole="catHCAduPraPreventivaResul" />
+  </EntityType>
+  <Association Name="FK_catHCAduPraPrevResul_catHCAduPraPreventiva">
+    <End Type="efAccesoADatosModel.catHCAduPraPreventiva" Role="catHCAduPraPreventiva" Multiplicity="1" />
+    <End Type="efAccesoADatosModel.catHCAduPraPreventivaResul" Role="catHCAduPraPreventivaResul" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catHCAduPraPreventiva">
+        <PropertyRef Name="aduPraPrevId" />
+      </Principal>
+      <Dependent Role="catHCAduPraPreventivaResul">
+        <PropertyRef Name="aduPraPrevId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="enlEspecialidadesPorCS">
+    <Key>
+      <PropertyRef Name="csId" />
+      <PropertyRef Name="espId" />
+    </Key>
+    <Property Type="Int32" Name="csId" Nullable="false" />
+    <Property Type="Int16" Name="espId" Nullable="false" />
+    <Property Type="Boolean" Name="requiereEnfermeria" Nullable="false" />
+    <NavigationProperty Name="catCentroDeSalud" Relationship="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catCentroDeSalud" FromRole="enlEspecialidadesPorCS" ToRole="catCentroDeSalud" />
+    <NavigationProperty Name="catEspecialidad" Relationship="efAccesoADatosModel.FK_enlEspecialidadesPorCS_catEspecialidad" FromRole="enlEspecialidadesPorCS" ToRole="catEspecialidad" />
+  </EntityType>
+  <Association Name="FK_enlEspecialidadesPorCS_catCentroDeSalud">
+    <End Type="efAccesoADatosModel.catCentroDeSalud" Role="catCentroDeSalud" Multiplicity="1" />
+    <End Type="efAccesoADatosModel.enlEspecialidadesPorCS" Role="enlEspecialidadesPorCS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catCentroDeSalud">
+        <PropertyRef Name="csId" />
+      </Principal>
+      <Dependent Role="enlEspecialidadesPorCS">
+        <PropertyRef Name="csId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_enlEspecialidadesPorCS_catEspecialidad">
+    <End Type="efAccesoADatosModel.catEspecialidad" Role="catEspecialidad" Multiplicity="1" />
+    <End Type="efAccesoADatosModel.enlEspecialidadesPorCS" Role="enlEspecialidadesPorCS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catEspecialidad">
+        <PropertyRef Name="espId" />
+      </Principal>
+      <Dependent Role="enlEspecialidadesPorCS">
+        <PropertyRef Name="espId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

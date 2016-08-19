@@ -4510,16 +4510,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="catHCAduPraPreventiva">
-      <EntityTypeMapping TypeName="efAccesoADatosModel.catHCAduPraPreventiva">
-        <MappingFragment StoreEntitySet="catHCAduPraPreventiva">
-          <ScalarProperty Name="aduPraPrevTipoDeDato" ColumnName="aduPraPrevTipoDeDato" />
-          <ScalarProperty Name="aduPraPrevDescri" ColumnName="aduPraPrevDescri" />
-          <ScalarProperty Name="aduPraPrevCodigo" ColumnName="aduPraPrevCodigo" />
-          <ScalarProperty Name="aduPraPrevId" ColumnName="aduPraPrevId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="catHCAduPraPreventivaResul">
       <EntityTypeMapping TypeName="efAccesoADatosModel.catHCAduPraPreventivaResul">
         <MappingFragment StoreEntitySet="catHCAduPraPreventivaResul">
@@ -5603,6 +5593,31 @@
           <ScalarProperty Name="fechaCarga" ColumnName="fechaCarga" />
           <ScalarProperty Name="turId" ColumnName="turId" />
           <ScalarProperty Name="tlaId" ColumnName="tlaId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="catHCAduPraPreventiva">
+      <EntityTypeMapping TypeName="efAccesoADatosModel.catHCAduPraPreventiva">
+        <MappingFragment StoreEntitySet="catHCAduPraPreventiva">
+          <ScalarProperty Name="aduPraPrevValoresLista" ColumnName="aduPraPrevValoresLista" />
+          <ScalarProperty Name="aduPraPrevReferenciaMaxMujer" ColumnName="aduPraPrevReferenciaMaxMujer" />
+          <ScalarProperty Name="aduPraPrevReferenciaMinMujer" ColumnName="aduPraPrevReferenciaMinMujer" />
+          <ScalarProperty Name="aduPraPrevReferenciaMaxHombre" ColumnName="aduPraPrevReferenciaMaxHombre" />
+          <ScalarProperty Name="aduPraPrevReferenciaMinHombre" ColumnName="aduPraPrevReferenciaMinHombre" />
+          <ScalarProperty Name="aduPraPrevGrupo" ColumnName="aduPraPrevGrupo" />
+          <ScalarProperty Name="aduPraPrevTipoDeDato" ColumnName="aduPraPrevTipoDeDato" />
+          <ScalarProperty Name="aduPraPrevDescri" ColumnName="aduPraPrevDescri" />
+          <ScalarProperty Name="aduPraPrevCodigo" ColumnName="aduPraPrevCodigo" />
+          <ScalarProperty Name="aduPraPrevId" ColumnName="aduPraPrevId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="enlEspecialidadesPorCS">
+      <EntityTypeMapping TypeName="efAccesoADatosModel.enlEspecialidadesPorCS">
+        <MappingFragment StoreEntitySet="enlEspecialidadesPorCS">
+          <ScalarProperty Name="requiereEnfermeria" ColumnName="requiereEnfermeria" />
+          <ScalarProperty Name="espId" ColumnName="espId" />
+          <ScalarProperty Name="csId" ColumnName="csId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
