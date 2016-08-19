@@ -1,5 +1,6 @@
 function generateChart(chartData, labels, type, selector) {
     //inicializo data object
+    console.log('se intenta generar gráfico');
     var data = {
         labels: [],
         datasets: []
@@ -20,7 +21,6 @@ function generateChart(chartData, labels, type, selector) {
     var colorChart = [
         'rgba(255,127,80,1)',
         'rgba(255,140,0,1)',
-        'rgba(128,128,0,1',
         'rgba(46,139,87,1)',
         'rgba(32,178,170,1)',
         'rgba(100,149,237,1)',
@@ -33,6 +33,8 @@ function generateChart(chartData, labels, type, selector) {
 
     //agrego labels
     data.labels = labels;
+
+
 
     //agrego propiedades
     for (k in chartData) {
@@ -54,6 +56,7 @@ function generateChart(chartData, labels, type, selector) {
             responsive: false
         }
     });
+
 }
 
 /*

@@ -413,6 +413,11 @@ namespace GeDoc.Controllers
 
                 //Registra log de usuario
                 new AccountController().RegistrarLog((Session["Usuario"] as sisUsuario), "Index", "catTurno", "Eliminar Turno", CodigoEstado == "DI" ? "Elimina un Turno " + turId : "Bloquea un Turno " + turId);
+
+                if (CodigoEstado == "DI")
+                {
+                    RegistrarLogTurnos((Session["Usuario"] as sisUsuario), turId, 2);
+                }
                 context.SaveChanges();
             }
 
@@ -577,6 +582,9 @@ namespace GeDoc.Controllers
                 }
                 //Registra log de usuario
                 new AccountController().RegistrarLog((Session["Usuario"] as sisUsuario), "Index", "catTurno", "Asignar Paciente","Asigna un Paciente al Turno "+turId);
+
+                //Registra log de cambios en turnos
+                RegistrarLogTurnos((Session["Usuario"] as sisUsuario), turId, 1);
                 context.SaveChanges();
             }
 
@@ -586,6 +594,17 @@ namespace GeDoc.Controllers
             }
 
             return Json(new { IsValid = true, Mensaje = "OK" });
+        }
+
+        private void RegistrarLogTurnos(sisUsuario _usrId, int _turId, byte _tipoLog)
+        {
+            catTurnoLogAsignacion newItem = new catTurnoLogAsignacion();
+            newItem.turId = _turId;
+            newItem.fechaCarga = DateTime.Now;
+            newItem.usrId = _usrId.usrId;
+            newItem.logTipo = _tipoLog;//1-Asignacion;2-liberacion
+            context.catTurnoLogAsignacion.AddObject(newItem);
+            context.SaveChanges();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]

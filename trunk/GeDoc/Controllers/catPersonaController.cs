@@ -433,9 +433,12 @@ namespace GeDoc
                                  select new catPersonas()
                                             {
                                                 secId = d.secId,
+                                                
                                                 perAntiguedad = getAntiguedad(d.perAntiguedadAnios, d.perAntiguedadMeses, d.perAntiguedadDias),
+                                                
                                                 perAntiguedadPago = getAntiguedad(d.perAntiguedadAniosPago, d.perAntiguedadMesesPago, d.perAntiguedadDiasPago),
                                                 perAntiguedadVacaciones = getAntiguedad(d.perAntiguedadAniosVacaciones, d.perAntiguedadMesesVacaciones, d.perAntiguedadDiasVacaciones),
+                                               
                                                 perCUIL = d.perCUIL,
                                                 perDNI = d.perDNI,
                                                 perEdad = _MetodosUtiles.Edad(d.perFechaNacimiento),
@@ -449,13 +452,16 @@ namespace GeDoc
                                                 perEsContratado = d.perEsContratado,
                                                 perId = d.perId,
                                                 secNombre = d.catSector.secNombre,
-                                                perFechaNacimientoTexto = d.perFechaNacimiento == null ? "" : d.perFechaNacimiento.Value.ToString("dd/MM/yyyy"),
-                                                tipoIdSexoTexto = d.sisTipo == null ? "" : d.sisTipo.tipoDescripcion,
+                                               
+                                               perFechaNacimientoTexto = d.perFechaNacimiento == null ? "" : d.perFechaNacimiento.Value.ToString("dd/MM/yyyy"),
+                                               tipoIdSexoTexto = d.sisTipo == null ? "" : d.sisTipo.tipoDescripcion,
+
                                                 perFoto = d.perFoto,
                                                 paisId = d.paisId,
                                                 paisNombre = d.paisId == null ? "" : d.catPais.paisNombre,
                                                 perCelular = d.perCelular == null ? "" : d.perCelular,
                                                 perEstadoCivil = d.sisTipo1 == null ? "" : d.sisTipo1.tipoDescripcion,
+
                                                 perFechaCasamiento = d.perFechaCasamiento,
                                                 perFechaCasamientoTexto = d.perFechaCasamiento == null ? "" : d.perFechaCasamiento.Value.ToString("dd/MM/yyyy"),
                                                 perLeeoEscribe = (bool)(d.perLeeoEscribe == null ? false : d.perLeeoEscribe),
@@ -466,12 +472,21 @@ namespace GeDoc
                                                 tipoIdEstadoCivil = d.tipoIdEstadoCivil,
                                                 perAutorizaNotificarSMS = (bool)(d.perAutorizaNotificarSMS == null ? false : d.perAutorizaNotificarSMS),
                                                 perDomicilio = d.perDomicilio == null ? "" : d.perDomicilio,
-                                                perIdiomas = _Idiomas,
-                                                carDescripcion = (d.gdId != null && d.catGradosDesignacion1.gdFechaHasta != null) ? (d.catGradosDesignacion1.catGradosCategoria.catGrados.graDescripcion + " " + d.catGradosDesignacion1.catGradosCategoria.gracDescripcion + ", SERVICIO " + d.catGradosDesignacion1.gdServicio + ", " + d.catGradosDesignacion1.sisTipo.tipoDescripcion + ", " + d.catGradosDesignacion1.gdHoras + " HORAS (" + (d.catGradosDesignacion1.gdHorasAdicional > 0 ? d.catGradosDesignacion1.gdHorasAdicional + " HORAS ADICIONALES)" : "SIN HORAS ADICIONALES)")) : (d.catCargoDesignacion.Count == 0 ? "" : d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.catCargo.catAgrupamiento.agrCodigo + ") " + d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.catCargo.carDescripcion + " (Categoría " + d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.categNumero + "-" + d.catCargoDesignacion.First().catCargoCategoria.categHoras + ")"),
+
+                                                 perIdiomas = _Idiomas,
+                                                
+                                               carDescripcion = (d.gdId != null && d.catGradosDesignacion1.gdFechaHasta != null) ? (d.catGradosDesignacion1.catGradosCategoria.catGrados.graDescripcion + " " + d.catGradosDesignacion1.catGradosCategoria.gracDescripcion + ", SERVICIO " + d.catGradosDesignacion1.gdServicio + ", " + d.catGradosDesignacion1.sisTipo.tipoDescripcion + ", " + d.catGradosDesignacion1.gdHoras + " HORAS (" + (d.catGradosDesignacion1.gdHorasAdicional > 0 ? d.catGradosDesignacion1.gdHorasAdicional + " HORAS ADICIONALES)" : "SIN HORAS ADICIONALES)")) : (d.catCargoDesignacion.Count == 0 ? "" : d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.catCargo.catAgrupamiento.agrCodigo + ") " + d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.catCargo.carDescripcion + " (Categoría " + d.catCargoDesignacion.First(f => f.desigVigenciaHasta == null).catCargoCategoria.categNumero + "-" + d.catCargoDesignacion.First().catCargoCategoria.categHoras + ")"),
+                                                
+                                                
+                                                
                                                 ofiId = d.ofiId,
-                                                Oficina = d.ofiId == null? new catOficinas() { ofiCodigo = 0, ofiNombre = "" } : new catOficinas() { ofiCodigo = d.catOficina.ofiCodigo, ofiNombre = d.catOficina.ofiNombre },
+                                                 Oficina = d.ofiId == null ? new catOficinas() { ofiCodigo = 0, ofiNombre = "" } : new catOficinas() { ofiCodigo = d.catOficina.ofiCodigo, ofiNombre = d.catOficina.ofiNombre },
+                                                
                                                 perFuncion = d.perFuncion,
+                                                
+
                                                 gdId = d.gdId
+                                               
                                             }).FirstOrDefault();
 
             return Json(new { InfoPersona = _Item });

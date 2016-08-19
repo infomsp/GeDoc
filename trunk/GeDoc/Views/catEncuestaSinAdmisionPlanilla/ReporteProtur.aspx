@@ -103,7 +103,7 @@
         height:     100%;
         width:      100%;
         background: rgba( 0, 0, 0, .9 ) 
-                    url('http://i.stack.imgur.com/FhHRx.gif') 
+                    url('<%=Url.Content("~/Content/General/WaitingIndicator.gif")%>')
                     50% 50% 
                     no-repeat;
     }
@@ -147,15 +147,27 @@
             var _MinFecha = 0;
             var _MaxFecha = 0;
             var _cantCuando = 0;
+            var _Direccion = "";
+            var _FechaImpresion = "";
             
+            var _PercentPersonas = 0;
+            /*
+            Atendidos	14	56%
+            Programados	7	28%
+            Sin Resolver	5	20%
+            */
             if (window.opener.document.getElementById('RowID')==null) {
                 cerrarPopUp();
             }
             var RowID = window.opener.document.getElementById('RowID').value;
             var fechaSelected = window.opener.document.getElementById('fechaSelected').value;
-            var csNombre = window.opener.document.getElementById('csNombre').value;
+            //var csNombre = window.opener.document.getElementById('csNombre').value+ "-- federico compro un autito--- muy bomnito";
             var Encuestador = window.opener.document.getElementById('Encuestador').value;
 
+
+            //csNombre = ((csNombre) && (csNombre.indexOf('-') != -1)) ? csNombre = csNombre.replace(/[^\w\s\.\,]/gi, '').substring(0, csNombre.indexOf('-')).trim() : csNombre = csNombre.replace(/[^\w\s\.\,]/gi, '').trim();
+
+            //alert(csNombre);
             $(window).bind('resize', function () {
                 $("#rpt").setGridWidth($(window).width()-20);
             }).trigger('resize');
@@ -223,14 +235,18 @@
                     loadtext: "Cargando...",
                     caption: 'Reporte Protur',
                     'loadComplete': function (data) {
-                        if(data== null)
+
+                        if (data == null)
                         {
                             cerrarPopUp();
                         }
+                        _Direccion = data.csActual;
                         _TotalRecords = data.records;
                         _Datos = data.rows;
                         _RowID = RowID;
+                        csNombre = data.csSalud;
                         _NombreUsuario = data._NombreUsuario;
+                        _FechaImpresion = data._fechaprint;
                         parse_datos(_Datos, data.rows.length);
                     },
                     
@@ -279,15 +295,16 @@
                     if (datos[i].cell[15] != "") //Programados
                     {
                         _Programados++;
-                        if (datos[i].cell[16] == datos[i].cell[9]) //Centro de Salud
+                        if (datos[i].cell[16].trim() == csNombre) //Centro de Salud
                         {
                             _EstaInstitucion++;
                         }
                         else {
                             _OtraInstitucion++;
                         }
+                        
                     }
-                    if (datos[i].cell[18] == "" && datos[i].cell[11] == "") //Sin Resolver
+                    if (datos[i].cell[18] == "NO" ) //Sin Resolver
                     {
                         _SinResolver++;
                     }
@@ -322,7 +339,7 @@
                 $("#f_max").html(_MaxFecha);
 
                 /*Promedio entre fechas menoy y mayor*/
-                _Promedio = ((_MaxFecha + _MinFecha) / 2).toFixed(2);
+                _Promedio = ((_MaxFecha + _MinFecha) / 2).toFixed(0);
                 $("#f_prom").html(_Promedio);
                 /*Fin*/
                 
@@ -364,10 +381,13 @@
                 /*Fin*/
 
 
+                /*Total Personas*/
+                _PercentPersonas = _Atendidos + _Programados + _SinResolver;
+
                 /*Porcentaje atendidos*/
                 var p_Atendidos;
                 if (_Atendidos > 0){
-                    p_Atendidos = (_Atendidos / _TurnosSolicitados * 100).toFixed(0) + "%";
+                    p_Atendidos = (_Atendidos / _PercentPersonas * 100).toFixed(0) + "%";
                     $("#p_atendidos").html(p_Atendidos);
                 }
                 else {
@@ -380,7 +400,7 @@
                 var p_Programados;
                 if (_Programados > 0)
                 {
-                    p_Programados = (_Programados / _TurnosSolicitados * 100).toFixed(0) + "%";
+                    p_Programados = (_Programados / _PercentPersonas * 100).toFixed(0) + "%";
                     $("#p_programados").html(p_Programados);
                 }
                 else {
@@ -391,9 +411,9 @@
 
                 /*Porcentaje Sin resolver */
                 var p_SinResolver;
-                if (_SinResolver>0)
+                if (_SinResolver>0 )
                 {
-                    p_SinResolver = (_SinResolver / _TurnosSolicitados * 100).toFixed(0) + "%";
+                    p_SinResolver = (_SinResolver / _PercentPersonas * 100).toFixed(0) + "%";
                     $("#p_sresolver").html(p_SinResolver);
                 }
                 else
@@ -442,8 +462,8 @@
                 $("#1").html("Encuesta N° : " + _RowID);
                 $("#2").html("Fecha de encuesta: " + fechaSelected  );
                 $("#3").html("Encuestador : " + Encuestador);
-                $("#header").html(" " + csNombre );
-                $("#header_usr").html("Usuario: " + _NombreUsuario);
+                $("#header").html(" " + csNombre + " <br><small>" + _Direccion+ "</small>");
+                $("#header_usr").html("Usuario: " + _NombreUsuario + "  <br><small>" + _FechaImpresion + "</small>" );
 
                 FusionCharts.ready(function () {
 
@@ -661,8 +681,8 @@
 </head>
     <body class="loading">
         <div class="modal"><!-- Place at bottom of page --></div>
-        <div id="header" style=" height:60px; line-height:60px; font-size:16px; font-weight:700 ;  border: solid 1px #f2f2f2; width:79%; margin-top:20px; text-align:center;float:left "></div>
-        <div id="header_usr" style=" height:60px; line-height:60px; font-size:12px; font-weight:700 ;  border: solid 1px #f2f2f2; width:20%; margin-top:20px; text-align:center;float:left "></div>
+        <div id="header" style=" height:60px; line-height:30px; font-size:16px; font-weight:700 ;  border: solid 1px #f2f2f2; width:79%; margin-top:20px; text-align:center;float:left "></div>
+        <div id="header_usr" style=" height:60px; line-height:30px; font-size:12px; font-weight:700 ;  border: solid 1px #f2f2f2; width:20%; margin-top:20px; text-align:center;float:left "></div>
         
 
         <div id="1" style="font-size:14px;text-align:center; border: solid 1px #f2f2f2; width:33%; margin-top:20px; margin-bottom:20px; float:left">  </div>

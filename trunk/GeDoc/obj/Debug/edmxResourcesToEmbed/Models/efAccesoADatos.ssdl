@@ -371,6 +371,7 @@
     <EntitySet Name="CronosRelNovedadPersona" EntityType="efAccesoADatosModel.Store.CronosRelNovedadPersona" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="enlCentrodeSaludBarrio" EntityType="efAccesoADatosModel.Store.enlCentrodeSaludBarrio" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="enlEncuestaAPSPersonaEnfermedad" EntityType="efAccesoADatosModel.Store.enlEncuestaAPSPersonaEnfermedad" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="enlEspecialidadesPorCS" EntityType="efAccesoADatosModel.Store.enlEspecialidadesPorCS" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="enlEstadisticaPlanillaEspecialidad" EntityType="efAccesoADatosModel.Store.enlEstadisticaPlanillaEspecialidad" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="enlPacienteAlergia" EntityType="efAccesoADatosModel.Store.enlPacienteAlergia" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="enlPacienteAntecenteFamiliar" EntityType="efAccesoADatosModel.Store.enlPacienteAntecenteFamiliar" store:Type="Tables" Schema="dbo" />
@@ -2241,6 +2242,14 @@
       <End Role="catEncuestaAPSPersonas" EntitySet="catEncuestaAPSPersonas" />
       <End Role="enlEncuestaAPSPersonaEnfermedad" EntitySet="enlEncuestaAPSPersonaEnfermedad" />
     </AssociationSet>
+    <AssociationSet Name="FK_enlEspecialidadesPorCS_catCentroDeSalud" Association="efAccesoADatosModel.Store.FK_enlEspecialidadesPorCS_catCentroDeSalud">
+      <End Role="catCentroDeSalud" EntitySet="catCentroDeSalud" />
+      <End Role="enlEspecialidadesPorCS" EntitySet="enlEspecialidadesPorCS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_enlEspecialidadesPorCS_catEspecialidad" Association="efAccesoADatosModel.Store.FK_enlEspecialidadesPorCS_catEspecialidad">
+      <End Role="catEspecialidad" EntitySet="catEspecialidad" />
+      <End Role="enlEspecialidadesPorCS" EntitySet="enlEspecialidadesPorCS" />
+    </AssociationSet>
     <AssociationSet Name="FK_enlEstadisticaPlanillaEspecialidad_enlEstadisticaPlanillaEspecialidad" Association="efAccesoADatosModel.Store.FK_enlEstadisticaPlanillaEspecialidad_enlEstadisticaPlanillaEspecialidad">
       <End Role="catEspecialidad" EntitySet="catEspecialidad" />
       <End Role="enlEstadisticaPlanillaEspecialidad" EntitySet="enlEstadisticaPlanillaEspecialidad" />
@@ -3701,6 +3710,12 @@
     <Property Name="aduPraPrevCodigo" Type="int" Nullable="false" />
     <Property Name="aduPraPrevDescri" Type="varchar" MaxLength="150" />
     <Property Name="aduPraPrevTipoDeDato" Type="varchar" MaxLength="255" />
+    <Property Name="aduPraPrevGrupo" Type="varchar" MaxLength="20" />
+    <Property Name="aduPraPrevReferenciaMinHombre" Type="varchar" MaxLength="20" />
+    <Property Name="aduPraPrevReferenciaMaxHombre" Type="varchar" MaxLength="20" />
+    <Property Name="aduPraPrevReferenciaMinMujer" Type="varchar" MaxLength="20" />
+    <Property Name="aduPraPrevReferenciaMaxMujer" Type="varchar" MaxLength="20" />
+    <Property Name="aduPraPrevValoresLista" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="catHCAduPraPreventivaResul">
     <Key>
@@ -5607,6 +5622,15 @@
     <Property Name="encPerId" Type="int" />
     <Property Name="enfId" Type="int" />
     <Property Name="encEnfDescripcionComentario" Type="varchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="enlEspecialidadesPorCS">
+    <Key>
+      <PropertyRef Name="csId" />
+      <PropertyRef Name="espId" />
+    </Key>
+    <Property Name="csId" Type="int" Nullable="false" />
+    <Property Name="espId" Type="smallint" Nullable="false" />
+    <Property Name="requiereEnfermeria" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="enlEstadisticaPlanillaEspecialidad">
     <Key>
@@ -10665,6 +10689,30 @@
       </Principal>
       <Dependent Role="enlEncuestaAPSPersonaEnfermedad">
         <PropertyRef Name="encPerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_enlEspecialidadesPorCS_catCentroDeSalud">
+    <End Role="catCentroDeSalud" Type="efAccesoADatosModel.Store.catCentroDeSalud" Multiplicity="1" />
+    <End Role="enlEspecialidadesPorCS" Type="efAccesoADatosModel.Store.enlEspecialidadesPorCS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catCentroDeSalud">
+        <PropertyRef Name="csId" />
+      </Principal>
+      <Dependent Role="enlEspecialidadesPorCS">
+        <PropertyRef Name="csId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_enlEspecialidadesPorCS_catEspecialidad">
+    <End Role="catEspecialidad" Type="efAccesoADatosModel.Store.catEspecialidad" Multiplicity="1" />
+    <End Role="enlEspecialidadesPorCS" Type="efAccesoADatosModel.Store.enlEspecialidadesPorCS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="catEspecialidad">
+        <PropertyRef Name="espId" />
+      </Principal>
+      <Dependent Role="enlEspecialidadesPorCS">
+        <PropertyRef Name="espId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
