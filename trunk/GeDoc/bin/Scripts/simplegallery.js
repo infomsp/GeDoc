@@ -45,7 +45,8 @@ function simpleGallery(settingarg) {
     var slideshow = this
     jQuery(document).ready(function($) {
         var setting = slideshow.setting
-        setting.$wrapperdiv = $('#' + setting.wrapperid).css({ position: 'relative', visibility: 'visible', background: 'white', overflow: 'hidden', width: setting.dimensions[0], height: setting.dimensions[1] }).empty() //main gallery DIV
+        //setting.$wrapperdiv = $('#' + setting.wrapperid).css({ position: 'relative', visibility: 'visible', background: 'white', overflow: 'hidden', width: setting.dimensions[0], height: setting.dimensions[1] }).empty() //main gallery DIV
+        setting.$wrapperdiv = $('#' + setting.wrapperid).css({ position: 'relative', visibility: 'visible', background: 'white', overflow: 'hidden', width: '99.5%' , height: setting.dimensions[1] }).empty() //main gallery DIV
         if (setting.$wrapperdiv.length == 0) { //if no wrapper DIV found
             alert("Error: DIV with ID \"" + setting.wrapperid + "\" not found on page.")
             return

@@ -3716,6 +3716,7 @@
     <Property Name="aduPraPrevReferenciaMinMujer" Type="varchar" MaxLength="20" />
     <Property Name="aduPraPrevReferenciaMaxMujer" Type="varchar" MaxLength="20" />
     <Property Name="aduPraPrevValoresLista" Type="varchar" MaxLength="50" />
+    <Property Name="aduPraPrevUnidadMedida" Type="varchar" MaxLength="20" />
   </EntityType>
   <EntityType Name="catHCAduPraPreventivaResul">
     <Key>
