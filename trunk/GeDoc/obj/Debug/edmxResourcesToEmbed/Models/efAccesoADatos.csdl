@@ -2233,9 +2233,6 @@
       <End Role="catAvisoMensaje" EntitySet="catAvisoMensaje" />
       <End Role="catAviso" EntitySet="catAviso" />
     </AssociationSet>
-    <FunctionImport Name="spGetPlanillaResueltos" ReturnType="Collection(Int32)">
-      <Parameter Name="plaId" Mode="In" Type="Int32" />
-    </FunctionImport>
     <EntitySet Name="catEncuestaSinAdmisionPersona" EntityType="efAccesoADatosModel.catEncuestaSinAdmisionPersona" />
     <AssociationSet Name="FK_catEncuestaSinAdmisionPersona_catEncuestaSinAdmisionCausa" Association="efAccesoADatosModel.FK_catEncuestaSinAdmisionPersona_catEncuestaSinAdmisionCausa">
       <End Role="catEncuestaSinAdmisionCausa" EntitySet="catEncuestaSinAdmisionCausa" />
@@ -2386,6 +2383,9 @@
       <End Role="catEspecialidad" EntitySet="catEspecialidad" />
       <End Role="enlEspecialidadesPorCS" EntitySet="enlEspecialidadesPorCS" />
     </AssociationSet>
+    <FunctionImport Name="spGetPlanillaResueltos" ReturnType="Collection(efAccesoADatosModel.spGetPlanillaResueltos_Result)">
+      <Parameter Name="plaId" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="spPases_Result">
     <Property Type="String" Name="origenAlias" Nullable="true" MaxLength="50" />
@@ -13843,6 +13843,7 @@
     <Property Type="String" Name="aduPraPrevReferenciaMaxMujer" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Type="String" Name="aduPraPrevValoresLista" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="catHCAduPraPreventivaResul" Relationship="efAccesoADatosModel.FK_catHCAduPraPrevResul_catHCAduPraPreventiva" FromRole="catHCAduPraPreventiva" ToRole="catHCAduPraPreventivaResul" />
+    <Property Type="String" Name="aduPraPrevUnidadMedida" MaxLength="20" FixedLength="false" Unicode="false" />
   </EntityType>
   <Association Name="FK_catHCAduPraPrevResul_catHCAduPraPreventiva">
     <End Type="efAccesoADatosModel.catHCAduPraPreventiva" Role="catHCAduPraPreventiva" Multiplicity="1" />
@@ -13891,4 +13892,9 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="spGetPlanillaResueltos_Result">
+    <Property Type="Int64" Name="pacId" Nullable="true" />
+    <Property Type="String" Name="atendidoLocal" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="programado" Nullable="false" MaxLength="5" />
+  </ComplexType>
 </Schema>

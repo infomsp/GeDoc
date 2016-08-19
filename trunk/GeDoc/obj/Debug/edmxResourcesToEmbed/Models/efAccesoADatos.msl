@@ -5274,7 +5274,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="spGetPlanillaResueltos" FunctionName="efAccesoADatosModel.Store.spGetPlanillaResueltos" />
     <EntitySetMapping Name="catEncuestaSinAdmisionPersona">
       <EntityTypeMapping TypeName="efAccesoADatosModel.catEncuestaSinAdmisionPersona">
         <MappingFragment StoreEntitySet="catEncuestaSinAdmisionPersona">
@@ -5599,6 +5598,7 @@
     <EntitySetMapping Name="catHCAduPraPreventiva">
       <EntityTypeMapping TypeName="efAccesoADatosModel.catHCAduPraPreventiva">
         <MappingFragment StoreEntitySet="catHCAduPraPreventiva">
+          <ScalarProperty Name="aduPraPrevUnidadMedida" ColumnName="aduPraPrevUnidadMedida" />
           <ScalarProperty Name="aduPraPrevValoresLista" ColumnName="aduPraPrevValoresLista" />
           <ScalarProperty Name="aduPraPrevReferenciaMaxMujer" ColumnName="aduPraPrevReferenciaMaxMujer" />
           <ScalarProperty Name="aduPraPrevReferenciaMinMujer" ColumnName="aduPraPrevReferenciaMinMujer" />
@@ -5621,5 +5621,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="spGetPlanillaResueltos" FunctionName="efAccesoADatosModel.Store.spGetPlanillaResueltos">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="efAccesoADatosModel.spGetPlanillaResueltos_Result">
+          <ScalarProperty Name="pacId" ColumnName="pacId" />
+          <ScalarProperty Name="atendidoLocal" ColumnName="atendidoLocal" />
+          <ScalarProperty Name="programado" ColumnName="programado" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>
