@@ -438,7 +438,7 @@
 
 
     function onSavePaciente(e) {
-        debugger
+        //debugger
         var values = e.values;
         _pacId = values.pacId;
     }
@@ -996,11 +996,11 @@
         return 0;
     }
     function onSaveEspecialidades(e) {
-        debugger;
+        //debugger;
         //agrega planilla
 
 
-        console.dir(e.values)
+        //console.dir(e.values)
         //agrega o no campo de centro de salud dependiendo si está programado
         if ($("#programado-input").val() == 'NO') {
             e.values.programadoEn = '';
@@ -1083,7 +1083,7 @@
                 console.log("No se pudo acceder al controlador o a la base de datos");
             }
          });
-        debugger;
+        //debugger;
 
         //console.log(fechaPlanilla)
         //cuando agregan

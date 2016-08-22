@@ -119,32 +119,11 @@ namespace GeDoc.Controllers
             return _Datos.AsEnumerable();
         }
 
-
+        //busca las especialidades y si hay alguna sin resolver cuenta al paciente como no resuelto
         public int? getResuelto(int plaid) {
-            //var result = context.spGetPlanillaResueltos(plaid).ToList();
-            //int? resultint = result[0];
-            //return resultint;
 
             var results = context.spGetPlanillaResueltos(plaid).ToList();
 
-
-            //if (results[0].pacId == null)
-            //{
-            //    return 0;
-            //}
-            //else
-            //{
-
-            //    foreach (var result in results)
-            //    {
-
-            //            if (result.atendidoLocal == "NO" && result.programado == "NO")
-            //            {
-            //                contador++;
-            //            }
-
-            //    }
-            //}
 
             ArrayList resultados = new ArrayList();
 
@@ -1263,12 +1242,6 @@ namespace GeDoc.Controllers
             var interconsulta = context.sisTipo.Where(a => a.tipoCodigo.Equals("IC") && a.tipoDescripcion.Equals("NO")).FirstOrDefault().tipoId;
 
             var derivado = context.sisTipo.Where(a => a.tipoCodigo.Equals("DI") && a.tipoDescripcion.Equals("NO")).FirstOrDefault().tipoId;
-
-            //var atendidoLocal = context.sisTipo.Where(a => a.tipoCodigo.Equals("AL") && a.tipoDescripcion.Equals("NO")).FirstOrDefault().tipoId;
-
-            //select st.tipoId from sisTipo st inner join sisTipoEntidad te
-            //on st.tipoeId = te.tipoeId 
-            //where te.tipoeCodigo = 'AL' and st.tipoDescripcion = 'NO'
 
             var atendidoLocal = (
                 from st in context.sisTipo
